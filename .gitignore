@@ -1,11 +1,17 @@
-# ---> Vue
-# gitignore template for Vue.js projects
-#
-# Recommended template: Node.gitignore
+node_modules
+.DS_Store
+.github
+dist
+.npmrc
+.cache
 
-# TODO: where does this rule come from?
-docs/_book
+## ide
+**/.idea
+*.iml
 
-# TODO: where does this rule come from?
-test/
+## backend
+**/target
+**/logs
+**/dist
 
+## front
