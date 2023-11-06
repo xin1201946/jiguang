@@ -1,6 +1,6 @@
-import md5 from 'md5';
+import md5 from 'md5'
 //签名密钥串(前后端要一致，正式发布请自行修改)
-const signatureSecret = 'dd05f1c54d63749eda95f9fa6d49v442a';
+const signatureSecret = "dd05f1c54d63749eda95f9fa6d49v442a";
 
 export default class signMd5Utils {
   /**
@@ -23,6 +23,7 @@ export default class signMd5Utils {
     return sortObj;
   }
 
+
   /**
    * @param url 请求的url,应该包含请求参数(url的?后面的参数)
    * @param requestParams 请求参数(POST的JSON参数)
@@ -31,9 +32,9 @@ export default class signMd5Utils {
   static getSign(url, requestParams) {
     let urlParams = this.parseQueryString(url);
     let jsonObj = this.mergeObject(urlParams, requestParams);
+    //console.log("sign jsonObj: ",jsonObj)
     let requestBody = this.sortAsc(jsonObj);
-    delete requestBody._t;
-    console.log('sign requestBody:', requestBody);
+    console.log("sign requestBody: ",requestBody)
     return md5(JSON.stringify(requestBody) + signatureSecret).toUpperCase();
   }
 
@@ -50,23 +51,19 @@ export default class signMd5Utils {
     // 获取URL上最后带逗号的参数变量 sys/dict/getDictItems/sys_user,realname,username
     //【这边条件没有encode】带条件参数例子：/sys/dict/getDictItems/sys_user,realname,id,username!='admin'%20order%20by%20create_time
     let lastpathVariable = url.substring(url.lastIndexOf('/') + 1);
-    if (lastpathVariable.includes(',')) {
-      if (lastpathVariable.includes('?')) {
-        lastpathVariable = lastpathVariable.substring(0, lastpathVariable.indexOf('?'));
+    if(lastpathVariable.includes(",")){
+      if(lastpathVariable.includes("?")){
+        lastpathVariable = lastpathVariable.substring(0, lastpathVariable.indexOf("?"));
       }
-      //update-begin---author:wangshuai ---date:20221103  for：[issues/183]下拉搜索，使用动态字典，在线页面不报错，生成的代码报错 ------------
       //解决Sign 签名校验失败 #2728
-      //decodeURI对特殊字符没有没有编码和解码的能力，需要使用decodeURIComponent
-      result['x-path-variable'] = decodeURIComponent(lastpathVariable);
-      //update-end---author:wangshuai ---date:20221103  for：[issues/183]下拉搜索，使用动态字典，在线页面不报错，生成的代码报错 ------------
+      result["x-path-variable"] = decodeURIComponent(lastpathVariable);
     }
     if (urlArray && urlArray[1]) {
-      let paramString = urlArray[1],
-        paramResult;
+      let paramString = urlArray[1], paramResult;
       while ((paramResult = paramReg.exec(paramString)) != null) {
         //数字值转为string类型，前后端加密规则保持一致
-        if (this.myIsNaN(paramResult[2])) {
-          paramResult[2] = paramResult[2].toString();
+        if(this.myIsNaN(paramResult[2])){
+          paramResult[2] = paramResult[2].toString()
         }
         result[paramResult[1]] = paramResult[2];
       }
@@ -82,8 +79,8 @@ export default class signMd5Utils {
       for (let key in objectTwo) {
         if (objectTwo.hasOwnProperty(key) === true) {
           //数字值转为string类型，前后端加密规则保持一致
-          if (this.myIsNaN(objectTwo[key])) {
-            objectTwo[key] = objectTwo[key].toString();
+          if(this.myIsNaN(objectTwo[key])){
+            objectTwo[key] = objectTwo[key].toString()
           }
           objectOne[key] = objectTwo[key];
         }
@@ -95,9 +92,9 @@ export default class signMd5Utils {
   static urlEncode(param, key, encode) {
     if (param == null) return '';
     let paramStr = '';
-    let t = typeof param;
+    let t = typeof (param);
     if (t == 'string' || t == 'number' || t == 'boolean') {
-      paramStr += '&' + key + '=' + (encode == null || encode ? encodeURIComponent(param) : param);
+      paramStr += '&' + key + '=' + ((encode == null || encode) ? encodeURIComponent(param) : param);
     } else {
       for (let i in param) {
         let k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : '.' + i);
@@ -105,16 +102,20 @@ export default class signMd5Utils {
       }
     }
     return paramStr;
-  }
+  };
 
   /**
    * 接口签名用 生成header中的时间戳
    * @returns {number}
    */
-  static getTimestamp() {
-    return new Date().getTime();
+  static getTimestamp(){
+    return new Date().getTime()
   }
 
+  // /**
+  //  * 获取客户端时间（签名参数 X_TIMESTAMP）
+  //  * @returns {string}
+  //  */
   // static getDateTimeToString() {
   //   const date_ = new Date()
   //   const year = date_.getFullYear()
@@ -132,8 +133,9 @@ export default class signMd5Utils {
   //   if (msecs < 10) secs = '0' + msecs
   //   return year + '' + month + '' + day + '' + hours + '' + mins + '' + secs
   // }
-  // true:数值型的，false：非数值型
+    // true:数值型的，false：非数值型
   static myIsNaN(value) {
     return typeof value === 'number' && !isNaN(value);
   }
+
 }

@@ -1,26 +1,44 @@
 <template>
-  <ConfigProvider :locale="getAntdLocale">
-    <AppProvider>
-      <RouterView />
-    </AppProvider>
-  </ConfigProvider>
+  <a-config-provider :locale="locale">
+    <div id="app">
+      <router-view/>
+    </div>
+  </a-config-provider>
 </template>
+<script>
+  import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
+  import enquireScreen from '@/utils/device'
 
-<script lang="ts" setup>
-  import { ConfigProvider } from 'ant-design-vue';
-  import { AppProvider } from '/@/components/Application';
-  import { useTitle } from '/@/hooks/web/useTitle';
-  import { useLocale } from '/@/locales/useLocale';
+  export default {
+    data () {
+      return {
+        locale: zhCN,
+      }
+    },
+    created () {
+      let that = this
+      enquireScreen(deviceType => {
+        // tablet
+        if (deviceType === 0) {
+          that.$store.commit('TOGGLE_DEVICE', 'mobile')
+          that.$store.dispatch('setSidebar', false)
+        }
+        // mobile
+        else if (deviceType === 1) {
+          that.$store.commit('TOGGLE_DEVICE', 'mobile')
+          that.$store.dispatch('setSidebar', false)
+        }
+        else {
+          that.$store.commit('TOGGLE_DEVICE', 'desktop')
+          that.$store.dispatch('setSidebar', true)
+        }
 
-  // 解决日期时间国际化问题
-  import 'dayjs/locale/zh-cn';
-  // support Multi-language
-  const { getAntdLocale } = useLocale();
-
-  useTitle();
+      })
+    }
+  }
 </script>
-<style lang="less">
-// update-begin--author:liaozhiyang---date:20230803---for：【QQYUN-5839】windi会影响到html2canvas绘制的图片样式
-img{display:inline-block;}
-// update-end--author:liaozhiyang---date:20230803---for：【QQYUN-5839】windi会影响到html2canvas绘制的图片样式
+<style>
+  #app {
+    height: 100%;
+  }
 </style>
