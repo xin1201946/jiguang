@@ -1,70 +1,89 @@
 <template>
-  <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :onClick="handleClick">
-    <v-tooltip :showTitle="false" dataKey="item*percent"/>
-    <v-axis/>
-    <v-legend dataKey="item"/>
-    <v-pie position="percent" color="item" :v-style="pieStyle" :label="labelConfig"/>
-    <v-coord type="theta"/>
-  </v-chart>
+  <div ref="chartRef" :style="{ height, width }"></div>
 </template>
-
-<script>
-  const DataSet = require('@antv/data-set')
-  import { ChartEventMixins } from './mixins/ChartMixins'
-
-  export default {
+<script lang="ts">
+  import { defineComponent, PropType, ref, Ref, watchEffect, reactive, watch } from 'vue';
+  import { useECharts } from '/@/hooks/web/useECharts';
+  import { cloneDeep } from 'lodash-es';
+  export default defineComponent({
     name: 'Pie',
-    mixins: [ChartEventMixins],
     props: {
-      title: {
-        type: String,
-        default: ''
+      chartData: {
+        type: Array,
+        default: () => [],
+      },
+      size: {
+        type: Object,
+        default: () => {},
+      },
+      option: {
+        type: Object,
+        default: () => ({}),
+      },
+      width: {
+        type: String as PropType<string>,
+        default: '100%',
       },
       height: {
-        type: Number,
-        default: 254
+        type: String as PropType<string>,
+        default: 'calc(100vh - 78px)',
       },
-      dataSource: {
-        type: Array,
-        default: () => [
-          { item: '示例一', count: 40 },
-          { item: '示例二', count: 21 },
-          { item: '示例三', count: 17 },
-          { item: '示例四', count: 13 },
-          { item: '示例五', count: 9 }
-        ]
-      }
     },
-    data() {
-      return {
-        scale: [{
-          dataKey: 'percent',
-          min: 0,
-          formatter: '.0%'
-        }],
-        pieStyle: {
-          stroke: '#fff',
-          lineWidth: 1
+    emits: ['click'],
+    setup(props, { emit }) {
+      const chartRef = ref<HTMLDivElement | null>(null);
+      const { setOptions, getInstance, resize } = useECharts(chartRef as Ref<HTMLDivElement>);
+      const option = reactive({
+        tooltip: {
+          formatter: '{b} ({c})',
         },
-        labelConfig: ['percent', {
-          formatter: (val, item) => {
-            return item.point.item + ': ' + val
-          }
-        }]
+        series: [
+          {
+            type: 'pie',
+            radius: '72%',
+            center: ['50%', '55%'],
+            data: [],
+            labelLine: { show: true },
+            label: {
+              show: true,
+              formatter: '{b} \n ({d}%)',
+              color: '#B1B9D3',
+            },
+          },
+        ],
+      });
+
+      watchEffect(() => {
+        props.chartData && initCharts();
+      });
+      /**
+       * 监听拖拽大小变化
+       */
+      watch(
+        () => props.size,
+        () => {
+          resize();
+        },
+        {
+          immediate: true,
+        }
+      );
+      function initCharts() {
+        if (props.option) {
+          Object.assign(option, cloneDeep(props.option));
+        }
+        option.series[0].data = props.chartData;
+        setOptions(option);
+        resize();
+        getInstance()?.off('click', onClick);
+        getInstance()?.on('click', onClick);
       }
+
+      function onClick(params) {
+        emit('click', params);
+      }
+
+      return { chartRef };
     },
-    computed: {
-      data() {
-        let dv = new DataSet.View().source(this.dataSource)
-        // 计算数据百分比
-        dv.transform({
-          type: 'percent',
-          field: 'count',
-          dimension: 'item',
-          as: 'percent'
-        })
-        return dv.rows
-      }
-    }
-  }
+  });
 </script>

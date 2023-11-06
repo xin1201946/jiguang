@@ -5,13 +5,31 @@ dist
 .npmrc
 .cache
 
-## ide
-**/.idea
-*.iml
+tests/server/static
+tests/server/static/upload
 
-## backend
-**/target
-**/logs
-**/dist
+.local
+# local env files
+.env.local
+.env.*.local
+.eslintcache
 
-## front
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+# .vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+/os_del.cmd
+os_del.cmd
+/.vscode/
+/.history/
+/svn clear.bat

@@ -2,54 +2,58 @@
   <div class="chart-trend">
     {{ term }}
     <span>{{ rate }}%</span>
-    <span :class="['trend-icon', trend]"><a-icon :type="'caret-' + trend"/></span>
+    <span :class="['trend-icon', trend]"><Icon :icon="'ant-design:caret-' + trend + '-outlined'" /></span>
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Trend",
+<script lang="ts">
+  import { defineComponent, computed } from 'vue';
+
+  export default defineComponent({
+    name: 'Trend',
     props: {
       // 同title
       term: {
         type: String,
         default: '',
-        required: true
+        required: true,
       },
       // 百分比
       percentage: {
         type: Number,
-        default: null
+        default: null,
       },
       type: {
         type: Boolean,
-        default: null
+        default: null,
       },
       target: {
         type: Number,
-        default: 0
+        default: 0,
       },
       value: {
         type: Number,
-        default: 0
+        default: 0,
       },
       fixed: {
         type: Number,
-        default: 2
-      }
+        default: 2,
+      },
     },
-    data () {
+    setup(props) {
+      const trend = computed(() => {
+        let type = props.type === null ? props.value >= props.target : props.type;
+        return type ? 'up' : 'down';
+      });
+      const rate = computed(() =>
+        (props.percentage === null ? (Math.abs(props.value - props.target) * 100) / props.target : props.percentage).toFixed(props.fixed)
+      );
       return {
-        trend: this.type && 'up' || 'down',
-        rate: this.percentage
-      }
+        trend,
+        rate,
+      };
     },
-    created () {
-      let type = this.type === null ? this.value >= this.target : this.type
-      this.trend = type ? 'up' : 'down';
-      this.rate = (this.percentage === null ? Math.abs(this.value - this.target) * 100 / this.target : this.percentage).toFixed(this.fixed)
-    }
-  }
+  });
 </script>
 
 <style lang="less" scoped>
@@ -61,20 +65,22 @@
     .trend-icon {
       font-size: 12px;
 
-      &.up, &.down {
+      &.up,
+      &.down {
         margin-left: 4px;
         position: relative;
         top: 1px;
 
         i {
           font-size: 12px;
-          transform: scale(.83);
+          transform: scale(0.83);
         }
       }
 
       &.up {
         color: #f5222d;
       }
+
       &.down {
         color: #52c41a;
         top: -1px;

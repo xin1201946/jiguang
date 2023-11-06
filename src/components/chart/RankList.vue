@@ -1,7 +1,7 @@
 <template>
   <div class="rank">
     <h4 class="title">{{ title }}</h4>
-    <ul class="list" :style="{height:height?`${height}px`:'auto',overflow:'auto'}">
+    <ul class="list" :style="{ height: height ? `${height}px` : 'auto', overflow: 'auto' }">
       <li :key="index" v-for="(item, index) in list">
         <span :class="index < 3 ? 'active' : null">{{ index + 1 }}</span>
         <span>{{ item.name }}</span>
@@ -11,29 +11,28 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "RankList",
-    // ['title', 'list']
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  export default defineComponent({
+    name: 'RankList',
     props: {
       title: {
         type: String,
-        default: ''
+        default: '',
       },
       list: {
         type: Array,
-        default: null
+        default: null,
       },
       height: {
         type: Number,
-        default: null
-      }
-    }
-  }
+        default: null,
+      },
+    },
+  });
 </script>
 
 <style lang="less" scoped>
-
   .rank {
     padding: 0 32px 32px 72px;
 
@@ -46,7 +45,7 @@
         margin-top: 16px;
 
         span {
-          color: rgba(0, 0, 0, .65);
+          color: rgba(0, 0, 0, 0.65);
           font-size: 14px;
           line-height: 22px;
 
@@ -77,5 +76,4 @@
   .mobile .rank {
     padding: 0 32px 32px 32px;
   }
-
 </style>
