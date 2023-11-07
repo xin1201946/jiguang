@@ -18,7 +18,7 @@
         <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
       </a-tab-pane>
     </a-tabs>
-    <div style="margin: 12px 12px 0;height: 100%">
+    <div class="mains">
       <!-- update-begin-author:taoyan date:20201221 for:此处删掉transition标签 不知道为什么加上后 页面路由切换的时候即1及菜单切到2及菜单的时候 两个菜单页面会同时出现300-500秒左右 -->
       <keep-alive v-if="multipage">
         <router-view v-if="reloadFlag"/>
@@ -376,7 +376,10 @@
 </script>
 
 <style lang="less">
-
+.mains{
+  margin: 12px 12px 0;
+  height: calc(100% - 52px - 12px);
+}
   /*
  * The following styles are auto-applied to elements with
  * transition="page-transition" when their visibility is toggled
@@ -385,6 +388,7 @@
  * You can easily play with the page transition by editing
  * these styles.
  */
+
 
   .page-transition-enter {
     opacity: 0;

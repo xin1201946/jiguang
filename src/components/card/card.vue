@@ -1,15 +1,17 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <slot name="query"></slot>
-    </div>
-    <div class="table-operator">
-      <slot name="operator"></slot>
-    </div>
-    <div>
-      <slot></slot>
-    </div>
-  </a-card>
+  <div class="card">
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <slot name="query"></slot>
+      </div>
+      <div class="table-operator">
+        <slot name="operator"></slot>
+      </div>
+      <div>
+        <slot></slot>
+      </div>
+    </a-card>
+  </div>
 </template>
 
 <script>
@@ -19,5 +21,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+.card{
+  height: 100%;
+  width: 100%;
+  /deep/.ant-card{
+    height: 100%;
+    width: 100%;
+  }
+}
 </style>

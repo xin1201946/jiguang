@@ -56,7 +56,10 @@
 
     <a-layout
       :class="[layoutMode, `content-width-${contentWidth}`]"
-      :style="{ paddingLeft: fixSiderbar && isDesktop() ? `${sidebarOpened ? 200 : 80}px` : '0' }">
+      :style="{
+      paddingLeft: fixSiderbar && isDesktop() ? `${sidebarOpened ? 200 : 80}px` : '0',
+      overflow: 'hidden'
+       }">
       <!-- layout header -->
       <global-header
         :mode="layoutMode"
@@ -69,12 +72,15 @@
       />
 
       <!-- layout content -->
-      <a-layout-content :style="{ height: '100%', paddingTop: fixedHeader ? '59px' : '0' }">
+<!--      /deep/.ant-layout-content{
+  height: calc(100% - 59px - 122px) !important;
+}-->
+      <a-layout-content :style="{ paddingTop: fixedHeader ? '59px' : '0' }">
         <slot></slot>
       </a-layout-content>
 
       <!-- layout footer -->
-      <a-layout-footer style="padding: 0px">
+      <a-layout-footer style="padding: 0px;height: 122px">
         <global-footer/>
       </a-layout-footer>
     </a-layout>
@@ -134,11 +140,11 @@
       //--update-begin----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
       //this.menus = this.mainRouters.find((item) => item.path === '/').children;
       this.menus = this.permissionMenuList
-      
+
       //--update-begin----author:liusq---date:20210223------for:关于测边菜单遮挡内容问题详细说明 #2255
       this.collapsed=!this.sidebarOpened;
       //--update-begin----author:liusq---date:20210223------for:关于测边菜单遮挡内容问题详细说明 #2255
-  
+
       // 根据后台配置菜单，重新排序加载路由信息
       //console.log('----加载菜单逻辑----')
       //console.log(this.mainRouters)
@@ -199,13 +205,17 @@
   }
 
   .layout {
-    min-height: 100vh !important;
-    overflow-x: hidden;
+    //min-height: 100vh !important;
+    //overflow-x: hidden;
+    height: 100%;
+    overflow: hidden;
+    /deep/.ant-layout-content{
+      height: calc(100% - 122px - 59px) !important;
+    }
 
     &.mobile {
 
       .ant-layout-content {
-
         .content {
           margin: 24px 0 0;
         }
