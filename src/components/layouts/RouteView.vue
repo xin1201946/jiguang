@@ -1,9 +1,9 @@
 <template>
   <div class="main">
-  <keep-alive :include="includedComponents">
-    <router-view v-if="keepAlive" />
-  </keep-alive>
-  <router-view v-if="!keepAlive" />
+    <keep-alive :include="includedComponents">
+      <router-view v-if="keepAlive" />
+    </keep-alive>
+    <router-view v-if="!keepAlive" />
   </div>
 </template>
 
@@ -40,3 +40,9 @@
     },
   }
 </script>
+
+<style scoped lang="less">
+.main{
+  height: 100%;
+}
+</style>
