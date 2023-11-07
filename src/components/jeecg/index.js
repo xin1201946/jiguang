@@ -39,7 +39,6 @@ import lodash_object from 'lodash'
 import debounce from 'lodash/debounce'
 import pick from 'lodash.pick'
 import data from 'china-area-data'
-import signMd5Utils from '@/utils/encryption/signMd5Utils'
 
 export default {
   install(Vue) {
@@ -88,6 +87,5 @@ export default {
     Vue.prototype.$Jdebounce= debounce
     Vue.prototype.$Jpick = pick
     Vue.prototype.$Jpcaa = data
-    Vue.prototype.$signMd5Utils = signMd5Utils
   }
 }

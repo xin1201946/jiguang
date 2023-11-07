@@ -107,9 +107,9 @@ export default {
       // caseId，表格唯一标识
       caseId: `_j-vxe-${randomString(8)}_`,
       // 内置columns
-      innerColumns: [],
+      _innerColumns: [],
       // 内置 EditRules
-      innerEditRules: [],
+      _innerEditRules: [],
       // 记录滚动条位置
       scroll: {top: 0, left: 0},
       // 当前是否正在滚动
@@ -156,14 +156,14 @@ export default {
       excludeCode:[],
       // 联动下拉选项（用于隔离不同的下拉选项）
       // 内部联动配置，map
-      innerLinkageConfig: null,
+      _innerLinkageConfig: null,
     }
   },
   computed: {
 
     // vxe 最终 columns
     vxeColumns() {
-      this.innerColumns.forEach(column => {
+      this._innerColumns.forEach(column => {
         let renderOptions = {
           caseId: this.caseId,
           bordered: this.bordered,
@@ -184,11 +184,11 @@ export default {
           }
         }
         // 处理联动列，联动列只能作用于 select 组件
-        if (column.$type === JVXETypes.select && this.innerLinkageConfig != null) {
+        if (column.$type === JVXETypes.select && this._innerLinkageConfig != null) {
           // 判断当前列是否是联动列
-          if (this.innerLinkageConfig.has(column.key)) {
+          if (this._innerLinkageConfig.has(column.key)) {
             renderOptions.linkage = {
-              config: this.innerLinkageConfig.get(column.key),
+              config: this._innerLinkageConfig.get(column.key),
               getLinkageOptionsSibling: this.getLinkageOptionsSibling,
               getLinkageOptionsAsync: this.getLinkageOptionsAsync,
               linkageSelectChange: this.linkageSelectChange,
@@ -224,11 +224,11 @@ export default {
         }
         // update--end--autor:lvdandan-----date:20201211------for:JT-118 【online】 日期、时间控件长度较小
       })
-      return this.innerColumns
+      return this._innerColumns
     },
     // vxe 最终 editRules
     vxeEditRules() {
-      return Object.assign({}, this.editRules, this.innerEditRules)
+      return Object.assign({}, this.editRules, this._innerEditRules)
     },
     // vxe 最终 props
     vxeProps() {
@@ -302,8 +302,8 @@ export default {
             this.$set(data, this.dragSortKey, idx + 1)
           }
           // 处理联动回显数据
-          if (this.innerLinkageConfig != null) {
-            for (let configItem of this.innerLinkageConfig.values()) {
+          if (this._innerLinkageConfig != null) {
+            for (let configItem of this._innerLinkageConfig.values()) {
               this.autoSetLinkageOptionsByData(data, '', configItem, 0)
             }
           }
@@ -341,8 +341,8 @@ export default {
       handler(columns) {
         //获取不需要显示列
         this.loadExcludeCode()
-        let innerColumns = []
-        let innerEditRules = {}
+        let _innerColumns = []
+        let _innerEditRules = {}
         let {rowNumber, rowSelection, rowExpand, dragSort} = this
         let expandColumn, seqColumn, checkboxColumn, radioColumn, dragSortColumn
         if (Array.isArray(columns)) {
@@ -422,7 +422,7 @@ export default {
                     rules.push(Object.assign({}, rule, replace))
                   }
                 }
-                innerEditRules[col.key] = rules
+                _innerEditRules[col.key] = rules
               }
               // 处理统计列
               // sum = 求和、average = 平均值
@@ -435,7 +435,7 @@ export default {
                   }
                 })
               }
-              innerColumns.push(col)
+              _innerColumns.push(col)
             }
           })
         }
@@ -445,7 +445,7 @@ export default {
           if (seqColumn) {
             col = Object.assign(col, seqColumn, {type: 'seq'})
           }
-          innerColumns.unshift(col)
+          _innerColumns.unshift(col)
         }
         // 判断是否开启了可选择行
         if (rowSelection) {
@@ -462,7 +462,7 @@ export default {
           if (this.rowSelectionType === 'checkbox' && checkboxColumn) {
             col = Object.assign(col, checkboxColumn, {type: 'checkbox'})
           }
-          innerColumns.unshift(col)
+          _innerColumns.unshift(col)
         }
         // 是否可展开行
         if (rowExpand) {
@@ -474,7 +474,7 @@ export default {
           if (expandColumn) {
             col = Object.assign(col, expandColumn, {type: 'expand'})
           }
-          innerColumns.unshift(col)
+          _innerColumns.unshift(col)
         }
         // 是否可拖动排序
         if (dragSort) {
@@ -486,11 +486,11 @@ export default {
           if (dragSortColumn) {
             col = Object.assign(col, dragSortColumn, {type: JVXETypes.rowDragSort})
           }
-          innerColumns.unshift(col)
+          _innerColumns.unshift(col)
         }
 
-        this.innerColumns = innerColumns
-        this.innerEditRules = innerEditRules
+        this._innerColumns = _innerColumns
+        this._innerEditRules = _innerEditRules
       }
     },
     // watch linkageConfig
@@ -501,7 +501,7 @@ export default {
         if (Array.isArray(this.linkageConfig) && this.linkageConfig.length > 0) {
           // 获取联动的key顺序
           let getLcKeys = (key, arr) => {
-            let col = this.innerColumns.find(col => col.key === key)
+            let col = this._innerColumns.find(col => col.key === key)
             if (col) {
               arr.push(col.key)
               if (col.linkageKey) {
@@ -520,9 +520,9 @@ export default {
             }
             keys.forEach(k => configMap.set(k, configItem))
           })
-          this.innerLinkageConfig = configMap
+          this._innerLinkageConfig = configMap
         } else {
-          this.innerLinkageConfig = null
+          this._innerLinkageConfig = null
         }
       }
     },
@@ -734,8 +734,8 @@ export default {
             this.$set(data, this.dragSortKey, idx + 1)
           }
           // 处理联动回显数据
-          if (this.innerLinkageConfig != null) {
-            for (let configItem of this.innerLinkageConfig.values()) {
+          if (this._innerLinkageConfig != null) {
+            for (let configItem of this._innerLinkageConfig.values()) {
               this.autoSetLinkageOptionsByData(data, '', configItem, 0)
             }
           }
@@ -1253,10 +1253,10 @@ export default {
           record[col.key] = createValue({row: record, column, $table: xTable})
         }
         // update-begin--author:sunjianlei---date:20210819------for: 处理联动列，联动列只能作用于 select 组件
-        if (col.$type === JVXETypes.select && this.innerLinkageConfig != null) {
+        if (col.$type === JVXETypes.select && this._innerLinkageConfig != null) {
           // 判断当前列是否是联动列
-          if (this.innerLinkageConfig.has(col.key)) {
-            let configItem = this.innerLinkageConfig.get(col.key)
+          if (this._innerLinkageConfig.has(col.key)) {
+            let configItem = this._innerLinkageConfig.get(col.key)
             this.getLinkageOptionsAsync(configItem, '')
           }
         }
