@@ -22,6 +22,8 @@
 <script>
 import TreeCard from '@comp/card/TreeCard.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
+import { bizEntryFormPageList } from '@api/biz'
+
 const treeData = [
   {
     title: '全部',
@@ -117,7 +119,7 @@ export default {
     },
     handleSubmit (e) {
       console.log(e)
-    }
+    },
   },
   updated() {
     this.$refs.query.init(this.search)
