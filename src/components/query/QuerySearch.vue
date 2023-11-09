@@ -9,11 +9,19 @@
         <a-form-item colon :label="item.label">
 <!--          普通输入框-->
           <template v-if="item.type === 'input'">
-            <a-input allowClear v-decorator="item.rules"></a-input>
+            <a-input
+              allowClear
+              :placehorder="item.placehorder"
+              v-decorator="item.rules"
+            ></a-input>
           </template>
 <!--          选择器-->
           <template v-else-if="item.type === 'select'">
-            <a-select allowClear v-decorator="item.rules">
+            <a-select
+              allowClear
+              :placehorder="item.placehorder"
+              v-decorator="item.rules"
+            >
               <a-select-option
                 v-for="value in item.data"
                 :value="value.value"
@@ -22,7 +30,12 @@
           </template>
 <!--          数字输入框-->
           <template v-else-if="item.type === 'number'">
-            <a-input oninput="value=value.replace(/[^\d]/g,'')" allowClear  v-decorator="item.rules"></a-input>
+            <a-input
+              :placehorder="item.placehorder"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              allowClear
+              v-decorator="item.rules"
+            ></a-input>
           </template>
         </a-form-item>
       </a-col>

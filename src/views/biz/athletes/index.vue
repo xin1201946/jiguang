@@ -88,7 +88,6 @@ export default {
         this.data = res.result.records
         this.pagination.current = res.result.current
         this.pagination.total = res.result.total
-
       })
     }
   }
