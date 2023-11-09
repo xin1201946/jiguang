@@ -42,8 +42,8 @@
       <a-col :span="6">
         <a-form-item :labelCol="{span: 0}">
           <a-space>
-            <a-button html-type="submit" type="primary">查询</a-button>
-            <a-button @click="handleReset">重置</a-button>
+            <a-button html-type="submit" type="primary" icon="search">查询</a-button>
+            <a-button @click="handleReset" icon="reload">重置</a-button>
           </a-space>
         </a-form-item>
       </a-col>
