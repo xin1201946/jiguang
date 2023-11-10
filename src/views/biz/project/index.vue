@@ -9,7 +9,7 @@
     </template>
     <template slot="operator">
       <a-space>
-        <a-button type="primary" @click="handleAdd" icon="plus">添加</a-button>
+        <a-button type="primary" @click="handleAdd('tablePc')" icon="plus">添加</a-button>
       </a-space>
     </template>
     <template slot="default">
@@ -23,7 +23,7 @@
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
-            <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record)">编辑</a-button>
+            <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record, 'tablePc')">编辑</a-button>
             <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
           </a-space>
         </template>

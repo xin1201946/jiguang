@@ -1,11 +1,11 @@
 import { getLabel } from '@/utils'
 export const sexData = [
   {
-    value: '0',
+    value: '1',
     label: '男'
   },
   {
-    value: '1',
+    value: '2',
     label: '女'
   }
 ]

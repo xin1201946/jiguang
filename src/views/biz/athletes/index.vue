@@ -10,6 +10,19 @@
     <template slot="operator">
       <a-space>
         <a-button type="primary" @click="handleAdd" icon="plus">添加</a-button>
+        <a-button type="primary" @click="handleExport">下载导入模板</a-button>
+        <a-upload
+          accept=".xlsx, xls"
+          name="file"
+          :showUploadList="false"
+          :multiple="false"
+          :headers="tokenHeader"
+          :action="importExcelUrl"
+          @change="handleImportExcel"
+        >
+          <a-button type="primary" icon="import">导入</a-button>
+        </a-upload>
+
       </a-space>
     </template>
     <template>
@@ -37,7 +50,7 @@
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import { athletesQuery, athletesColumns } from '@views/biz/athletes/athletes.config'
-import { bizEntryFormDelete, bizEntryFormPageList } from '@api/biz'
+import { bizEntryFormDelete, bizEntryFormPageList, bizEntryFormGetImportTemplate } from '@api/biz'
 import AthletesModal from '@views/biz/athletes/modal/athletesModal.vue'
 import { deleteMessage } from '@/utils'
 import bizMixins from '@views/biz/bizMixins'
@@ -51,6 +64,7 @@ export default {
   mixins: [bizMixins],
   data() {
     return {
+      loading: false,
       columns: athletesColumns,
       data: [],
       query: {
@@ -58,6 +72,7 @@ export default {
         entrySex: undefined,
         entryType: undefined
       },
+      api: 'bizEntryForm/importExcel'
     }
   },
   mounted() {
@@ -65,6 +80,10 @@ export default {
     this.getList()
   },
   methods: {
+    handleExport() {
+      bizEntryFormGetImportTemplate()
+        .then((res) => this.downLoad(res, '运动员导入.xlsx'))
+    },
     handleDelete (record) {
       deleteMessage().then(() => {
         bizEntryFormDelete(record.entryFormId).then(res => {
@@ -83,7 +102,6 @@ export default {
         pageNum: this.pagination.current,
         pageSize: this.pagination.pageSize
       }
-      // console.log(data)
       bizEntryFormPageList(data).then(res => {
         this.data = res.result.records
         this.pagination.current = res.result.current

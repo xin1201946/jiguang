@@ -35,6 +35,11 @@ export const projectColumns = [
     dataIndex: 'projectName'
   },
   {
+    title: "平板编号",
+    align: 'center',
+    // dataIndex: 'groupCount'
+  },
+  {
     title: "组数",
     align: 'center',
     dataIndex: 'groupCount'

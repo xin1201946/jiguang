@@ -3,24 +3,36 @@ import { getLabel } from '@/utils'
 export const deviceType = [
   {
     value: '0',
-    label: '枪'
+    label: '激光训练器'
   },
   {
     value: '1',
-    label: '靶'
+    label: '激光接收靶'
   }
 ]
 
 export const deviceGunType = [
   {
     value: '0',
-    label: '气步枪'
+    label: '长款激光训练器'
   },
   {
     value: '1',
-    label: '气手枪'
+    label: '短款激光训练器'
   }
 ]
+
+export const deviceStatus = [
+  {
+    value: '0',
+    label: '离线'
+  },
+  {
+    value: '1',
+    label: '在线'
+  }
+]
+
 
 export const equipmentQuery = [
   {
@@ -33,23 +45,24 @@ export const equipmentQuery = [
     placehorder: '请输入设备编号',
   },
   {
-    type: 'input',
+    type: 'select',
     rules: [
       'deviceStatus',
-      { rules: [{ required: false, message: '请输入设备状态' }] }
+      { rules: [{ required: false, message: '请选择设备状态' }] }
     ],
     label: '设备状态',
     placehorder: '请输入设备状态',
+    data: deviceStatus
     // data: deviceType
   },
   {
     type: 'select',
     rules: [
       'deviceGunType',
-      { rules: [{ required: false, message: '请选择枪支类型' }] }
+      { rules: [{ required: false, message: '请选择激光训练器' }] }
     ],
-    label: '枪支类型',
-    placehorder: '请选择枪支类型',
+    label: '激光训练器类型',
+    placehorder: '请选择激光训练器类型',
     data: deviceGunType
   },
   {
@@ -71,13 +84,10 @@ export const equipmentColumns = [
     align: 'center'
   },
   {
-    title: '枪支类型',
-    dataIndex: 'deviceGunType',
+    title: '设备电量',
+    dataIndex: 'deviceVoltage',
     align: 'center',
-    customRender: (text, record, index) => {
-      const type = getLabel(deviceGunType, text)
-      return type
-    }
+    customRender: (text) => `${text}%`,
   },
   {
     title: '设备类型',
@@ -86,17 +96,28 @@ export const equipmentColumns = [
     customRender: (text, record, index) => {
       const type = getLabel(deviceType, text)
       return type
-    }
+    },
   },
   {
-    title: '设备电压',
-    dataIndex: 'deviceVoltage',
-    align: 'center'
+    title: '激光训练器类型',
+    dataIndex: 'deviceGunType',
+    align: 'center',
+    scopedSlots: {
+      customRender: 'deviceGunType'
+    },
+    customRender: (text, record, index) => {
+      const type = getLabel(deviceGunType, text)
+      return type
+    },
   },
   {
     title: '设备状态',
     dataIndex: 'deviceStatus',
-    align: 'center'
+    align: 'center',
+    customRender: (text, record, index) => {
+      const type = getLabel(deviceStatus, text)
+      return type
+    },
   },
   {
     title: '操作',

@@ -44,5 +44,6 @@
 <style scoped lang="less">
 .main{
   height: 100%;
+  overflow-y: auto;
 }
 </style>

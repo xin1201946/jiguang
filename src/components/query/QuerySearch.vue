@@ -5,7 +5,7 @@
     layout="inline"
   >
     <a-row :gutter="24">
-      <a-col :span="4" v-for="(item,i) in formData" :key="i">
+      <a-col :span="item.label.length > 5 ? 5 : 4" v-for="(item,i) in formData" :key="i">
         <a-form-item colon :label="item.label">
 <!--          普通输入框-->
           <template v-if="item.type === 'input'">
@@ -25,7 +25,8 @@
               <a-select-option
                 v-for="value in item.data"
                 :value="value.value"
-              >{{ value.label }}</a-select-option>
+              >{{ value.label }}
+              </a-select-option>
             </a-select>
           </template>
 <!--          数字输入框-->

@@ -19,6 +19,7 @@
         rowKey="tabletPcId"
         :pagination="pagination"
         @change="handleTableChange"
+        bordered
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -35,7 +36,7 @@
 <script>
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import Card from '@comp/card/card.vue'
-import { slabQuery, slabTableColumns } from '@views/biz/slab/slab.config'
+import { slabQuery, slabTableColumns, tabletPcModel } from '@views/biz/slab/slab.config'
 import { bizTabletPcPageList, bizTabletPcDelete } from '@api/biz'
 import SlabModal from '@views/biz/slab/model/SlabModal.vue'
 import bizMixins from '@views/biz/bizMixins'
@@ -54,7 +55,8 @@ export default {
       data: [],
       query: {
         tabletPcName: undefined,
-        tabletPcStatus: undefined
+        tabletPcStatus: undefined,
+        tabletPcModel: undefined
       }
     }
   },

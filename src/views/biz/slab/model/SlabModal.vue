@@ -12,13 +12,21 @@
       ref="form"
       :model="formData"
     >
-      <a-form-model-item label="设备编号" prop="deviceNum">
-<!--        <a-input v-model="formData.deviceNum"></a-input>-->
-        <a-select v-model="formData.deviceNum">
+      <a-form-model-item label="设备编号枪" prop="deviceNum0">
+        <a-select v-model="formData.deviceNum0">
           <a-select-option
-            v-for="item in device"
+            v-for="item in device.filter(item => item.deviceType === '0')"
             :key="item.deviceId"
-            :value="item.deviceId"
+            :value="item.deviceNum"
+          >{{ item.deviceNum }}</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="设备编号靶" prop="deviceNum1">
+        <a-select v-model="formData.deviceNum1">
+          <a-select-option
+            v-for="item in device.filter(item => item.deviceType === '1')"
+            :key="item.deviceId"
+            :value="item.deviceNum"
           >{{ item.deviceNum }}</a-select-option>
         </a-select>
       </a-form-model-item>
@@ -28,11 +36,21 @@
       <a-form-model-item label="平板编号" prop="tabletPcNum">
         <a-input v-model="formData.tabletPcNum"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="当前模式" prop="tabletPcStatus">
+      <a-form-model-item label="平板状态" prop="tabletPcStatus">
 <!--        <a-input v-model="formData.tabletPcStatus"></a-input>-->
         <a-select v-model="formData.tabletPcStatus">
           <a-select-option
             v-for="item in tabletPcStatus"
+            :key="item.value"
+            :value="item.value"
+          >{{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="当前模式" prop="tabletPcModel">
+        <a-select v-model="formData.tabletPcModel">
+          <a-select-option
+            v-for="item in tabletPcModel"
             :key="item.value"
             :value="item.value"
           >{{ item.label }}
@@ -46,8 +64,8 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import bizMixins from '@views/biz/bizMixins'
-import { tabletPcStatus } from '@views/biz/slab/slab.config'
-import { bizDeviceSave, bizDeviceUpdate } from '@api/biz'
+import { tabletPcModel, tabletPcStatus } from '@views/biz/slab/slab.config'
+import { bizTabletPcSave, bizTabletPcUpdate } from '@api/biz'
 
 export default {
   name: 'slabModal',
@@ -58,6 +76,7 @@ export default {
   data() {
     return {
       tabletPcStatus,
+      tabletPcModel,
       title: "",
       visible: false,
       type: 0,
@@ -65,12 +84,15 @@ export default {
         tabletPcStatus: '',
         tabletPcNum: '',
         tabletPcName: '',
-        deviceNum: '',
-        tabletPcId: ''
+        // deviceNum: '',
+        deviceNum0: '',
+        deviceNum1: "",
+        tabletPcId: '',
+        tabletPcModel: ''
       },
       rules: {
         tabletPcStatus: [
-           { required: true, message: '请选择当前模式', trigger: 'blur' }
+           { required: true, message: '请选择平板状态', trigger: 'blur' }
         ],
         tabletPcNum: [
            { required: true, message: '请输入平板编号', trigger: 'blur' }
@@ -78,9 +100,15 @@ export default {
         tabletPcName: [
            { required: true, message: '请输入平板名称', trigger: 'blur' }
         ],
-        deviceNum: [
-           { required: true, message: '请选择设备编号', trigger: 'blur' }
+        deviceNum0: [
+           { required: true, message: '请选择设备编号枪', trigger: 'blur' }
         ],
+        deviceNum1: [
+          { required: true, message: '请选择设备编号靶', trigger: 'blur' }
+        ],
+        tabletPcModel: [
+          { required: true, message: '请选择当前模式', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -91,10 +119,10 @@ export default {
           if (this.type === 0) {
             const data = JSON.parse(JSON.stringify(this.formData))
             delete data.tabletPcId
-            bizDeviceSave(data).then(this.quit)
+            bizTabletPcSave(data).then(this.quit)
           }
           if (this.type === 1) {
-            bizDeviceUpdate(this.formData).then(this.quit)
+            bizTabletPcUpdate(this.formData).then(this.quit)
           }
         }
       })

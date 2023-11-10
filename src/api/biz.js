@@ -1,4 +1,4 @@
-import { getAction, deleteAction, putAction, postAction, httpAction } from '@/api/manage'
+import { deleteAction, downFile, download, postAction } from '@/api/manage'
 
 /**
  * 平板
@@ -11,7 +11,8 @@ export const bizTabletPcSave = data => postAction("/bizTabletPc/save", data)
 export const bizTabletPcUpdate = data => postAction("bizTabletPc/update", data)
 // 平板删除
 export const bizTabletPcDelete = id => deleteAction(`bizTabletPc/delete/${id}`)
-
+// 平板列表
+export const bizTabletPcList = () => postAction("bizTabletPc/list", {})
 
 // 报名表分页查询
 export const bizEntryFormPageList = data => postAction('/bizEntryForm/page/list',data)
@@ -23,6 +24,8 @@ export const bizEntryFormDelete = id => deleteAction(`/bizEntryForm/delete/${id}
 export const bizEntryFormUpdate = data => postAction("/bizEntryForm/update", data)
 // 报名查询不分页
 export const bizEntryFormList = data => postAction("/bizEntryForm/list", data)
+// 下载
+export const bizEntryFormGetImportTemplate = () => download("bizEntryForm/getImportTemplate")
 
 /**
  * 项目

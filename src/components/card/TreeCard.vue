@@ -13,7 +13,7 @@
         <div class="table-operator">
           <slot name="operator"></slot>
         </div>
-        <div>
+        <div class="table">
           <slot></slot>
         </div>
       </a-card>
@@ -37,7 +37,9 @@ export default {
     height: 100%;
   }
   &_card{
+    height: 100%;
     flex: 1;
+    overflow-y: hidden;
   }
 
   /deep/.ant-card{

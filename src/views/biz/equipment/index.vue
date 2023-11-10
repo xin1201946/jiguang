@@ -37,11 +37,11 @@
 import Card from '@comp/card/card.vue'
 import bizMixins from '@views/biz/bizMixins'
 import QuerySearch from '@comp/query/QuerySearch.vue'
-import { equipmentColumns, equipmentQuery } from '@views/biz/equipment/equipment.config'
+import { equipmentColumns, equipmentQuery, deviceGunType } from '@views/biz/equipment/equipment.config'
 import { deleteMessage } from '@/utils'
 import { bizDevicePageList, bizDeviceDelete } from '@api/biz'
 import EquipmentModal from '@views/biz/equipment/modal/equipmentModal.vue'
-
+import { getLabel } from '@/utils'
 export default {
   name: 'equipment',
   components: {
@@ -53,6 +53,7 @@ export default {
   data() {
     return {
       columns: equipmentColumns,
+      deviceGunType,
       data: [],
       query: {
         deviceNum: undefined,
@@ -67,6 +68,7 @@ export default {
     this.getList()
   },
   methods: {
+    getLabel,
     getList() {
       const data = {
         ...this.query,

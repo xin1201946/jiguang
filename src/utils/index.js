@@ -1,5 +1,11 @@
 import { Modal } from 'ant-design-vue'
-export const getLabel = (arr, value) =>  arr.filter(item => item.value === value)[0].label
+export const getLabel = (arr, value) =>  {
+  const a = arr.filter(item => String(item.value) === String(value))
+  if (a.length) {
+    return a[0].label
+  }
+  return ""
+}
 
 export const deleteMessage = () => {
   return new Promise((resolve, reject) => {

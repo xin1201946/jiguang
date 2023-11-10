@@ -12,17 +12,33 @@
       ref="form"
       :model="formData"
     >
+
       <a-form-model-item label="设备编号" prop="deviceNum">
         <a-input v-model="formData.deviceNum"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="设备状态" prop="deviceStatus">
-        <a-input v-model="formData.deviceStatus"></a-input>
+      <a-form-model-item label="设备电量" prop="deviceVoltage">
+        <a-input v-model="formData.deviceVoltage" suffix="%">
+        </a-input>
       </a-form-model-item>
-      <a-form-model-item label="设备电压" prop="deviceVoltage">
-        <a-input v-model="formData.deviceVoltage"></a-input>
+      <a-form-model-item label="设备类型" prop="deviceType">
+        <a-select v-model="formData.deviceType">
+          <a-select-option
+            v-for="item in deviceType"
+            :key="item.value"
+            :value="item.value"
+          >{{ item.label }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="枪支类型" prop="deviceGunType">
-        <a-select v-model="formData.deviceGunType">
+      <a-form-model-item
+        label="激光训练器类型"
+        prop="deviceGunType"
+        :rules="{ required: formData.deviceType === '0', message: '激光训练器类型', trigger: 'blur' }"
+      >
+        <a-select
+          v-model="formData.deviceGunType"
+          allowClear
+        >
           <a-select-option
             v-for="item in deviceGunType"
             :key="item.value"
@@ -31,10 +47,11 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="设备类型" prop="deviceType">
-        <a-select v-model="formData.deviceType">
+      <a-form-model-item label="设备状态" v-if="type === 1">
+        <!--        <a-input disabled v-model="formData.deviceStatus"></a-input>-->
+        <a-select disabled v-model="formData.deviceStatus">
           <a-select-option
-            v-for="item in deviceType"
+            v-for="item in deviceStatus"
             :key="item.value"
             :value="item.value"
           >{{ item.label }}
@@ -48,7 +65,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import bizMixins from '@views/biz/bizMixins'
-import { deviceGunType, deviceType } from '@views/biz/equipment/equipment.config'
+import { deviceGunType, deviceType, deviceStatus } from '@views/biz/equipment/equipment.config'
 import { bizDeviceSave, bizDeviceUpdate } from '@api/biz'
 export default {
   name: 'equipmentModal',
@@ -63,6 +80,7 @@ export default {
       type: 0,
       deviceGunType,
       deviceType,
+      deviceStatus,
       formData: {
         deviceNum: '',
         deviceStatus: '',
@@ -75,17 +93,17 @@ export default {
         deviceNum: [
           { required: true, message: '请输入设备号', trigger: 'blur' }
         ],
-        deviceStatus: [
-          { required: true, message: '请输入设备状态', trigger: 'blur' }
-        ],
+        // deviceStatus: [
+        //   { required: true, message: '请输入设备状态', trigger: 'blur' }
+        // ],
         deviceType: [
           { required: true, message: '请选择设备类型', trigger: 'blur' }
         ],
         deviceGunType: [
-          { required: true, message: '请选择枪支类型', trigger: 'blur' }
+          { required: false, message: '请选择枪支类型', trigger: 'blur' }
         ],
         deviceVoltage: [
-          { required: true, message: '请输入设备电压', trigger: 'blur' }
+          { required: true, message: '请输入设备电量', trigger: 'blur' }
         ],
       }
     }
@@ -97,10 +115,13 @@ export default {
           if (this.type === 0) {
             const data = JSON.parse(JSON.stringify(this.formData))
             delete data.deviceId
+            delete data.deviceStatus
             bizDeviceSave(data).then(this.quit)
           }
           if (this.type === 1) {
-            bizDeviceUpdate(this.formData).then(this.quit)
+            const data = JSON.parse(JSON.stringify(this.formData))
+            delete data.deviceStatus
+            bizDeviceUpdate(data).then(this.quit)
           }
         }
       })

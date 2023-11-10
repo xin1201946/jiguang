@@ -145,6 +145,12 @@ export function downFile(url,parameter, method='get'){
 
 }
 
+export const download = (url) => axios({
+  url: url,
+  method: 'get' ,
+  responseType: 'blob'
+})
+
 /**
  * 下载文件
  * @param url 文件路径
