@@ -25,10 +25,27 @@
           <a-space>
             <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record)">编辑</a-button>
             <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+<!--            <a-dropdown trigger="click">
+              <a-button size="small" icon="small-dash" />
+              <a-menu slot="overlay">
+                <a-menu-item @click="handleControl(record)">
+                  设备控制
+                </a-menu-item>
+                <a-menu-item @click="handleDisPlay(record)">
+                  设备显示
+                </a-menu-item>
+                <a-menu-item @click="handleProject(record)">
+                  项目控制
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>-->
           </a-space>
         </template>
       </a-table>
       <EquipmentModal ref="modal" @list="handleList"></EquipmentModal>
+<!--      <ProjectModal ref="project"></ProjectModal>-->
+<!--      <ControlModal ref="control"></ControlModal>-->
+<!--      <DisplayModal ref="display"></DisplayModal>-->
     </template>
   </Card>
 </template>
@@ -41,13 +58,18 @@ import { equipmentColumns, equipmentQuery, deviceGunType } from '@views/biz/equi
 import { deleteMessage } from '@/utils'
 import { bizDevicePageList, bizDeviceDelete } from '@api/biz'
 import EquipmentModal from '@views/biz/equipment/modal/equipmentModal.vue'
-import { getLabel } from '@/utils'
+// import ProjectModal from '@views/biz/equipment/modal/ProjectModal.vue'
+// import ControlModal from '@views/biz/equipment/modal/ControlModal.vue'
+// import DisplayModal from '@views/biz/equipment/modal/DisplayModal.vue'
 export default {
   name: 'equipment',
   components: {
     Card,
     QuerySearch,
-    EquipmentModal
+    EquipmentModal,
+    // ProjectModal,
+    // ControlModal,
+    // DisplayModal
   },
   mixins: [bizMixins],
   data() {
@@ -68,7 +90,6 @@ export default {
     this.getList()
   },
   methods: {
-    getLabel,
     getList() {
       const data = {
         ...this.query,
@@ -85,13 +106,27 @@ export default {
       deleteMessage().then(() => {
         bizDeviceDelete(record.deviceId).then(res => {
           if (res.code === 200) {
-            this.getList()
+            if (this.data.length === 1) {
+              this.pagination.current = this.pagination.current - 1
+            }
+            this.$nextTick(() => {
+              this.getList()
+            })
             this.$message.success(res.message)
           }else {
             this.$message.warning(res.message)
           }
         })
       })
+    },
+    handleDisPlay(record) {
+      this.$refs.display.init(record)
+    },
+    handleControl(record) {
+      this.$refs.control.init(record)
+    },
+    handleProject(record) {
+      this.$refs.project.init(record)
     }
   }
 }

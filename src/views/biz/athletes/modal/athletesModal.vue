@@ -4,6 +4,7 @@
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"
+    :loading="loadingModal"
   >
     <a-form-model
       :labelCol="{span: 6}"
@@ -94,6 +95,7 @@ export default {
     handleOk() {
       this.$refs.form.validate((v) => {
         if (v) {
+          this.loadingModal = true
           if (this.type === 0) {
             const data = JSON.parse(JSON.stringify(this.formData))
             delete data.entryFormId
@@ -105,6 +107,7 @@ export default {
               }else {
                 this.$message.warning(res.message)
               }
+              this.loadingModal = false
             })
           }else{
             bizEntryFormUpdate(this.formData).then(res => {
@@ -115,6 +118,7 @@ export default {
               }else {
                 this.$message.warning(res.message)
               }
+              this.loadingModal = false
             })
           }
         }

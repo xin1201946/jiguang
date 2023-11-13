@@ -4,10 +4,15 @@
     :title="title"
     :maskClosable="false"
     :keyboard="false"
-    @ok="handleOk"
     @cancel="handleCancel"
   >
     <slot></slot>
+    <template slot="footer">
+      <a-space>
+        <a-button @click="handleCancel">取消</a-button>
+        <a-button :loading="loading" type="primary" @click="handleOk">确定</a-button>
+      </a-space>
+    </template>
   </a-modal>
 </template>
 
@@ -22,6 +27,10 @@ export default {
     title: {
       required: true,
       type: String
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

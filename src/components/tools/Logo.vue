@@ -21,7 +21,7 @@
     props: {
       title: {
         type: String,
-        default: '激光射击系统',
+        default: window._CONFIG.logo,
         required: false
       },
       showTitle: {

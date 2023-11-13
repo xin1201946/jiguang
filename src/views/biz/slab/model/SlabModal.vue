@@ -4,6 +4,7 @@
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"
+    :loading="loadingModal"
   >
     <a-form-model
       :labelCol="{span: 6}"
@@ -15,7 +16,7 @@
       <a-form-model-item label="设备编号枪" prop="deviceNum0">
         <a-select v-model="formData.deviceNum0">
           <a-select-option
-            v-for="item in device.filter(item => item.deviceType === '0')"
+            v-for="item in types.device.filter(item => item.deviceType === '0')"
             :key="item.deviceId"
             :value="item.deviceNum"
           >{{ item.deviceNum }}</a-select-option>
@@ -24,7 +25,7 @@
       <a-form-model-item label="设备编号靶" prop="deviceNum1">
         <a-select v-model="formData.deviceNum1">
           <a-select-option
-            v-for="item in device.filter(item => item.deviceType === '1')"
+            v-for="item in types.device.filter(item => item.deviceType === '1')"
             :key="item.deviceId"
             :value="item.deviceNum"
           >{{ item.deviceNum }}</a-select-option>
@@ -116,6 +117,7 @@ export default {
     handleOk() {
       this.$refs.form.validate(v => {
         if (v) {
+          this.loadingModal = true
           if (this.type === 0) {
             const data = JSON.parse(JSON.stringify(this.formData))
             delete data.tabletPcId
@@ -139,6 +141,7 @@ export default {
       }else {
         this.$message.warning(res.message)
       }
+      this.loadingModal = false
     },
   }
 }

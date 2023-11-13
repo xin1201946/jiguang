@@ -208,7 +208,7 @@ export const displayTableColumns = [
  /*  {
     title: '操作',
     align: 'center',
-    dataIndex: 'deviceControlId',
+    dataIndex: 'deviceDisplayId',
     scopedSlots: {
       customRender: 'operation'
     },

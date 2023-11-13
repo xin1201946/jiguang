@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo1.png" class="logo" alt="logo">
-            <span class="title">激光射击系统</span>
+            <span class="title">{{ logo }}</span>
           </a>
         </div>
 <!--        <div class="desc">-->
@@ -38,7 +38,9 @@
     components: { RouteView },
     mixins: [mixinDevice],
     data () {
-      return {}
+      return {
+        logo: window._CONFIG.logo
+      }
     },
     mounted () {
       document.body.classList.add('userLayout')

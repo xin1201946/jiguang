@@ -127,28 +127,18 @@ export function saveService(parameter) {
  * @returns {*}
  */
 export function downFile(url,parameter, method='get'){
-  if(method=='get'){
-    return axios({
-      url: url,
-      params: parameter,
-      method: method ,
-      responseType: 'blob'
-    })
-  }else{
-    return axios({
-      url: url,
-      method: method,
-      data: parameter,
-      responseType: 'blob'
-    })
-  }
-
+  return axios({
+    url: url,
+    params: parameter,
+    method: method ,
+    responseType: 'blob',
+  })
 }
 
 export const download = (url) => axios({
   url: url,
   method: 'get' ,
-  responseType: 'blob'
+  responseType: 'blob',
 })
 
 /**

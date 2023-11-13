@@ -26,7 +26,7 @@ export const bizEntryFormUpdate = data => postAction("/bizEntryForm/update", dat
 export const bizEntryFormList = data => postAction("/bizEntryForm/list", data)
 // 下载
 export const bizEntryFormGetImportTemplate = () => download("bizEntryForm/getImportTemplate")
-
+// export const bizEntryFormGetImportTemplate = () =
 /**
  * 项目
  */

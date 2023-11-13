@@ -26,10 +26,11 @@ const bizMixins = {
         pageSize: 10,
         total: 20
       },
-      device: [],
       types: {
-        tablePc: []
-      }
+        tablePc: [],
+        device: []
+      },
+      loadingModal: false
     }
   },
   methods: {
@@ -45,7 +46,6 @@ const bizMixins = {
       }else {
         this.$refs.modal.init()
       }
-
     },
     // 查询重置按钮
     handleSearch(data) {
@@ -62,15 +62,22 @@ const bizMixins = {
       this.getList()
     },
     // 点击编辑
-    handleEdit(record) {
-      this.$refs.modal.edit(record)
+    handleEdit(record, type) {
+      if (type) {
+        this.$refs.modal.edit(record, type)
+      }else {
+        this.$refs.modal.edit(record)
+      }
     },
     // 编辑弹窗初始化
     edit(row, type) {
       this.visible = true
+      this.loadingModal = false
       this.title = '修改'
       this.type = 1
-      this.getType(type)
+      if (type){
+        this.getType(type)
+      }
       this.$nextTick(() => {
         for (const key in this.formData) {
           this.formData[key] = row[key]
@@ -78,14 +85,13 @@ const bizMixins = {
         this.$refs.form.clearValidate()
       })
     },
-    // 设置type
+    // 设置types
     getType(type) {
       switch (type) {
         // 设备集合
         case 'device':
           bizDeviceList({}).then(res => {
-            console.log(res)
-            this[type] = res.result
+            this.types[type] = res.result
           })
           break
         // 平板集合
@@ -98,10 +104,13 @@ const bizMixins = {
     },
     // 添加弹窗初始化
     init(type) {
+      this.loadingModal = false
       this.visible = true
       this.title = '添加'
       this.type = 0
-      this.getType(type)
+      if (type){
+        this.getType(type)
+      }
       this.$nextTick(() => {
         for (const key in this.formData) {
           this.formData[key] = undefined
@@ -121,7 +130,9 @@ const bizMixins = {
         if (response.code === 200) {
           this.$message.success("导入成功")
           this.pagination.current = 1
-          this.getList()
+          this.$nextTick(() => {
+            this.getList()
+          })
         }else {
           this.$message.warning(response.message)
         }
@@ -131,11 +142,12 @@ const bizMixins = {
       if (!data || data.size === 0){
         this.$message.warning("文件下载失败")
       }else{
-        const url = window.URL.createObjectURL(new Blob([data]), name)
-        const a = document.createElement("a")
-        a.style.display = "none"
+        const blob = new Blob([data], {type: 'application/vnd.ms-excel'})
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.style.display = 'none'
         a.href = url
-        a.setAttribute("download", name)
+        a.setAttribute('download', name)
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
@@ -150,6 +162,7 @@ const bizMixins = {
       }else {
         this.$message.warning(res.message)
       }
+      this.loadingModal = false
     },
   }
 }

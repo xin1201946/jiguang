@@ -118,8 +118,10 @@ export default {
       this.form.resetFields(this.resets)
       this.$nextTick(() => {
         const obj = {}
-        for (const item of this.resets) {
-          obj[item] = undefined
+        if (this.resets.length) {
+          for (const item of this.resets) {
+            obj[item] = undefined
+          }
         }
         this.$emit('reset', obj)
       })

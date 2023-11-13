@@ -15,7 +15,7 @@
     <a-table
       :columns="columns"
       :data-source="data"
-      rowKey="deviceControlId"
+      rowKey="deviceDisplayId"
       :pagination="pagination"
       @change="handleTableChange"
       bordered
@@ -88,7 +88,12 @@ export default {
       deleteMessage().then(() => {
         displayDelete(record.deviceDisplayId).then(res => {
           if (res.code === 200) {
-            this.getList()
+            if (this.data.length === 1) {
+              this.pagination.current = this.pagination.current - 1
+            }
+            this.$nextTick(() => {
+              this.getList()
+            })
             this.$message.success(res.message)
           }else {
             this.$message.warning(res.message)

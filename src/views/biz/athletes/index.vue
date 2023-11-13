@@ -54,6 +54,7 @@ import { bizEntryFormDelete, bizEntryFormPageList, bizEntryFormGetImportTemplate
 import AthletesModal from '@views/biz/athletes/modal/athletesModal.vue'
 import { deleteMessage } from '@/utils'
 import bizMixins from '@views/biz/bizMixins'
+import { downFile } from '@api/manage'
 export default {
   name: 'athletes',
   components: {
@@ -88,7 +89,12 @@ export default {
       deleteMessage().then(() => {
         bizEntryFormDelete(record.entryFormId).then(res => {
           if (res.code === 200) {
-            this.getList()
+            if (this.data.length === 1) {
+              this.pagination.current = this.pagination.current - 1
+            }
+            this.$nextTick(() => {
+              this.getList()
+            })
             this.$message.success(res.message)
           }else {
             this.$message.warning(res.message)

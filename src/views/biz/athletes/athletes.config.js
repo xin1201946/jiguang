@@ -46,8 +46,8 @@ export const athletesQuery = [
       'entryType',
       { rules: [{ required: false, message: '请选择类型' }] }
     ],
-    label: '人员类型',
-    placehorder: '请选择类型',
+    label: '类别',
+    placehorder: '请选择类别',
     data: typeData
   }
 ]
@@ -72,7 +72,7 @@ export const athletesColumns = [
     }
   },
   {
-    title: "身份",
+    title: "类别",
     dataIndex: 'entryType',
     align: 'center',
     customRender: (text, record, index) => {

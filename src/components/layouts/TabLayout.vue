@@ -183,7 +183,7 @@
        * @param title 要修改的新标题
        */
       changeTitle(title) {
-        let projectTitle = "激光射击系统"
+        let projectTitle = window._CONFIG.logo
         // 首页特殊处理
         if (this.$route.path === indexKey) {
           document.title = projectTitle

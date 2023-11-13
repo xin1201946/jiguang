@@ -49,7 +49,7 @@ Overview
     - default 内容
 - TreeCard
   - slot
-    - tree左侧
+    - tree 左侧内容
     - query 右侧查询
     - operator 右侧操作
     - default 右侧内容

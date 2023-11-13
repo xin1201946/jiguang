@@ -17,8 +17,8 @@
         :type="collapsed ? 'menu-unfold' : 'menu-fold'"
         @click="toggle"/>
 
-      <span v-if="device === 'desktop'">欢迎进入 激光射击系统平台</span>
-      <span v-else>Jeecg-Boot</span>
+      <span v-if="device === 'desktop'">欢迎进入 {{ logo }}</span>
+      <span v-else>{{ logo }}</span>
 
       <user-menu :theme="theme"/>
     </div>
@@ -99,6 +99,7 @@
           topSmenuStyle: {}
         },
         chatStatus: '',
+        logo: window._CONFIG.logo
       }
     },
     watch: {
