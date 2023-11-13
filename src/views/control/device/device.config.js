@@ -103,7 +103,8 @@ export const deviceQuery = [
     ],
     data: targetCollect,
     label: '靶机倾角采集',
-    placehorder: '请选择靶机倾角采集'
+    placehorder: '请选择靶机倾角采集',
+    span: 4
   },
   {
     type: 'select',
@@ -113,7 +114,8 @@ export const deviceQuery = [
     ],
     data: triggerCollect,
     label: '扳机预压采集',
-    placehorder: '请选择扳机预压采集'
+    placehorder: '请选择扳机预压采集',
+    span: 4
   }
 ]
 export const deviceTableColumns = [

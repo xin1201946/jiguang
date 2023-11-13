@@ -65,7 +65,7 @@ export default {
 
 <style scoped lang="less">
 .list{
-  margin: 10px 20px;
+  margin: 10px 6px;
   box-sizing: border-box;
   display: inline-flex;
   border-radius: 10px;

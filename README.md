@@ -6,12 +6,6 @@ Ant Design Jeecg Vue
 Overview
 ----
 
-基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro  Vue 版
-Jeecg-boot 的前端UI框架，采用前后端分离方案，提供强大代码生成器的低代码平台。
-前端页面代码和后端功能代码一键生成，不需要写任何代码，保持jeecg一贯的强大！！
-
-
-
 #### 前端技术
  
 - 基础框架：[ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
@@ -24,6 +18,44 @@ Jeecg-boot 的前端UI框架，采用前后端分离方案，提供强大代码�
 - [vue-cropper](https://github.com/xyxiao001/vue-cropper) - 头像裁剪组件
 - [@antv/g2](https://antv.alipay.com/zh-cn/index.html) - Alipay AntV 数据可视化图表
 - [Viser-vue](https://viserjs.github.io/docs.html#/viser/guide/installation)  - antv/g2 封装实现
+
+#### 项目内组件配置
+
+- QuerySearch 查询组件
+  - init方法传参方式为Array类型
+    - ```
+      { 
+        type: "input",
+        rules: [
+          "",
+          {}
+        ],
+        label: "",
+        placehorder: "",
+        span: "",
+        range: ["", ""]
+      }
+      type: input (输入), select (选择), range(日期选择)
+      rules: 第零元素字符, v-model绑定值, 第一元素校验
+      label: 表单左侧文字
+      placehorder: 表单提示文字
+      span: 表单占位格 数字类型 可加可不加 默认为4,label超出4字符后默认为5
+      range: 日期选择查询开始和结束时间 可加可不加, 开始默认start结束默认end
+      -
+- Card
+  - slot
+    - query 查询
+    - operator 操作
+    - default 内容
+- TreeCard
+  - slot
+    - tree左侧
+    - query 右侧查询
+    - operator 右侧操作
+    - default 右侧内容
+
+
+
 
 
 
@@ -55,32 +87,6 @@ yarn run build
 ```
 yarn run lint
 ```
-
-Docker镜像启动前端（单体模式）
-----
-
- ``` 
-# 1.配置host
-
-    127.0.0.1   jeecg-boot-system
-
-# 2.修改前端项目的后台域名
-    .env.development
-    域名改成： http://jeecg-boot-system:8080/jeecg-boot
-   
-# 3.进入项目根目录，执行打包命令
-  yarn run build
-
-# 4.构建镜像
-  docker build -t jeecgboot-ui2 .
-
-# 5.启动镜像
-  docker run --name jeecgboot-ui-vue2 -p 80:80 -d jeecgboot-ui2
-
-# 6.访问前台项目
-  http://localhost
-``` 
-
 
 
 其他说明

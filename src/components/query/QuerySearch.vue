@@ -5,7 +5,11 @@
     layout="inline"
   >
     <a-row v-if="formData.length" :gutter="24">
-      <a-col :span="item.label.length > 5 ? 5 : 4" v-for="(item,i) in formData" :key="i">
+      <a-col
+        :span="item.span || (item.label.length > 5 ? 5 : 4) "
+        v-for="(item,i) in formData"
+        :key="i"
+      >
         <a-form-item colon :label="item.label">
 <!--          普通输入框-->
           <template v-if="item.type === 'input'">
@@ -73,10 +77,15 @@ export default {
   },
   methods: {
     init(arr) {
-      this.formData = arr
-      this.resets = []
-      for (const item of arr) {
-        this.resets.push(item.rules[0])
+      if (arr) {
+        this.formData = arr
+        this.resets = []
+        for (const item of arr) {
+          this.resets.push(item.rules[0])
+        }
+      }else {
+        this.formData = []
+        this.resets = []
       }
     },
     handleSubmit (e) {
@@ -93,8 +102,8 @@ export default {
           for (const key in values) {
             if (Array.isArray(values[key])) {
               const range = this.formData.filter(item => item.range).length ? this.formData.filter(item => item.range)[0].range : [null, null]
-              obj[key + (range[0] || 'start') ] = values[key][0]
-              obj[key + (range[1] || 'end') ] = values[key][1]
+              obj[(range[0] || 'start')] = values[key][0]
+              obj[(range[1] || 'end')] = values[key][1]
             }else {
               obj[key] = values[key]
             }
