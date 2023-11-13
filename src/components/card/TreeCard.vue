@@ -31,6 +31,7 @@ export default {
 .treeCard{
   display: flex;
   height: 100%;
+  padding-bottom: 20px;
   &_tree{
     min-width: 200px;
     margin-right: 10px;

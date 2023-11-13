@@ -27,7 +27,9 @@ const bizMixins = {
         total: 20
       },
       device: [],
-      type: {}
+      types: {
+        tablePc: []
+      }
     }
   },
   methods: {
@@ -76,18 +78,22 @@ const bizMixins = {
         this.$refs.form.clearValidate()
       })
     },
+    // 设置type
     getType(type) {
       switch (type) {
+        // 设备集合
         case 'device':
           bizDeviceList({}).then(res => {
             console.log(res)
             this[type] = res.result
           })
           break
+        // 平板集合
         case 'tablePc':
           bizTabletPcList().then(res => {
-            this.type[type] = res.result
+            this.types[type] = res.result
           })
+          break
       }
     },
     // 添加弹窗初始化
@@ -135,7 +141,16 @@ const bizMixins = {
         document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
       }
-    }
+    },
+    callback(res) {
+      if (res.code === 200) {
+        this.$message.success(res.message)
+        this.handleCancel()
+        this.$emit("list")
+      }else {
+        this.$message.warning(res.message)
+      }
+    },
   }
 }
 

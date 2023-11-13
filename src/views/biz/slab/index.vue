@@ -9,7 +9,7 @@
     </template>
     <template slot="operator">
       <a-space>
-        <a-button type="primary" @click="handleAdd('device')">添加</a-button>
+        <a-button type="primary" @click="handleAdd('device')" icon="plus">添加</a-button>
       </a-space>
     </template>
     <template slot="default">

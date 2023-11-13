@@ -4,7 +4,7 @@
     @submit="handleSubmit"
     layout="inline"
   >
-    <a-row :gutter="24">
+    <a-row v-if="formData.length" :gutter="24">
       <a-col :span="item.label.length > 5 ? 5 : 4" v-for="(item,i) in formData" :key="i">
         <a-form-item colon :label="item.label">
 <!--          普通输入框-->
@@ -37,6 +37,15 @@
               allowClear
               v-decorator="item.rules"
             ></a-input>
+          </template>
+<!--          日期范围-->
+          <template v-else-if="item.type === 'range'">
+            <a-range-picker
+              allowClear
+              valueFormat="YYYY-MM-DD HH:mm:ss"
+              :placehorder="item.placehorder"
+              v-decorator="item.rules"
+            ></a-range-picker>
           </template>
         </a-form-item>
       </a-col>
@@ -73,7 +82,27 @@ export default {
     handleSubmit (e) {
       e.preventDefault();
       this.form.validateFields( (errors, values) => {
-        this.$emit("submit", values)
+        let flag = false
+        for (const key in values) {
+          if (Array.isArray(values[key])) {
+            flag = true
+          }
+        }
+        if (flag) {
+          const obj = {}
+          for (const key in values) {
+            if (Array.isArray(values[key])) {
+              const range = this.formData.filter(item => item.range).length ? this.formData.filter(item => item.range)[0].range : [null, null]
+              obj[key + (range[0] || 'start') ] = values[key][0]
+              obj[key + (range[1] || 'end') ] = values[key][1]
+            }else {
+              obj[key] = values[key]
+            }
+          }
+          this.$emit("submit", obj)
+        }else {
+          this.$emit("submit", values)
+        }
       })
     },
     handleReset() {
