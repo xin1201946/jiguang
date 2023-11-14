@@ -24,7 +24,7 @@ const bizMixins = {
       pagination: {
         current: 1,
         pageSize: 10,
-        total: 20
+        total: 0
       },
       types: {
         tablePc: [],
@@ -82,7 +82,9 @@ const bizMixins = {
         for (const key in this.formData) {
           this.formData[key] = row[key]
         }
-        this.$refs.form.clearValidate()
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
+        }
       })
     },
     // 设置types
@@ -115,7 +117,9 @@ const bizMixins = {
         for (const key in this.formData) {
           this.formData[key] = undefined
         }
-        this.$refs.form.clearValidate()
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
+        }
       })
     },
    // 导入

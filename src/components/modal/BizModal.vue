@@ -5,6 +5,7 @@
     :maskClosable="false"
     :keyboard="false"
     @cancel="handleCancel"
+    :width="width"
   >
     <slot></slot>
     <template slot="footer">
@@ -31,6 +32,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    width: {
+      type: Number,
+      default: 520
     }
   },
   data() {

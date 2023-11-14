@@ -13,6 +13,7 @@
       <br/>
       <br/>
       <br/>
+      <h1 style="text-align: center">登录</h1>
       <login-account ref="alogin" @validateFail="validateFail" @success="requestSuccess" @fail="requestFailed"></login-account>
       <a-form-model-item>
         <a-checkbox @change="handleRememberMeChange" default-checked>自动登录</a-checkbox>
