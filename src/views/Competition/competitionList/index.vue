@@ -17,7 +17,7 @@
     </template>
     <a-table
       :columns="columns"
-      rowKey="id"
+      rowKey="contestId"
       :dataSource="data"
       :pagination="pagination"
       @change="handleTableChange"
@@ -30,13 +30,14 @@
             size="small"
             ghost
             icon="edit"
-            @click="handleEdit(record, 'device')"
+            @click="handleEdita(record)"
           >编辑</a-button>
           <a-button
             type="primary"
             size="small"
             ghost
             icon="edit"
+            @click="handleEditPhase(record)"
           >编辑比赛</a-button>
           <a-button
             type="primary"
@@ -65,6 +66,7 @@ import { competitionListQuery, competitionListTableColumns } from '@views/Compet
 import BizMixins from '@views/biz/bizMixins'
 import CompetitionListModal from '@views/Competition/competitionList/modal/competitionListModal.vue'
 import { deleteMessage } from '@/utils'
+import { bizContestDelete, bizContestPageList } from '@api/competition'
 export default {
   name: 'competitionList',
   components: {
@@ -84,17 +86,56 @@ export default {
       }
     }
   },
+
   mounted() {
     this.$refs.query.init(competitionListQuery)
     this.getList()
   },
   methods: {
     getList() {
-
+      const data = {
+        ...this.query,
+        pageNum: this.pagination.current,
+        pageSize: this.pagination.pageSize
+      }
+      bizContestPageList(data).then(res => {
+        if (res.code === 200) {
+          this.data = res.result.records
+          this.pagination.current = res.result.current
+          this.pagination.total = res.result.total
+        }
+      })
+    },
+    handleEdita(record) {
+      const data = JSON.parse(JSON.stringify(record))
+      data.contestTime = [data.contestTimeStart, data.contestTimeEnd]
+      data.registTime = [data.registTimeStart, data.registTimeEnd]
+      this.handleEdit(data)
+    },
+    handleEditPhase(record) {
+      // /competition/projectPhase
+      this.$router.push({
+        path: "/competition/projectPhase",
+        query: {
+          id: record.contestId
+        }
+      })
     },
     handleDelete (record) {
       deleteMessage().then(() => {
-
+        bizContestDelete(record.contestId).then(res => {
+          if (res.code === 200) {
+            if (this.data.length === 1) {
+              this.pagination.current = this.pagination.current - 1
+            }
+            this.$nextTick(() => {
+              this.getList()
+            })
+            this.$message.success(res.message)
+          }else {
+            this.$message.warning(res.message)
+          }
+        })
       })
     }
   }

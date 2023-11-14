@@ -39,7 +39,7 @@ export const bizProjectUpdate = data => postAction('bizProject/update', data)
 // 项目删除
 export const bizProjectDelete = id => deleteAction(`bizProject/delete/${id}`)
 // 项目不分页查询
-export const bizProjectList = data => postAction("bizProject/list", data)
+export const bizProjectList = (data = {}) => postAction("bizProject/list", data)
 
 /**
  * 设备

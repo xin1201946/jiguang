@@ -66,12 +66,12 @@ export const competitionListQuery = [
 export const competitionListTableColumns = [
   {
     title: "赛事名称",
-    dataIndex: "name",
+    dataIndex: "contestName",
     align: 'center'
   },
   {
     title: "赛事类型",
-    dataIndex: "conType",
+    dataIndex: "contestType",
     align: 'center'
   },
   {
@@ -83,12 +83,18 @@ export const competitionListTableColumns = [
   {
     title: "报名时间",
     dataIndex: "registTime",
-    align: 'center'
+    align: 'center',
+    customRender: (text, record) => {
+      return `${record.registTimeStart} - ${record.registTimeEnd}`
+    }
   },
   {
     title: "比赛时间",
     dataIndex: "contestTime",
-    align: 'center'
+    align: 'center',
+    customRender: (text, record) => {
+      return `${record.contestTimeStart} - ${record.contestTimeEnd}`
+    }
   },
   {
     title: "主办方",
@@ -102,14 +108,14 @@ export const competitionListTableColumns = [
   },
   {
     title: "当前状态",
-    dataIndex: "status",
+    dataIndex: "contestStatus",
     align: 'center',
     customRender: text => getLabel(status, text)
   },
   {
     title: '操作',
     align: 'center',
-    dataIndex: 'id',
+    dataIndex: 'contestId',
     scopedSlots: {
       customRender: 'operation'
     },

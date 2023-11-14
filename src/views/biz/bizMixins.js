@@ -115,7 +115,11 @@ const bizMixins = {
       }
       this.$nextTick(() => {
         for (const key in this.formData) {
-          this.formData[key] = undefined
+          if (Array.isArray(this.formData[key])) {
+            this.formData[key] = []
+          }else {
+            this.formData[key] = ""
+          }
         }
         if (this.$refs.form) {
           this.$refs.form.clearValidate()

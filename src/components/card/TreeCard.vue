@@ -7,14 +7,16 @@
     </div>
     <div class="treeCard_card">
       <a-card :bordered="false">
-        <div class="table-page-search-wrapper">
-          <slot name="query"></slot>
-        </div>
-        <div class="table-operator">
-          <slot name="operator"></slot>
-        </div>
-        <div class="table">
-          <slot></slot>
+        <div style="display: flex;flex-direction: column;height: 100%">
+          <div class="table-page-search-wrapper">
+            <slot name="query"></slot>
+          </div>
+          <div class="table-operator">
+            <slot name="operator"></slot>
+          </div>
+          <div class="table">
+            <slot></slot>
+          </div>
         </div>
       </a-card>
     </div>
@@ -34,15 +36,22 @@ export default {
   padding-bottom: 20px;
   &_tree{
     min-width: 200px;
+    max-width: 400px;
     margin-right: 10px;
     height: 100%;
+    overflow-y: hidden;
   }
   &_card{
     height: 100%;
     flex: 1;
     overflow-y: hidden;
   }
-
+  .table{
+    flex: 1;
+  }
+  /deep/.ant-card-body{
+    height: 100%;
+  }
   /deep/.ant-card{
     height: 100%;
     width: 100%;
