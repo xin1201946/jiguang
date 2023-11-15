@@ -18,7 +18,9 @@
           <a-input v-model="formData.stageName"></a-input>
         </a-form-model-item>
         <a-form-model-item label="阶段顺序" prop="stageOrder">
-          <a-input v-model="formData.stageOrder"></a-input>
+          <a-input
+            oninput="value=value.replace(/[^\d]/g,'')"
+            v-model="formData.stageOrder"/>
         </a-form-model-item>
         <a-form-model-item
           label="是否团体排名"

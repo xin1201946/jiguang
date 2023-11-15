@@ -122,7 +122,7 @@ export default {
       })
     },
     handleDelete (record) {
-      deleteMessage().then(() => {
+      deleteMessage("删除当前赛事,会删除下属赛事项目、项目阶段、项目设备,是否删除该条信息").then(() => {
         bizContestDelete(record.contestId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

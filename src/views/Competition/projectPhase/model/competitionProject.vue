@@ -151,6 +151,10 @@ export default {
       }
       bizContestProjectPageList(data).then(res => {
         this.data = res.result.records
+        if (this.data.length) {
+          this.selectedRowKeys = [this.data[0].cproId]
+          this.$emit("change", [this.data[0].cproId])
+        }
         this.pagination.current = res.result.current
         this.pagination.total = res.result.total
       })
@@ -179,7 +183,7 @@ export default {
       this.$refs.modal.edit(record)
     },
     handleDelete(record) {
-      deleteMessage().then(() => {
+      deleteMessage('删除当前项目,会删除下属项目阶段、项目设备,是否删除该条信息').then(() => {
         bizContestProjectDelete(record.cproId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

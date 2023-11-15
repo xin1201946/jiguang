@@ -116,7 +116,7 @@ export default {
       this.$refs.modal.edit(record,this.id)
     },
     handleDelete(record) {
-      deleteMessage().then(() => {
+      deleteMessage('删除项目设备,是否删除该条信息').then(() => {
         bizContestProjectDeviceDelete(record.cproDeviceId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {
