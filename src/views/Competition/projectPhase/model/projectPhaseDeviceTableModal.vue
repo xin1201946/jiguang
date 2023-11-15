@@ -13,7 +13,7 @@
       ref="form"
       :model="formData"
     >
-      <a-form-model-item label="平板">
+      <a-form-model-item label="平板设备号" prop="tabletPcNum">
         <a-select
           @change="handleChange"
           v-model="formData.tabletPcNum"
@@ -25,13 +25,13 @@
           >{{ item.tabletPcName }}</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="枪">
-        <a-input v-model="formData.gunDeviceNum"></a-input>
+      <a-form-model-item label="枪设备号" prop="gunDeviceNum">
+        <a-input disabled v-model="formData.gunDeviceNum"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="靶">
-        <a-input v-model="formData.targetDeviceNum"></a-input>
+      <a-form-model-item label="靶设备号" prop="targetDeviceNum">
+        <a-input disabled v-model="formData.targetDeviceNum"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="靶位">
+      <a-form-model-item label="靶位" prop="targetSite">
         <a-input v-model="formData.targetSite"></a-input>
       </a-form-model-item>
     </a-form-model>
@@ -62,10 +62,18 @@ export default {
       },
       tableList: [],
       rules: {
-        targetSite: [],
-        targetDeviceNum: [],
-        tabletPcNum: [],
-        gunDeviceNum: []
+        targetSite: [
+          { required: true, message: '请输入靶位', trigger: 'blur' }
+        ],
+        targetDeviceNum: [
+          { required: true, message: '请选择枪设备号', trigger: 'blur' }
+        ],
+        tabletPcNum: [
+          { required: true, message: '请选择靶设备号', trigger: 'blur' }
+        ],
+        gunDeviceNum: [
+          { required: true, message: '请选择平板状态', trigger: 'blur' }
+        ]
       },
       cproId: ""
     }

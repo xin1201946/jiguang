@@ -9,8 +9,7 @@
     <template slot="operator">
       <div class="operators">
         <a-space>
-          <a-button>确定</a-button>
-          <a-button>返回</a-button>
+          <a-button @click="handleBack">返回</a-button>
         </a-space>
       </div>
     </template>
@@ -41,6 +40,7 @@ import ProjectPhaseDeviceTable from '@views/Competition/projectPhase/model/proje
 import ProjectPhaseStageTable from '@views/Competition/projectPhase/model/projectPhaseStageTable.vue'
 export default {
   name: 'projectPhase',
+  inject: ["closeCurrent"],
   components: {
     TreeCard,
     ProjectPhaseTree,
@@ -65,6 +65,12 @@ export default {
     }
   },
   methods: {
+    handleBack() {
+      this.closeCurrent()
+      this.$nextTick(() => {
+        this.$router.push('/competition/competitionList')
+      })
+    },
     getInfo ({ id }) {
       bizContestQueryById(id).then(res => {
         this.id = id
@@ -75,6 +81,7 @@ export default {
       })
     },
     getChange(cproId) {
+      console.log(cproId)
       this.cproId = String(cproId)
     },
     handleTabsChange(v) {
@@ -100,7 +107,7 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .tables{
   height: 100%;

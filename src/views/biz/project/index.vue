@@ -56,6 +56,7 @@ export default {
       query: {
         groupCount: undefined,
         projectName: undefined,
+        ammo: undefined
       },
     }
   },

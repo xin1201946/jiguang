@@ -29,5 +29,9 @@ export default {
     height: 100%;
     width: 100%;
   }
+  /deep/.ant-card-body{
+    height: 100%;
+    overflow-y: auto;
+  }
 }
 </style>

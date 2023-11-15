@@ -1,51 +1,64 @@
 <template>
-  <div v-if="cproId">
-    <div style="margin-bottom: 20px">
-      <a-space>
-        <a-button
-          type="primary"
-          @click="handleAdd"
-          icon="plus"
-        >添加
-        </a-button>
-      </a-space>
-    </div>
-    <a-table
-      bordered
-      :pagination="pagination"
-      :data-source="data"
-      @change="handleTableChange"
-      rowKey="cproDeviceId"
-      size="small"
-      :columns="columns"
-    >
-      <template slot="operation" slot-scope="text, record, index">
+  <div>
+    <div v-if="cproId">
+      <div style="margin-bottom: 20px">
         <a-space>
           <a-button
             type="primary"
-            size="small"
-            ghost
-            icon="edit"
-            @click="handleEdit(record)"
-          >编辑</a-button>
-          <a-button
-            type="danger"
-            size="small"
-            ghost
-            icon="delete"
-            @click="handleDelete(record)"
-          >删除</a-button>
+            @click="handleAdd"
+            icon="plus"
+          >添加
+          </a-button>
         </a-space>
-      </template>
-    </a-table>
-    <projectPhaseStageTableModal ref="modal" @list="getList"></projectPhaseStageTableModal>
+      </div>
+      <a-table
+        bordered
+        :pagination="pagination"
+        :data-source="data"
+        @change="handleTableChange"
+        rowKey="cproDeviceId"
+        size="small"
+        :columns="columns"
+        :scroll="{ y: 330, x: 1200}"
+      >
+        <template slot="operation" slot-scope="text, record, index">
+          <a-space>
+            <a-button
+              type="primary"
+              size="small"
+              ghost
+              icon="edit"
+              @click="handleEdit(record)"
+            >编辑</a-button>
+            <a-button
+              type="danger"
+              size="small"
+              ghost
+              icon="delete"
+              @click="handleDelete(record)"
+            >删除</a-button>
+          </a-space>
+        </template>
+      </a-table>
+      <projectPhaseStageTableModal ref="modal" @list="getList"></projectPhaseStageTableModal>
+    </div>
+    <div v-else>
+      <a-empty description="暂无数据, 请先选择项目, 如没有项目请先添加项目"/>
+    </div>
   </div>
 </template>
 
 <script>
 import projectPhaseStageTableModal from '@views/Competition/projectPhase/model/projectPhaseStageTableModal.vue'
 import { bizContestProjectStageDelete, bizContestProjectStagePageList } from '@api/competition'
-import { deleteMessage } from '@/utils'
+import { deleteMessage, getLabel } from '@/utils'
+import {
+  integrationMethod,
+  isAdjustment,
+  isGroupRank,
+  playerGroup,
+  scoreModel
+} from '@views/Competition/projectPhase/projectPhase.config'
 export default {
   name: 'projectPhaseStageTable',
   components: {
@@ -78,14 +91,71 @@ export default {
           align: 'center'
         },
         {
-          title: "目标分",
-          dataIndex: "targetScore",
+          title: "是否团体排名",
+          dataIndex: "isGroupRank",
+          align: 'center',
+          width: 120,
+          customRender: text => getLabel(isGroupRank, text)
+        },
+        {
+          title: "参团选手",
+          dataIndex: "playerGroup",
+          align: 'center',
+          customRender: text => getLabel(playerGroup, text)
+        },
+        {
+          title: "参团人数",
+          dataIndex: "playerNum",
           align: 'center'
         },
         {
-          title: "平局得分",
-          dataIndex: "drawScore",
+          title: "积分方式",
+          dataIndex: "integrationMethod",
+          align: 'center',
+          width: 140,
+          customRender: text => getLabel(integrationMethod, text)
+        },
+        {
+          title: "计分模式",
+          dataIndex: "scoreModel",
+          align: 'center',
+          customRender: text => getLabel(scoreModel, text)
+        },
+        {
+          title: "默认组数",
+          dataIndex: "groupCount",
           align: 'center'
+        },
+        {
+          title: "每组枪数",
+          dataIndex: "gunsPerGroup",
+          align: 'center'
+        },
+        {
+          title: "射击时长",
+          dataIndex: "shootPeriod",
+          align: 'center'
+        },
+        {
+          title: "是否试射",
+          dataIndex: "isAdjustment",
+          align: 'center',
+          customRender: text => getLabel(isAdjustment, text)
+        },
+        {
+          title: "晋级名次",
+          dataIndex: "riseNum",
+          align: 'center'
+        },
+        {
+          title: '操作',
+          align: 'center',
+          dataIndex: 'cproDeviceId',
+          scopedSlots: {
+            customRender: 'operation'
+          },
+          width: 200,
+          fixed: 'right'
         }
       ]
     }

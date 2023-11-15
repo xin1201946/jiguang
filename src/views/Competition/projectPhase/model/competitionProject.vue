@@ -17,9 +17,10 @@
       @change="handleTableChange"
       rowKey="cproId"
       size="small"
+      :customRow="customRow"
       :columns="columns"
       :row-selection="rowSelection"
-      :scroll="{ y: 120 }"
+      :scroll="{ y: 130, x: 1200}"
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
@@ -54,12 +55,12 @@ const columns = [
     title: "项目名称",
     dataIndex: "projectName",
     align: "center",
-    width: 200,
   },
   {
     title: "比赛模式",
     dataIndex: "mode",
     align: "center",
+    width: 80,
     customRender: (text) => {
       if (String(text) === '0') {
         return '个人赛'
@@ -72,17 +73,20 @@ const columns = [
   {
     title: "团队人数",
     dataIndex: "groupSize",
-    align: "center"
+    align: "center",
+    width: 80,
   },
   {
     title: "设备数量",
     dataIndex: "deviceNum",
-    align: "center"
+    align: "center",
+    width: 80,
   },
   {
     title: "选手上限",
     dataIndex: "playerLimit",
-    align: "center"
+    align: "center",
+    width: 80,
   },
   {
     title: "报名时间",
@@ -100,7 +104,7 @@ const columns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    width: 200,
+    width: 210,
     fixed: 'right'
   }
 ]
@@ -119,6 +123,7 @@ export default {
       },
       data: [],
       columns,
+      selectedRowKeys: []
     }
   },
   computed: {
@@ -126,7 +131,8 @@ export default {
       return {
         fixed: true,
         type: 'radio',
-        onChange: this.handleChange
+        onChange: this.handleChange,
+        selectedRowKeys: this.selectedRowKeys
       }
     }
   },
@@ -149,7 +155,20 @@ export default {
         this.pagination.total = res.result.total
       })
     },
+    customRow(record) {
+      const that = this
+      return {
+        on: {
+          click(){
+            console.log()
+            that.selectedRowKeys = [record.cproId]
+            that.$emit("change", [record.cproId])
+          }
+        }
+      }
+    },
     handleChange(selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
       this.$emit("change", selectedRowKeys)
     },
     handleTableChange (pagination) {

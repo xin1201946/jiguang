@@ -1,44 +1,50 @@
 <template>
-  <div v-if="cproId">
-    <div style="margin-bottom: 20px">
-      <a-space>
-        <a-button
-          type="primary"
-          @click="handleAdd"
-          icon="plus"
-        >添加
-        </a-button>
-      </a-space>
-    </div>
-    <a-table
-      bordered
-      :pagination="pagination"
-      :data-source="data"
-      @change="handleTableChange"
-      rowKey="cproDeviceId"
-      size="small"
-      :columns="columns"
-    >
-      <template slot="operation" slot-scope="text, record, index">
+  <div>
+    <div v-if="cproId">
+      <div style="margin-bottom: 20px">
         <a-space>
           <a-button
             type="primary"
-            size="small"
-            ghost
-            icon="edit"
-            @click="handleEdit(record)"
-          >编辑</a-button>
-          <a-button
-            type="danger"
-            size="small"
-            ghost
-            icon="delete"
-            @click="handleDelete(record)"
-          >删除</a-button>
+            @click="handleAdd"
+            icon="plus"
+          >添加
+          </a-button>
         </a-space>
-      </template>
-    </a-table>
-    <ProjectPhaseDeviceTableModal ref="modal" @list="getList"></ProjectPhaseDeviceTableModal>
+      </div>
+      <a-table
+        bordered
+        :pagination="pagination"
+        :data-source="data"
+        @change="handleTableChange"
+        rowKey="cproDeviceId"
+        size="small"
+        :columns="columns"
+        :scroll="{ y: 330, x: 1200}"
+      >
+        <template slot="operation" slot-scope="text, record, index">
+          <a-space>
+            <a-button
+              type="primary"
+              size="small"
+              ghost
+              icon="edit"
+              @click="handleEdit(record)"
+            >编辑</a-button>
+            <a-button
+              type="danger"
+              size="small"
+              ghost
+              icon="delete"
+              @click="handleDelete(record)"
+            >删除</a-button>
+          </a-space>
+        </template>
+      </a-table>
+      <ProjectPhaseDeviceTableModal ref="modal" @list="getList"></ProjectPhaseDeviceTableModal>
+    </div>
+    <div v-else style="height: 100%">
+      <a-empty description="暂无数据, 请先选择项目, 如没有项目请先添加项目"/>
+    </div>
   </div>
 </template>
 

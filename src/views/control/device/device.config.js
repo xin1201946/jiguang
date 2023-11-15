@@ -62,7 +62,7 @@ export const deviceQuery = [
       'tabletPcNum',
       { rules: [{ required: false, message: '请输入平板名称' }] },
     ],
-    label: '编号',
+    label: '平板编号',
     placehorder: '请输入平板编号'
   },
   {
