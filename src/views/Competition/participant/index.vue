@@ -3,15 +3,26 @@
     <!--    顶部-->
     <div class="btns">
       <a-space>
-        <!-- <a-button type="primary" @click="handleBack">返回赛事列表</a-button> -->
-        <a-page-header :title="title" @back="handleBack" />
-        <a-upload accept=".xlsx, xls" name="file" method="post" :showUploadList="false" :multiple="false"
-          :headers="tokenHeader" :action="importExcelUrl" :data="(file) => ({ file, contestId })"
-          @change="handleImportExcel">
-          <a-button type="primary" icon="import">导入参赛人员
+        <a-button type="primary" @click="handleBack">返回赛事列表</a-button>
+        <a-upload
+          accept=".xlsx, xls"
+          name="file"
+          method="post"
+          :showUploadList="false"
+          :multiple="false"
+          :headers="tokenHeader"
+          :action="importExcelUrl"
+          :data="(file) => ({file, contestId})"
+          @change="handleImportExcel"
+        >
+          <a-button
+            type="primary"
+            icon="import"
+          >导入参赛人员
           </a-button>
         </a-upload>
-        <a-button type="primary" icon="download" @click="handleDownload">下载参赛人员模板</a-button>
+        <a-button type="primary" icon="download" @click="handleDownload">下载参赛人员模板
+        </a-button>
       </a-space>
     </div>
     <!--    内容-->
@@ -19,7 +30,11 @@
       <TreeCard>
         <!--        左侧树-->
         <template slot="tree">
-          <ParticipantTree @change="handleTreeChange" @contest="handleContest" />
+          <ParticipantTree
+            @change="handleTreeChange"
+            @contest="handleContest"
+          />
+
         </template>
         <template slot="query">
           <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
@@ -29,7 +44,11 @@
             <a-button icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
           </a-space>
         </template>
-        <a-table :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId"
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="pagination"
+          rowKey="playerId"
           @change="handleTableChange" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space>
@@ -59,7 +78,8 @@ import { deleteMessage } from '@/utils'
 import {
   bizContestPlayerDelete,
   bizContestPlayerGetImportTemplate,
-  bizContestProjectPlayerPageList
+  bizContestProjectPlayerPageList,
+  bizContestPlayerList
 } from '@api/competition'
 export default {
   name: 'participant',
@@ -82,9 +102,9 @@ export default {
         groupName: undefined,
         projectGroup: undefined
       },
+      list: [],
       api: 'bizContestPlayer/importExcel',
-      contestId: this.$route.query.id || null,
-      title: undefined,
+      contestId:this.$route.query.id || null
     }
   },
   computed: {
@@ -93,7 +113,6 @@ export default {
     $route: {
       handler() {
         this.contestId = this.$route.query.id || null
-        this.title = this.$route.query.contestName || null
         this.$nextTick(() => {
           this.listInit()
         })
@@ -107,9 +126,9 @@ export default {
   },
   methods: {
     // 获取赛事id
-    handleContest(id) {
-      this.contestId = id
-      this.id = undefined
+    handleContest(contestId, id) {
+      this.contestId = contestId
+      this.id = id
       this.pagination.current = 1
       this.$nextTick(() => {
         this.getList()
@@ -132,10 +151,9 @@ export default {
     // 点击返回赛事列表
     handleBack() {
       this.closeCurrent()
-      this.$route.go(-1)
-      // this.$nextTick(() => {
-      //   this.$router.push('/competition/competitionList')
-      // })
+      this.$nextTick(() => {
+        this.$router.push('/competition/competitionList')
+      })
     },
     // 获取参数人员列表
     getList() {
@@ -161,7 +179,28 @@ export default {
     },
     // 点击编辑人员名单
     handleUserEdit() {
-      this.$refs.user.init()
+      // 获取当前项目所有的人员
+      if (this.id) {
+        bizContestPlayerList({
+          contestId: this.contestId,
+          cproId: this.id
+        }).then(res => {
+          if (res.result.length) {
+            const list = res.result.map(item => item.playerId)
+            this.$refs.user.inits(list, res.result, {
+              contestId: this.contestId,
+              cproId: this.id
+            })
+          }else {
+            this.$refs.user.inits([], [], {
+              contestId: this.contestId,
+              cproId: this.id
+            })
+          }
+        })
+      }else {
+        this.$message.warning("请先选择左侧项目, 再点击编辑人员名单按钮")
+      }
     },
     // 删除
     handleDelete(record) {
@@ -177,14 +216,14 @@ export default {
               this.getList()
             })
             this.$message.success(res.message)
-          } else {
+          }else {
             this.$message.warning(res.message)
           }
         })
       })
     },
     // 下载
-    handleDownload() {
+    handleDownload () {
       bizContestPlayerGetImportTemplate()
         .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
@@ -195,7 +234,8 @@ export default {
 <style scoped lang="less">
 @btnHeight: 50px;
 
-* {}
+* {
+}
 
 .participant {
   height: 100%;
@@ -209,11 +249,7 @@ export default {
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 0 20px 0 0;
-
-    .btns_box {
-      display: flex;
-    }
+    padding: 0 20px;
   }
 
   .cardTrue {
@@ -223,13 +259,5 @@ export default {
   .cardFalse {
     height: 100%;
   }
-}
-
-/deep/.ant-page-header {
-  padding: 16px 24px 16px 10px !important;
-}
-
-/deep/.ant-page-header-back {
-  font-size: 20px;
 }
 </style>

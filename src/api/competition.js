@@ -47,8 +47,9 @@ export const bizContestProjectStageDelete = id => deleteAction(`bizContestProjec
 export const bizContestPlayerGetImportTemplate = () => download("bizContestPlayer/getImportTemplate")
 export const bizContestPlayerDelete = (id) => deleteAction(`bizContestPlayer/delete/${id}`)
 export const bizContestProjectPlayerPageList = (data ) => postAction('bizContestProjectPlayer/page/list', data)
-export const bizContestPlayerList = data => postAction("bizContestPlayer/list", data)
+export const bizContestPlayerList = data => postAction("bizContestProjectPlayer/list", data)
 export const bizContestPlayerUpdate = data => postAction("bizContestPlayer/update", data)
+export const bizContestProjectPlayerUpdatePlayer = data => postAction("bizContestProjectPlayer/updatePlayer", data)
 /**
  * 赛事审核
  */

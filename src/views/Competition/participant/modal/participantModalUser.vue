@@ -12,7 +12,7 @@
       :columns="columns"
       :data-source="data"
       @change="handleTableChange"
-      rowKey="tabletPcId"
+      rowKey="playerId"
       :row-selection="rowSelection"
       bordered
     ></a-table>
@@ -22,6 +22,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import { participantModalUserTableColumns } from '@views/Competition/participant/participant.config'
+import { bizContestProjectPlayerPageList, bizContestProjectPlayerUpdatePlayer } from '@api/competition'
 export default {
   name: 'participantModalUser',
   components: {
@@ -45,21 +46,44 @@ export default {
       columns: participantModalUserTableColumns,
       data: [],
       selectedRowKeys: [],
-      rows: []
+      rows: [],
+      obj: {}
     }
   },
   computed: {
     rowSelection() {
       return {
         fixed: true,
-        type: 'radio',
+        type: 'checkbox',
         onChange: this.handleChange,
-        selectedRowKeys: this.selectedRowKeys
+        selectedRowKeys: this.selectedRowKeys,
       }
     }
   },
   methods: {
-    handleOk () {},
+    handleOk () {
+
+      if (this.selectedRowKeys.length) {
+        this.loading = true
+        bizContestProjectPlayerUpdatePlayer({
+          checkList: this.rows,
+          ...this.obj
+        }).then(res => {
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.handleCancel()
+            this.$emit("list")
+          }else {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      }else {
+        this.handleCancel()
+        this.$emit("list")
+      }
+
+    },
     handleCancel() {
       this.visible = false
     },
@@ -70,26 +94,28 @@ export default {
     },
     getList() {
       const data = {
-        ...this.query,
         pageNum: this.pagination.current,
         pageSize: this.pagination.pageSize
       }
-      /*  if (res.code === 200) {
+      bizContestProjectPlayerPageList(data).then(res => {
+        if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
         }
-        */
+      })
     },
     handleChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.rows = selectedRows
     },
-    init() {
+    inits(arr, arrs, query) {
       this.visible = true
       this.loading = false
-      this.selectedRowKeys =[]
-      this.rows = []
+      this.selectedRowKeys = arr
+      this.rows = arrs
+      this.obj = query
+      this.getList()
     }
   }
 }

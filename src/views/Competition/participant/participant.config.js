@@ -104,24 +104,38 @@ export const participantTableColumns = [
 
 export const participantModalUserTableColumns = [
   {
+    title: "选手编号",
+    dataIndex: 'serialNumber',
+    align: 'center',
+  },
+  {
     title: "姓名",
-     align: 'center',
+    dataIndex: 'playerName',
+    align: 'center',
   },
   {
     title: "性别",
-     align: 'center',
+    align: 'center',
+    dataIndex: 'playerSex',
+    customRender: text => {
+
+      return getLabel(sexData, text)
+    }
   },
   {
-    title: "身份证",
-     align: 'center',
+    title: "身份证号",
+    align: 'center',
+    dataIndex: 'idCardNum',
   },
   {
     title: "团体名称",
-     align: 'center',
+    align: 'center',
+    dataIndex: 'groupName',
   },
   {
-    title: "是否团体排名",
+    title: "项目组别",
     align: 'center',
-    //   customRender: (text) =>
+    dataIndex: 'projectGroup',
+    customRender: text => getLabel(projectGroup, text)
   },
 ]
