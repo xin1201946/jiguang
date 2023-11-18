@@ -1,4 +1,5 @@
 import { getLabel } from '@/utils'
+import { tabletPcModel, tabletPcStatus } from '@views/biz/slab/slab.config'
 // 报靶控制
 export const indicateTargetControl = [
   {
@@ -56,7 +57,7 @@ export const triggerCollect = [
 ]
 
 export const deviceQuery = [
-  {
+/*   {
     type: "input",
     rules: [
       'tabletPcNum',
@@ -116,6 +117,35 @@ export const deviceQuery = [
     label: '扳机预压采集',
     placehorder: '请选择扳机预压采集',
     span: 4
+  } */
+  {
+    type: "input",
+    rules: [
+      'tabletPcName',
+      { rules: [{ required: false, message: '请输入平板名称' }] },
+    ],
+    label: '平板名称',
+    placehorder: '请输入平板名称'
+  },
+  {
+    type: 'select',
+    rules: [
+      'tabletPcStatus',
+      { rules: [{ required: false, message: '请选择当前模式' }] },
+    ],
+    label: '平板状态',
+    placehorder: '请选择当前模式',
+    data: tabletPcStatus,
+  },
+  {
+    type: 'select',
+    rules: [
+      'tabletPcModel',
+      { rules: [{ required: false, message: '请选择当前模式' }] },
+    ],
+    label: '当前模式',
+    placehorder: '请选择当前模式',
+    data: tabletPcModel,
   }
 ]
 export const deviceTableColumns = [
@@ -125,42 +155,39 @@ export const deviceTableColumns = [
     dataIndex: "tabletPcNum"
   },
   {
-    title: '报靶控制',
-    align: 'center',
-    dataIndex: "indicateTargetControl",
-    customRender: (text) => getLabel(indicateTargetControl, text)
+    title: '平板名称',
+    dataIndex: 'tabletPcName',
+    align: 'center'
   },
   {
-    title: '击发控制',
-    align: 'center',
-    dataIndex: "shootControl",
-    customRender: (text) => getLabel(shootControl, text)
+    title: '激光训练器编号',
+    dataIndex: 'deviceNum0',
+    align: 'center'
   },
   {
-    title: '音效控制',
-    align: 'center',
-    dataIndex: "soundControl",
-    customRender: (text) => getLabel(soundControl, text)
+    title: '激光接收靶编号',
+    dataIndex: 'deviceNum1',
+    align: 'center'
   },
   {
-    title: '靶机倾角采集',
+    title: '平板状态',
+    dataIndex: 'tabletPcStatus',
     align: 'center',
-    dataIndex: "targetCollect",
-    customRender: (text) => getLabel(targetCollect, text)
+    customRender: (text) => getLabel(tabletPcStatus, text)
   },
   {
-    title: '扳机预压采集',
+    title: '当前模式',
+    dataIndex: 'tabletPcModel',
     align: 'center',
-    dataIndex: "triggerCollect",
-    customRender: (text) => getLabel(triggerCollect, text)
+    customRender: (text) => getLabel(tabletPcModel, text)
   },
-  /* {
+  {
     title: '操作',
     align: 'center',
-    dataIndex: 'deviceControlId',
+    dataIndex: 'tabletPcId',
     scopedSlots: {
       customRender: 'operation'
     },
     width: 200
-  } */
+  }
 ]

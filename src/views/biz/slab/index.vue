@@ -10,6 +10,7 @@
     <template slot="operator">
       <a-space>
         <a-button type="primary" @click="handleAdd('device')" icon="plus">添加</a-button>
+        <a-button type="primary" @click="handleSync">同步</a-button>
       </a-space>
     </template>
     <template slot="default">
@@ -37,7 +38,7 @@
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import Card from '@comp/card/card.vue'
 import { slabQuery, slabTableColumns, tabletPcModel } from '@views/biz/slab/slab.config'
-import { bizTabletPcPageList, bizTabletPcDelete } from '@api/biz'
+import { bizTabletPcPageList, bizTabletPcDelete, bizTabletPcSync } from '@api/biz'
 import SlabModal from '@views/biz/slab/model/SlabModal.vue'
 import bizMixins from '@views/biz/bizMixins'
 import { deleteMessage } from '@/utils'
@@ -77,6 +78,17 @@ export default {
           this.data = res.result.records
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
+        }
+      })
+    },
+    handleSync() {
+      bizTabletPcSync().then(res => {
+        if (res.code === 200) {
+          this.$message.success('平板同步成功')
+          this.pagination.current = 1
+          this.getList()
+        }else {
+          this.$message.warning(res.message)
         }
       })
     },

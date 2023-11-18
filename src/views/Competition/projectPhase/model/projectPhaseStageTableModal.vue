@@ -155,8 +155,10 @@
             v-model="formData.groupCount"
           ></a-input>
         </a-form-model-item>
-        <a-form-model-item label="每组枪数" prop="gunsPerGroup">
+        <a-form-model-item label="每组枪数">
           <a-input
+            disabled
+            :readonly="true"
             oninput="value=value.replace(/[^\d]/g,'')"
             v-model="formData.gunsPerGroup"
           ></a-input>
@@ -227,7 +229,7 @@ export default {
         integrationMethod: "",
         scoreModel: "",
         groupCount: '',
-        gunsPerGroup: '',
+        gunsPerGroup: '10',
         shootPeriod: '',
         isAdjustment: '',
         riseNum: '',
@@ -311,11 +313,12 @@ export default {
       this.cproId = id
       this.type = 0
       this.loading = false
-      this.title = "添加"
+      this.title = "添加比赛阶段"
       this.visible = true
       this.$nextTick(() => {
         for (const key in this.formData) {
-          this.formData[key] = ''
+          if (key !== 'gunsPerGroup')
+            this.formData[key] = ''
         }
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
@@ -325,7 +328,7 @@ export default {
     edit(row, id) {
       this.cproId = id
       this.type = 1
-      this.title = "编辑"
+      this.title = "编辑比赛阶段"
       this.loading = false
       this.visible = true
       this.$nextTick(() => {
@@ -343,7 +346,7 @@ export default {
 
 <style scoped lang="less">
 .modes{
-  height: 500px;
+  height: 100%;
   overflow-y: auto;
 }
 </style>

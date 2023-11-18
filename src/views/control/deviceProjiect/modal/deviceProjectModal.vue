@@ -4,7 +4,7 @@
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"
-    loading="loadingBtn"
+    :loading="loadingBtn"
   >
     <a-form-model
       :labelCol="{span: 6}"

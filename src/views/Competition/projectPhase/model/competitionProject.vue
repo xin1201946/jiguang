@@ -1,6 +1,6 @@
 <template>
   <div class="competitionProject">
-    <div class="competitionProject_operator">
+    <div class="competitionProject_operator" v-if="check === '0'">
       <a-space>
         <a-button
           type="primary"
@@ -20,7 +20,7 @@
       :customRow="customRow"
       :columns="columns"
       :row-selection="rowSelection"
-      :scroll="{ y: 130, x: 1200}"
+      :scroll="{ y: check === '0'? 130 : 180, x: 1200}"
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
@@ -30,12 +30,14 @@
             ghost
             icon="edit"
             @click="handleEdita(record)"
+            :disabled="check === '1'"
           >编辑</a-button>
           <a-button
             type="danger"
             size="small"
             ghost
             icon="delete"
+            :disabled="check === '1'"
             @click="handleDelete(record)"
           >删除</a-button>
         </a-space>
@@ -89,7 +91,7 @@ const columns = [
     width: 80,
   },
   {
-    title: "报名时间",
+    title: "比赛时间",
     dataIndex: "projectTime",
     align: 'center',
     width: 400,
@@ -118,13 +120,28 @@ export default {
     return {
       pagination: {
         current: 1,
-        pageSize: 4,
-        total: 0
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
       },
       data: [],
       columns,
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      check: ''
     }
+  },
+  watch: {
+    $route: {
+      handler(n, o) {
+        this.check = n.query.check
+      },
+      immediate: true,
+      deep: true
+    },
   },
   computed: {
     rowSelection() {

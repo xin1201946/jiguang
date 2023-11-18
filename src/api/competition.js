@@ -27,7 +27,7 @@ export const bizContestProjectDelete = id => deleteAction(`bizContestProject/del
  */
 export const bizContestProjectDevicePageList = data => postAction("bizContestProjectDevice/page/list", data)
 export const bizContestProjectDeviceList = (data = {}) => postAction("bizContestProjectDevice/list", data)
-export const bizContestProjectDeviceSave = data => postAction("bizContestProjectDevice/save", data)
+export const bizContestProjectDeviceSave = data => postAction("bizContestProjectDevice/saveBatch", data)
 export const bizContestProjectDeviceUpdate = data => postAction("bizContestProjectDevice/update", data)
 export const bizContestProjectDeviceDelete = id => deleteAction(`bizContestProjectDevice/delete/${id}`)
 

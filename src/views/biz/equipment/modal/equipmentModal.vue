@@ -15,7 +15,7 @@
     >
 
       <a-form-model-item label="设备编号" prop="deviceNum">
-        <a-input v-model="formData.deviceNum"></a-input>
+        <a-input :disabled="type === 1" v-model="formData.deviceNum"></a-input>
       </a-form-model-item>
       <a-form-model-item label="设备电量" prop="deviceVoltage">
         <a-input v-model="formData.deviceVoltage" suffix="%">

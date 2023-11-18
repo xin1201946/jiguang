@@ -34,11 +34,11 @@ export const projectColumns = [
     align: 'center',
     dataIndex: 'projectName'
   },
-  {
-    title: "平板编号",
-    align: 'center',
-    // dataIndex: 'groupCount'
-  },
+  // {
+  //   title: "平板编号",
+  //   align: 'center',
+  //   // dataIndex: 'groupCount'
+  // },
   {
     title: "组数",
     align: 'center',

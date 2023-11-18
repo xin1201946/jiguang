@@ -25,26 +25,34 @@
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
-          <a-button
+<!--          <a-button
             type="primary"
             size="small"
             ghost
             icon="edit"
             @click="handleEdita(record)"
-          >编辑</a-button>
+          >编辑</a-button>-->
           <a-button
             type="primary"
             size="small"
             ghost
             icon="edit"
             @click="handleEditPhase(record)"
-          >编辑比赛</a-button>
+          >设置比赛信息</a-button>
           <a-button
             type="primary"
             size="small"
             ghost
-            icon="import"
-          >导入参赛人员</a-button>
+            icon="link"
+            @click="handleParticipant(record)"
+          >参赛人员管理</a-button>
+          <a-button
+            ghost
+            size="small"
+            type="primary"
+            icon="check-circle"
+            @click="handleParticipantCheck(record)"
+          >审核</a-button>
           <a-button
             type="danger"
             size="small"
@@ -80,9 +88,9 @@ export default {
       data: [],
       columns: competitionListTableColumns,
       query: {
-        name: undefined,
-        conType: undefined,
-        status: undefined
+        contestName: undefined,
+        contestType: undefined,
+        contestStatus: undefined
       }
     }
   },
@@ -90,6 +98,15 @@ export default {
   mounted() {
     this.$refs.query.init(competitionListQuery)
     this.getList()
+  },
+  watch: {
+    $route:{
+      handler(){
+        this.getList()
+      },
+      immediate: true,
+      deep: true
+    }
   },
   methods: {
     getList() {
@@ -117,7 +134,25 @@ export default {
       this.$router.push({
         path: "/competition/projectPhase",
         query: {
-          id: record.contestId
+          id: record.contestId,
+          check: '0'
+        }
+      })
+    },
+    handleParticipant(record) {
+      this.$router.push({
+        path: "/competition/participant",
+        query: {
+          id: record.contestId,
+        }
+      })
+    },
+    handleParticipantCheck(record) {
+      this.$router.push({
+        path: "/competition/projectPhase",
+        query: {
+          id: record.contestId,
+          check: '1'
         }
       })
     },

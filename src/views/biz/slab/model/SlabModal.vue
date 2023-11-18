@@ -13,7 +13,14 @@
       ref="form"
       :model="formData"
     >
-      <a-form-model-item label="设备编号枪" prop="deviceNum0">
+      <a-form-model-item label="平板编号" prop="tabletPcNum">
+        <a-input :disabled="type === 1" v-model="formData.tabletPcNum"></a-input>
+      </a-form-model-item>
+      <a-form-model-item label="平板名称" prop="tabletPcName">
+        <a-input v-model="formData.tabletPcName"></a-input>
+      </a-form-model-item>
+
+      <a-form-model-item label="激光训练器编号" prop="deviceNum0">
         <a-select v-model="formData.deviceNum0">
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '0')"
@@ -22,7 +29,7 @@
           >{{ item.deviceNum }}</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="设备编号靶" prop="deviceNum1">
+      <a-form-model-item label="激光接收靶编号" prop="deviceNum1">
         <a-select v-model="formData.deviceNum1">
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '1')"
@@ -31,12 +38,7 @@
           >{{ item.deviceNum }}</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="平板名称" prop="tabletPcName">
-        <a-input v-model="formData.tabletPcName"></a-input>
-      </a-form-model-item>
-      <a-form-model-item label="平板编号" prop="tabletPcNum">
-        <a-input v-model="formData.tabletPcNum"></a-input>
-      </a-form-model-item>
+
       <a-form-model-item label="平板状态" prop="tabletPcStatus">
 <!--        <a-input v-model="formData.tabletPcStatus"></a-input>-->
         <a-select v-model="formData.tabletPcStatus">
@@ -102,10 +104,10 @@ export default {
            { required: true, message: '请输入平板名称', trigger: 'blur' }
         ],
         deviceNum0: [
-           { required: true, message: '请选择设备编号枪', trigger: 'blur' }
+           { required: true, message: '请选择激光训练器编号', trigger: 'blur' }
         ],
         deviceNum1: [
-          { required: true, message: '请选择设备编号靶', trigger: 'blur' }
+          { required: true, message: '请选择激光接收靶编号', trigger: 'blur' }
         ],
         tabletPcModel: [
           { required: true, message: '请选择当前模式', trigger: 'blur' }

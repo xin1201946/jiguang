@@ -7,6 +7,11 @@
         @submit="handleSearch"
       ></QuerySearch>
     </template>
+    <template slot="operator">
+      <a-space>
+        <a-button type="primary" @click="handleAdd('tablePc')" icon="plus">添加</a-button>
+      </a-space>
+    </template>
     <a-table
       :columns="columns"
       :data-source="data"
@@ -24,12 +29,14 @@
         </a-space>
       </template>
     </a-table>
+    <DeviceProjectModal ref="modal" @list="handleList"></DeviceProjectModal>
   </Card>
 </template>
 
 <script>
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import Card from '@comp/card/card.vue'
+import DeviceProjectModal from '@views/control/deviceProjiect/modal/deviceProjectModal.vue'
 import BizMixins from '@views/biz/bizMixins'
 import {
   deviceProjectQuery,
@@ -40,6 +47,7 @@ export default {
   name: 'deviceProject',
   components: {
     Card,
+    DeviceProjectModal,
     QuerySearch
   },
   mixins: [BizMixins],

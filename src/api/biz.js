@@ -1,4 +1,4 @@
-import { deleteAction, downFile, download, postAction } from '@/api/manage'
+import { deleteAction, downFile, download, getAction, postAction } from '@/api/manage'
 
 /**
  * 平板
@@ -13,6 +13,9 @@ export const bizTabletPcUpdate = data => postAction("bizTabletPc/update", data)
 export const bizTabletPcDelete = id => deleteAction(`bizTabletPc/delete/${id}`)
 // 平板列表
 export const bizTabletPcList = () => postAction("bizTabletPc/list", {})
+// 童虎
+export const bizTabletPcSync = () => getAction("bizTabletPc/sync")
+
 
 // 报名表分页查询
 export const bizEntryFormPageList = data => postAction('/bizEntryForm/page/list',data)
@@ -49,3 +52,5 @@ export const bizDeviceSave = data => postAction('bizDevice/save', data)
 export const bizDeviceUpdate = data => postAction('bizDevice/update',data)
 export const bizDeviceDelete = id => deleteAction(`bizDevice/delete/${id}`)
 export const bizDeviceList = data => postAction("bizDevice/list", data)
+//同步
+export const bizDeviceSync = data => getAction("bizDevice/sync")

@@ -34,6 +34,7 @@ export default {
   display: flex;
   height: 100%;
   padding-bottom: 20px;
+  overflow-y: hidden;
   &_tree{
     min-width: 200px;
     max-width: 400px;

@@ -5,7 +5,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loadingModal"
-    :width="820"
+    :width="950"
   >
 <!--    :labelCol="{span: 6}"
         :wrapperCol="{span: 14}"-->
@@ -68,6 +68,7 @@
                 valueFormat="YYYY-MM-DD HH:mm:ss"
                 format="YYYY-MM-DD HH:mm:ss"
                 :showTime="true"
+                :disabledDate="disabledDate"
               ></a-range-picker>
             </a-form-model-item>
           </a-col>
@@ -124,6 +125,7 @@ import { playerType } from '@views/Competition/competitionList/competitionList.c
 import { VueEditor } from 'vue2-editor'
 import { editorToolBar } from '@/utils/editor'
 import { bizContestSave, bizContestUpdate } from '@api/competition'
+import dayjs from 'dayjs'
 export default {
   name: 'competitionListModal',
   components: {
@@ -182,6 +184,11 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && (
+        dayjs(current).format("YYYY-MM-DD HH:mm:ss") < dayjs(this.formData.registTime[1]).add(1,"day").format("YYYY-MM-DD HH:mm:ss")
+      )
+    },
     handleOk() {
       console.log(this.formData)
       this.$refs.form.validate(v => {
@@ -220,7 +227,7 @@ export default {
 
 <style scoped lang="less">
 .modal{
-  height: 500px;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 20px;

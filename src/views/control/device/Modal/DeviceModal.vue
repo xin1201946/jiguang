@@ -6,156 +6,179 @@
     @cancel="handleCancel"
     :loading="loadingModal"
   >
-    <a-form-model
-      :labelCol="{span: 6}"
-      :wrapperCol="{span: 14, offset: 2}"
-      :rules="rules"
-      ref="form"
-      :model="formData"
-    >
-      <a-form-model-item label="平板编号" prop="tabletPcNum">
-        <a-select v-model="formData.tabletPcNum">
-          <a-select-option
-            v-for="item in types.tablePc"
-            :value="item.tabletPcNum"
-          >
-            {{ item.tabletPcNum }}
-          </a-select-option>
-        </a-select>
-<!--        tabletPcNum-->
-      </a-form-model-item>
-      <a-form-model-item label="报靶控制" prop="indicateTargetControl">
-        <a-radio-group
-          name="indicateTargetControl"
-          v-model="formData.indicateTargetControl"
-        >
-          <a-radio
-            v-for="item of indicateTargetControl"
-            :value="item.value"
-          >{{ item.label }}</a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-      <a-form-model-item label="击发控制" prop="shootControl">
-        <a-radio-group
-          name="shootControl"
-          v-model="formData.shootControl">
-          <a-radio
-            v-for="item of shootControl"
-            :value="item.value"
-          >{{ item.label }}</a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-      <a-form-model-item label="音效控制" prop="soundControl">
-        <a-radio-group
-          name="soundControl"
-          v-model="formData.soundControl"
-        >
-          <a-radio
-            v-for="item of soundControl"
-            :value="item.value"
-          >{{ item.label }}</a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-      <a-form-model-item label="靶机倾角采集" prop="targetCollect">
-        <a-radio-group
-          name="targetCollect"
-          v-model="formData.targetCollect"
-        >
-          <a-radio
-            v-for="item of targetCollect"
-            :value="item.value"
-          >{{ item.label }}</a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-      <a-form-model-item label="扳机预压采集" prop="triggerCollect">
-        <a-radio-group
-          name="triggerCollect"
-          v-model="formData.triggerCollect"
-        >
-          <a-radio
-            v-for="item of triggerCollect"
-            :value="item.value"
-          >{{ item.label }}</a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-    </a-form-model>
+    <a-descriptions title="设备信息" :column="4">
+      <a-descriptions-item label="平板名称" span="2">
+        {{  data.bizTabletPc &&  data.bizTabletPc.tabletPcName}}
+      </a-descriptions-item>
+      <a-descriptions-item label="平板状态" span="2">
+        {{ getLabel(tabletPcStatus, data.bizTabletPc && data.bizTabletPc.tabletPcStatus) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="设备编号枪" span="2">
+        {{ data.bizTabletPc && data.bizTabletPc.deviceNum0 }}
+      </a-descriptions-item>
+      <a-descriptions-item label="设备编号靶" span="2">
+        {{ data.bizTabletPc && data.bizTabletPc.deviceNum1 }}
+      </a-descriptions-item>
+      <a-descriptions-item label="当前模式" span="2">
+        {{ getLabel(tabletPcModels, data.bizTabletPc && data.bizTabletPc.tabletPcModel) }}
+      </a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions title="项目控制信息" :column="4">
+      <a-descriptions-item label="项目名称" span="2">{{ data.bizTabletProject && data.bizTabletProject.projectName }}</a-descriptions-item>
+      <a-descriptions-item label="组数" span="2">{{ data.bizTabletProject && data.bizTabletProject.groupCount }}</a-descriptions-item>
+      <a-descriptions-item label="弹药" span="2">{{ data.bizTabletProject && data.bizTabletProject.ammo }}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions title="设备控制信息" :column="4">
+      <a-descriptions-item label="击发控制" span="2">
+        {{ getLabel(shootControl, data.bizDeviceControl && data.bizDeviceControl.shootControl) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="音效控制" span="2">
+        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.soundControl) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="报靶控制" span="2">
+        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.indicateTargetControl) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="靶机倾角采集控制" span="2">
+        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.targetCollect) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="扳机预压采集控制" span="2">
+        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.triggerCollect) }}
+      </a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions title="显示控制信息" :column="4">
+      <a-descriptions-item label="靶点大小" span="2">
+        {{ getLabel(targetSize, data.bizDeviceDisplay && data.bizDeviceDisplay.targetSize) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="靶点显隐" span="2">
+        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.targetShow) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="清靶模式" span="2">
+        {{ getLabel(clearTargetWay, data.bizDeviceDisplay && data.bizDeviceDisplay.clearTargetWay) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="瞄准曲线" span="2">
+        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.aimCurveShow) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="压力曲线" span="2">
+        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.stressCurveShow) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="发序显隐" span="2">
+        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.sequenceShow) }}
+      </a-descriptions-item>
+      <a-descriptions-item label="自动放大" span="2">
+        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.autoAmplify) }}
+      </a-descriptions-item>
+    </a-descriptions>
   </BizModal>
 </template>
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import BizMixins from '@views/biz/bizMixins'
-import {
-  indicateTargetControl,
-  shootControl,
-  soundControl,
-  targetCollect,
-  triggerCollect
-} from '@views/control/device/device.config'
-import { controlSave, controlUpdate } from '@api/control'
+import { getLabel } from '@/utils'
+
+
+const tabletPcStatus = [
+  {
+    value: '0',
+    label: '未连接'
+  },
+  {
+    value: '1',
+    label: '已连接'
+  }
+]
+const tabletPcModels = [
+  {
+    value: '0',
+    label: '试射'
+  },
+  {
+    value: '1',
+    label: '比赛'
+  }
+]
+const triggerCollect = [
+  {
+    value: '0',
+    label: '开'
+  },
+  {
+    value: '1',
+    label: '关'
+  }
+]
+
+const shootControl = [
+  {
+    value: '1',
+    label: '正常射击'
+  },
+  {
+    value: '2',
+    label: '轨迹扫描'
+  }
+]
+
+const autoAmplify = [
+  {
+    value: '0',
+    label: '显'
+  },
+  {
+    value: '1',
+    label: '隐'
+  }
+]
+const clearTargetWay = [
+  {
+    value: '1',
+    label: '一组一清'
+  },
+  {
+    value: '2',
+    label: '手动清靶'
+  }
+]
+
+const targetSize = [
+  {
+    value: '0',
+    label: '大'
+  },
+  {
+    value: '1',
+    label: '小'
+  }
+]
 
 export default {
   name: 'deviceModal',
   components: {
     BizModal
   },
-  mixins: [BizMixins],
   data() {
     return {
-      shootControl,
-      indicateTargetControl,
-      soundControl,
-      targetCollect,
-      triggerCollect,
+      loadingModal: false,
       visible: false,
       title: '',
-      type: 0,
-      rules: {
-        indicateTargetControl: [
-          { required: true, message: '请选择报靶控制', trigger: 'blur' }
-        ],
-        shootControl: [
-          { required: true, message: '请选择击发控制', trigger: 'blur' }
-        ],
-        soundControl: [
-          { required: true, message: '请选择音效控制', trigger: 'blur' }
-        ],
-        tabletPcNum: [
-          { required: true, message: '请选择平板编号', trigger: 'blur' }
-        ],
-        targetCollect: [
-          { required: true, message: '请选择靶机倾角采集', trigger: 'blur' }
-        ],
-        triggerCollect: [
-          { required: true, message: '请选择triggerCollect', trigger: 'blur' }
-        ]
-      },
-      formData: {
-        deviceControlId: '',
-        indicateTargetControl: '',
-        shootControl: '',
-        soundControl: '',
-        tabletPcNum: '',
-        targetCollect: '',
-        triggerCollect: ''
-      }
+      data: {},
+      tabletPcModels,
+      triggerCollect,
+      shootControl,
+      autoAmplify,
+      clearTargetWay,
+      targetSize,
+      tabletPcStatus
     }
   },
   methods: {
+    getLabel,
+    init(data) {
+      this.visible = true
+      this.data = data
+      console.log(data)
+    },
     handleOk() {
-      this.$refs.form.validate( v => {
-        if (v) {
-          if (this.type === 0) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            delete data.deviceControlId
-            controlSave(data).then(this.callback)
-          }
-          if (this.type === 1) {
-            controlUpdate(this.formData).then(this.callback)
-          }
-        }
-      })
-      // this.handleCancel()
+      this.handleCancel()
     },
     handleCancel() {
       this.visible = false

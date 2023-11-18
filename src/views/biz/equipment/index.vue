@@ -10,6 +10,7 @@
     <template slot="operator">
       <a-space>
         <a-button type="primary" @click="handleAdd" icon="plus">添加</a-button>
+        <a-button type="primary" @click="handleSync">同步</a-button>
       </a-space>
     </template>
     <template slot="default">
@@ -56,7 +57,7 @@ import bizMixins from '@views/biz/bizMixins'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import { equipmentColumns, equipmentQuery, deviceGunType } from '@views/biz/equipment/equipment.config'
 import { deleteMessage } from '@/utils'
-import { bizDevicePageList, bizDeviceDelete } from '@api/biz'
+import { bizDevicePageList, bizDeviceDelete, bizDeviceSync } from '@api/biz'
 import EquipmentModal from '@views/biz/equipment/modal/equipmentModal.vue'
 // import ProjectModal from '@views/biz/equipment/modal/ProjectModal.vue'
 // import ControlModal from '@views/biz/equipment/modal/ControlModal.vue'
@@ -117,6 +118,17 @@ export default {
             this.$message.warning(res.message)
           }
         })
+      })
+    },
+    handleSync() {
+      bizDeviceSync().then(res => {
+        if (res.code === 200) {
+          this.$message.success('设备同步成功')
+          this.pagination.current = 1
+          this.getList()
+        }else {
+          this.$message.warning(res.message)
+        }
       })
     },
     handleDisPlay(record) {

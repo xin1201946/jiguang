@@ -7,6 +7,11 @@
         @submit="handleSearch"
       ></QuerySearch>
     </template>
+    <template slot="operator">
+      <a-space>
+        <a-button type="primary" @click="handleAdd('tablePc')" icon="plus">添加</a-button>
+      </a-space>
+    </template>
     <a-table
       :columns="columns"
       :data-source="data"

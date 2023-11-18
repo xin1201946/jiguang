@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="cproId">
-      <div style="margin-bottom: 20px">
+      <div style="margin-bottom: 20px"  v-if="check === '0'">
         <a-space>
           <a-button
             type="primary"
@@ -19,7 +19,7 @@
         rowKey="cproDeviceId"
         size="small"
         :columns="columns"
-        :scroll="{ y: 330, x: 1200}"
+        :scroll="{ y: check === '0'? 350 : 400, x: 1200}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -29,10 +29,12 @@
               ghost
               icon="edit"
               @click="handleEdit(record)"
+              :disabled="check === '1'"
             >编辑</a-button>
             <a-button
               type="danger"
               size="small"
+              :disabled="check === '1'"
               ghost
               icon="delete"
               @click="handleDelete(record)"
@@ -74,8 +76,13 @@ export default {
     return {
       pagination: {
         current: 1,
-        pageSize: 4,
-        total: 0
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
       },
       id: "",
       data: [],
@@ -157,8 +164,18 @@ export default {
           width: 200,
           fixed: 'right'
         }
-      ]
+      ],
+      check: ''
     }
+  },
+  watch: {
+    $route: {
+      handler(n, o) {
+        this.check = n.query.check
+      },
+      immediate: true,
+      deep: true
+    },
   },
   methods: {
     handleAdd() {

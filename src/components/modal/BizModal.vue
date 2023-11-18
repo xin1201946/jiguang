@@ -1,20 +1,28 @@
 <template>
-  <a-modal
+  <a-drawer
     :visible="visible"
     :title="title"
-    :maskClosable="false"
+    :maskClosable="true"
     :keyboard="false"
-    @cancel="handleCancel"
+    @close="handleCancel"
     :width="width"
   >
-    <slot></slot>
-    <template slot="footer">
+    <div class="body">
+      <slot></slot>
+    </div>
+    <div style="display: flex; justify-content: flex-end;margin-top: 20px">
       <a-space>
         <a-button @click="handleCancel">取消</a-button>
         <a-button :loading="loading" type="primary" @click="handleOk">确定</a-button>
       </a-space>
-    </template>
-  </a-modal>
+    </div>
+<!--    <template slot="footer">
+      <a-space>
+        <a-button @click="handleCancel">取消</a-button>
+        <a-button :loading="loading" type="primary" @click="handleOk">确定</a-button>
+      </a-space>
+    </template>-->
+  </a-drawer>
 </template>
 
 <script>
@@ -55,6 +63,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
+<style scoped lang="less">
+.body{
+  height: calc(100% - 60px);
+}
+/deep/.ant-drawer-body{
+  height: calc(100% - 55px);
+}
 </style>

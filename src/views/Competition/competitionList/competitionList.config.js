@@ -38,25 +38,25 @@ export const competitionListQuery = [
     label: "赛事名称",
     placeholder: "请输入赛事名称",
     rules: [
-      "name",
+      "contestName",
       {}
     ]
   },
   {
     type: "input",
     label: "赛事类型",
-    placeholder: "请输入赛事名词",
+    placeholder: "请输入赛事类型",
     rules: [
-      "conType",
+      "contestType",
       {}
     ]
   },
   {
     type: "select",
-    label: "当前状态",
-    placeholder: "请输入赛事名词",
+    label: "赛事状态",
+    placeholder: "请输入赛事状态",
     rules: [
-      "status",
+      "contestStatus",
       {}
     ],
     data: status
@@ -107,9 +107,10 @@ export const competitionListTableColumns = [
     align: 'center'
   },
   {
-    title: "当前状态",
+    title: "赛事状态",
     dataIndex: "contestStatus",
     align: 'center',
+    width: 120,
     customRender: text => getLabel(status, text)
   },
   {

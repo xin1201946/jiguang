@@ -54,13 +54,8 @@ export const slabQuery = [
 
 export const slabTableColumns = [
   {
-    title: '平板对应设备编号枪',
-    dataIndex: 'deviceNum0',
-    align: 'center'
-  },
-  {
-    title: '平板对应设备编号靶',
-    dataIndex: 'deviceNum1',
+    title: '平板编号',
+    dataIndex: 'tabletPcNum',
     align: 'center'
   },
   {
@@ -68,11 +63,18 @@ export const slabTableColumns = [
     dataIndex: 'tabletPcName',
     align: 'center'
   },
+
   {
-    title: '平板编号',
-    dataIndex: 'tabletPcNum',
+    title: '激光训练器编号',
+    dataIndex: 'deviceNum0',
     align: 'center'
   },
+  {
+    title: '激光接收靶编号',
+    dataIndex: 'deviceNum1',
+    align: 'center'
+  },
+
 
   {
     title: '平板状态',

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="cproId">
-      <div style="margin-bottom: 20px">
+      <div style="margin-bottom: 20px" v-if="check === '0'">
         <a-space>
           <a-button
             type="primary"
@@ -19,7 +19,7 @@
         rowKey="cproDeviceId"
         size="small"
         :columns="columns"
-        :scroll="{ y: 330, x: 1200}"
+        :scroll="{ y:  check === '0'? 350 : 400, x: 1200}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -28,10 +28,20 @@
               size="small"
               ghost
               icon="edit"
+              :disabled="check === '1'"
               @click="handleEdit(record)"
             >编辑</a-button>
             <a-button
+              type="primary"
+              size="small"
+              ghost
+              icon="bind"
+              :disabled="check === '1'"
+              @click="handleBind(record)"
+            >绑定靶位</a-button>
+            <a-button
               type="danger"
+              :disabled="check === '1'"
               size="small"
               ghost
               icon="delete"
@@ -41,6 +51,7 @@
         </template>
       </a-table>
       <ProjectPhaseDeviceTableModal ref="modal" @list="getList"></ProjectPhaseDeviceTableModal>
+      <ProjectPhaseDeviceTableModalBind ref="bind" @list="getList"></ProjectPhaseDeviceTableModalBind>
     </div>
     <div v-else style="height: 100%">
       <a-empty description="暂无数据, 请先选择项目, 如没有项目请先添加项目"/>
@@ -52,19 +63,21 @@
 import { bizContestProjectDeviceDelete, bizContestProjectDevicePageList } from '@api/competition'
 import { deleteMessage } from '@/utils'
 import ProjectPhaseDeviceTableModal from '@views/Competition/projectPhase/model/projectPhaseDeviceTableModal.vue'
+import ProjectPhaseDeviceTableModalBind
+  from '@views/Competition/projectPhase/model/projectPhaseDeviceTableModalBind.vue'
 const columns = [
-  {
-    title: "枪设备号",
-    dataIndex: "gunDeviceNum",
-    align: 'center'
-  },
   {
     title: "平板设备号",
     dataIndex: "tabletPcNum",
     align: 'center'
   },
   {
-    title: "靶设备号",
+    title: "激光训练器",
+    dataIndex: "gunDeviceNum",
+    align: 'center'
+  },
+  {
+    title: "激光接收靶",
     dataIndex: "targetDeviceNum",
     align: 'center'
   },
@@ -80,7 +93,7 @@ const columns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    width: 200,
+    width: 250,
     fixed: 'right'
   }
 ]
@@ -88,7 +101,8 @@ const columns = [
 export default {
   name: 'projectPhaseDeviceTable',
   components: {
-    ProjectPhaseDeviceTableModal
+    ProjectPhaseDeviceTableModal,
+    ProjectPhaseDeviceTableModalBind
   },
   props: {
     cproId: {
@@ -100,13 +114,28 @@ export default {
     return {
       pagination: {
         current: 1,
-        pageSize: 4,
-        total: 0
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
       },
       data: [],
       columns,
-      id: ""
+      id: "",
+      check: ''
     }
+  },
+  watch: {
+    $route: {
+      handler(n, o) {
+        this.check = n.query.check
+      },
+      immediate: true,
+      deep: true
+    },
   },
   methods: {
     handleAdd() {
@@ -114,6 +143,9 @@ export default {
     },
     handleEdit(record) {
       this.$refs.modal.edit(record,this.id)
+    },
+    handleBind(record) {
+      this.$refs.bind.bind(record, this.id)
     },
     handleDelete(record) {
       deleteMessage('删除项目设备,是否删除该条信息').then(() => {

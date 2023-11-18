@@ -16,6 +16,7 @@
       <a-form-model-item v-if="false" label="项目名称">
         <a-input v-model="formData.projectName"></a-input>
       </a-form-model-item>
+
       <a-form-model-item  label="比赛项目" prop="projectId">
         <a-select
           v-model="formData.projectId"
@@ -28,6 +29,13 @@
           >
             {{ item.projectName }}
           </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="项目组别" prop="projectGroup">
+        <a-select v-model="formData.projectGroup">
+          <a-select-option value="甲组">甲组</a-select-option>
+          <a-select-option value="乙组">乙组</a-select-option>
+          <a-select-option value="丙组">丙组</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="选手上限" prop="playerLimit">
@@ -50,6 +58,7 @@
           v-model="formData.projectTime"
           :showTime="true"
           valueFormat="YYYY-MM-DD HH:mm:ss"
+          :disabledDate="disabledDate"
         ></a-range-picker>
       </a-form-model-item>
       <a-form-model-item label="比赛模式" prop="mode">
@@ -64,8 +73,9 @@
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import { bizContestProjectSave, bizContestProjectUpdate } from '@api/competition'
+import { bizContestProjectSave, bizContestProjectUpdate, bizContestQueryById } from '@api/competition'
 import { bizProjectList } from '@api/biz'
+import dayjs from 'dayjs'
 export default {
   name: 'competitionProjectModal',
   components: {
@@ -77,6 +87,8 @@ export default {
       visible: false,
       loading: false,
       type: 0,
+      times: '',
+      timeStart: '',
       formData: {
         deviceNum: "",
         groupSize: "",
@@ -85,9 +97,13 @@ export default {
         projectName: "",
         projectTime: [],
         projectId: "",
-        cproId: ""
+        cproId: "",
+        projectGroup: ''
       },
       rules: {
+        projectGroup: [
+          { required: true, message: '请选择项目组别', trigger: 'blur' }
+        ],
         projectId: [
           { required: true, message: '请选择比赛项目', trigger: 'blur' }
         ],
@@ -111,6 +127,14 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") < dayjs(this.timeStart).add(1, 'day').format("YYYY-MM-DD HH:mm:ss")) {
+        return  true
+      }
+      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") > dayjs(this.times).format("YYYY-MM-DD HH:mm:ss")) {
+        return  true
+      }
+    },
     handleOk() {
       console.log(this.formData)
       this.$refs.form.validate(v => {
@@ -160,7 +184,6 @@ export default {
     getProjectList() {
       return bizProjectList().then(res => {
         this.projectList = res.result
-        console.log(this.projectList)
         return
       })
     },
@@ -172,20 +195,24 @@ export default {
       this.visible = true
       this.loading = false
       this.type = 0
-      this.title = "添加"
+      this.title = "添加比赛项目"
 
       this.$nextTick(() => {
-        this.getProjectList().then(() => {
-          for (const key in this.formData) {
-            if (Array.isArray(this.formData[key])) {
-              this.formData[key] = []
-            }else {
-              this.formData[key] = ''
+        bizContestQueryById(this.$route.query.id).then(res => {
+          this.times = res.result.contestTimeEnd
+          this.timeStart = res.result.contestTimeStart
+          this.getProjectList().then(() => {
+            for (const key in this.formData) {
+              if (Array.isArray(this.formData[key])) {
+                this.formData[key] = []
+              }else {
+                this.formData[key] = ''
+              }
             }
-          }
-          if (this.$refs.form) {
-            this.$refs.form.clearValidate()
-          }
+            if (this.$refs.form) {
+              this.$refs.form.clearValidate()
+            }
+          })
         })
       })
     },
@@ -193,19 +220,23 @@ export default {
       this.visible = true
       this.loading = false
       this.type = 1
-      this.title = "编辑"
+      this.title = "编辑比赛项目"
       const data = JSON.parse(JSON.stringify(row))
       data.projectTime = [row.projectTimeStart, row.projectTimeEnd]
       this.$nextTick(() => {
-        this.getProjectList().then(() => {
-          for (const key in this.formData) {
-            this.formData[key] = data[key]
-          }
-
-          if (this.$refs.form) {
-            this.$refs.form.clearValidate()
-          }
+        bizContestQueryById(this.$route.query.id).then(res => {
+          // contestTime
+          this.times = res.result.contestTimeEnd
+          this.getProjectList().then(() => {
+            for (const key in this.formData) {
+              this.formData[key] = data[key]
+            }
+            if (this.$refs.form) {
+              this.$refs.form.clearValidate()
+            }
+          })
         })
+
       })
     }
   }
