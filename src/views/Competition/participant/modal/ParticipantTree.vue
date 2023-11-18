@@ -1,30 +1,15 @@
 <template>
   <div class="tree">
-    <a-row>
+    <!-- <a-row>
       <a-col>
-        <a-select
-          show-search
-          style="width: 100%"
-          :filter-option="filterOption"
-          @change="changeClick"
-          placeholder="请选择赛事"
-          v-model="id"
-        >
-          <a-select-option
-            v-for="item in list"
-            :key="item.contestId"
-            :value="item.contestId"
-          >{{ item.contestName }}
+        <a-select show-search style="width: 100%" :filter-option="filterOption" @change="changeClick" placeholder="请选择赛事"
+          v-model="id">
+          <a-select-option v-for="item in list" :key="item.contestId" :value="item.contestId">{{ item.contestName }}
           </a-select-option>
         </a-select>
       </a-col>
-    </a-row>
-    <a-tree
-      v-model="treeKes"
-      :treeData="treeData"
-      :loadData="loadData"
-      @select="handleSelect"
-    ></a-tree>
+    </a-row> -->
+    <a-tree v-model="treeKes" :treeData="treeData" :loadData="loadData" @select="handleSelect"></a-tree>
   </div>
 </template>
 
@@ -35,7 +20,13 @@ export default {
   name: 'ParticipantTree',
   data() {
     return {
-      treeData: [],
+      treeData: [
+        {
+          title: '全部',
+          key: null,
+          isLeaf: true,
+        }
+      ],
       list: [],
       id: '',
       treeKes: []
@@ -91,6 +82,11 @@ export default {
             })
           }
         }
+        this.treeData.unshift({
+          title: '全部',
+          key: null,
+          isLeaf: true,
+        })
       })
     },
     getProjectList() {
@@ -101,9 +97,9 @@ export default {
         }
       })
     },
-    changeClick(event){
+    changeClick(event) {
       let a = {
-        contestId:event
+        contestId: event
       }
       this.treeKes = []
       this.getList(a)

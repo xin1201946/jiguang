@@ -4,9 +4,12 @@
       <a-space>
         <a-button type="primary" @click="handleBack">返回</a-button>
       </a-space>
-      <a-space v-if="check === '1'">
+      <a-space v-show="check === '1'">
         <a-button type="primary" @click="clickApproved">审核通过</a-button>
         <a-button type="danger" @click="clickReviewrejection">驳回审核</a-button>
+      </a-space>
+      <a-space v-if="check === '0'">
+        <a-button type="primary" @click="clickSubmit">提交</a-button>
       </a-space>
     </div>
     <div class="cards">
@@ -113,6 +116,21 @@ export default {
             break
           case '2':
             break
+        }
+      })
+    },
+    // 提交
+    clickSubmit(){
+      let parms = {
+        contestId: this.contestId,
+        contestStatus: '1'
+      }
+      bizContestAudit(parms).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message)
+          this.handleBack();
+        } else {
+          this.$message.error(res.message)
         }
       })
     },
