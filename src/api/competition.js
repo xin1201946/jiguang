@@ -39,3 +39,8 @@ export const bizContestProjectStageList = (data = {}) => postAction("bizContestP
 export const bizContestProjectStageSave = data => postAction("bizContestProjectStage/save", data)
 export const bizContestProjectStageUpdate = data => postAction("bizContestProjectStage/update", data)
 export const bizContestProjectStageDelete = id => deleteAction(`bizContestProjectStage/delete/${id}`)
+
+/**
+ * 赛事审核 
+ */ 
+ export const bizContestAudit = data => postAction("bizContest/audit", data)

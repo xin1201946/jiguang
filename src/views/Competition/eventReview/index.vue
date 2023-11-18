@@ -3,40 +3,23 @@
     <template slot="query">
       <QuerySearch ref="query" @submit="handleSearch" @reset="handleSearch"></QuerySearch>
     </template>
-    <template slot="operator">
-      <a-space>
-        <a-button type="primary" @click="handleAdd" icon="plus">创建赛事</a-button>
-      </a-space>
-    </template>
     <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange"
       bordered>
-      <template slot="operation" slot-scope="text, record,">
+      <template slot="operation" slot-scope="text, record">
         <a-space>
-          <!--          <a-button
-            type="primary"
-            size="small"
-            ghost
-            icon="edit"
-            @click="handleEdita(record)"
-          >编辑</a-button>-->
-          <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
-          <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
-          <!-- <a-button ghost size="small" type="primary" icon="check-circle"
-            @click="handleParticipantCheck(record)">审核</a-button> -->
-          <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+          <a-button ghost size="small" type="primary" icon="check-circle"
+            @click="handleParticipantCheck(record)">审核</a-button>
         </a-space>
       </template>
     </a-table>
-    <CompetitionListModal ref="modal" @list="handleList"></CompetitionListModal>
   </Card>
 </template>
 
 <script >
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
-import { competitionListQuery, competitionListTableColumns } from '@views/Competition/competitionList/competitionList.config'
+import { competitionListQuery, competitionListTableColumns } from '@views/Competition/eventReview/eventReviewList.config'
 import BizMixins from '@views/biz/bizMixins'
-import CompetitionListModal from '@views/Competition/competitionList/modal/competitionListModal.vue'
 import { deleteMessage } from '@/utils'
 import { bizContestDelete, bizContestPageList } from '@api/competition'
 export default {
@@ -44,7 +27,6 @@ export default {
   components: {
     Card,
     QuerySearch,
-    CompetitionListModal
   },
   mixins: [BizMixins],
   data() {
@@ -54,7 +36,7 @@ export default {
       query: {
         contestName: undefined,
         contestType: undefined,
-        contestStatus: undefined
+        contestStatus: '1'
       }
     }
   },
