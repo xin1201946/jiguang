@@ -2,13 +2,29 @@
   <div class="tree">
     <a-row>
       <a-col>
-        <a-select show-search style="width: 100%" :filter-option="filterOption" @change="changeClick" placeholder="请选择赛事">
-          <a-select-option v-for="item in list" :key="item.contestId" :value="item.contestId">{{ item.contestName }}
+        <a-select
+          show-search
+          style="width: 100%"
+          :filter-option="filterOption"
+          @change="changeClick"
+          placeholder="请选择赛事"
+          v-model="id"
+        >
+          <a-select-option
+            v-for="item in list"
+            :key="item.contestId"
+            :value="item.contestId"
+          >{{ item.contestName }}
           </a-select-option>
         </a-select>
       </a-col>
     </a-row>
-    <a-tree :treeData="treeData" :loadData="loadData" @select="handleSelect"></a-tree>
+    <a-tree
+      v-model="treeKes"
+      :treeData="treeData"
+      :loadData="loadData"
+      @select="handleSelect"
+    ></a-tree>
   </div>
 </template>
 
@@ -20,13 +36,16 @@ export default {
   data() {
     return {
       treeData: [],
-      list: []
+      list: [],
+      id: '',
+      treeKes: []
     }
   },
   watch: {
     $route: {
       handler(n) {
         if (this.$route.query.id) {
+          this.id = Number(this.$route.query.id)
           this.getList()
           this.getProjectList()
         }
@@ -86,7 +105,9 @@ export default {
       let a = {
         contestId:event
       }
+      this.treeKes = []
       this.getList(a)
+      this.$emit('contest', event)
     },
     loadData(node) {
       this.getList(node.dataRef)

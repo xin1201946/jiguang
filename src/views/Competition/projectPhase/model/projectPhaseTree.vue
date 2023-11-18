@@ -216,7 +216,6 @@ export default {
     cursor: not-allowed;
   }
   /deep/.ql-container.ql-snow.ql-disabled{
-    user-select: none;
     cursor: not-allowed;
   }
 }
@@ -230,7 +229,6 @@ export default {
     cursor: not-allowed;
   }
   /deep/.ql-container.ql-snow.ql-disabled{
-    user-select: none;
     cursor: not-allowed;
   }
 }

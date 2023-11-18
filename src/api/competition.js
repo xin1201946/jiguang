@@ -1,4 +1,4 @@
-import { deleteAction, getAction, postAction } from '@/api/manage'
+import { deleteAction, download, getAction, postAction } from '@/api/manage'
 
 /**
  * 赛事表
@@ -41,6 +41,16 @@ export const bizContestProjectStageUpdate = data => postAction("bizContestProjec
 export const bizContestProjectStageDelete = id => deleteAction(`bizContestProjectStage/delete/${id}`)
 
 /**
- * 赛事审核 
- */ 
+ * 参赛人员表
+ */
+
+export const bizContestPlayerGetImportTemplate = () => download("bizContestPlayer/getImportTemplate")
+export const bizContestPlayerDelete = (id) => deleteAction(`bizContestPlayer/delete/${id}`)
+export const bizContestProjectPlayerPageList = (data ) => postAction('bizContestProjectPlayer/page/list', data)
+
+export const bizContestPlayerList = data => postAction("bizContestPlayer/list", data)
+
+/**
+ * 赛事审核
+ */
  export const bizContestAudit = data => postAction("bizContest/audit", data)

@@ -3,9 +3,25 @@
     <!--    顶部-->
     <div class="btns">
       <a-space>
-        <a-button v-if="id" type="primary" @click="handleBack">返回赛事列表
-        </a-button>
-        <a-button type="primary" icon="import" @click="handleImport">导入参赛人员
+        <a-button type="primary" @click="handleBack">返回赛事列表</a-button>
+        <a-upload
+          accept=".xlsx, xls"
+          name="file"
+          method="post"
+          :showUploadList="false"
+          :multiple="false"
+          :headers="tokenHeader"
+          :action="importExcelUrl"
+          :data="(file) => ({file, contestId})"
+          @change="handleImportExcel"
+        >
+          <a-button
+            type="primary"
+            icon="import"
+          >导入参赛人员
+          </a-button>
+        </a-upload>
+        <a-button type="primary" icon="download" @click="handleDownload">下载参赛人员模板
         </a-button>
       </a-space>
     </div>
@@ -14,7 +30,10 @@
       <TreeCard>
         <!--        左侧树-->
         <template slot="tree">
-          <ParticipantTree @change="handleTreeChange" />
+          <ParticipantTree
+            @change="handleTreeChange"
+            @contest="handleContest"
+          />
         </template>
         <template slot="query">
           <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
@@ -24,7 +43,11 @@
             <a-button icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
           </a-space>
         </template>
-        <a-table :columns="columns" :data-source="data" rowKey="tabletPcId" :pagination="pagination"
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="pagination"
+          rowKey="playerId"
           @change="handleTableChange" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space>
@@ -51,6 +74,11 @@ import BizMixins from '@views/biz/bizMixins'
 import ParticipantModal from '@views/Competition/participant/modal/participantModal.vue'
 import ParticipantModalUser from '@views/Competition/participant/modal/participantModalUser.vue'
 import { deleteMessage } from '@/utils'
+import {
+  bizContestPlayerDelete,
+  bizContestPlayerGetImportTemplate,
+  bizContestProjectPlayerPageList
+} from '@api/competition'
 export default {
   name: 'participant',
   components: {
@@ -63,18 +91,25 @@ export default {
   mixins: [BizMixins],
   inject: ["closeCurrent"],
   data() {
-    const id = this.$route.query.id || null
     return {
-      id,
+      id: undefined,
       columns: participantTableColumns,
       data: [],
-      query: {}
+      query: {
+        playerSex: undefined,
+        groupName: undefined,
+        projectGroup: undefined
+      },
+      api: 'bizContestPlayer/importExcel',
+      contestId:this.$route.query.id || null
     }
+  },
+  computed: {
   },
   watch: {
     $route: {
       handler() {
-        this.id = this.$route.query.id || null
+        this.contestId = this.$route.query.id || null
         this.$nextTick(() => {
           this.listInit()
         })
@@ -87,14 +122,28 @@ export default {
     this.listInit()
   },
   methods: {
-    // 初始化
-    listInit() {
-      console.log(this.$refs.query)
-      this.$refs.query.init(participantQuery)
+    // 获取赛事id
+    handleContest(id) {
+      this.contestId = id
+      this.id = undefined
+      this.pagination.current = 1
+      this.$nextTick(() => {
+        this.getList()
+      })
     },
     // 左侧树回调方法
     handleTreeChange(data) {
-      console.log(data)
+      this.id = data.cproId
+      this.pagination.current = 1
+      this.$nextTick(() => {
+        this.getList()
+      })
+    },
+    // 初始化
+    listInit() {
+      this.$refs.query.init(participantQuery)
+      this.pagination.current = 1
+      this.getList()
     },
     // 点击返回赛事列表
     handleBack() {
@@ -108,14 +157,17 @@ export default {
       const data = {
         ...this.query,
         pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
+        contestId: this.contestId,
+        cproId: this.id
       }
-      /*  if (res.code === 200) {
+      bizContestProjectPlayerPageList(data).then(res => {
+        if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
         }
-        */
+      })
     },
     // 编辑人员名单回调方法
     handleUserList() {
@@ -129,13 +181,28 @@ export default {
     // 删除
     handleDelete(record) {
       deleteMessage().then(() => {
-
+        bizContestPlayerDelete(record.playerId).then(res => {
+          if (res.code === 200) {
+            if (this.data.length === 1) {
+              if (this.pagination.current !== 1) {
+                this.pagination.current = this.pagination.current - 1
+              }
+            }
+            this.$nextTick(() => {
+              this.getList()
+            })
+            this.$message.success(res.message)
+          }else {
+            this.$message.warning(res.message)
+          }
+        })
       })
     },
-    // 导入
-    handleImport() {
-
-    }
+    // 下载
+    handleDownload () {
+      bizContestPlayerGetImportTemplate()
+        .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
+    },
   }
 }
 </script>
@@ -144,7 +211,6 @@ export default {
 @btnHeight: 50px;
 
 * {
-  user-select: none;
 }
 
 .participant {

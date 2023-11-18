@@ -10,7 +10,11 @@
           <!--          选择器-->
           <template v-else-if="item.type === 'select'">
             <a-select allowClear :placehorder="item.placehorder" v-decorator="item.rules">
-              <a-select-option v-for="value in item.data" :value="value.value" :key="value">{{ value.label }}
+              <a-select-option
+                v-for="value in item.data"
+                :value="value.value"
+                :key="value.value"
+              >{{ value.label }}
               </a-select-option>
             </a-select>
           </template>

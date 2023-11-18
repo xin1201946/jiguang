@@ -147,12 +147,19 @@ export default {
           this.$refs.project.init(arr.join(','), res.result)
         })
       } else {
-
         if (this.selectedRows.length) {
-          this.selectedRows.map(item => {
-            arr.push(item.tabletPcNum)
-          })
-          this.$refs.project.init(arr.join(','))
+          if (this.selectedRows.length === 1) {
+            arr.push(this.selectedRows[0].tabletPcNum)
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+              this.$refs.project.init(arr.join(','), res.result)
+            })
+          }else{
+            this.selectedRows.map(item => {
+              arr.push(item.tabletPcNum)
+            })
+            this.$refs.project.init(arr.join(','))
+          }
+
         }else {
           this.$message.warning("请选择表格信息再点击批量项目控制按钮")
         }
@@ -169,10 +176,17 @@ export default {
         // this.$refs.device.init(arr.join(','))
       } else {
         if (this.selectedRows.length) {
-          this.selectedRows.map(item => {
-            arr.push(item.tabletPcNum)
-          })
-          this.$refs.device.init(arr.join(','))
+          if (this.selectedRows.length === 1) {
+            arr.push(this.selectedRows[0].tabletPcNum)
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+              this.$refs.device.init(arr.join(','), res.result)
+            })
+          }else {
+            this.selectedRows.map(item => {
+              arr.push(item.tabletPcNum)
+            })
+            this.$refs.device.init(arr.join(','))
+          }
         }else{
           this.$message.warning("请选择表格信息再点击批量设备控制按钮")
         }
@@ -188,10 +202,17 @@ export default {
         })
       } else {
         if (this.selectedRows.length) {
-          this.selectedRows.map(item => {
-            arr.push(item.tabletPcNum)
-          })
-          this.$refs.display.init(arr.join(','))
+          if (this.selectedRows.length === 1) {
+            arr.push(this.selectedRows[0].tabletPcNum)
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+              this.$refs.display.init(arr.join(','), res.result)
+            })
+          }else {
+            this.selectedRows.map(item => {
+              arr.push(item.tabletPcNum)
+            })
+            this.$refs.display.init(arr.join(','))
+          }
         }else{
           this.$message.warning("请选择表格信息再点击批量显示控制按钮")
         }

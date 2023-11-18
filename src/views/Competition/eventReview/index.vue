@@ -1,7 +1,7 @@
 <template>
   <Card>
     <template slot="query">
-      <QuerySearch ref="query" @submit="handleSearch" @reset="handleSearch"></QuerySearch>
+      <QuerySearch ref="query" @submit="handleReset" @reset="handleReset"></QuerySearch>
     </template>
     <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange"
       bordered>
@@ -55,6 +55,16 @@ export default {
     }
   },
   methods: {
+    handleReset(data) {
+      for (const key in this.query) {
+        this.query[key] = data[key]
+      }
+      this.query.contestStatus = '1'
+      this.pagination.current = 1
+      this.$nextTick(() => {
+        this.getList()
+      })
+    },
     getList() {
       const data = {
         ...this.query,

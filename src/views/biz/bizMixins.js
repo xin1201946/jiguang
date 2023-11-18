@@ -154,7 +154,7 @@ const bizMixins = {
       if (file.status === "done") {
         const {response} = file
         if (response.code === 200) {
-          this.$message.success("导入成功")
+          this.$message.success(response.message)
           this.pagination.current = 1
           this.$nextTick(() => {
             this.getList()

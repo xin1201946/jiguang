@@ -5,7 +5,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loading"
-    width="700"
+    :width="700"
   >
     <a-table
       :pagination="pagination"

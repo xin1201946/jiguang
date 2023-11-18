@@ -84,10 +84,11 @@ export default {
   },
   methods: {
     handleBack() {
-      this.closeCurrent()
-      // this.$nextTick(() => {
-      //   this.$router.push('/competition/eventReview')
-      // })
+
+      this.$nextTick(() => {
+        this.$router.push('/competition/competitionList')
+        this.closeCurrent()
+      })
     },
     getInfo({ id }) {
       bizContestQueryById(id).then(res => {
