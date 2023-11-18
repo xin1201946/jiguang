@@ -32,7 +32,7 @@ export const participantQuery = [
   {
     type: 'input',
     rules: [
-      'playerSex',
+      'playerName',
     ],
     label: '姓名',
     placehorder: ''

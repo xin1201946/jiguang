@@ -9,7 +9,12 @@
         </a-select>
       </a-col>
     </a-row> -->
-    <a-tree v-model="treeKes" :treeData="treeData" :loadData="loadData" @select="handleSelect"></a-tree>
+    <a-tree
+      v-model="treeKes"
+      :treeData="treeData"
+      :loadData="loadData"
+      @select="handleSelect"
+    ></a-tree>
   </div>
 </template>
 

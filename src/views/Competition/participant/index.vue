@@ -98,7 +98,7 @@ export default {
       columns: participantTableColumns,
       data: [],
       query: {
-        playerSex: undefined,
+        playerName: undefined,
         groupName: undefined,
         projectGroup: undefined
       },
@@ -136,6 +136,7 @@ export default {
     },
     // 左侧树回调方法
     handleTreeChange(data) {
+      console.log(data)
       this.id = data.cproId
       this.pagination.current = 1
       this.$nextTick(() => {
