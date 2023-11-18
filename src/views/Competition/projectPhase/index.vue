@@ -85,9 +85,9 @@ export default {
   methods: {
     handleBack() {
       this.closeCurrent()
-      this.$nextTick(() => {
-        this.$router.push('/competition/eventReview')
-      })
+      // this.$nextTick(() => {
+      //   this.$router.push('/competition/eventReview')
+      // })
     },
     getInfo({ id }) {
       bizContestQueryById(id).then(res => {

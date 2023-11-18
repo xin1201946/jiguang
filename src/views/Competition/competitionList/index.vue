@@ -19,6 +19,7 @@
             icon="edit"
             @click="handleEdita(record)"
           >编辑</a-button>-->
+          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
           <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
           <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
           <!-- <a-button ghost size="small" type="primary" icon="check-circle"
@@ -38,7 +39,7 @@ import { competitionListQuery, competitionListTableColumns } from '@views/Compet
 import BizMixins from '@views/biz/bizMixins'
 import CompetitionListModal from '@views/Competition/competitionList/modal/competitionListModal.vue'
 import { deleteMessage } from '@/utils'
-import { bizContestDelete, bizContestPageList } from '@api/competition'
+import { bizContestDelete, bizContestPageList,bizContestAudit } from '@api/competition'
 export default {
   name: 'competitionList',
   components: {
@@ -92,6 +93,21 @@ export default {
       data.contestTime = [data.contestTimeStart, data.contestTimeEnd]
       data.registTime = [data.registTimeStart, data.registTimeEnd]
       this.handleEdit(data)
+    },
+    // 提交
+    handleSubmit(record){
+      let parms = {
+        contestId: record.contestId,
+        contestStatus: '1'
+      }
+      bizContestAudit(parms).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message)
+          this.getList()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     handleEditPhase(record) {
       // /competition/projectPhase
