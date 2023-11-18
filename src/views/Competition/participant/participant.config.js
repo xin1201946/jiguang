@@ -14,7 +14,7 @@ export const sexData = [
   }
 ]
 
-const projectGroup = [
+export const projectGroup = [
   {
     label: "甲组",
     value: "甲组"
