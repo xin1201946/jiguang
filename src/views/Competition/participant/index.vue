@@ -180,7 +180,7 @@ export default {
     // 点击编辑人员名单
     handleUserEdit() {
       // 获取当前项目所有的人员
-      if (this.id) {
+      if (this.id !== undefined) {
         bizContestPlayerList({
           contestId: this.contestId,
           cproId: this.id
