@@ -1,54 +1,32 @@
 <template>
   <div class="participant">
-<!--    顶部-->
+    <!--    顶部-->
     <div class="btns">
       <a-space>
-        <a-button
-          v-if="id"
-          type="primary"
-          @click="handleBack"
-        >返回赛事列表
+        <a-button v-if="id" type="primary" @click="handleBack">返回赛事列表
         </a-button>
-        <a-button
-          type="primary"
-          icon="import"
-          @click="handleImport"
-        >导入参赛人员
+        <a-button type="primary" icon="import" @click="handleImport">导入参赛人员
         </a-button>
       </a-space>
     </div>
-<!--    内容-->
+    <!--    内容-->
     <div class="cardTrue">
       <TreeCard>
-<!--        左侧树-->
+        <!--        左侧树-->
         <template slot="tree">
-          <ParticipantTree @change="handleTreeChange"/>
+          <ParticipantTree @change="handleTreeChange" />
         </template>
         <template slot="query">
-          <QuerySearch
-            ref="query"
-            @reset="handleSearch"
-            @submit="handleSearch"
-          />
+          <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
         </template>
         <template slot="operator">
           <a-space>
-            <a-button
-              icon="edit"
-              type="primary"
-              @click="handleUserEdit"
-            >编辑人员名单</a-button>
+            <a-button icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
           </a-space>
         </template>
-        <a-table
-          :columns="columns"
-          :data-source="data"
-          rowKey="tabletPcId"
-          :pagination="pagination"
-          @change="handleTableChange"
-          bordered
-        >
-          <template slot="operation" slot-scope="text, record, index">
+        <a-table :columns="columns" :data-source="data" rowKey="tabletPcId" :pagination="pagination"
+          @change="handleTableChange" bordered>
+          <template slot="operation" slot-scope="text, record">
             <a-space>
               <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record, 'device')">编辑</a-button>
               <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
@@ -56,9 +34,9 @@
           </template>
         </a-table>
       </TreeCard>
-<!--      编辑-->
+      <!--      编辑-->
       <ParticipantModal ref="modal" @list="handleList"></ParticipantModal>
-<!--      编辑人员名单-->
+      <!--      编辑人员名单-->
       <ParticipantModalUser ref="user" @list="handleUserList"></ParticipantModalUser>
     </div>
   </div>
@@ -164,13 +142,16 @@ export default {
 
 <style scoped lang="less">
 @btnHeight: 50px;
-*{
+
+* {
   user-select: none;
 }
-.participant{
+
+.participant {
   height: 100%;
   overflow-y: hidden;
-  .btns{
+
+  .btns {
     height: @btnHeight;
     background: #fff;
     margin-bottom: 10px;
@@ -180,10 +161,12 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
   }
-  .cardTrue{
+
+  .cardTrue {
     height: calc(100% - @btnHeight - 10px);
   }
-  .cardFalse{
+
+  .cardFalse {
     height: 100%;
   }
 }

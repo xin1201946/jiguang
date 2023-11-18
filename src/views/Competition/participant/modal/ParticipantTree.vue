@@ -2,20 +2,13 @@
   <div class="tree">
     <a-row>
       <a-col>
-        <a-select
-          show-search
-          style="width: 100%"
-          :filter-option="filterOption"
-        >
-
+        <a-select show-search style="width: 100%" :filter-option="filterOption" @change="changeClick" placeholder="请选择赛事">
+          <a-select-option v-for="item in list" :key="item.contestId" :value="item.contestId">{{ item.contestName }}
+          </a-select-option>
         </a-select>
       </a-col>
     </a-row>
-    <a-tree
-      :treeData="treeData"
-      :loadData="loadData"
-      @select="handleSelect"
-    ></a-tree>
+    <a-tree :treeData="treeData" :loadData="loadData" @select="handleSelect"></a-tree>
   </div>
 </template>
 
@@ -59,7 +52,7 @@ export default {
       }
       bizContestProjectList(data).then(res => {
         if (res.result.length) {
-          if (this.$route.query.id){
+          if (this.$route.query.id) {
             this.treeData = res.result.map(item => {
               return {
                 ...item,
@@ -85,8 +78,15 @@ export default {
       bizContestList({}).then(res => {
         if (res.code === 200) {
           this.list = res.result
+          console.log(this.list, '123')
         }
       })
+    },
+    changeClick(event){
+      let a = {
+        contestId:event
+      }
+      this.getList(a)
     },
     loadData(node) {
       this.getList(node.dataRef)
@@ -100,7 +100,7 @@ export default {
 
 
 <style scoped lang="less">
-.tree{
+.tree {
   height: 100%;
   overflow-y: hidden;
 }
