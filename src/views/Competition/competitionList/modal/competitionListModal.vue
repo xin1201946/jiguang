@@ -97,7 +97,8 @@
               :wrapperCol="{span: 21}"
               prop="briefIntro"
             >
-              <VueEditor v-model="formData.briefIntro"></VueEditor>
+              <a-input :maxLength="500" type="textarea" v-model="formData.briefIntro"></a-input>
+<!--              <VueEditor v-model="formData.briefIntro"></VueEditor>-->
             </a-form-model-item>
           </a-col>
         </a-row>
