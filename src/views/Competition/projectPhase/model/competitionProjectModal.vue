@@ -156,40 +156,49 @@ export default {
     },
     // 结束秒数禁用
     disabledSecondsEnd(selectedHour, selectedMinute) {
+      if (dayjs(this.end).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[1]).format('YYYY-MM-DD')){
+
+      }
       return []
     },
     // 开始秒数禁用
     disabledSeconds(selectedHour, selectedMinute) {
-      console.log(selectedHour, selectedMinute)
+      if (dayjs(this.start).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[0]).format('YYYY-MM-DD')) {
+
+      }
       return []
     },
     // 结束分钟禁用
     disabledMinutesEnd(selectedHour) {
-      const h = dayjs(this.end).format('HH')
-      if (Number(h) === Number(selectedHour)) {
-        const m = dayjs(this.end).format('mm')
-        const arr = []
-        for (let i = 0; i < 60; i++) {
-          if (i > Number(m)) {
-            arr.push(i)
+      if (dayjs(this.end).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[1]).format('YYYY-MM-DD')) {
+        const h = dayjs(this.end).format('HH')
+        if (Number(h) === Number(selectedHour)) {
+          const m = dayjs(this.end).format('mm')
+          const arr = []
+          for (let i = 0; i < 60; i++) {
+            if (i > Number(m)) {
+              arr.push(i)
+            }
           }
+          return arr
         }
-        return arr
       }
       return []
     },
     // 开始分钟禁用
     disabledMinutes(selectedHour) {
-      const h = dayjs(this.start).format('HH')
-      if (Number(h) === Number(selectedHour)) {
-        const m = dayjs(this.start).format('mm')
-        const arr = []
-        for (let i = 0; i < 60; i++) {
-          if (i < Number(m)) {
-            arr.push(i)
+      if (dayjs(this.start).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[0]).format('YYYY-MM-DD')) {
+        const h = dayjs(this.start).format('HH')
+        if (Number(h) === Number(selectedHour)) {
+          const m = dayjs(this.start).format('mm')
+          const arr = []
+          for (let i = 0; i < 60; i++) {
+            if (i < Number(m)) {
+              arr.push(i)
+            }
           }
+          return arr
         }
-        return arr
       }
       return []
     },
