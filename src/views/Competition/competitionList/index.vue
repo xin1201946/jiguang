@@ -19,7 +19,7 @@
             icon="edit"
             @click="handleEdita(record)"
           >编辑</a-button>-->
-          <a-button v-if="record.contestStatus === '0' || record.contestStatus === '1'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
+          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
           <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
           <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
           <!-- <a-button ghost size="small" type="primary" icon="check-circle"
