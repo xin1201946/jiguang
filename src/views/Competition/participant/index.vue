@@ -285,8 +285,6 @@ export default {
 <style scoped lang="less">
 @btnHeight: 50px;
 
-* {}
-
 .participant {
   height: 100%;
   overflow-y: hidden;

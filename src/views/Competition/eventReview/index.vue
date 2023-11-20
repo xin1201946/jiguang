@@ -135,6 +135,6 @@ export default {
 
 <style scoped lang="less">
 * {
-  user-select: none;
+  //user-select: none;
 }
 </style>
