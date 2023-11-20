@@ -35,14 +35,14 @@ export const playerType = [
 export const competitionListQuery = [
   {
     type: "input",
-    label: "赛事名称",
+    label: "查询条件",
     placeholder: "请输入赛事名称",
     rules: [
-      "contestName",
+      "selectWord",
       {}
     ]
   },
-  {
+ /*  {
     type: "input",
     label: "赛事类型",
     placeholder: "请输入赛事类型",
@@ -60,7 +60,7 @@ export const competitionListQuery = [
       {}
     ],
     data: status
-  }
+  } */
 ]
 
 export const competitionListTableColumns = [

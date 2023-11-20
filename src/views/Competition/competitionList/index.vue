@@ -53,9 +53,7 @@ export default {
       data: [],
       columns: competitionListTableColumns,
       query: {
-        contestName: undefined,
-        contestType: undefined,
-        contestStatus: undefined
+        selectWord: undefined,
       }
     }
   },
@@ -164,6 +162,6 @@ export default {
 
 <style scoped lang="less">
 * {
-  user-select: none;
+  //user-select: none;
 }
 </style>
