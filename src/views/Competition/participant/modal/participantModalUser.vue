@@ -141,9 +141,15 @@ export default {
             }
             return false
           })
-          this.selectedRowKeys = arr.map(item => item.playerId)
-          this.rows = arr
-          this.selectedRowKeysBf = arr
+          if (arr.length) {
+            this.selectedRowKeys = arr.map(item => item.playerId)
+            this.rows = arr
+            this.selectedRowKeysBf = arr
+          }else {
+            this.selectedRowKeys = []
+            this.rows = []
+            this.selectedRowKeysBf = []
+          }
         }
       })
     },
