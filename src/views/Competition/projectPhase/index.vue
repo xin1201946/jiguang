@@ -177,7 +177,7 @@ export default {
 @btnHeight: 50px;
 
 * {
-  user-select: none;
+  //user-select: none;
 }
 
 .projectPhase {

@@ -157,14 +157,40 @@ export default {
     // 结束秒数禁用
     disabledSecondsEnd(selectedHour, selectedMinute) {
       if (dayjs(this.end).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[1]).format('YYYY-MM-DD')){
-
+        const h = dayjs(this.end).format('HH')
+        const m = dayjs(this.end).format('mm')
+        const s = dayjs(this.end).format('ss')
+        if (Number(h) === Number(selectedHour)) {
+          if (Number(m) === Number(selectedMinute)) {
+            const arr = []
+            for (let i = 0; i < 60; i++) {
+              if (i > Number(s)) {
+                arr.push(i)
+              }
+            }
+            return arr
+          }
+        }
       }
       return []
     },
     // 开始秒数禁用
     disabledSeconds(selectedHour, selectedMinute) {
       if (dayjs(this.start).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[0]).format('YYYY-MM-DD')) {
-
+        const h = dayjs(this.start).format('HH')
+        const m = dayjs(this.start).format('mm')
+        const s = dayjs(this.start).format('ss')
+        if (Number(h) === Number(selectedHour)) {
+          if (Number(m) === Number(selectedMinute)) {
+            const arr = []
+            for (let i = 0; i < 60; i++) {
+              if (i < Number(s)) {
+                arr.push(i)
+              }
+            }
+            return arr
+          }
+        }
       }
       return []
     },
