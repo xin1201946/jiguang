@@ -36,11 +36,12 @@ export const competitionListQuery = [
   {
     type: "input",
     label: "查询条件",
-    placeholder: "请输入赛事名称",
+    placeholder: "查询条件为赛事名称, 赛事类型, 主办方, 赛事地点",
     rules: [
       "selectWord",
       {}
-    ]
+    ],
+    span: 7
   },
  /*  {
     type: "input",

@@ -5,11 +5,11 @@
         <a-form-item colon :label="item.label">
           <!--          普通输入框-->
           <template v-if="item.type === 'input'">
-            <a-input allowClear :placehorder="item.placehorder" v-decorator="item.rules"></a-input>
+            <a-input allowClear :placeholder="item.placeholder" v-decorator="item.rules"></a-input>
           </template>
           <!--          选择器-->
           <template v-else-if="item.type === 'select'">
-            <a-select allowClear :placehorder="item.placehorder" v-decorator="item.rules">
+            <a-select allowClear :placehorder="item.placeholder" v-decorator="item.rules">
               <a-select-option
                 v-for="value in item.data"
                 :value="value.value"
@@ -20,12 +20,12 @@
           </template>
           <!--          数字输入框-->
           <template v-else-if="item.type === 'number'">
-            <a-input :placehorder="item.placehorder" oninput="value=value.replace(/[^\d]/g,'')" allowClear
+            <a-input :placehorder="item.placeholder" oninput="value=value.replace(/[^\d]/g,'')" allowClear
               v-decorator="item.rules"></a-input>
           </template>
           <!--          日期范围-->
           <template v-else-if="item.type === 'range'">
-            <a-range-picker allowClear valueFormat="YYYY-MM-DD HH:mm:ss" :placehorder="item.placehorder"
+            <a-range-picker allowClear valueFormat="YYYY-MM-DD HH:mm:ss" :placehorder="item.placeholder"
               v-decorator="item.rules"></a-range-picker>
           </template>
         </a-form-item>

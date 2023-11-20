@@ -15,8 +15,8 @@
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
-          <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit">开始比赛</a-button>
-          <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+          <a-button type="primary" size="small" ghost icon="edit" @click="handleStart">开始比赛</a-button>
+<!--          <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
         </a-space>
       </template>
     </a-table>
@@ -48,7 +48,8 @@ export default {
     this.$refs.query.init(gameQuery)
   },
   methods: {
-    handleDelete(record) {}
+    handleDelete(record) {},
+    handleStart(record) {},
   }
 }
 </script>
