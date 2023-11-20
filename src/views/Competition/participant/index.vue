@@ -5,13 +5,21 @@
       <a-space>
         <!-- <a-button type="primary" @click="handleBack">返回赛事列表</a-button> -->
         <a-page-header :title="title" @back="handleBack" />
-        <a-upload accept=".xlsx, xls" name="file" method="post" :showUploadList="false" :multiple="false"
-          :headers="tokenHeader" :action="importExcelUrl" :data="(file) => ({ file, contestId })"
-          @change="handleImportExcel">
-          <a-button type="primary" icon="import">导入参赛人员
-          </a-button>
+        <a-upload
+          accept=".xlsx, xls"
+          name="file"
+          method="post"
+          :showUploadList="false"
+          :multiple="false"
+          :headers="tokenHeader"
+          :action="importExcelUrl"
+          :data="(file) => ({ file, contestId })"
+          @change="handleImportExcel"
+          :disabled="status !== '0'"
+        >
+          <a-button :disabled="status !== '0'" type="primary" icon="import">导入参赛人员</a-button>
         </a-upload>
-        <a-button type="primary" icon="download" @click="handleDownload">下载参赛人员模板</a-button>
+        <a-button :disabled="status !== '0'" type="primary" icon="download" @click="handleDownload">下载参赛人员模板</a-button>
       </a-space>
     </div>
     <!--    内容-->
@@ -25,7 +33,7 @@
           <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
         </template>
         <template slot="operator">
-          <a-space>
+          <a-space v-if="status === '0'">
             <a-button v-show="t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
           </a-space>
@@ -33,10 +41,13 @@
         <a-table :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId"
           @change="handleTableChange" bordered>
           <template slot="operation" slot-scope="text, record">
-            <a-space>
+            <a-space v-if="status === '0'">
               <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
-
               <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+            </a-space>
+            <a-space v-else>
+              <a-button disabled type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
+              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
             </a-space>
           </template>
         </a-table>
@@ -94,7 +105,8 @@ export default {
       contestId: this.$route.query.id || null,
       title: undefined,
       t: '全部',
-      treeList: []
+      treeList: [],
+      status: ''
     }
   },
   computed: {
@@ -104,6 +116,7 @@ export default {
       handler() {
         this.contestId = this.$route.query.id || null
         this.title = this.$route.query.contestName || null
+        this.status = this.$route.query.status
         this.$nextTick(() => {
           this.listInit()
         })
@@ -114,6 +127,7 @@ export default {
   },
   mounted() {
     this.listInit()
+    this.status = this.$route.query.status
   },
   methods: {
     // 获取赛事id

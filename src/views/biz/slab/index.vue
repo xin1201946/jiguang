@@ -94,19 +94,7 @@ export default {
     },
     handleDelete(record) {
       deleteMessage("是否删除当前平板信息").then(() => {
-        bizTabletPcDelete(record.tabletPcId).then(res => {
-          if (res.code === 200) {
-            if (this.data.length === 1) {
-              this.pagination.current = this.pagination.current - 1
-            }
-            this.$nextTick(() => {
-              this.getList()
-            })
-            this.$message.success(res.message)
-          }else {
-            this.$message.warning(res.message)
-          }
-        })
+        bizTabletPcDelete(record.tabletPcId).then(this.deleteCallback)
       })
     }
   },

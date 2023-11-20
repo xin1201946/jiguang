@@ -194,6 +194,21 @@ const bizMixins = {
       }
       this.loadingModal = false
     },
+    deleteCallback (res) {
+      if (res.code === 200) {
+        if (this.data.length === 1) {
+          if (this.pagination.current !== 1) {
+            this.pagination.current = this.pagination.current - 1
+          }
+        }
+        this.$nextTick(() => {
+          this.getList()
+        })
+        this.$message.success(res.message)
+      }else {
+        this.$message.warning(res.message)
+      }
+    }
   }
 }
 

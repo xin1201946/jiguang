@@ -127,7 +127,8 @@ export default {
         path: "/competition/participant",
         query: {
           id: record.contestId,
-          contestName:record.contestName
+          contestName:record.contestName,
+          status: record.contestStatus
         }
       })
     },
