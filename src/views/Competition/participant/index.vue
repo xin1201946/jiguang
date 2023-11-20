@@ -19,7 +19,7 @@
       <TreeCard>
         <!--        左侧树-->
         <template slot="tree">
-          <ParticipantTree @change="handleTreeChange" @contest="handleContest" />
+          <ParticipantTree @change="handleTreeChange" @contest="handleContest" @treeList="handleTreeList"/>
         </template>
         <template slot="query">
           <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
@@ -27,14 +27,14 @@
         <template slot="operator">
           <a-space>
             <a-button v-show="t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
-            <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdd">添加</a-button>
+            <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
           </a-space>
         </template>
         <a-table :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId"
           @change="handleTableChange" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space>
-              <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdit(record)">编辑</a-button>
+              <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
 
               <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
             </a-space>
@@ -93,7 +93,8 @@ export default {
       api: 'bizContestPlayer/importExcel',
       contestId: this.$route.query.id || null,
       title: undefined,
-      t: '全部'
+      t: '全部',
+      treeList: []
     }
   },
   computed: {
@@ -252,6 +253,17 @@ export default {
       bizContestPlayerGetImportTemplate()
         .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
+    handleTreeList(list) {
+      this.treeList = list
+    },
+    handleAdds() {
+      this.$refs.modal.list = this.treeList
+      this.handleAdd()
+    },
+    handleEdits(record) {
+      this.$refs.modal.list = this.treeList
+      this.handleEdit(record)
+    }
   }
 }
 </script>

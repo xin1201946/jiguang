@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="cproId">
-      <div style="margin-bottom: 20px"  v-if="check === '0'">
+      <div style="margin-bottom: 20px"  v-if="!disabled">
         <a-space>
           <a-button
             type="primary"
@@ -19,22 +19,22 @@
         rowKey="cproDeviceId"
         size="small"
         :columns="columns"
-        :scroll="{ y: check === '0'? 350 : 400, x: 1200}"
+        :scroll="{ y: !disabled? 350 : 400, x: 1200}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
             <a-button
+              :disabled="disabled"
               type="primary"
               size="small"
               ghost
               icon="edit"
               @click="handleEdit(record)"
-              :disabled="check === '1'"
             >编辑</a-button>
             <a-button
               type="danger"
               size="small"
-              :disabled="check === '1'"
+              :disabled="disabled"
               ghost
               icon="delete"
               @click="handleDelete(record)"
@@ -70,6 +70,9 @@ export default {
     cproId: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean
     }
   },
   data() {

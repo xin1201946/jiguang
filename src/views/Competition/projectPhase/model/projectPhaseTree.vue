@@ -1,11 +1,11 @@
 <template>
   <div class="projectPhaseTree">
-    <div class="btns" v-if="check === '0'">
+    <div class="btns" v-if="!disabled">
       <a-space>
-        <a-button type="primary" @click="handleAdd">保存</a-button>
+        <a-button  type="primary" @click="handleAdd">保存</a-button>
       </a-space>
     </div>
-    <div :class="check === '0'? 'trees' : 'treea'">
+    <div :class="!disabled? 'trees' : 'treea'">
       <a-form-model
         ref="form"
         :labelCol="{span: 6}"

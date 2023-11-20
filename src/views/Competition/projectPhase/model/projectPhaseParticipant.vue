@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="cproId">
-      <div style="margin-bottom: 20px" v-if="check === '0'">
+      <div style="margin-bottom: 20px" v-if="!disabled">
         <a-space>
           <a-button
             type="primary"
@@ -19,12 +19,12 @@
         rowKey="playerId"
         size="small"
         :columns="columns"
-        :scroll="{ y:  check === '0'? 350 : 400, x: 1200}"
+        :scroll="{ y: !disabled? 350 : 400, x: 1200}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-button
             type="danger"
-            :disabled="check === '1'"
+            :disabled="disabled"
             size="small"
             ghost
             icon="delete"
@@ -60,6 +60,9 @@ export default {
     projectName: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean
     }
   },
   data() {

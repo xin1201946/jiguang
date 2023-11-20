@@ -33,7 +33,8 @@ const bizMixins = {
       },
       types: {
         tablePc: [],
-        device: []
+        device: [],
+        evnet: []
       },
       loadingModal: false
     }
@@ -119,6 +120,9 @@ const bizMixins = {
           bizTabletPcList().then(res => {
             this.types[type] = res.result
           })
+          break
+        // 赛事项目集合
+        case 'evnet':
           break
       }
     },

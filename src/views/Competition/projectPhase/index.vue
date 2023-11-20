@@ -8,7 +8,7 @@
         <a-button type="primary" @click="clickApproved">审核通过</a-button>
         <a-button type="danger" @click="clickReviewrejection">驳回审核</a-button>
       </a-space>
-      <a-space v-if="check === '0'">
+      <a-space v-if="!disabled">
         <a-button type="primary" @click="clickSubmit">提交</a-button>
       </a-space>
     </div>
@@ -21,18 +21,18 @@
         <div class="tables">
           <!--          项目-->
           <div class="project">
-            <CompetitionProject @change="getChange" />
+            <CompetitionProject :disabled="disabled" @change="getChange" />
           </div>
           <div class="tabsTable">
             <a-tabs size="small" @change="handleTabsChange">
               <a-tab-pane key="1" tab="阶段">
-                <ProjectPhaseStageTable ref="stage" :cproId="cproId" />
+                <ProjectPhaseStageTable :disabled="disabled" ref="stage" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="0" tab="设备">
-                <ProjectPhaseDeviceTable ref="device" :cproId="cproId" />
+                <ProjectPhaseDeviceTable :disabled="disabled" ref="device" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="2" tab="参赛人员">
-                <projectPhaseParticipant ref="participant" :projectName="projectName" :cproId="cproId"/>
+                <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId"/>
               </a-tab-pane>
             </a-tabs>
           </div>
@@ -71,6 +71,14 @@ export default {
       check: '',
       contestId: '',
       projectName: ''
+    }
+  },
+  computed: {
+    disabled() {
+      if (this.tree.contestStatus === '0' && this.$route.query.check === '0') {
+        return false
+      }
+      return true
     }
   },
   watch: {

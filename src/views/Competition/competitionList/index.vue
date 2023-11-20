@@ -96,7 +96,7 @@ export default {
     },
     // 提交
     handleSubmit(record){
-      infoMessage("是否确认审核").then(() => {
+      infoMessage("是否提交赛事信息").then(() => {
         let parms = {
           contestId: record.contestId,
           contestStatus: '1'

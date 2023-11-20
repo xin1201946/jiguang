@@ -9,12 +9,21 @@
         </a-select>
       </a-col>
     </a-row> -->
-    <a-tree
-      v-model="treeKes"
-      :treeData="treeData"
-      :loadData="loadData"
-      @select="handleSelect"
-    ></a-tree>
+    <a-form>
+      <a-form-item>
+        <a-radio-group
+          v-model="treeKes"
+          @change="handleSelect"
+        >
+          <a-radio
+            :style="radioStyle"
+            :value="item.key"
+            v-for="item in treeData"
+          >{{item.projectName ? `${item.projectName} - ${item.projectGroup}` : '全部'}}
+          </a-radio>
+        </a-radio-group>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
@@ -25,6 +34,11 @@ export default {
   name: 'ParticipantTree',
   data() {
     return {
+      radioStyle: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+      },
       treeData: [
         /* {
           title: '全部',
@@ -34,7 +48,7 @@ export default {
       ],
       list: [],
       id: '',
-      treeKes: []
+      treeKes: "-1"
     }
   },
   watch: {
@@ -54,8 +68,11 @@ export default {
 
   },
   methods: {
-    handleSelect(selectedKeys, { node }) {
-      this.$emit("change", node.dataRef)
+    handleSelect(e) {
+      console.log(e.target.value)
+      const key = this.treeData.filter(item => item.key === e.target.value)
+      console.log(key)
+      this.$emit("change", key[0])
     },
     getList(v) {
       const data = {}
@@ -89,7 +106,14 @@ export default {
         }
         this.treeData.unshift({
           title: '全部',
-          key: null,
+          key: '-1',
+          isLeaf: true,
+        })
+        this.$emit("treeList", res.result)
+        this.treeKes = "-1"
+        this.$emit("change", {
+          title: '全部',
+          key: '-1',
           isLeaf: true,
         })
       })

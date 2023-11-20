@@ -1,6 +1,6 @@
 <template>
   <div class="competitionProject">
-    <div class="competitionProject_operator" v-if="check === '0'">
+    <div class="competitionProject_operator" v-if="!disabled">
       <a-space>
         <a-button
           type="primary"
@@ -20,7 +20,7 @@
       :customRow="customRow"
       :columns="columns"
       :row-selection="rowSelection"
-      :scroll="{ y: check === '0'? 130 : 180, x: 1200}"
+      :scroll="{ y: !disabled ? 130 : 180, x: 1200}"
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
@@ -30,14 +30,14 @@
             ghost
             icon="edit"
             @click="handleEdita(record)"
-            :disabled="check === '1'"
+            :disabled="disabled"
           >编辑</a-button>
           <a-button
             type="danger"
             size="small"
             ghost
             icon="delete"
-            :disabled="check === '1'"
+            :disabled="disabled"
             @click="handleDelete(record)"
           >删除</a-button>
         </a-space>
@@ -121,6 +121,11 @@ export default {
   name: 'competitionProject',
   components: {
     CompetitionProjectModal
+  },
+  props: {
+    disabled: {
+      type: Boolean
+    }
   },
   data() {
     return {
