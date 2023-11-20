@@ -57,7 +57,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
-import { bizContestPlayerUpdate } from '@api/competition'
+import { bizContestPlayerSave, bizContestPlayerUpdate } from '@api/competition'
 import { projectGroup } from '@views/Competition/participant/participant.config'
 export default {
   name: 'participantModal',
@@ -111,7 +111,15 @@ export default {
       this.$refs.form.validate(v => {
         if (v) {
           this.loadingModal = true
-          bizContestPlayerUpdate(this.formData).then(this.callback)
+          if (this.type === 1) {
+            bizContestPlayerUpdate(this.formData).then(this.callback)
+          }
+          if (this.type === 0) {
+            const data = JSON.parse(JSON.stringify(this.formData))
+            delete data.playerId
+            data.contestId = this.$route.query.id
+            bizContestPlayerSave(data).then(this.callback)
+          }
         }
       })
     },

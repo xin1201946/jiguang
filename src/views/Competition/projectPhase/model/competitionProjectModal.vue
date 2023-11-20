@@ -56,9 +56,10 @@
       <a-form-model-item label="比赛时间" prop="projectTime">
         <a-range-picker
           v-model="formData.projectTime"
-          :showTime="true"
+          :showTime="showTime"
           valueFormat="YYYY-MM-DD HH:mm:ss"
           :disabledDate="disabledDate"
+          :disabledTime="disabledTime"
         ></a-range-picker>
       </a-form-model-item>
       <a-form-model-item label="比赛模式" prop="mode">
@@ -123,15 +124,111 @@ export default {
           { required: true, message: '请选择比赛模式', trigger: 'blur' }
         ]
       },
-      projectList: []
+      projectList: [],
+      start: '',
+      end: ''
+    }
+  },
+  computed: {
+    showTime () {
+      return {
+        format: 'HH:mm:ss',
+        valueFormat: 'HH:mm:ss',
+      }
     }
   },
   methods: {
+    disabledTime(dates, partial) {
+      if (partial === 'start'){
+        return {
+          disabledHours: this.disabledHours,
+          disabledMinutes: this.disabledMinutes,
+          disabledSeconds: this.disabledSeconds
+        }
+      }
+      if (partial === 'end'){
+        return {
+          disabledHours: this.disabledHoursEnd,
+          disabledMinutes: this.disabledMinutesEnd,
+          disabledSeconds: this.disabledSecondsEnd
+        }
+      }
+    },
+    // 结束秒数禁用
+    disabledSecondsEnd(selectedHour, selectedMinute) {
+      return []
+    },
+    // 开始秒数禁用
+    disabledSeconds(selectedHour, selectedMinute) {
+      console.log(selectedHour, selectedMinute)
+      return []
+    },
+    // 结束分钟禁用
+    disabledMinutesEnd(selectedHour) {
+      const h = dayjs(this.end).format('HH')
+      if (Number(h) === Number(selectedHour)) {
+        const m = dayjs(this.end).format('mm')
+        const arr = []
+        for (let i = 0; i < 60; i++) {
+          if (i > Number(m)) {
+            arr.push(i)
+          }
+        }
+        return arr
+      }
+      return []
+    },
+    // 开始分钟禁用
+    disabledMinutes(selectedHour) {
+      const h = dayjs(this.start).format('HH')
+      if (Number(h) === Number(selectedHour)) {
+        const m = dayjs(this.start).format('mm')
+        const arr = []
+        for (let i = 0; i < 60; i++) {
+          if (i < Number(m)) {
+            arr.push(i)
+          }
+        }
+        return arr
+      }
+      return []
+    },
+    // 结束小时禁用
+    disabledHoursEnd() {
+      if (dayjs(this.end).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[1]).format('YYYY-MM-DD')) {
+        const h = dayjs(this.end).format('HH')
+        const m = dayjs(this.end).format('mm')
+        let arr = []
+        for (let i = 0; i< 24; i++) {
+          if (i > Number(h)) {
+            arr.push(i)
+          }
+        }
+        return arr
+      }
+      return []
+    },
+    // 开始小时禁用
+    disabledHours() {
+      const h = dayjs(this.start).format('HH')
+      const m = dayjs(this.start).format('mm')
+      if (dayjs(this.start).format('YYYY-MM-DD') === dayjs(this.formData.projectTime[0]).format('YYYY-MM-DD')) {
+        let arr = []
+        for (let i = 0; i< 24; i++) {
+          if (i < Number(h)) {
+            arr.push(i)
+          }
+        }
+        return arr
+      }
+      return []
+    },
+    // 不可选择的日期
     disabledDate(current) {
-      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") < dayjs(this.timeStart).add(1, 'day').format("YYYY-MM-DD HH:mm:ss")) {
+      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") < dayjs(this.timeStart).format("YYYY-MM-DD HH:mm:ss")) {
         return  true
       }
-      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") > dayjs(this.times).format("YYYY-MM-DD HH:mm:ss")) {
+      if (dayjs(current).format("YYYY-MM-DD HH:mm:ss") > dayjs(this.times).add(1, 'day').format("YYYY-MM-DD HH:mm:ss")) {
         return  true
       }
     },
@@ -196,11 +293,12 @@ export default {
       this.loading = false
       this.type = 0
       this.title = "添加比赛项目"
-
       this.$nextTick(() => {
         bizContestQueryById(this.$route.query.id).then(res => {
           this.times = res.result.contestTimeEnd
           this.timeStart = res.result.contestTimeStart
+          this.start = res.result.contestTimeStart
+          this.end = res.result.contestTimeEnd
           this.getProjectList().then(() => {
             for (const key in this.formData) {
               if (Array.isArray(this.formData[key])) {
@@ -227,6 +325,9 @@ export default {
         bizContestQueryById(this.$route.query.id).then(res => {
           // contestTime
           this.times = res.result.contestTimeEnd
+          this.timeStart = res.result.contestTimeStart
+          this.start = res.result.contestTimeStart
+          this.end = res.result.contestTimeEnd
           this.getProjectList().then(() => {
             for (const key in this.formData) {
               this.formData[key] = data[key]

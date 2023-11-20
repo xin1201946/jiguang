@@ -93,7 +93,7 @@ export default {
       })
     },
     handleDelete(record) {
-      deleteMessage().then(() => {
+      deleteMessage("是否删除当前平板信息").then(() => {
         bizTabletPcDelete(record.tabletPcId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

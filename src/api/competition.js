@@ -50,6 +50,10 @@ export const bizContestProjectPlayerPageList = (data ) => postAction('bizContest
 export const bizContestPlayerList = data => postAction("bizContestProjectPlayer/list", data)
 export const bizContestPlayerUpdate = data => postAction("bizContestPlayer/update", data)
 export const bizContestProjectPlayerUpdatePlayer = data => postAction("bizContestProjectPlayer/updatePlayer", data)
+
+export const bizContestPlayerSave = data => postAction('bizContestPlayer/save', data)
+
+export const bizContestProjectPlayerDelete = id => deleteAction(`bizContestProjectPlayer/delete/${id}`)
 /**
  * 赛事审核
  */

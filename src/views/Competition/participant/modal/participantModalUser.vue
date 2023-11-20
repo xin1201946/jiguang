@@ -14,6 +14,7 @@
       @change="handleTableChange"
       rowKey="playerId"
       :row-selection="rowSelection"
+      size="small"
       bordered
     ></a-table>
   </BizModal>
@@ -23,6 +24,7 @@
 import BizModal from '@comp/modal/BizModal.vue'
 import { participantModalUserTableColumns } from '@views/Competition/participant/participant.config'
 import { bizContestProjectPlayerPageList, bizContestProjectPlayerUpdatePlayer } from '@api/competition'
+import { infoMessage } from '@/utils'
 export default {
   name: 'participantModalUser',
   components: {
@@ -46,8 +48,10 @@ export default {
       columns: participantModalUserTableColumns,
       data: [],
       selectedRowKeys: [],
+      selectedRowKeysBf: [],
       rows: [],
-      obj: {}
+      obj: {},
+      projectName: ''
     }
   },
   computed: {
@@ -62,22 +66,48 @@ export default {
   },
   methods: {
     handleOk () {
-
       if (this.selectedRowKeys.length) {
-        this.loading = true
-        bizContestProjectPlayerUpdatePlayer({
-          checkList: this.rows,
-          ...this.obj
-        }).then(res => {
-          if (res.code === 200) {
-            this.$message.success(res.message)
-            this.handleCancel()
-            this.$emit("list")
-          }else {
-            this.$message.warning(res.message)
+        // this.loading = true
+        // console.log(this.rows)
+        const names = this.rows.filter(item => {
+          if (item.projectNames) {
+            return item.projectNames.includes(this.projectName)
           }
-          this.loading = false
+          return false
         })
+        if (names.length !== this.rows.length) {
+          infoMessage("选中人员存在不属于当前项目的人员，请确认是否添加").then(() => {
+            this.loading = true
+            bizContestProjectPlayerUpdatePlayer({
+              checkList: this.rows,
+              ...this.obj
+            }).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+                this.handleCancel()
+                this.$emit("list")
+              }else {
+                this.$message.warning(res.message)
+              }
+              this.loading = false
+            })
+          })
+        }else {
+          this.loading = true
+          bizContestProjectPlayerUpdatePlayer({
+            checkList: this.rows,
+            ...this.obj
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.message)
+              this.handleCancel()
+              this.$emit("list")
+            }else {
+              this.$message.warning(res.message)
+            }
+            this.loading = false
+          })
+        }
       }else {
         this.handleCancel()
         this.$emit("list")
@@ -95,13 +125,25 @@ export default {
     getList() {
       const data = {
         pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
+        contestId: this.obj.contestId,
+        isAll: '1'
       }
       bizContestProjectPlayerPageList(data).then(res => {
         if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
+
+          const arr = this.data.filter(item => {
+            if (item.projectNames) {
+              return item.projectNames.includes(this.projectName)
+            }
+            return false
+          })
+          this.selectedRowKeys = arr.map(item => item.playerId)
+          this.rows = arr
+          this.selectedRowKeysBf = arr
         }
       })
     },
@@ -109,10 +151,13 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.rows = selectedRows
     },
-    inits(arr, arrs, query) {
+    inits(arr, arrs, query, name) {
+      console.log(name)
+      this.projectName = name
       this.visible = true
       this.loading = false
       this.selectedRowKeys = arr
+      this.selectedRowKeysBf = arrs
       this.rows = arrs
       this.obj = query
       this.getList()

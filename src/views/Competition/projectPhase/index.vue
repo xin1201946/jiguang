@@ -32,11 +32,7 @@
                 <ProjectPhaseDeviceTable ref="device" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="2" tab="参赛人员">
-                <!--                <ProjectPhaseDeviceTable
-                  ref="device"
-                  :cproId="cproId"
-                />-->
-                参赛人员
+                <projectPhaseParticipant ref="participant" :projectName="projectName" :cproId="cproId"/>
               </a-tab-pane>
             </a-tabs>
           </div>
@@ -54,6 +50,7 @@ import CompetitionProject from '@views/Competition/projectPhase/model/competitio
 import { bizContestQueryById, bizContestAudit } from '@api/competition'
 import ProjectPhaseDeviceTable from '@views/Competition/projectPhase/model/projectPhaseDeviceTable.vue'
 import ProjectPhaseStageTable from '@views/Competition/projectPhase/model/projectPhaseStageTable.vue'
+import projectPhaseParticipant from '@views/Competition/projectPhase/model/projectPhaseParticipant.vue'
 export default {
   name: 'projectPhase',
   inject: ["closeCurrent"],
@@ -63,7 +60,8 @@ export default {
     ProjectPhaseTree,
     CompetitionProject,
     ProjectPhaseStageTable,
-    ProjectPhaseDeviceTable
+    ProjectPhaseDeviceTable,
+    projectPhaseParticipant
   },
   data() {
     return {
@@ -72,6 +70,7 @@ export default {
       cproId: "",
       check: '',
       contestId: '',
+      projectName: ''
     }
   },
   watch: {
@@ -87,9 +86,12 @@ export default {
   },
   methods: {
     handleBack() {
-
       this.$nextTick(() => {
-        this.$router.push('/competition/competitionList')
+        if (this.check === '1') {
+          this.$router.push('/Competition/eventReview')
+        }else {
+          this.$router.push('/competition/competitionList')
+        }
         this.closeCurrent()
       })
     },
@@ -102,8 +104,9 @@ export default {
         this.tree = data
       })
     },
-    getChange(cproId) {
+    getChange(cproId, name) {
       this.cproId = String(cproId)
+      this.projectName = name
     },
     handleTabsChange(v) {
       this.$nextTick(() => {
@@ -115,6 +118,7 @@ export default {
             this.$refs.stage.handleList()
             break
           case '2':
+            this.$refs.participant.handleList()
             break
         }
       })

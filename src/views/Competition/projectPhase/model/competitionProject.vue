@@ -57,6 +57,12 @@ const columns = [
     title: "项目名称",
     dataIndex: "projectName",
     align: "center",
+    // width: 200
+  },
+  {
+    title: "项目组别",
+    dataIndex: "projectGroup",
+    align: "center",
   },
   {
     title: "比赛模式",
@@ -170,7 +176,7 @@ export default {
         this.data = res.result.records
         if (this.data.length) {
           this.selectedRowKeys = [this.data[0].cproId]
-          this.$emit("change", [this.data[0].cproId])
+          this.$emit("change", [this.data[0].cproId], this.data[0].projectName)
         }
         this.pagination.current = res.result.current
         this.pagination.total = res.result.total
@@ -181,16 +187,15 @@ export default {
       return {
         on: {
           click(){
-            console.log()
             that.selectedRowKeys = [record.cproId]
-            that.$emit("change", [record.cproId])
+            that.$emit("change", [record.cproId], record.projectName)
           }
         }
       }
     },
     handleChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
-      this.$emit("change", selectedRowKeys)
+      this.$emit("change", selectedRowKeys, selectedRows[0].projectName)
     },
     handleTableChange (pagination) {
       this.pagination = pagination

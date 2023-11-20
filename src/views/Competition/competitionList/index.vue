@@ -10,7 +10,7 @@
     </template>
     <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange"
       bordered>
-      <template slot="operation" slot-scope="text, record,">
+      <template slot="operation" slot-scope="text, record">
         <a-space>
           <!--          <a-button
             type="primary"
@@ -19,7 +19,7 @@
             icon="edit"
             @click="handleEdita(record)"
           >编辑</a-button>-->
-          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
+          <a-button v-if="record.contestStatus === '0' || record.contestStatus === '1'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
           <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
           <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
           <!-- <a-button ghost size="small" type="primary" icon="check-circle"
@@ -38,7 +38,7 @@ import QuerySearch from '@comp/query/QuerySearch.vue'
 import { competitionListQuery, competitionListTableColumns } from '@views/Competition/competitionList/competitionList.config'
 import BizMixins from '@views/biz/bizMixins'
 import CompetitionListModal from '@views/Competition/competitionList/modal/competitionListModal.vue'
-import { deleteMessage } from '@/utils'
+import { deleteMessage, infoMessage } from '@/utils'
 import { bizContestDelete, bizContestPageList,bizContestAudit } from '@api/competition'
 export default {
   name: 'competitionList',
@@ -96,18 +96,21 @@ export default {
     },
     // 提交
     handleSubmit(record){
-      let parms = {
-        contestId: record.contestId,
-        contestStatus: '1'
-      }
-      bizContestAudit(parms).then((res) => {
-        if (res.success) {
-          this.$message.success(res.message)
-          this.getList()
-        } else {
-          this.$message.error(res.message)
+      infoMessage("是否确认审核").then(() => {
+        let parms = {
+          contestId: record.contestId,
+          contestStatus: '1'
         }
+        bizContestAudit(parms).then((res) => {
+          if (res.success) {
+            this.$message.success(res.message)
+            this.getList()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       })
+
     },
     handleEditPhase(record) {
       // /competition/projectPhase

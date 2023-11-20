@@ -79,7 +79,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteMessage().then(() => {
+      deleteMessage("是否删除当前项目预设信息").then(() => {
         bizProjectDelete(row.projectId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

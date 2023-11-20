@@ -15,24 +15,24 @@
       >
         <a-form-model-item label="赛事名称" prop="contestName">
           <a-input
-            :disabled="check === '1'"
+            :disabled="disabled"
             style="width: 100%"
             v-model="data.contestName"
           ></a-input>
         </a-form-model-item>
         <a-form-model-item label="主办方" prop="sponsor">
           <a-input
-            :disabled="check === '1'"
+            :disabled="disabled"
             style="width: 100%" v-model="data.sponsor"></a-input>
         </a-form-model-item>
         <a-form-model-item label="赛事类型" prop="contestType">
           <a-input
-            :disabled="check === '1'"
+            :disabled="disabled"
             style="width: 100%" v-model="data.contestType"></a-input>
         </a-form-model-item>
         <a-form-model-item label="选手类型" prop="playerType">
           <a-select
-            :disabled="check === '1'"
+            :disabled="disabled"
             v-model="data.playerType"
           >
             <a-select-option
@@ -46,7 +46,7 @@
         <a-form-model-item label="报名时间" prop="registTime">
           <a-range-picker
             style="width: 100%"
-            :disabled="check === '1'"
+            :disabled="disabled"
             valueFormat="YYYY-MM-DD HH:mm:ss"
             format="YYYY-MM-DD HH:mm:ss"
             :showTime="true"
@@ -55,7 +55,7 @@
         </a-form-model-item>
         <a-form-model-item label="比赛时间" prop="contestTime">
           <a-range-picker
-            :disabled="check === '1'"
+            :disabled="disabled"
             v-model="data.contestTime"
             style="width: 100%"
             valueFormat="YYYY-MM-DD HH:mm:ss"
@@ -70,7 +70,7 @@
           :wrapperCol="{span: 24}"
         >
           <a-input
-            :disabled="check === '1'"
+            :disabled="disabled"
             v-model="data.location"
             type="textarea"
             :maxLength="100"
@@ -83,7 +83,7 @@
         >
 <!--          <VueEditor v-model="data.briefIntro"></VueEditor>-->
           <a-input
-            :disabled="check === '1'"
+            :disabled="disabled"
             v-model="data.briefIntro"
             type="textarea"
             :maxLength="500"
@@ -95,7 +95,7 @@
           :wrapperCol="{span: 24}"
         >
           <VueEditor
-            :disabled="check === '1'"
+            :disabled="disabled"
             v-model="data.content"
           />
         </a-form-model-item>
@@ -149,6 +149,14 @@ export default {
         ],
       },
       check: ''
+    }
+  },
+  computed: {
+    disabled() {
+      if (this.data.contestStatus === '0' && this.$route.query.check === '0') {
+        return false
+      }
+      return true
     }
   },
   watch: {

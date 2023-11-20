@@ -26,11 +26,11 @@ export default {
   data() {
     return {
       treeData: [
-        {
+        /* {
           title: '全部',
           key: null,
           isLeaf: true,
-        }
+        } */
       ],
       list: [],
       id: '',

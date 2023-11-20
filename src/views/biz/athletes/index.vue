@@ -86,7 +86,7 @@ export default {
         .then((res) => this.downLoad(res, '运动员导入.xlsx'))
     },
     handleDelete (record) {
-      deleteMessage().then(() => {
+      deleteMessage("是否删除当前运动员信息").then(() => {
         bizEntryFormDelete(record.entryFormId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

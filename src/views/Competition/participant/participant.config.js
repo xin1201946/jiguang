@@ -56,6 +56,7 @@ export const participantQuery = [
   }
 ]
 
+
 export const participantTableColumns = [
   {
     title: "选手编号",
@@ -102,7 +103,7 @@ export const participantTableColumns = [
   },
 ]
 
-export const participantModalUserTableColumns = [
+export const participantTableColumnsAll = [
   {
     title: "选手编号",
     dataIndex: 'serialNumber',
@@ -131,6 +132,61 @@ export const participantModalUserTableColumns = [
     title: "团体名称",
     align: 'center',
     dataIndex: 'groupName',
+  },
+  {
+    title: "项目名称",
+    dataIndex: 'projectNames',
+    align: 'center',
+  },
+  {
+    title: "项目组别",
+    align: 'center',
+    dataIndex: 'projectGroup',
+    customRender: text => getLabel(projectGroup, text)
+  },
+  {
+    title: "操作",
+    align: 'center',
+    scopedSlots: {
+      customRender: 'operation'
+    },
+    width: 200
+  },
+]
+
+export const participantModalUserTableColumns = [
+  {
+    title: "选手编号",
+    dataIndex: 'serialNumber',
+    align: 'center',
+  },
+  {
+    title: "姓名",
+    dataIndex: 'playerName',
+    align: 'center',
+  },
+  {
+    title: "性别",
+    align: 'center',
+    dataIndex: 'playerSex',
+    customRender: text => {
+      return getLabel(sexData, text)
+    }
+  },
+  {
+    title: "身份证号",
+    align: 'center',
+    dataIndex: 'idCardNum',
+  },
+  {
+    title: "团体名称",
+    align: 'center',
+    dataIndex: 'groupName',
+  },
+  {
+    title: "项目名称",
+    dataIndex: 'projectNames',
+    align: 'center',
   },
   {
     title: "项目组别",

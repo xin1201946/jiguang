@@ -104,7 +104,7 @@ export default {
       })
     },
     handleDelete(record) {
-      deleteMessage().then(() => {
+      deleteMessage("是否删除当前设备信息").then(() => {
         bizDeviceDelete(record.deviceId).then(res => {
           if (res.code === 200) {
             if (this.data.length === 1) {

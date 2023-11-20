@@ -23,3 +23,19 @@ export const deleteMessage = (text) => {
     })
   })
 }
+
+export const infoMessage = text => {
+  return new Promise((resolve, reject) => {
+    Modal.confirm({
+      title: "提示",
+      content: h => <div>{text}</div>,
+      okType: "primary",
+      onOk() {
+        resolve()
+      },
+      onCancel() {
+        reject()
+      }
+    })
+  })
+}
