@@ -28,7 +28,7 @@ export const athletesQuery = [
       { rules: [{ required: false, message: '请输入姓名' }] }
     ],
     label: '姓名',
-    placehorder: '请输入姓名',
+    placeholder: '请输入姓名',
   },
   {
     type: 'select',
@@ -37,7 +37,7 @@ export const athletesQuery = [
       { rules: [{ required: false, message: '请选择性别' }] }
     ],
     label: '性别',
-    placehorder: '请选择性别',
+    placeholder: '请选择性别',
     data: sexData
   },
   {
@@ -47,7 +47,7 @@ export const athletesQuery = [
       { rules: [{ required: false, message: '请选择类型' }] }
     ],
     label: '类别',
-    placehorder: '请选择类别',
+    placeholder: '请选择类别',
     data: typeData
   }
 ]

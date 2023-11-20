@@ -35,7 +35,7 @@ export const participantQuery = [
       'playerName',
     ],
     label: '姓名',
-    placehorder: ''
+    placeholder: '请输入姓名'
   },
   {
     type: 'input',
@@ -43,7 +43,7 @@ export const participantQuery = [
       'groupName',
     ],
     label: '团体名称',
-    placehorder: ''
+    placeholder: '请输入团体名称'
   },
   {
     type: 'select',
@@ -51,7 +51,7 @@ export const participantQuery = [
       'projectGroup',
     ],
     label: '项目组别',
-    placehorder: '',
+    placeholder: '请选择项目组别',
     data: projectGroup
   }
 ]

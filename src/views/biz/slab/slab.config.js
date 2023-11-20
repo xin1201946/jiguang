@@ -28,7 +28,7 @@ export const slabQuery = [
       { rules: [{ required: false, message: '请输入平板名称' }] },
     ],
     label: '平板名称',
-    placehorder: '请输入平板名称'
+    placeholder: '请输入平板名称'
   },
   {
     type: 'select',
@@ -37,7 +37,7 @@ export const slabQuery = [
       { rules: [{ required: false, message: '请选择当前模式' }] },
     ],
     label: '平板状态',
-    placehorder: '请选择当前模式',
+    placeholder: '请选择平板状态',
     data: tabletPcStatus,
   },
   {
@@ -47,7 +47,7 @@ export const slabQuery = [
       { rules: [{ required: false, message: '请选择当前模式' }] },
     ],
     label: '当前模式',
-    placehorder: '请选择当前模式',
+    placeholder: '请选择当前模式',
     data: tabletPcModel,
   }
 ]

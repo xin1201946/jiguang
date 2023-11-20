@@ -42,7 +42,7 @@ export const equipmentQuery = [
       { rules: [{ required: false, message: '请输入设备编号' }] }
     ],
     label: '设备编号',
-    placehorder: '请输入设备编号',
+    placeholder: '请输入设备编号',
   },
   {
     type: 'select',
@@ -51,7 +51,7 @@ export const equipmentQuery = [
       { rules: [{ required: false, message: '请选择设备状态' }] }
     ],
     label: '设备状态',
-    placehorder: '请输入设备状态',
+    placeholder: '请选择设备状态',
     data: deviceStatus
     // data: deviceType
   },
@@ -62,7 +62,7 @@ export const equipmentQuery = [
       { rules: [{ required: false, message: '请选择激光训练器' }] }
     ],
     label: '激光训练器类型',
-    placehorder: '请选择激光训练器类型',
+    placeholder: '请选择激光训练器类型',
     data: deviceGunType
   },
   {
@@ -72,7 +72,7 @@ export const equipmentQuery = [
       { rules: [{ required: false, message: '请选择设备类型' }] }
     ],
     label: '设备类型',
-    placehorder: '请选择设备类型',
+    placeholder: '请选择设备类型',
     data: deviceType
   },
 ]

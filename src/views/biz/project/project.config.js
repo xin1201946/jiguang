@@ -7,7 +7,7 @@ export const projectQuery = [
       { rules: [{ required: false, message: '请输入项目名称' }] }
     ],
     label: '项目名称',
-    placehorder: '请输入项目名称',
+    placeholder: '请输入项目名称',
   },
   {
     type: 'number',
@@ -16,7 +16,7 @@ export const projectQuery = [
       { rules: [{ required: false, message: '请输入组数' }] }
     ],
     label: '组数',
-    placehorder: '请输入组数',
+    placeholder: '请输入组数',
   },
   {
     type: 'number',
@@ -25,7 +25,7 @@ export const projectQuery = [
       { rules: [{ required: false, message: '请输入组数' }] }
     ],
     label: '弹药数量',
-    placehorder: '请输入弹药数量',
+    placeholder: '请输入弹药数量',
   },
 ]
 export const projectColumns = [
