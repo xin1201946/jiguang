@@ -1,6 +1,6 @@
 <template>
   <div class="treeCard">
-    <div class="treeCard_tree">
+    <div :class="width ? 'treeCard_width': 'treeCard_tree'">
       <a-card :bordered="false">
         <slot name="tree"></slot>
       </a-card>
@@ -25,7 +25,13 @@
 
 <script lang="ts">
 export default {
-  name: 'treeCard'
+  name: 'treeCard',
+  props: {
+    width: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 
@@ -38,6 +44,12 @@ export default {
   &_tree{
     min-width: 200px;
     max-width: 400px;
+    margin-right: 10px;
+    height: 100%;
+    overflow-y: hidden;
+  }
+  &_width{
+    min-width: 200px;
     margin-right: 10px;
     height: 100%;
     overflow-y: hidden;

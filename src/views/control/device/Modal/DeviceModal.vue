@@ -1,12 +1,14 @@
 <template>
   <BizModal
-    :title="title"
+    title="设备信息"
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loadingModal"
+    :width="600"
   >
-    <a-descriptions title="设备信息" :column="4">
+  <div style="height: 100%;overflow-y: auto;padding-right: 20px">
+    <a-descriptions bordered title="设备信息" :column="4">
       <a-descriptions-item label="平板名称" span="2">
         {{  data.bizTabletPc &&  data.bizTabletPc.tabletPcName}}
       </a-descriptions-item>
@@ -23,12 +25,12 @@
         {{ getLabel(tabletPcModels, data.bizTabletPc && data.bizTabletPc.tabletPcModel) }}
       </a-descriptions-item>
     </a-descriptions>
-    <a-descriptions title="项目控制信息" :column="4">
+    <a-descriptions bordered title="项目控制信息" :column="4">
       <a-descriptions-item label="项目名称" span="2">{{ data.bizTabletProject && data.bizTabletProject.projectName }}</a-descriptions-item>
       <a-descriptions-item label="组数" span="2">{{ data.bizTabletProject && data.bizTabletProject.groupCount }}</a-descriptions-item>
       <a-descriptions-item label="弹药" span="2">{{ data.bizTabletProject && data.bizTabletProject.ammo }}</a-descriptions-item>
     </a-descriptions>
-    <a-descriptions title="设备控制信息" :column="4">
+    <a-descriptions bordered title="设备控制信息" :column="4">
       <a-descriptions-item label="击发控制" span="2">
         {{ getLabel(shootControl, data.bizDeviceControl && data.bizDeviceControl.shootControl) }}
       </a-descriptions-item>
@@ -45,7 +47,7 @@
         {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.triggerCollect) }}
       </a-descriptions-item>
     </a-descriptions>
-    <a-descriptions title="显示控制信息" :column="4">
+    <a-descriptions bordered title="显示控制信息" :column="4">
       <a-descriptions-item label="靶点大小" span="2">
         {{ getLabel(targetSize, data.bizDeviceDisplay && data.bizDeviceDisplay.targetSize) }}
       </a-descriptions-item>
@@ -68,6 +70,7 @@
         {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.autoAmplify) }}
       </a-descriptions-item>
     </a-descriptions>
+  </div>
   </BizModal>
 </template>
 

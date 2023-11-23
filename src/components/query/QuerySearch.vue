@@ -9,7 +9,11 @@
           </template>
           <!--          选择器-->
           <template v-else-if="item.type === 'select'">
-            <a-select allowClear :placeholder="item.placeholder" v-decorator="item.rules">
+            <a-select
+              allowClear
+              :placeholder="item.placeholder"
+              v-decorator="item.rules"
+            >
               <a-select-option
                 v-for="value in item.data"
                 :value="value.value"
@@ -20,13 +24,42 @@
           </template>
           <!--          数字输入框-->
           <template v-else-if="item.type === 'number'">
-            <a-input :placeholder="item.placeholder" oninput="value=value.replace(/[^\d]/g,'')" allowClear
-              v-decorator="item.rules"></a-input>
+            <a-input
+              :placeholder="item.placeholder"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              allowClear
+              v-decorator="item.rules"
+            ></a-input>
           </template>
           <!--          日期范围-->
           <template v-else-if="item.type === 'range'">
-            <a-range-picker allowClear valueFormat="YYYY-MM-DD HH:mm:ss" :placeholder="item.placeholder"
-              v-decorator="item.rules"></a-range-picker>
+            <a-range-picker
+              allowClear
+              valueFormat="YYYY-MM-DD HH:mm:ss"
+              :placeholder="item.placeholder"
+              v-decorator="item.rules"
+            ></a-range-picker>
+          </template>
+<!--          查询-->
+          <template v-else-if="item.type === 'search'">
+            <a-select
+              allowClear
+              show-search
+              :placeholder="item.placeholder"
+              v-decorator="item.rules"
+              style="width: 100%"
+              @search="fetchUser"
+              @change="handleChange"
+            >
+              <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+              <a-select-option
+                v-else
+                v-for="value in item.data"
+                :value="value.value"
+                :key="value.value"
+              >{{ value.label }}
+              </a-select-option>
+            </a-select>
           </template>
         </a-form-item>
       </a-col>
@@ -49,7 +82,9 @@ export default {
     return {
       formData: [],
       form: this.$form.createForm(this, { name: 'search' }),
-      resets: []
+      resets: [],
+
+      fetching: false
     }
   },
   methods: {
@@ -60,6 +95,7 @@ export default {
         for (const item of arr) {
           this.resets.push(item.rules[0])
         }
+        // for (const item )
       } else {
         this.formData = []
         this.resets = []
@@ -102,6 +138,12 @@ export default {
         }
         this.$emit('reset', obj)
       })
+    },
+    fetchUser(value) {
+      console.log(value)
+    },
+    handleChange(value) {
+      console.log(value)
     }
   }
 }
@@ -109,4 +151,4 @@ export default {
 
 
 
-<style scoped lang="scss"></style>
+<style scoped lang="less"></style>

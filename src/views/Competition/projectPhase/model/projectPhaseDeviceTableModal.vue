@@ -208,20 +208,31 @@ export default {
     handleCancel() {
       this.visible = false
     },
-    init(id) {
-      this.selectedRowKeys = []
-      this.selectedRows = []
+    init(id, data) {
+      console.log(data)
       this.cproId = id
       this.type = 0
       this.loading = false
       this.title = "添加比赛设备"
       this.visible = true
       this.getPcTableList().then(() => {
+        console.log(this.tableList)
+        const arr = []
+        for (const item of this.tableList) {
+          for (const key of data) {
+            if (item.tabletPcNum === key) {
+              arr.push(item)
+            }
+          }
+        }
+        this.selectedRowKeys = arr.map(item => item.tabletPcId)
+        this.selectedRows = arr
+        // const arr = this.tableList.filter(item => item.tabletPcNum.includes(data))
+        console.log(arr)
         this.$nextTick(() => {
           for (const key in this.formData){
             this.formData[key] = ""
           }
-          // this.$refs.form.clearValidate()
         })
       })
     },

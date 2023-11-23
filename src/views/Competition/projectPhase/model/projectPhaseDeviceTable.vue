@@ -23,14 +23,14 @@
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
-            <a-button
+<!--            <a-button
               type="primary"
               size="small"
               ghost
               icon="edit"
               :disabled="disabled"
               @click="handleEdit(record)"
-            >编辑</a-button>
+            >编辑</a-button>-->
             <a-button
               type="primary"
               size="small"
@@ -142,7 +142,8 @@ export default {
   },
   methods: {
     handleAdd() {
-      this.$refs.modal.init(this.id)
+      const data = this.data.map(item => item.tabletPcNum)
+      this.$refs.modal.init(this.id, data)
     },
     handleEdit(record) {
       this.$refs.modal.edit(record,this.id)

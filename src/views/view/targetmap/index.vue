@@ -1,11 +1,20 @@
 <template>
   <TreeCard>
     <template slot="tree">
-      <h1>
-        运行中设备
-        <span>{{equipmentNum}}</span>
-      </h1>
-      <a-tree :tree-data="treeData"></a-tree>
+<!--      <h1>-->
+<!--        运行中设备-->
+<!--        <span>{{equipmentNum}}</span>-->
+<!--      </h1>-->
+<!--      <a-tree :tree-data="treeData"></a-tree>-->
+      <a-radio-group v-model="tree">
+        <a-radio
+          :style="style"
+          v-for="item in treeList"
+          :key="item.contestId"
+          :value="item.contestId"
+        >{{ item.contestName }}
+        </a-radio>
+      </a-radio-group>
     </template>
     <template slot="query">
       <QuerySearch
@@ -40,50 +49,7 @@ import TreeCard from '@comp/card/TreeCard.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import TargetMapModal from '@views/view/targetmap/modules/TargetMapModal.vue'
 import ListEchatCard from '@views/view/targetmap/modules/ListEchatCard.vue'
-const treeData = [
-  {
-    title: '全部',
-    key: '-1',
-  },
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          { title: '0-0-0-0', key: '0-0-0-0' },
-          { title: '0-0-0-1', key: '0-0-0-1' },
-          { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          { title: '0-0-1-0', key: '0-0-1-0' },
-          { title: '0-0-1-1', key: '0-0-1-1' },
-          { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      { title: '0-1-0-0', key: '0-1-0-0' },
-      { title: '0-1-0-1', key: '0-1-0-1' },
-      { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-  },
-
-];
+import { bizContestList } from '@api/competition'
 export default {
   name: 'targetmap',
   components: {
@@ -95,11 +61,19 @@ export default {
   data() {
     return {
       equipmentNum: 0,
-      treeData,
       pagination: {
         total: 20,
         current: 1,
         pageSize: 6
+      },
+      style: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+        width: '150px',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden'
       },
       list: [
         {
@@ -160,40 +134,46 @@ export default {
 
       search: [
         {
-          type: "input",
-          rules: [
-            'project',
-            { rules: [{ required: false, message: '请输入项目名称' }] },
-          ],
-          label: '项目名称',
-          placehorder: '请输入项目名称'
+          type: 'input',
+          label: '姓名',
+          rules: ['a'],
+          placeholder: '请输入姓名'
         },
         {
-          type: "select",
-          rules: [
-            'equipment',
-            { rules: [{ required: false, message: '请选择设备类型' }] },
-          ],
-          label: '设备类型',
-          data: [
-            {
-              value: 0,
-              label: '关闭'
-            },
-            {
-              value: 1,
-              label: '运行中'
-            }
-          ],
-          placehorder: '请选择设备类型'
-        }
-      ]
+          type: 'select',
+          label: '项目名称',
+          rules: ['b'],
+          placeholder: '请选择项目',
+          data: []
+        },
+        {
+          type: 'input',
+          label: '阶段名称',
+          rules: ['c'],
+          placeholder: '请输入阶段名称'
+        },
+        {
+          type: 'input',
+          label: '团体名称',
+          rules: ['d'],
+          placeholder: '请输入团体名称'
+        },
+      ],
+      treeList: [],
+      tree: ''
     }
   },
   mounted() {
+    this.getTreeList()
     this.$refs.query.init(this.search)
   },
   methods: {
+    getTreeList () {
+      bizContestList({}).then(res => {
+        this.treeList = res.result
+        this.tree = res.result[0].contestId
+      })
+    },
     handleReset(e) {
       console.log(e)
     },

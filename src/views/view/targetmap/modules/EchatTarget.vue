@@ -70,7 +70,7 @@
       </g>
     </g>
     <g class="dot">
-
+      <circle v-for="(item, i) in dots"></circle>
     </g>
   </svg>
 </template>
@@ -80,7 +80,7 @@ export default {
   name: 'echarTarget',
   data(){
     return {
-
+      dots: []
     }
   },
   mounted() {
@@ -93,6 +93,7 @@ export default {
      * @param option
      */
     setOption(option) {
+      this.dots = option
     }
   }
 }

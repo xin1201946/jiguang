@@ -122,7 +122,7 @@ export default {
       bizContestList({}).then(res => {
         if (res.code === 200) {
           this.list = res.result
-          console.log(this.list, '123')
+          // console.log(this.list, '123')
         }
       })
     },

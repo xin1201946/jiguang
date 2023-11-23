@@ -1,0 +1,71 @@
+import { status } from '@views/Competition/competitionList/competitionList.config'
+
+export const gameInfoQuery = [
+  {
+    type: "input",
+    label: '选手姓名',
+    placeholder: '请输入选手姓名',
+    rules: [
+      ''
+    ],
+    span: 4
+  },
+  {
+    type: "input",
+    label: '代表队',
+    placeholder: '请输入代表队',
+    rules: [
+      ''
+    ],
+  },
+  {
+    type: "select",
+    label: '审核状态',
+    placeholder: '请选择审核状态',
+    rules: [
+      'status'
+    ],
+    data: status,
+  },
+]
+
+
+export const gameInfoColumns = [
+  {
+    title: '选手编号',
+    align: 'center',
+  },
+  {
+    title: '姓名',
+    align: 'center',
+  },
+  {
+    title: '性别',
+    align: 'center',
+  },
+  {
+    title: '身份证号',
+    align: 'center',
+  },
+  {
+    title: '团体名称',
+    align: 'center',
+  },
+  {
+    title: '是否团体排名',
+    align: 'center',
+  },
+  {
+    title: '靶位',
+    align: 'center',
+  },
+  {
+    title: '操作',
+    align: 'center',
+    dataIndex: 'entryFormId',
+    scopedSlots: {
+      customRender: 'operation'
+    },
+    width: 200
+  }
+]
