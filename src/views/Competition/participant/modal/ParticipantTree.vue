@@ -19,6 +19,7 @@
             :style="radioStyle"
             :value="item.key"
             v-for="item in treeData"
+            :key="item.key"
           >{{item.projectName ? `${item.projectName} - ${item.projectGroup}` : '全部'}}
           </a-radio>
         </a-radio-group>
