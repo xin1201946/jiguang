@@ -18,20 +18,31 @@ export const teamGroupManageQuery = [
 
 export const teamGroupManageTable = [
   {
-    title: '教练员',
-    align: 'center',
-    dataIndex: 'a'
-  },
-  {
-    title: '团队编号',
-    align: 'center',
-    dataIndex: 'contestName'
-  },
-  {
     title: '团队名称',
     align: 'center',
-    dataIndex: 'teamGroupName'
+    dataIndex: 'groupName'
   },
+  {
+    title: '教练',
+    align: 'center',
+    dataIndex: 'coachName'
+  },
+  {
+    title: '领队',
+    align: 'center',
+    dataIndex: 'leaderName'
+  },
+  {
+    title: '团队项目人数',
+    align: 'center',
+    dataIndex: 'groupPlayerCount'
+  },
+  {
+    title: '团队项目分数',
+    align: 'center',
+    dataIndex: 'groupScore'
+  },
+
   {
     title: '操作',
     align: 'center',

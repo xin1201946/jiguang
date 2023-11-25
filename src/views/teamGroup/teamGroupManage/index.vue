@@ -31,12 +31,13 @@
         @change="handleTableChange"
         bordered
         :data-source="data"
+        rowKey="groupId"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
             <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>
             <a-button type="primary" size="small" ghost icon="edit" @click="handleEdits(record)">编辑</a-button>
-            <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+<!--            <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
           </a-space>
         </template>
       </a-table>
@@ -55,6 +56,7 @@ import { teamGroupManageQuery, teamGroupManageTable } from '@views/teamGroup/tea
 import { bizContestList } from '@api/competition'
 import TeamGroupManageModal from '@views/teamGroup/teamGroupManage/modal/teamGroupManageModal.vue'
 import { deleteMessage } from '@/utils'
+import { bizGroupPageList } from '@api/teamGroup'
 export default {
   name: 'teamGroupManage',
   components: {
@@ -68,15 +70,10 @@ export default {
     return {
       radioData: [],
       style: radioStyle,
+      query: {},
       contestId: '',
       columns: teamGroupManageTable,
-      data: [
-        {
-          a: '领队1',
-          contestName: '赛事1',
-          teamGroupName: '团队1'
-        }
-      ]
+      data: []
     }
   },
   watch: {
@@ -117,9 +114,20 @@ export default {
       })
     },
     getList() {
-
+      const data = {
+        ...this.query,
+        pageNum: this.pagination.current,
+        pageSize: this.pagination.pageSize,
+        contestId: this.contestId
+      }
+      bizGroupPageList(data).then(res => {
+        this.data = res.result.records
+        this.pagination.current = res.result.current
+        this.pagination.total = res.result.total
+      })
     },
     handleInfo(record) {
+
       this.$refs.modal.info(record, this.contestId, name.label)
       // this.$router.push('/teamGroup/teamGroupManageInfo')
     },
