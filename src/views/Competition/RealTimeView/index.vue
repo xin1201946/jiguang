@@ -81,19 +81,7 @@ export default {
       tree: '',
       treeList: [],
       list: [],
-      data: [
-        {
-          name: 'cs',
-          project: 'cs',
-          stage: 'cs',
-          tuan: 'cs',
-          bawei: 'cs',
-          total: 100,
-          group1: 20,
-          group2: 30,
-          group3: 40
-        }
-      ],
+      data: [],
       query: {},
       columns: RealTimeViewTableColumns,
       scroll: {
