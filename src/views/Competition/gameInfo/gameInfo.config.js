@@ -32,30 +32,40 @@ export const gameInfoQuery = [
 
 export const gameInfoColumns = [
   {
+    dataIndex: 'serialNumber',
     title: '选手编号',
     align: 'center',
   },
   {
+    dataIndex: 'playerName',
     title: '姓名',
     align: 'center',
   },
   {
+    dataIndex: 'playerSex',
+    customRender: (text, record, index)=>{
+      return record.playerSex == '1' ? '男' : '女'
+    },
     title: '性别',
     align: 'center',
   },
   {
+    dataIndex: 'idCardNum',
     title: '身份证号',
     align: 'center',
   },
   {
+    dataIndex: 'groupName',
     title: '团体名称',
     align: 'center',
   },
   {
+    dataIndex: 'action',
     title: '是否团体排名',
     align: 'center',
   },
   {
+    dataIndex: 'targetSite',
     title: '靶位',
     align: 'center',
   },

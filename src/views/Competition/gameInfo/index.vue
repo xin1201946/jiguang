@@ -1,38 +1,26 @@
 <template>
   <div class="gameInfo">
     <div class="btns">
-      <a-page-header
-        @back="handleBack"
-        title="2023年中小学生激光设计比赛"
-      ></a-page-header>
+      <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
     </div>
     <div class="cards">
       <TreeCard :width="true">
         <template slot="tree">
-          <a-directory-tree
-            multiple
-            default-expand-all
-            @select="onSelect"
-            @expand="onExpand"
-          >
+          <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
             <a-tree-node
               v-for="item in treeList"
               :key="item.projectId + item.projectGroup"
               :title="item.projectName + ' - ' + item.projectGroup"
             >
-              <a-tree-node
-                v-for="i in item.children"
-                is-leaf
-                :slots="{title: 'title'}"
-                :key="i.cproStageId"
-              >
+              <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
-                    <span>{{i.stageName}}</span>
+                    <span>{{ i.stageName }}</span>
                     <a-space>
-                      <a-button @click="handleZhunbei(i)" size="small">准备</a-button>
-                      <a-button @click="handleShishe(i)" size="small">试射</a-button>
-                      <a-button @click="handleBisai(i)" size="small">比赛</a-button>
+                      <a-button @click.stop="handleZhunbei(i)" size="small">准备</a-button>
+                      <a-button @click.stop="handleShishe(i)" size="small">试射</a-button>
+                      <a-button @click.stop="handleBisai(i)" size="small">开始</a-button>
+                      <a-button @click.stop="handleEnd(i)" size="small">结束</a-button>
                     </a-space>
                   </div>
                 </template>
@@ -45,38 +33,36 @@
         </template>
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
-            <a-button type="primary">导入参赛人员</a-button>
+            <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-show="group !== null" type="primary" @click="handleDraw">抽签</a-button>
-<!--            选中组别-->
-            <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button>
-            <a-button v-show="group !== null && draw" type="primary">推送平板</a-button>
+            <a-button v-show="group !== null" type="primary" @click="handleDraw">下一阶段</a-button>
+            <!--            选中组别-->
+            <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
+            <a-button v-show="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
           </a-space>
         </template>
         <div class="gameInfoTables" v-show="groupActive">
           <div class="gameInfoTables_group">
             <a-radio-group v-model="group">
               <a-radio
-                style="display: block;height: 30px;line-height: 30px;"
-                v-for="item in 5"
-                :value="item"
-                :key="item"
-              >{{ numToCapital(item) }}组</a-radio>
+                @change="radioChangeHandle"
+                style="display: block; height: 30px; line-height: 30px"
+                v-for="item in groupList"
+                :value="item.group"
+                :key="item.group"
+                >{{ numToCapital(item.group) }}组</a-radio
+              >
             </a-radio-group>
           </div>
           <div class="gameInfoTables_table">
-            <a-table
-              :columns="columns"
-            ></a-table>
+            <a-table rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
           </div>
         </div>
-        <a-table
-          v-show="!groupActive"
-          :columns="columns"
-        ></a-table>
-        <gameInfoDrawModal ref="draw" @list="drawList"></gameInfoDrawModal>
+        <a-table v-show="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
+        <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
-        <GameInfoGroupModal ref="group" @list="groupList"></GameInfoGroupModal>
+        <GameInfoGroupModal ref="group" @list="groupListHandle"></GameInfoGroupModal>
       </TreeCard>
     </div>
   </div>
@@ -90,7 +76,19 @@ import gameInfoTargetModal from '@views/Competition/gameInfo/modal/gameInfoTarge
 import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawModal.vue'
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
-import { bizContestProjectList, bizContestProjectStageList } from '@api/competition'
+import {
+  bizContestProjectList,
+  bizContestProjectStageList,
+  getStagePlayerGroup,
+  addStagePlayer,
+  stagePlayerGroup,
+  drawing,
+  propePlayerSiteToPad,
+  ready,
+  fireAdjust,
+  startFire,
+  endFire,
+} from '@api/competition'
 import { numToCapital } from '@/utils'
 
 export default {
@@ -101,29 +99,105 @@ export default {
     QuerySearch,
     gameInfoTargetModal,
     gameInfoDrawModal,
-    GameInfoGroupModal
+    GameInfoGroupModal,
   },
-  inject: ["closeCurrent"],
+  inject: ['closeCurrent'],
   data() {
     return {
-      title: '项目名称',
-      contestId: '6',
       treeList: [],
       cproStageId: null,
+      cproId: null,
       columns: gameInfoColumns,
       group: null,
+      groupList: [],
       groupActive: false,
-      draw: false
+      draw: false,
+
+      data: {},
+
+      dataSource: [],
     }
   },
   methods: {
     numToCapital,
     /**
+     * 推送到pad
+     */
+    pushPadHandle() {
+      propePlayerSiteToPad({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('推送成功！')
+        } else {
+          this.$message.error(res.message)
+        }
+        cosnoe.log(res)
+      })
+    },
+    /**
+     * 导入
+     */
+    importHandle() {
+      addStagePlayer({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('导入成功！')
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+        console.log(res)
+      })
+    },
+    /**
+     * 获取table数据
+     */
+    getTableList() {
+      getStagePlayerGroup({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+      }).then((res) => {
+        if (res.result[0].group === -1) {
+          this.group = null
+          this.groupList = []
+          this.groupActive = false
+          this.dataSource = res.result[0].bizContestPlayerList
+        } else {
+          if (!this.group) {
+            this.group = res.result[0].group
+          }
+          this.groupList = res.result
+          this.groupActive = true
+          this.radioChangeHandle({ target: { value: res.result[0].group } })
+        }
+        console.log(res)
+      })
+    },
+    /**
+     * 选择组别
+     */
+    radioChangeHandle(e) {
+      this.group = e.target.value
+      console.log(this.groupList)
+      this.groupList.forEach((item) => {
+        if (item.group == this.group) {
+          this.dataSource = item.bizContestPlayerList
+        }
+      })
+    },
+    /**
      * 头部返回
      */
     handleBack() {
       this.$nextTick(() => {
-        // this.$router.push('/competition/game')
         this.closeCurrent()
       })
     },
@@ -133,7 +207,10 @@ export default {
     handleDraw() {
       this.$refs.draw.init()
     },
-    handleGroup () {
+    /**
+     * 分组
+     */
+    handleGroup() {
       this.$refs.group.init()
     },
     /**
@@ -141,23 +218,23 @@ export default {
      */
     getProjectList() {
       bizContestProjectList({
-        contestId: this.contestId
-      }).then(res => {
+        contestId: this.data.contestId,
+      }).then((res) => {
         const arr = res.result.map(async (item) => {
           const stage = await bizContestProjectStageList({
             contestId: item.contestId,
-            cproId: item.cproId
+            cproId: item.cproId,
           })
           return {
             ...item,
-            children: stage.result.length ? stage.result : []
+            children: stage.result.length ? stage.result : [],
           }
         })
         this.getTree(arr)
       })
     },
     getTree(arr) {
-      Promise.all(arr).then(res => {
+      Promise.all(arr).then((res) => {
         this.treeList = res
       })
     },
@@ -172,7 +249,20 @@ export default {
         this.draw = false
         this.group = null
         this.groupActive = false
-      }else {
+        function findParent(data, target, result) {
+          data.forEach((item) => {
+            item.children.forEach((e) => {
+              if (e.cproStageId === target) {
+                result.push(item)
+              }
+            })
+          })
+        }
+        let result = []
+        findParent(this.treeList, this.cproStageId, result)
+        this.cproId = result[0].cproId
+        this.getTableList()
+      } else {
         this.cproStageId = null
         this.draw = false
         this.group = null
@@ -182,33 +272,106 @@ export default {
     onExpand() {},
     handleZhunbei(row) {
       console.log('zhunbei')
+      ready({
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('操作成功！')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     handleShishe(row) {
+      console.log('@!#@!!@#@!')
+      fireAdjust({
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('操作成功！')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
       console.log('shishe')
     },
     handleBisai(row) {
       console.log('bisai')
+      startFire({
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('操作成功！')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handleEnd() {
+      endFire({
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('操作成功！')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     /**
      * 弹窗回调
      */
-    drawList() {
+    drawListHandle(e) {
       this.draw = true
+      drawing({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group, //人员组别
+        startNo: e.startNo, //靶位开始编号
+        endNo: e.endNo, //靶位结束编号
+      }).then((res) => {
+        console.log(res)
+        if (res.success) {
+          this.$message.success('抽签成功！')
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
-    groupList() {
-      this.groupActive = true
-    }
+    groupListHandle() {
+      stagePlayerGroup({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('分组成功！')
+          this.groupActive = true
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+        console.log(res)
+      })
+    },
   },
   mounted() {
     this.$refs.query.init(gameInfoQuery)
+    this.data = JSON.parse(decodeURI(this.$route.query.row))
     this.getProjectList()
-  }
+  },
 }
 </script>
 
 <style scoped lang="less">
 @btnHeight: 50px;
-.gameInfo{
+.gameInfo {
   height: 100%;
   overflow: hidden;
   .btns {
@@ -226,24 +389,23 @@ export default {
 
   .cards {
     height: calc(100% - @btnHeight - 10px);
-    /deep/.ant-tree-child-tree.ant-tree-child-tree-open{
+    /deep/.ant-tree-child-tree.ant-tree-child-tree-open {
       //选中后设置背景色及高度
-      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected::before{
-        height: 30px
+      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected::before {
+        height: 30px;
       }
 
-      li{
+      li {
         display: flex;
       }
-      .ant-tree-treenode-selected{
-
+      .ant-tree-treenode-selected {
       }
-      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal{
+      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal {
         display: flex;
         align-items: center;
       }
     }
-    .title{
+    .title {
       display: flex;
       width: 300px;
       justify-content: space-between;
@@ -251,36 +413,36 @@ export default {
       align-items: center;
     }
   }
-  .gameInfoTables{
+  .gameInfoTables {
     height: 100%;
     overflow: hidden;
     display: flex;
-    &_group{
+    &_group {
       min-width: 100px;
       height: 100%;
       overflow: auto;
     }
-    &_table{
+    &_table {
       flex: 1;
       height: 100%;
       overflow: auto;
     }
   }
 }
-.query{
+.query {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.tables{
+.tables {
   overflow: hidden;
   max-height: 640px;
-  &_top{
+  &_top {
     margin-bottom: 20px;
     width: 100%;
     height: 340px;
   }
-  &_buttom{
+  &_buttom {
     height: 300px;
   }
 }

@@ -12,6 +12,7 @@
   "dependencies": {
     "@antv/data-set": "^0.11.4",
     "@jeecg/antd-online-mini": "3.1.0-beta",
+    "@jiaminghi/data-view": "^2.10.0",
     "@tinymce/tinymce-vue": "2.1.0",
     "@toast-ui/editor": "^2.1.2",
     "ant-design-vue": "^1.7.2",

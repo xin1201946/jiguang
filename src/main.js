@@ -7,6 +7,8 @@ import Storage from 'vue-ls'
 import router from './router'
 import store from './store/'
 import { VueAxios } from "@/utils/request"
+// 将自动注册所有组件为全局组件
+import dataV from '@jiaminghi/data-view'
 
 require('@jeecg/antd-online-mini')
 require('@jeecg/antd-online-mini/dist/OnlineForm.css')
@@ -62,7 +64,7 @@ Vue.use(preview)
 Vue.use(vueBus);
 Vue.use(JeecgComponents);
 Vue.use(VueAreaLinkage);
-
+Vue.use(dataV)
 SSO.init(() => {
   main()
 })

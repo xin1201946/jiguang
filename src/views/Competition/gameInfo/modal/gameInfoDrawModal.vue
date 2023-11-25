@@ -1,38 +1,19 @@
 <template>
-  <BizModal
-    :title="title"
-    :visible="visible"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    :loading="loadingModal"
-  >
-    <a-form-model
-      :labelCol="{span: 6}"
-      :wrapperCol="{span: 14}"
-      :rules="rules"
-      ref="form"
-      :model="formData"
-    >
+  <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
+    <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 14 }" :rules="rules" ref="form" :model="formData">
       <a-form-model-item label="靶位区间">
         <a-row :gutter="24">
           <a-col :span="12">
-            <a-form-model-item
-              :labelCol="{span: 0}"
-              :wrapperCol="{span: 24}"
-            >
-              <a-input></a-input>
+            <a-form-model-item :labelCol="{ span: 0 }" :wrapperCol="{ span: 24 }">
+              <a-input v-model="formData.startNo"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item
-              :labelCol="{span: 0}"
-              :wrapperCol="{span: 24}"
-            >
-              <a-input></a-input>
+            <a-form-model-item :labelCol="{ span: 0 }" :wrapperCol="{ span: 24 }">
+              <a-input v-model="formData.endNo"></a-input>
             </a-form-model-item>
           </a-col>
         </a-row>
-
       </a-form-model-item>
     </a-form-model>
   </BizModal>
@@ -43,7 +24,7 @@ import BizModal from '@comp/modal/BizModal.vue'
 export default {
   name: 'gameInfoDrawModal',
   components: {
-    BizModal
+    BizModal,
   },
   data() {
     return {
@@ -51,24 +32,23 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {},
-      rules: {}
+      rules: {},
     }
   },
   methods: {
     handleOk() {
       this.visible = false
-      this.$emit('list')
+      this.$emit('list', this.formData)
     },
     handleCancel() {
       this.visible = false
     },
     init() {
       this.visible = true
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped lang="less">
-
 </style>
