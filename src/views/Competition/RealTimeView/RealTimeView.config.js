@@ -108,6 +108,13 @@ export const RealTimeViewTableColumns = [
     title: '总成绩',
     align: 'center',
     dataIndex: 'stageTotal',
+    customRender: (text, record) => {
+      if (record.integrationMethod === 2 || record.integrationMethod === '2') {
+        console.log(record)
+        return text + '_x' + record.goodTotal
+      }
+      return text
+    }
     /* scopedSlots: {
       customRender: 'total'
     }, */

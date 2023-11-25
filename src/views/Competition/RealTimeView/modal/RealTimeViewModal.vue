@@ -15,7 +15,9 @@
         <a-descriptions-item :span="2" label="团体名称">{{ formData.groupName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="阶段名称">{{ formData.stageName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="阶段组别">{{ formData.stageGroup }}</a-descriptions-item>
-        <a-descriptions-item :span="2" label="总成绩">{{ formData.stageTotal }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="总成绩">{{
+            (record.integrationMethod === 2 || record.integrationMethod === '2') ? formData.stageTotal + '_x' + formData.goodTotal : formData.stageTotal
+        }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="设备编号">{{ formData.tabletPcNum }}</a-descriptions-item>
 
       </a-descriptions>
