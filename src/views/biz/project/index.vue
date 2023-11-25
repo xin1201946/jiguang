@@ -41,6 +41,7 @@ import ProjectModal from '@views/biz/project/modal/projectModal.vue'
 import { projectQuery, projectColumns } from '@views/biz/project/project.config'
 import { bizProjectPageList, bizProjectDelete } from '@api/biz'
 import { deleteMessage } from '@/utils'
+
 export default {
   name: 'project',
   components: {

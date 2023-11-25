@@ -1,15 +1,23 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-page-header
-        @back="handleBack"
-        :title="treeList.length && treeList[0].contestName"
-      ></a-page-header>
+      <a-select
+        :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'"
+        style="width: 300px"
+        v-model="contestId"
+        @change="handleContest"
+      >
+        <a-select-option
+          v-for="(item, i) in treeList"
+          :key="i"
+          :value="item.contestId"
+        >{{item.contestName}}</a-select-option>
+      </a-select>
     </div>
     <div class="cards">
       <TreeCard>
         <template slot="tree">
-          <a-radio-group v-model="tree" @change="handleTreeChange">
+          <a-radio-group v-if="list.length" v-model="tree" @change="handleTreeChange">
             <a-radio
               :style="style"
               v-for="item in list"
@@ -18,6 +26,7 @@
             > {{ item.label }}
             </a-radio>
           </a-radio-group>
+          <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else/>
         </template>
         <template slot="query">
           <QuerySearch
@@ -31,19 +40,18 @@
           <a-table
             :columns="columns"
             :data-source="data"
-            rowKey="tabletPcId"
+            rowKey="finalScoreId"
             :pagination="pagination"
             @change="handleTableChange"
             bordered
-            :scroll="scroll"
           >
-            <template slot="total" slot-scope="text, record, index">
+<!--            <template slot="total" slot-scope="text, record, index">
               <a @click="$refs.modals.init">{{ text }}</a>
-            </template>
+            </template>-->
             <template slot="operation" slot-scope="text, record, index">
               <a-space>
 <!--                <a-icon type="profile" />-->
-                <a-button type="primary" size="small" ghost icon="profile" @click="handleEdit(record )">详情</a-button>
+                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>
 <!--                <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
             </template>
@@ -64,9 +72,16 @@ import {
   RealTimeViewTreeStyle
 } from '@views/Competition/RealTimeView/RealTimeView.config'
 import { deleteMessage, numToCapital } from '@/utils'
-import { bizContestList, bizContestProjectList, bizContestProjectStageList } from '@api/competition'
+
+import {
+  bizContestList,
+  bizContestProjectList,
+  bizContestProjectStageList,
+  bizPlayerFinalScorePageList, bizPlayerFinalScoreQueryById
+} from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
+import { bizEntryFormList } from '@api/biz'
 export default {
   name: 'RealTimeView',
   components: {
@@ -78,11 +93,16 @@ export default {
   data() {
     return {
       style: RealTimeViewTreeStyle,
+      contestId: '',
       tree: '',
       treeList: [],
       list: [],
       data: [],
-      query: {},
+      query: {
+        playerName: undefined,
+        stageName: undefined,
+        groupName: undefined
+      },
       columns: RealTimeViewTableColumns,
       scroll: {
         x: 1500
@@ -90,62 +110,100 @@ export default {
     }
   },
   computed: {},
-  watch: {},
-  mounted() {
-    this.getTreeList()
-    this.$refs.query.init(RealTimeViewQuery)
+  watch: {
+    $route: {
+      handler() {
+        this.$nextTick(() => {
+          this.getTreeList()
+          this.$refs.query.init(RealTimeViewQuery)
+        })
+      },
+      deep: true,
+      immediate: true
+    }
   },
   created() {},
   methods: {
+    // 修改赛事
+    handleContest() {
+      if (this.$refs.query) {
+        this.getProjectList()
+      }
+    },
     // 获取姓名
     getUserName(data) {
-      data.unshift({ label: '全部', value: '' })
-      const query = RealTimeViewQuery.map(item => {
-        if (item.label === '阶段名称' && item.type === 'select') {
-          return {
-            ...item,
-            data: data
-          }
+      bizEntryFormList({}).then(res => {
+        // console.log(res.result)
+        const result = res.result.map(item => ({
+          label: item.entryName,
+          value: item.entryName
+        }))
+        if (data.length) {
+          data.unshift({ label: '全部', value: '' })
         }
-        return item
-      })
-      this.$refs.query.init(query)
-      this.$nextTick(() => {
-        this.$refs.query.handleReset()
+        const query = RealTimeViewQuery.map(item => {
+          if (item.label === '阶段名称' && item.type === 'select') {
+            return {
+              ...item,
+              data: data
+            }
+          }
+          if (item.type === 'search' && item.label === '姓名') {
+            return {
+              ...item,
+              data: result
+            }
+          }
+          return item
+        })
+        this.$refs.query.init(query)
+        this.$nextTick(() => {
+          this.$refs.query.handleReset()
+        })
       })
     },
     // 获取阶段
     getStage () {
       bizContestProjectStageList({
-        cproId: this.tree
+        cproId: this.tree,
+        contestId: this.contestId
       }).then(res => {
-        const data = res.result.map(item => {
-          return {
-            ...item,
-            label: item.stageName,
-            value: item.cproStageId
-          }
-        })
-        // 姓名
-       this.getUserName(data)
+        if (res.result.length) {
+          const data = res.result.map(item => {
+            return {
+              ...item,
+              label: item.stageName,
+              value: item.cproStageId
+            }
+          })
+          this.getUserName(data)
+        }else {
+          this.getUserName([])
+        }
       })
     },
     // 获取项目
     getProjectList () {
       bizContestProjectList({
-        contestId: this.treeList[0].contestId
+        contestId: this.contestId
       }).then(res => {
+        // console.log(res)
         if (res.code === 200) {
           // 查询下拉框
-          const data = res.result.map(item => {
-            return {
-              ...item,
-              label: `${item.projectName} - ${item.projectGroup}`,
-              value: item.cproId
-            }
-          })
-          this.tree = data[0].value
-          this.list = data
+          if (res.result.length) {
+            const data = res.result.map(item => {
+              return {
+                ...item,
+                label: `${item.projectName} - ${item.projectGroup}`,
+                value: item.cproId
+              }
+            })
+            this.tree = data[0].value
+            this.list = data
+          }else {
+            this.tree = ''
+            this.list = []
+          }
           // 阶段
           this.getStage()
         }
@@ -155,11 +213,10 @@ export default {
     getTreeList () {
       bizContestList({}).then(res => {
         this.treeList = res.result
-        // this.tree = res.result[0].contestId
+        this.contestId = res.result[0].contestId
         this.pagination.current = 1
         // 通过比赛获取左侧项目
         this.getProjectList()
-
       })
     },
     handleDelete() {
@@ -174,7 +231,7 @@ export default {
           // title: numToCapital((i + 1) * 10),
           title: (i + 1) * 10,
           align: 'center',
-          dataIndex: `group${i+1}`
+          dataIndex: `scoreList${i+1}`
         })
       }
       // children.push({
@@ -196,11 +253,34 @@ export default {
       const data = {
         ...this.query,
         pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
+        contestId: this.contestId,
+        cproId: this.tree,
       }
-      // todo 以下复制到列表接口, total值不固定
-      // 当前比赛总共可以打几枪 先默认为10枪
-      this.getColumns(3)
+      bizPlayerFinalScorePageList(data).then(res => {
+        if (res.code === 200) {
+          if (res.result.records.length) {
+            this.getColumns(res.result.records[0].gunTotalGroup)
+          }
+          this.$nextTick(() => {
+            if (res.result.records.length) {
+              this.data = res.result.records.map(item => {
+                const obj = item
+                if (item.scoreList.length) {
+                  for (let i = 0; i < item.scoreList.length; i++) {
+                    obj['scoreList' + (i + 1)] = item.scoreList[i]
+                  }
+                }
+                return obj
+              })
+            }else {
+              this.data = []
+            }
+            this.pagination.current = res.result.current
+            this.pagination.total = res.result.total
+          })
+        }
+      })
     },
     handleTreeChange (v) {
       this.getStage()
@@ -208,6 +288,14 @@ export default {
     handleBack() {
       this.$nextTick(() => {
 
+      })
+    },
+    handleInfo(record) {
+      // console.log()
+      bizPlayerFinalScoreQueryById(record.finalScoreId).then(res => {
+        if (res.code === 200) {
+          this.$refs.modal.info(res.result, record)
+        }
       })
     }
   },
@@ -230,6 +318,10 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
     justify-content: space-between;
+    /deep/.ant-page-header-heading{
+      display: flex;
+      align-items: center;
+    }
   }
 
   .cards {

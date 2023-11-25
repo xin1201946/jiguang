@@ -48,15 +48,15 @@
               :placeholder="item.placeholder"
               v-decorator="item.rules"
               style="width: 100%"
-              @search="fetchUser"
+              @search="v => fetchUser(v, item.data)"
               @change="handleChange"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
               <a-select-option
                 v-else
-                v-for="value in item.data"
+                v-for="(value, i) in item.data"
                 :value="value.value"
-                :key="value.value"
+                :key="i"
               >{{ value.label }}
               </a-select-option>
             </a-select>
@@ -139,11 +139,11 @@ export default {
         this.$emit('reset', obj)
       })
     },
-    fetchUser(value) {
-      console.log(value)
+    fetchUser(value, data) {
+      // console.log(value, data)
     },
     handleChange(value) {
-      console.log(value)
+      // console.log(value)
     }
   }
 }

@@ -1,0 +1,1 @@
+import { deleteAction, download, getAction, postAction } from '@/api/manage'

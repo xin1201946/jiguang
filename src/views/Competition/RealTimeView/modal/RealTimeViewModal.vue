@@ -9,22 +9,36 @@
   >
     <div style="height: 100%; overflow-y: auto">
       <a-descriptions bordered :column="4">
-        <a-descriptions-item :span="2" label="选手名称">xxxx</a-descriptions-item>
-        <a-descriptions-item :span="2" label="项目名称">xxxx</a-descriptions-item>
-        <a-descriptions-item :span="2" label="团体名称">xxxx</a-descriptions-item>
-        <a-descriptions-item :span="2" label="阶段名称">xxxx</a-descriptions-item>
-        <a-descriptions-item :span="2" label="靶位">xxxx</a-descriptions-item>
-        <a-descriptions-item :span="2" label="总成绩">xxxx</a-descriptions-item>
+        <a-descriptions-item :span="2" label="选手名称">{{ formData.playerName }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="项目名称">{{formData.projectName}}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="项目组别">{{formData.projectGroup}}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="团体名称">{{ formData.groupName }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="阶段名称">{{ formData.stageName }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="阶段组别">{{ formData.stageGroup }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="总成绩">{{ formData.stageTotal }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="设备编号">{{ formData.tabletPcNum }}</a-descriptions-item>
+
       </a-descriptions>
       <br/>
-      <div class="tables">
+      <div class="tables" v-if="formData.detailScoreList && formData.detailScoreList.length">
+<!--        <a-descriptions bordered :column="2" title="射击成绩(所有环数)">
+          <template v-for="(item, i) in formData.detailScoreList">
+            <a-descriptions-item
+              :key="i"
+              :span="1"
+              :label="`第${numToCapital((i + 1))}发`"
+            >{{item.shootCode}}</a-descriptions-item>
+          </template>
+        </a-descriptions>
+        <br>-->
         <a-descriptions bordered :column="2" title="射击成绩(所有环数)">
-          <a-descriptions-item
-            v-for="(item, i) in target"
-            :key="i"
-            :span="1"
-            :label="`第${numToCapital(item.group)}发`"
-          >1</a-descriptions-item>
+          <template v-for="(item, i) in formData.detailScoreList">
+            <a-descriptions-item
+              :key="i"
+              :span="1"
+              :label="`第${numToCapital(item.shootCode)}发`"
+            >{{item.score}}</a-descriptions-item>
+          </template>
         </a-descriptions>
       </div>
 <!--      <div>
@@ -75,38 +89,6 @@ export default {
           align: 'center'
         }
       ],
-      target: [
-        {
-          group: 1
-        },
-        {
-          group: 2
-        },
-        {
-          group: 3
-        },
-        {
-          group: 4
-        },
-        {
-          group: 5
-        },
-        {
-          group: 6
-        },
-        {
-          group: 7
-        },
-        {
-          group: 8
-        },
-        {
-          group: 9
-        },
-        {
-          group: 10
-        },
-      ]
     }
   },
   methods: {
@@ -114,7 +96,13 @@ export default {
     inits() {
       this.visible = true
     },
-    handleOk() {},
+    info(data, record) {
+      this.visible = true
+      this.formData = data
+    },
+    handleOk() {
+      this.visible = false
+    },
     handleCancel() {
       this.visible = false
     }
@@ -125,7 +113,7 @@ export default {
 <style scoped lang="less">
 .tables{
   /deep/.ant-descriptions-item-label.ant-descriptions-item-colon{
-    width: 100px;
+    width: 150px;
   }
 }
 .echar{

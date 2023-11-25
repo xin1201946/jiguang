@@ -59,6 +59,13 @@ export const bizContestProjectPlayerDelete = id => deleteAction(`bizContestProje
  */
 export const bizContestAudit = data => postAction("bizContest/audit", data)
 
+/**
+ * 赛事成绩
+ */
+
+export const bizPlayerFinalScorePageList = data => postAction('bizPlayerFinalScore/page/list', data)
+
+export const bizPlayerFinalScoreQueryById = id => getAction(`bizPlayerFinalScore/queryById/${id}`)
 
 /**
  * 比赛安排

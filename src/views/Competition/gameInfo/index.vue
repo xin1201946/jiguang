@@ -51,7 +51,7 @@
                 v-for="item in groupList"
                 :value="item.group"
                 :key="item.group"
-                >{{ numToCapital(item.group) }}组</a-radio
+              >{{ numToCapital(item.group) }}组</a-radio
               >
             </a-radio-group>
           </div>

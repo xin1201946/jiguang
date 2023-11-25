@@ -117,3 +117,13 @@ export const numToCapital = (num, type = 0) => {
   }
   return ''
 }
+
+/**
+ * @const radioStyle 左侧树样式
+ */
+export const radioStyle = {
+  width: '100px',
+  display: 'block',
+  height: '30px',
+  lineHeight: '30px'
+}
