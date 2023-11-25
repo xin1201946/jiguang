@@ -32,6 +32,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item
+        v-show="formData.deviceType === '0'"
         label="激光训练器类型"
         prop="deviceGunType"
         :rules="{ required: formData.deviceType === '0', message: '激光训练器类型', trigger: 'blur' }"
