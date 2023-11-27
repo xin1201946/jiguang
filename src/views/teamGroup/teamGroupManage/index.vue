@@ -2,7 +2,10 @@
   <TreeCard :width="false">
     <template slot="tree">
       <div style="width: 220px">
-        <a-radio-group v-model="contestId">
+        <a-radio-group
+          v-model="contestId"
+          @change="radioChange"
+        >
           <a-radio
             :style="style"
             v-for="(item, i) in radioData"
@@ -22,6 +25,7 @@
     <template slot="operator">
       <a-space>
         <a-button type="primary" icon="plus" @click="handleAdds">添加</a-button>
+        <a-button type="primary" icon="sync" @click="handleSync">更新</a-button>
       </a-space>
     </template>
     <template slot="default">
@@ -49,19 +53,16 @@
 <script>
 import BizMixins from '@views/biz/bizMixins'
 import TreeCard from '@comp/card/TreeCard.vue'
-import Card from '@comp/card/card.vue'
 import { radioStyle } from '@/utils'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import { teamGroupManageQuery, teamGroupManageTable } from '@views/teamGroup/teamGroupManage/teamGroupManage.config'
 import { bizContestList } from '@api/competition'
 import TeamGroupManageModal from '@views/teamGroup/teamGroupManage/modal/teamGroupManageModal.vue'
-import { deleteMessage } from '@/utils'
-import { bizGroupPageList } from '@api/teamGroup'
+import { bizGroupPageList, bizGroupQueryById, bizGroupUpdateBtn } from '@api/teamGroup'
 export default {
   name: 'teamGroupManage',
   components: {
     TreeCard,
-    Card,
     QuerySearch,
     TeamGroupManageModal
   },
@@ -92,6 +93,9 @@ export default {
     this.getTree()
   },
   methods: {
+    radioChange() {
+      this.$refs.query.handleReset()
+    },
     getTree() {
       bizContestList().then(res => {
         if (res.result.length) {
@@ -100,15 +104,8 @@ export default {
             value: item.contestId
           }))
           this.contestId = this.radioData[0].value
-          /* this.$refs.query.init(teamGroupManageQuery.map(item => {
-            if (item.type === 'search') {
-              item.data = this.radioData
-            }
-            return item
-          })) */
         }else {
           this.radioData = []
-          // this.$refs.query.init(teamGroupManageQuery)
         }
         this.getList()
       })
@@ -126,23 +123,34 @@ export default {
         this.pagination.total = res.result.total
       })
     },
+    // 详情
     handleInfo(record) {
-
-      this.$refs.modal.info(record, this.contestId, name.label)
-      // this.$router.push('/teamGroup/teamGroupManageInfo')
-    },
-    handleDelete(record) {
-      deleteMessage('是否删除当前团队').then(() => {
-        this.deleteCallback()
+      bizGroupQueryById(record.groupId).then(res => {
+        const name = this.radioData.filter(item => item.value === this.contestId)[0]
+        this.$refs.modal.info(res.result, this.contestId, name.label)
       })
     },
+    // 编辑
     handleEdits(record) {
       const name = this.radioData.filter(item => item.value === this.contestId)[0]
       this.$refs.modal.edit(record, this.contestId, name.label)
     },
+    // 添加
     handleAdds() {
       const name = this.radioData.filter(item => item.value === this.contestId)[0]
       this.$refs.modal.init(this.contestId, name.label)
+    },
+    // 更新
+    handleSync() {
+      bizGroupUpdateBtn({contestId: this.contestId}).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.pagination.current = 1
+          this.getList()
+        }else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }

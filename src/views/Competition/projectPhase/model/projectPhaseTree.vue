@@ -67,7 +67,7 @@
         <a-form-model-item
           label="比赛地点"
           prop="location"
-          :wrapperCol="{span: 24}"
+          :wrapperCol="{span: 22, offset: 2}"
         >
           <a-input
             :disabled="disabled"
@@ -79,7 +79,7 @@
         <a-form-model-item
           label="赛事简介"
           prop="briefIntro"
-          :wrapperCol="{span: 24}"
+          :wrapperCol="{span: 22, offset: 2}"
         >
 <!--          <VueEditor v-model="data.briefIntro"></VueEditor>-->
           <a-input
@@ -92,7 +92,7 @@
         <a-form-model-item
           label="赛事详情"
           prop="content"
-          :wrapperCol="{span: 24}"
+          :wrapperCol="{span: 22, offset: 2}"
         >
           <VueEditor
             :disabled="disabled"
@@ -207,6 +207,7 @@ export default {
 
 .projectPhaseTree{
   height: 100%;
+  width: 460px;
   overflow-y: hidden;
 }
 .btns{

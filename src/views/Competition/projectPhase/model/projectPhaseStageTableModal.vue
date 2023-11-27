@@ -167,7 +167,8 @@
           <a-input
             oninput="value=value.replace(/[^\d]/g,'')"
             v-model="formData.shootPeriod"
-          ></a-input>
+            addon-after="分"
+          />
         </a-form-model-item>
         <a-form-model-item label="是否试射" prop="isAdjustment">
           <a-select v-model="formData.isAdjustment">

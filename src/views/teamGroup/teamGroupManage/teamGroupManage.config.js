@@ -12,7 +12,8 @@ export const teamGroupManageQuery = [
     type: 'input',
     label: '团队名称',
     rules: ['teamGroupName'],
-    placeholder: '请输入团队名称'
+    placeholder: '请输入团队名称',
+    span: 5
   }
 ]
 
@@ -33,12 +34,12 @@ export const teamGroupManageTable = [
     dataIndex: 'leaderName'
   },
   {
-    title: '团队项目人数',
+    title: '团队人数',
     align: 'center',
     dataIndex: 'groupPlayerCount'
   },
   {
-    title: '团队项目分数',
+    title: '团队分数',
     align: 'center',
     dataIndex: 'groupScore'
   },

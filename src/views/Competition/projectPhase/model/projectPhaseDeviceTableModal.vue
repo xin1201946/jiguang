@@ -7,13 +7,42 @@
     @cancel="handleCancel"
   >
     <div class="modal">
-      <a-table
-        :data-source="tableList"
-        :columns="columns"
-        :pagination="false"
-        rowKey="tabletPcId"
-        :row-selection="rowSelection"
-      ></a-table>
+      <a-form>
+        <a-form-item
+          :labelCol="{span: 6}"
+          :wrapperCol="{span: 18}"
+          label="激光训练器类型"
+        >
+          <div style="display: flex">
+            <a-select
+              allowClear
+              placeholder="请选择激光训练器类型"
+              v-model="deviceType">
+              <a-select-option
+                v-for="item in deviceGunType"
+                :key="item.value"
+                :value="item.value"
+              >{{ item.label }}
+              </a-select-option>
+            </a-select>
+            <a-button
+              style="margin-left: 20px"
+              type="primary"
+              @click="handleClick"
+            >查询
+            </a-button>
+          </div>
+        </a-form-item>
+      </a-form>
+      <div class="modal_body">
+        <a-table
+          :data-source="tableList"
+          :columns="columns"
+          :pagination="false"
+          rowKey="tabletPcId"
+          :row-selection="rowSelection"
+        ></a-table>
+      </div>
     </div>
   </BizModal>
 </template>
@@ -22,6 +51,7 @@
 import { bizTabletPcList } from '@api/biz'
 import BizModal from '@comp/modal/BizModal.vue'
 import { bizContestProjectDeviceSave, bizContestProjectDeviceUpdate } from '@api/competition'
+import { deviceGunType } from '@views/biz/equipment/equipment.config'
 
 export default {
   name: 'projectPhaseDeviceTableModal',
@@ -30,6 +60,9 @@ export default {
   },
   data() {
     return {
+      deviceGunType,
+      deviceType: '',
+      tableLists: [],
       title: "",
       visible: false,
       loading: false,
@@ -41,14 +74,15 @@ export default {
           align: 'center'
         },
         {
-          // title: '平板对应设备编号枪',
           title: '激光训练器编号',
           dataIndex: 'deviceNum0',
-          align: 'center'
+          align: 'center',
+          customRender: (text, item) => {
+            return text + (item.deviceGunType === '0'? ' - 长款激光训练器' : item.deviceGunType === '1'? ' - 短款激光训练器' : '')
+          }
         },
         {
           title: '激光接收靶编号',
-          // title: '平板对应设备编号靶',
           dataIndex: 'deviceNum1',
           align: 'center'
         },
@@ -91,10 +125,17 @@ export default {
     }
   },
   methods: {
+    handleClick() {
+      if (this.deviceType) {
+        this.tableList = this.tableLists.filter(item => item.deviceGunType === this.deviceType)
+      }else {
+        this.tableList = this.tableLists
+      }
+    },
     getPcTableList () {
       return bizTabletPcList().then(res => {
-        console.log(res)
         this.tableList = res.result
+        this.tableLists = res.result
         return
       })
     },
@@ -120,25 +161,6 @@ export default {
               this.loading = false
             }
           })
-         /*  const key = this.selectedRows[0]
-          const obj =  this.tableList[key]
-          const data = {
-            gunDeviceNum: obj.deviceNum0,
-            targetDeviceNum: obj.deviceNum1,
-            tabletPcNum: obj.tabletPcNum,
-            cproId: this.cproId,
-            contestId: this.$route.query.id
-          }
-          bizContestProjectDeviceSave(data).then(res => {
-            if (res.code === 200) {
-              this.$message.success(res.message)
-              this.$emit("list")
-              this.visible = false
-            }else {
-              this.$message.warning(res.message)
-              this.loading = false
-            }
-          }) */
         }
         if (this.type === 1) {
           const obj =  this.selectedRows[0]
@@ -165,58 +187,17 @@ export default {
         }
 
       }
-     /*  this.$refs.form.validate(v => {
-        if (v) {
-          this.loading = true
-          if (this.type === 0) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            delete data.cproDeviceId
-            bizContestProjectDeviceSave({
-              ...data,
-              cproId: this.cproId,
-              contestId: this.$route.query.id
-            }).then(res => {
-              if (res.code === 200) {
-                this.$message.success(res.message)
-                this.$emit("list")
-                this.visible = false
-              }else {
-                this.$message.warning(res.message)
-                this.loading = false
-              }
-            })
-          }
-          if (this.type === 1) {
-            bizContestProjectDeviceUpdate({
-              ...this.formData,
-              cproId: this.cproId,
-              contestId: this.$route.query.id
-            }).then(res => {
-              if (res.code === 200) {
-                this.$message.success(res.message)
-                this.$emit("list")
-                this.visible = false
-              }else {
-                this.$message.warning(res.message)
-                this.loading = false
-              }
-            })
-          }
-        }
-      }) */
     },
     handleCancel() {
       this.visible = false
     },
     init(id, data) {
-      console.log(data)
       this.cproId = id
       this.type = 0
       this.loading = false
       this.title = "添加比赛设备"
       this.visible = true
       this.getPcTableList().then(() => {
-        console.log(this.tableList)
         const arr = []
         for (const item of this.tableList) {
           for (const key of data) {
@@ -227,8 +208,6 @@ export default {
         }
         this.selectedRowKeys = arr.map(item => item.tabletPcId)
         this.selectedRows = arr
-        // const arr = this.tableList.filter(item => item.tabletPcNum.includes(data))
-        console.log(arr)
         this.$nextTick(() => {
           for (const key in this.formData){
             this.formData[key] = ""
@@ -237,7 +216,6 @@ export default {
       })
     },
     edit(row, id) {
-      console.log(row, id)
       this.cproId = id
       this.type = 1
       this.title = "编辑比赛设备"
@@ -249,11 +227,8 @@ export default {
             this.formData[key] = row[key]
           }
           const keys = this.tableList.filter(item => item.tabletPcNum === row.tabletPcNum)[0]
-          // console.log(keys)
           this.selectedRowKeys = [keys.tabletPcId]
           this.selectedRows = [keys]
-          // tabletPcId
-          // this.$refs.form.clearValidate()
         })
       })
     }
@@ -264,6 +239,10 @@ export default {
 <style scoped lang="less">
 .modal{
   height: 100%;
+  overflow-y: hidden;
+}
+.modal_body{
+  height: calc(100% - 60px);
   overflow-y: auto;
 }
 </style>

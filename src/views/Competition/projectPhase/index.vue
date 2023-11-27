@@ -13,7 +13,7 @@
       </a-space>
     </div>
     <div class="cards">
-      <TreeCard>
+      <TreeCard :width="true">
         <!--    左侧详情-->
         <template slot="tree">
           <ProjectPhaseTree :data="tree"></ProjectPhaseTree>

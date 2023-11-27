@@ -4,7 +4,7 @@
       <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
     </div>
     <div class="cards">
-      <TreeCard :width="true">
+      <TreeCard>
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
             <a-tree-node
@@ -135,7 +135,7 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-        cosnoe.log(res)
+
       })
     },
     /**
@@ -153,7 +153,7 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-        console.log(res)
+        // console.log(res)
       })
     },
     /**
@@ -178,7 +178,7 @@ export default {
           this.groupActive = true
           this.radioChangeHandle({ target: { value: res.result[0].group } })
         }
-        console.log(res)
+        // console.log(res)
       })
     },
     /**
@@ -186,7 +186,7 @@ export default {
      */
     radioChangeHandle(e) {
       this.group = e.target.value
-      console.log(this.groupList)
+      // console.log(this.groupList)
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
           this.dataSource = item.bizContestPlayerList
@@ -271,7 +271,7 @@ export default {
     },
     onExpand() {},
     handleZhunbei(row) {
-      console.log('zhunbei')
+      // console.log('zhunbei')
       ready({
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
@@ -284,7 +284,7 @@ export default {
       })
     },
     handleShishe(row) {
-      console.log('@!#@!!@#@!')
+      // console.log('@!#@!!@#@!')
       fireAdjust({
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
@@ -298,7 +298,7 @@ export default {
       console.log('shishe')
     },
     handleBisai(row) {
-      console.log('bisai')
+      // console.log('bisai')
       startFire({
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
@@ -335,7 +335,7 @@ export default {
         startNo: e.startNo, //靶位开始编号
         endNo: e.endNo, //靶位结束编号
       }).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.success) {
           this.$message.success('抽签成功！')
           this.getTableList()
@@ -357,12 +357,12 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-        console.log(res)
+        // console.log(res)
       })
     },
   },
   mounted() {
-    this.$refs.query.init(gameInfoQuery)
+    // this.$refs.query.init(gameInfoQuery)
     this.data = JSON.parse(decodeURI(this.$route.query.row))
     this.getProjectList()
   },

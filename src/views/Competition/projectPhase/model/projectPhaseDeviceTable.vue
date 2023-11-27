@@ -19,7 +19,7 @@
         rowKey="cproDeviceId"
         size="small"
         :columns="columns"
-        :scroll="{ y: !disabled ? 350 : 400, x: 1200}"
+        :scroll="{ y: 200, x: 1200}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -143,9 +143,11 @@ export default {
   methods: {
     handleAdd() {
       const data = this.data.map(item => item.tabletPcNum)
+      this.$refs.modal.deviceType = ""
       this.$refs.modal.init(this.id, data)
     },
     handleEdit(record) {
+      this.$refs.modal.deviceType = ""
       this.$refs.modal.edit(record,this.id)
     },
     handleBind(record) {

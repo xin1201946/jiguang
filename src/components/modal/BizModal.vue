@@ -5,12 +5,12 @@
     :maskClosable="true"
     :keyboard="false"
     @close="handleCancel"
-    :width="width"
+    :width="widths || width"
   >
     <div class="body">
       <slot></slot>
     </div>
-    <div style="display: flex; justify-content: flex-end;margin-top: 20px">
+    <div v-if="footer === true" style="display: flex; justify-content: flex-end;margin-top: 20px">
       <a-space>
         <a-button @click="handleCancel">取消</a-button>
         <a-button :loading="loading" type="primary" @click="handleOk">确定</a-button>
@@ -42,8 +42,15 @@ export default {
       default: false
     },
     width: {
-      type: Number,
+      type: Number || String,
       default: 520
+    },
+    widths: {
+      type: String,
+    },
+    footer: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

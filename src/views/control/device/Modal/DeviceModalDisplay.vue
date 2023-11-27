@@ -152,10 +152,15 @@ export default {
         }
         if (result) {
           const {bizDeviceDisplay} = result
-          console.log(bizDeviceDisplay)
-          for (const key in this.formData) {
-            if (bizDeviceDisplay[key] !== null || bizDeviceDisplay[key] !== undefined){
-              this.formData[key] = String(bizDeviceDisplay[key])
+          if (bizDeviceDisplay) {
+            for (const key in this.formData) {
+              if (bizDeviceDisplay[key] !== null || bizDeviceDisplay[key] !== undefined) {
+                this.formData[key] = String(bizDeviceDisplay[key])
+              }
+            }
+          }else {
+            for (const key in this.formData) {
+              this.formData[key] = ""
             }
           }
         }

@@ -5,7 +5,8 @@
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loadingModal"
-    :width="'50%'"
+    :widths="width"
+    :footer="title !== '详情'"
   >
     <div v-if="type !== 3" class="teamGroupManageModal">
       <a-form-model
@@ -18,178 +19,56 @@
         <a-form-model-item label="赛事名称">
           <a-input disabled v-model="name"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="团队编号">
-          <a-input></a-input>
+        <a-form-model-item label="团队名称" prop="groupName">
+          <a-input :disabled="type === 1" v-model="formData.groupName"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="团队名称">
-          <a-input></a-input>
+        <a-form-model-item label="教练" prop="coachName">
+          <a-input v-model="formData.coachName"></a-input>
         </a-form-model-item>
-<!--        <a-form-model-item label="领队">-->
-<!--          <a-input></a-input>-->
-<!--        </a-form-model-item>-->
-        <a-form-model-item label="教练员">
-          <div style="display: flex;align-items: center">
-            <a-input v-model="formData.coachName"></a-input>
-            <a-icon style="cursor: pointer;margin-left: 20px" size="20" @click="plus" type="plus-circle" />
-          </div>
-        </a-form-model-item>
-        <a-form-model-item
-          :wrapperCol="{span: 14, offset: 6}"
-          v-for="(coach, i) in formData.coach"
-          :prop="'coach.' + i + '.value'"
-          :key="coach.key"
-          :rules="{
-            required: true,
-            message: '请输入教练员',
-            trigger: 'blur',
-          }"
-        >
-          <div style="display: flex;align-items: center">
-            <a-input v-model="coach.value"></a-input>
-            <a-icon
-              style="cursor: pointer;margin-left: 20px"
-              @click="minus(i)"
-              type="minus-circle"
-            />
-          </div>
+        <a-form-model-item label="领队" prop="leaderName">
+          <a-input v-model="formData.leaderName"></a-input>
         </a-form-model-item>
       </a-form-model>
     </div>
-<!--    <div class="teamGroupManageModal">
-      <a-descriptions bordered :column="2">
-        <a-descriptions-item :span="2" label="赛事名称">
-        </a-descriptions-item>
-        <a-descriptions-item :span="2" label="领队">
-        </a-descriptions-item>
-      </a-descriptions>
-      <div style="margin-top: 20px">
-        <a-descriptions title="甲组" bordered :column="2">
-          <a-descriptions-item :span="1" label="男子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(人数)">
-          </a-descriptions-item>
-        </a-descriptions>
-      </div>
-      <div style="margin-top: 20px">
-        <a-descriptions title="乙组" bordered :column="2">
-          <a-descriptions-item :span="1" label="男子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(人数)">
-          </a-descriptions-item>
-        </a-descriptions>
-      </div>
-      <div style="margin-top: 20px">
-        <a-descriptions title="丙组" bordered :column="2">
-          <a-descriptions-item :span="1" label="男子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="男子步枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子手枪(人数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(分数)">
-          </a-descriptions-item>
-          <a-descriptions-item :span="1" label="女子步枪(人数)">
-          </a-descriptions-item>
-        </a-descriptions>
-      </div>
-      <div style="margin-top: 20px">
-        <a-descriptions>
-
-        </a-descriptions>
-      </div>
-    </div>-->
     <div v-else class="teamGroupManageModal">
-      <a-descriptions bordered :column="4">
-        <a-descriptions-item :span="1" label="赛事名称">
-          Cloud Database
+      <a-descriptions bordered :column="5">
+        <a-descriptions-item :span="1" label="团队名称">
+          {{ infos.groupName }}
         </a-descriptions-item>
         <a-descriptions-item :span="1" label="教练">
-          Cloud Database
+          {{ infos.coachName }}
         </a-descriptions-item>
-        <a-descriptions-item :span="1" label="总分数">
-          50
+        <a-descriptions-item :span="1" label="领队">
+          {{ infos.leaderName }}
         </a-descriptions-item>
         <a-descriptions-item :span="1" label="总人数">
-          60
+          {{ infos.groupPlayerCount }}
+        </a-descriptions-item>
+        <a-descriptions-item :span="1" label="总分数">
+          {{ infos.groupScore }}
         </a-descriptions-item>
       </a-descriptions>
-      <div style="margin-top: 20px">
-        <a-descriptions bordered :column="4" title="甲组">
-          <a-descriptions-item :span="2" label="项目名称">项目1</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目2</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目3</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目4</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-        </a-descriptions>
-      </div>
-      <div style="margin-top: 20px">
-        <a-descriptions bordered :column="4" title="乙组">
-          <a-descriptions-item :span="2" label="项目名称">项目1</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目2</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目3</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目4</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-        </a-descriptions>
-      </div>
-      <div style="margin-top: 20px">
-        <a-descriptions bordered :column="4" title="丙组">
-          <a-descriptions-item :span="2" label="项目名称">项目1</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目2</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目3</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">项目4</a-descriptions-item>
-          <a-descriptions-item :span="1" label="人数">60</a-descriptions-item>
-          <a-descriptions-item :span="1" label="分数">50</a-descriptions-item>
-        </a-descriptions>
+      <div style="margin-top: 20px" v-if="infos.groupProjectMap && Object.keys(infos.groupProjectMap).length">
+        <div v-for="(item, i) in list" :key="i" style="margin-bottom: 20px">
+          <a-descriptions bordered :column="4" :title="item.title" >
+            <template v-for="(key, index) in item.list">
+              <a-descriptions-item :key="index + '项目'" :span="2" label="项目名称">{{ key.projectName }}</a-descriptions-item>
+              <a-descriptions-item :key="index + '人'" :span="1" label="人数">{{ key.gpPlayerCount }}</a-descriptions-item>
+              <a-descriptions-item :key="index + '分'" :span="1" label="分数">{{ key.gpScore }}</a-descriptions-item>
+            </template>
+          </a-descriptions>
+        </div>
+<!--        <template v-for="item in Object.keys(infos.groupProjectMap)">
+          <div style="margin-bottom: 20px">
+            <a-descriptions :key="item" bordered :column="4" :title="item">
+              <template v-for="(key, i) in infos.groupProjectMap[item]">
+                <a-descriptions-item :key="i + '项目'" :span="2" label="项目名称">{{ key.projectName }}</a-descriptions-item>
+                <a-descriptions-item :key="i + '人'" :span="1" label="人数">{{ key.gpPlayerCount }}</a-descriptions-item>
+                <a-descriptions-item :key="i + '分'" :span="1" label="分数">{{ key.gpScore }}</a-descriptions-item>
+              </template>
+            </a-descriptions>
+          </div>
+        </template>-->
       </div>
 
     </div>
@@ -199,6 +78,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
+import { bizGroupSave, bizGroupUpdate } from '@api/teamGroup'
 
 
 export default {
@@ -212,43 +92,110 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {
-        coach: [],
         coachName: '',
+        leaderName: '',
+        groupName: '',
+        groupId: ''
       },
-      rules: {},
+      rules: {
+        groupName: [
+          {
+            required: true,
+            message: '请输入团队名称',
+            trigger: 'blur'
+          }
+        ],
+        coachName: [
+          {
+            required: true,
+            message: '请输入教练',
+            trigger: 'blur'
+          }
+        ],
+        leaderName: [
+          {
+            required: true,
+            message: '请输入领队',
+            trigger: 'blur'
+          }
+        ],
+      },
       type: 0,
       contestId: '',
-      name: ''
+      name: '',
+      width: '',
+      infos: {},
+      list: []
     }
   },
   methods: {
     init(contestId, name) {
+      this.width = '520px'
       this.visible = true
       this.contestId = contestId
       this.name = name
       this.type = 0
       this.title = '添加'
+      this.$nextTick(() => {
+        for (const key in this.formData) {
+          this.formData[key] = ''
+        }
+        this.$refs.form.clearValidate()
+      })
     },
     edit(reccord, contestId, name) {
+      this.width = '520px'
       this.visible = true
       this.contestId = contestId
       this.name = name
       this.type = 1
       this.title = '修改'
+      this.$nextTick(() => {
+        for (const key in this.formData) {
+          this.formData[key] = reccord[key]
+        }
+        this.$refs.form.clearValidate()
+      })
     },
-    info() {
+    info(reccord, contestId, name) {
+      this.contestId = contestId
+      this.name = name
+      this.width = '50%'
       this.visible = true
       this.type = 3
       this.title = '详情'
+
+      this.infos = reccord
+      // 排序
+      const order = [ '甲', '乙', '丙' ]
+      const keys = Object.keys(reccord.groupProjectMap)
+      const obj = []
+      for (const item of order) {
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i].includes(item)) {
+            obj.push({
+              title: [keys[i]],
+              list: reccord.groupProjectMap[keys[i]]
+            })
+          }
+        }
+      }
+      this.list = obj
     },
     handleOk() {
       this.$refs.form.validate((v) => {
         if (v) {
           if (this.type === 0) {
-
+            const data = JSON.parse(JSON.stringify(this.formData))
+            delete data.groupId
+            bizGroupSave({
+              ...data,
+              contestId: this.contestId
+            }).then(this.quit)
           }
           if (this.type === 1) {
-
+            const data = JSON.parse(JSON.stringify(this.formData))
+            bizGroupUpdate(data).then(this.quit)
           }
         }
       })
@@ -265,7 +212,17 @@ export default {
     },
     minus(i) {
       this.formData.coach.splice(i, 1)
-    }
+    },
+    quit(res) {
+      if (res.code === 200) {
+        this.$message.success(res.message)
+        this.handleCancel()
+        this.$emit("list")
+      }else {
+        this.$message.warning(res.message)
+      }
+      this.loadingModal = false
+    },
   }
 }
 </script>

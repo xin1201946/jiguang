@@ -169,8 +169,9 @@ export default {
     handleDevice(record) {
       const arr = []
       if (record){
-        arr.push( record.tabletPcNum)
+        arr.push(record.tabletPcNum)
         bizTabletPcQueryDeviceControlById(record.tabletPcId).then(res => {
+          console.log(arr.join(','))
           this.$refs.device.init(arr.join(','), res.result)
         })
         // this.$refs.device.init(arr.join(','))

@@ -60,6 +60,7 @@ export default {
     overflow-y: hidden;
   }
   .table{
+    overflow-y: auto;
     flex: 1;
   }
   /deep/.ant-card-body{

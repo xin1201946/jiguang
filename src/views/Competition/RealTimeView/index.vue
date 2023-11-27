@@ -71,13 +71,15 @@ import {
   RealTimeViewTableColumns,
   RealTimeViewTreeStyle
 } from '@views/Competition/RealTimeView/RealTimeView.config'
-import { deleteMessage, numToCapital } from '@/utils'
+import { deleteMessage } from '@/utils'
 
 import {
   bizContestList,
+  bizContestPlayerList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScorePageList, bizPlayerFinalScoreQueryById
+  bizPlayerFinalScorePageList,
+  bizPlayerFinalScoreQueryById
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
@@ -132,11 +134,16 @@ export default {
     },
     // 获取姓名
     getUserName(data) {
-      bizEntryFormList({}).then(res => {
+      bizContestPlayerList({
+        isAll: 1,
+        contestId: this.contestId,
+        cproId: this.tree,
+      }).then(res => {
+        console.log(res)
         // console.log(res.result)
         const result = res.result.map(item => ({
-          label: item.entryName,
-          value: item.entryName
+          label: item.playerName,
+          value: item.playerName
         }))
         if (data.length) {
           data.unshift({ label: '全部', value: '' })

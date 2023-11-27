@@ -120,6 +120,7 @@ export default {
       })
     },
     init (row, result) {
+      console.log(row)
       this.loadingModal = false
       this.visible = true
       this.$nextTick(() => {
@@ -128,10 +129,15 @@ export default {
         }
         if (result) {
           const {bizDeviceControl} = result
-          console.log(bizDeviceControl)
-          for (const key in this.formData) {
-            if (bizDeviceControl[key] !== null || bizDeviceControl[key] !== undefined){
-              this.formData[key] = String(bizDeviceControl[key])
+          if (bizDeviceControl) {
+            for (const key in this.formData) {
+              if (bizDeviceControl[key] !== null || bizDeviceControl[key] !== undefined) {
+                this.formData[key] = String(bizDeviceControl[key])
+              }
+            }
+          }else {
+            for (const key in this.formData) {
+              this.formData[key] = ""
             }
           }
         }

@@ -21,12 +21,12 @@
       </a-form-model-item>
 
       <a-form-model-item label="激光训练器编号" prop="deviceNum0">
-        <a-select v-model="formData.deviceNum0">
+        <a-select v-model="formData.deviceNum0" @change="handleDeviceChange">
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '0')"
             :key="item.deviceId"
             :value="item.deviceNum"
-          >{{ item.deviceNum }}</a-select-option>
+          >{{ item.deviceNum }} - {{ item.deviceGunType === '0'? '长款激光训练器' : item.deviceGunType === '1'? '短款激光训练器' : '' }}</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="激光接收靶编号" prop="deviceNum1">
@@ -87,6 +87,7 @@ export default {
         tabletPcStatus: '',
         tabletPcNum: '',
         tabletPcName: '',
+        deviceGunType: '',
         // deviceNum: '',
         deviceNum0: '',
         deviceNum1: "",
@@ -145,6 +146,12 @@ export default {
       }
       this.loadingModal = false
     },
+    handleDeviceChange(v) {
+      const device = this.types.device.filter(item => item.deviceType === '0')
+      const row = device.filter(item => item.deviceNum === v)[0]
+      console.log(row)
+      this.formData.deviceGunType = row.deviceGunType
+    }
   }
 }
 </script>

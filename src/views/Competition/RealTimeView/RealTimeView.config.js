@@ -56,13 +56,15 @@ export const RealTimeViewQuery = [
     rules: ['stageName'],
     placeholder: '请选择阶段名称',
     data: [],
-    value: ''
+    value: '',
+    span: 5
   },
   {
     type: 'input',
     label: '团体名称',
     rules: ['groupName'],
-    placeholder: '请输入团体名称'
+    placeholder: '请输入团体名称',
+    span: 5
   },
 ]
 export const RealTimeViewTableColumns = [

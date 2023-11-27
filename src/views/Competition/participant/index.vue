@@ -39,7 +39,7 @@
           </a-space>
         </template>
         <a-table :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId"
-          @change="handleTableChange" bordered>
+                 @change="handleTableChange" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space v-if="status === '0'">
               <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>

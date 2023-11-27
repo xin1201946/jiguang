@@ -138,13 +138,14 @@ export default {
               bizTabletProject,
               bizTabletPc
             } = result
-            this.formData.ammo = bizTabletProject.ammo
-            this.formData.projectId = Number(bizTabletProject.projectId)
-            this.formData.projectName = bizTabletProject.projectName
-            this.formData.groupCount = bizTabletProject.groupCount
-            this.formData.tabletPcModel = bizTabletPc.tabletPcModel
+            this.formData.ammo = bizTabletProject && bizTabletProject.ammo
+            this.formData.projectId = bizTabletProject && Number(bizTabletProject.projectId)
+            this.formData.projectName = bizTabletProject && bizTabletProject.projectName
+            this.formData.groupCount = bizTabletProject && bizTabletProject.groupCount
+            this.formData.tabletPcModel = bizTabletPc && bizTabletPc.tabletPcModel
           }
           this.$refs.form.clearValidate()
+          console.log(row)
           this.formData.tabletPcNumStrs = row
         })
       })

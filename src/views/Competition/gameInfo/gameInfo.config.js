@@ -17,6 +17,7 @@ export const gameInfoQuery = [
     rules: [
       ''
     ],
+    // span: 5
   },
   {
     type: "select",
@@ -26,6 +27,7 @@ export const gameInfoQuery = [
       'status'
     ],
     data: status,
+    span: 5
   },
 ]
 

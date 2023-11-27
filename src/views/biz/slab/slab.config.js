@@ -67,14 +67,21 @@ export const slabTableColumns = [
   {
     title: '激光训练器编号',
     dataIndex: 'deviceNum0',
-    align: 'center'
+    align: 'center',
+  },
+  {
+    title: '激光训练器类型',
+    dataIndex: 'deviceGunType',
+    align: 'center',
+    customRender: (text, item) => {
+      return item.deviceGunType === '0'? '长款激光训练器' : item.deviceGunType === '1'? '短款激光训练器' : ''
+    }
   },
   {
     title: '激光接收靶编号',
     dataIndex: 'deviceNum1',
     align: 'center'
   },
-
 
   {
     title: '平板状态',

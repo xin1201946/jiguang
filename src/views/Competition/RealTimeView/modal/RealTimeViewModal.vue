@@ -6,6 +6,7 @@
     @cancel="handleCancel"
     :loading="loadingModal"
     :width="600"
+    :footer="false"
   >
     <div style="height: 100%; overflow-y: auto">
       <a-descriptions bordered :column="4">
@@ -23,42 +24,23 @@
       </a-descriptions>
       <br/>
       <div class="tables" v-if="formData.detailScoreList && formData.detailScoreList.length">
-<!--        <a-descriptions bordered :column="2" title="射击成绩(所有环数)">
-          <template v-for="(item, i) in formData.detailScoreList">
+        <h3>射击成绩(所有环数)</h3>
+        <a-descriptions
+          style="margin-bottom: 20px"
+          bordered
+          :column="2"
+          v-for="(item, i) in list"
+          :title="`第${numToCapital(i+1)}组`"
+        >
+          <template v-for="(key, value) in item">
             <a-descriptions-item
-              :key="i"
+              :key="value"
               :span="1"
-              :label="`第${numToCapital((i + 1))}发`"
-            >{{item.shootCode}}</a-descriptions-item>
-          </template>
-        </a-descriptions>
-        <br>-->
-        <a-descriptions bordered :column="2" title="射击成绩(所有环数)">
-          <template v-for="(item, i) in formData.detailScoreList">
-            <a-descriptions-item
-              :key="i"
-              :span="1"
-              :label="`第${numToCapital(item.shootCode)}发`"
-            >{{item.score}}</a-descriptions-item>
+              :label="`第${numToCapital(key.shootCode)}发`"
+            >{{key.score}}</a-descriptions-item>
           </template>
         </a-descriptions>
       </div>
-<!--      <div>
-        <h3>射击成绩</h3>
-        <br/>
-        <div style="display: flex">
-          <div class="echar">
-            <EchatTarget></EchatTarget>
-          </div>
-          <div style="flex: 1;margin-left: 20px">
-            <a-table
-              :columns="column"
-              bordered
-              size="small"
-            ></a-table>
-          </div>
-        </div>
-      </div>-->
     </div>
   </BizModal>
 </template>
@@ -91,6 +73,7 @@ export default {
           align: 'center'
         }
       ],
+      list: []
     }
   },
   methods: {
@@ -101,6 +84,20 @@ export default {
     info(data, record) {
       this.visible = true
       this.formData = data
+      if (data.detailScoreList && data.detailScoreList.length) {
+        const arr = []
+        data.detailScoreList.map(item => {
+          arr.push(item.groupCount)
+          return item
+        })
+        const list = [...new Set(arr)]
+        this.list = list.map((item) => {
+          return data.detailScoreList.filter(i => i.groupCount === item)
+        })
+        console.log(this.list)
+      }
+      // detailScoreList
+      // item.groupCount
     },
     handleOk() {
       this.visible = false
