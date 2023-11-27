@@ -5,7 +5,7 @@
       <div class="left">
         <img class="logo" src="../../assets/logo1.png" alt="" />
         <div>
-          <h1 class="theme">2023年河北省青少年射击个人锦标赛（步手枪项目）河北省-保定市</h1>
+          <h1 class="theme">2023年河北省青少年射击个人锦标赛河北省-保定市</h1>
           <h1 class="title">{{ stageName }}-{{ projectName }}</h1>
         </div>
       </div>
@@ -41,7 +41,7 @@
     <!-- 个人赛 -->
     <div class="personallyLoading" v-if="state == '个人赛' && !isPersonally">
       <div>即将开始</div>
-      <div>2023年河北省青少年射击个人锦标赛（步手枪项目）</div>
+      <div>2023年河北省青少年射击个人锦标赛</div>
       <div>
         {{ stageName }}-{{ projectName }}
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
@@ -50,50 +50,110 @@
     <div class="personally" v-if="state == '个人赛' && isPersonally">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
-          <TableListVue :TitleList="personallyList.title" :List="personallyList.List[0]" />
+          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[0]" />
         </div>
-        <div>
-          <TableListVue :TitleList="personallyList.title" :List="personallyList.List[1]" />
+        <div v-if="personallyList.List[1].length != 0">
+          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[1]" />
         </div>
-        <div>
-          <TableListVue :TitleList="personallyList.title" :List="personallyList.List[2]" />
+        <div v-if="personallyList.List[2].length != 0">
+          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[2]" />
+        </div>
+        <div v-if="personallyList.List[3].length != 0">
+          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[3]" />
         </div>
       </a-carousel>
     </div>
     <!-- 团队赛 -->
     <div class="teamLoading" v-if="state == '团队赛' && !isTeam">
       <div>即将开始</div>
-      <div>2023年河北省青少年射击团队锦标赛（步手枪项目）</div>
+      <div>2023年河北省青少年射击团队锦标赛</div>
       <div>
-        资格赛-混团赛10米气步枪 甲组A轮试射
+        {{ stageName }}-{{ projectName }}
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
     <div class="team" v-if="state == '团队赛' && isTeam">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
-          <TableListVue :TitleList="teamList.title" :List="teamList.List[0]" />
+          <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[0]" />
         </div>
-        <div>
-          <TableListVue :TitleList="teamList.title" :List="teamList.List[1]" />
+        <div v-if="teamList.List[1].length != 0">
+          <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[1]" />
+        </div>
+        <div v-if="teamList.List[2].length != 0">
+          <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[2]" />
+        </div>
+        <div v-if="teamList.List[3].length != 0">
+          <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[3]" />
         </div>
       </a-carousel>
+    </div>
+    <!-- 混团赛 -->
+    <div class="mixeTeamLoading" v-if="state == '混团赛' && !isTeam">
+      <div>即将开始</div>
+      <div>2023年河北省青少年射击团队锦标赛</div>
+      <div>
+        {{ stageName }}-{{ projectName }}
+        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
+      </div>
+    </div>
+    <div class="mixeTeam" v-if="state == '混团赛' && isTeam">
+      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
+        <div>
+          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[0]" />
+        </div>
+        <div v-if="mixeTeamList.List[1].length != 0">
+          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[1]" />
+        </div>
+        <div v-if="mixeTeamList.List[2].length != 0">
+          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[1]" />
+        </div>
+      </a-carousel>
+    </div>
+    <!-- 混团赛决赛 -->
+    <div class="mixeTeamFinalsLoading" v-if="state == '混团赛决赛' && !isTeam">
+      <div>即将开始</div>
+      <div>2023年河北省青少年射击团队锦标赛</div>
+      <div>
+        {{ stageName }}-{{ projectName }}
+        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
+      </div>
+    </div>
+    <div class="mixeTeamFinals" v-if="state == '混团赛决赛' && isTeam">
+      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
+        <div>
+          <TableListVue type="混团赛决赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
+        </div>
+      </a-carousel>
+    </div>
+    <!-- 排名 -->
+    <div class="example" v-if="state == '排名' && !isTeam">
+      <div>
+        <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
+        <p>加载中...请稍后！</p>
+      </div>
+    </div>
+    <div class="team" v-if="state == '排名' && isTeam">
+      <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
 </template>
 
 <script>
 import { littleScreen } from '@api/competition'
+// 个人赛和混团赛滚动成绩tabelList
 import TableListVue from './components/tableList.vue'
+// 排名
+import RankingList from './components/rankingList.vue'
 export default {
-  components: { TableListVue },
+  components: { TableListVue, RankingList },
   data() {
     return {
       projectName: '',
       stageGroup: '',
       shootGroups: '',
       stageName: '',
-      state: '个人赛',
+      state: '排名',
 
       isSpin: false,
       drawList: {
@@ -308,16 +368,17 @@ export default {
       isPersonally: false,
       personallyList: {
         title: [],
-        List: [
-          [],
-          [],
-          [],
-          []
-        ],
+        List: [[], [], [], []],
       },
 
       isTeam: false,
       teamList: {
+        title: [],
+        List: [[], [], [], []],
+      },
+
+      isMixeTeam: false,
+      mixeTeamList: {
         title: [
           {
             name: '排名',
@@ -327,133 +388,247 @@ export default {
             name: '代表队',
           },
           {
+            name: '靶位',
+          },
+          {
             name: '姓名',
           },
           {
             name: '10',
-            width: '150px',
           },
           {
             name: '20',
-            width: '150px',
           },
           {
             name: '30',
-            width: '150px',
           },
           {
             name: '40',
-            width: '150px',
           },
           {
-            name: '50',
-          },
-          {
-            name: '60',
-          },
-          {
-            name: '总分',
+            name: '总环数',
           },
         ],
         List: [
           [
             {
               排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 2,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 3,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 4,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
-            },
-            {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
-            },
-            {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
-            },
-            {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 5,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
           ],
           [
             {
               排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 2,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
-              排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              排名: 3,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
             },
             {
+              排名: 4,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+            {
+              排名: 5,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+          ],
+          [
+            {
               排名: 1,
-              代表队: '团队1',
-              靶位: '姓名1',
-              姓名: '10',
-              '发序/环数': '10',
-              总环数: '10',
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+            {
+              排名: 2,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+            {
+              排名: 3,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+            {
+              排名: 4,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+            {
+              排名: 5,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              10: ['20', '20'],
+              20: ['40', '40'],
+              30: ['60', '60'],
+              40: ['80', '80'],
+              总环数: '400_x5',
+            },
+          ],
+        ],
+      },
+
+      isMixeTeamFinals: false,
+      mixeTeamFinalsList: {
+        title: [
+          {
+            name: '排名',
+            width: '80px',
+          },
+          {
+            name: '代表队',
+          },
+          {
+            name: '靶位',
+          },
+          {
+            name: '姓名',
+          },
+          {
+            name: '环数',
+          },
+          {
+            name: '总分',
+          },
+          {
+            name: '目标分',
+          },
+        ],
+        List: [
+          [
+            {
+              排名: 1,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              环数: ['10', '10'],
+              总分: 8,
+              目标分: '16',
+            },
+            {
+              排名: 2,
+              代表队: '保定',
+              靶位: ['1号靶', '2号靶'],
+              姓名: ['男', '女'],
+              环数: ['20', '20'],
+              总分: 6,
+              目标分: '16',
             },
           ],
         ],
@@ -469,21 +644,21 @@ export default {
       this.isTeam = true
       this.isPersonally = true
       this.$nextTick(() => {
-        // if (this.$refs.draw1) {
-        //   setInterval(() => {
-        //     this.$refs.draw1.next()
-        //   }, 10000)
-        // }
-        // if (this.$refs.draw2) {
-        //   setInterval(() => {
-        //     this.$refs.draw2.next()
-        //   }, 10000)
-        // }
-        // if (this.$refs.personally1) {
-        //   setInterval(() => {
-        //     this.$refs.personally1.next()
-        //   }, 10000)
-        // }
+        if (this.$refs.draw1) {
+          setInterval(() => {
+            this.$refs.draw1.next()
+          }, 10000)
+        }
+        if (this.$refs.draw2) {
+          setInterval(() => {
+            this.$refs.draw2.next()
+          }, 10000)
+        }
+        if (this.$refs.personally1) {
+          setInterval(() => {
+            this.$refs.personally1.next()
+          }, 10000)
+        }
         // if (this.$refs.personally2) {
         //   setInterval(() => {
         //     this.$refs.personally2.next()
@@ -497,59 +672,112 @@ export default {
   },
   methods: {
     getData() {
-      littleScreen({ type: '手' }).then((res) => {
-        let data = res.result
-        this.projectName = data.projectName
-        this.stageGroup = data.stageGroup
-        this.shootGroups = data.shootGroups
-        this.stageName = data.stageName
-        this.personallyList.title = [
-          {
-            name: '排名',
-            width: '80px',
-          },
-          {
-            name: '代表队',
-          },
-          {
-            name: '靶位',
-          },
-          {
-            name: '姓名',
-          },
-        ]
-        for (let i = 0; i < data.shootGroups; i++) {
+      if (this.state == '个人赛') {
+        littleScreen({ type: '步' }).then((res) => {
+          this.personallyList.List = [[], [], [], []]
+          let data = res.result
+          this.projectName = data.projectName
+          this.stageGroup = data.stageGroup
+          this.shootGroups = data.shootGroups
+          this.stageName = data.stageName
+          this.personallyList.title = [
+            {
+              name: '排名',
+              width: '80px',
+            },
+            {
+              name: '代表队',
+            },
+            {
+              name: '靶位',
+            },
+            {
+              name: '姓名',
+            },
+          ]
+          for (let i = 0; i < data.shootGroups; i++) {
+            this.personallyList.title.push({
+              name: `${i + 1}0`,
+            })
+          }
           this.personallyList.title.push({
-            name: `${i + 1}0`,
+            name: '总环数',
           })
-        }
-        this.personallyList.title.push({
-          name: '总环数',
-        })
-        data.players.forEach((item, index) => {
-          let arr = [8, 16, 24, 32, 40]
-          let obj = {
-            id: item.playerName,
-            排名: item.rank,
-            代表队: item.groupName,
-            靶位: item.targetSite,
-            姓名: item.playerName,
-            总环数: item.total + '_x' + item.good,
-          }
-          item.groupList.forEach((e, index) => {
-            obj[`${index + 1}0`] = e.gunGroupTotal
+          data.players.forEach((item, index) => {
+            let obj = {
+              id: item.playerName,
+              排名: item.rank,
+              代表队: item.groupName,
+              靶位: item.targetSite,
+              姓名: item.playerName,
+              总环数: item.total + '_x' + item.good,
+            }
+            item.groupList.forEach((e, v) => {
+              obj[`${v + 1}0`] = e.gunGroupTotal
+            })
+            if (index + 1 < 8) {
+              this.personallyList.List[0].push(obj)
+            } else if (index + 1 < 16 && index + 1 > 7) {
+              this.personallyList.List[1].push(obj)
+            } else if (index + 1 < 24 && index + 1 > 15) {
+              this.personallyList.List[2].push(obj)
+            } else if (index + 1 < 32 && index + 1 > 23) {
+              this.personallyList.List[3].push(obj)
+            }
           })
-          if (index + 1 < 8) {
-            this.personallyList.List[0].push(obj)
-          } else if (index + 1 < 16 && index + 1 > 7) {
-            this.personallyList.List[1].push(obj)
-          } else if (index + 1 < 24 && index + 1 > 15) {
-            this.personallyList.List[2].push(obj)
-          } else if (index + 1 < 32 && index + 1 > 23) {
-            this.personallyList.List[3].push(obj)
-          }
         })
-      })
+      } else if (this.state == '抽签') {
+      } else if (this.state == '团队赛') {
+        littleScreen({ type: '步' }).then((res) => {
+          this.teamList.List = [[], [], [], []]
+          let data = res.result
+          this.projectName = data.projectName
+          this.stageGroup = data.stageGroup
+          this.shootGroups = data.shootGroups
+          this.stageName = data.stageName
+          this.teamList.title = [
+            {
+              name: '排名',
+              width: '80px',
+            },
+            {
+              name: '代表队',
+            },
+          ]
+          for (let i = 0; i < data.shootGroups; i++) {
+            this.teamList.title.push({
+              name: `${i + 1}0`,
+            })
+          }
+          this.teamList.title.push({
+            name: '总环数',
+          })
+          data.players.forEach((item, index) => {
+            let obj = {
+              id: item.playerName,
+              排名: item.rank,
+              代表队: item.groupName,
+              靶位: item.targetSite,
+              姓名: item.playerName,
+              总环数: item.total + '_x' + item.good,
+            }
+            item.groupList.forEach((e, v) => {
+              obj[`${v + 1}0`] = e.gunGroupTotal
+            })
+            if (index + 1 < 8) {
+              this.teamList.List[0].push(obj)
+            } else if (index + 1 < 16 && index + 1 > 7) {
+              this.teamList.List[1].push(obj)
+            } else if (index + 1 < 24 && index + 1 > 15) {
+              this.teamList.List[2].push(obj)
+            } else if (index + 1 < 32 && index + 1 > 23) {
+              this.teamList.List[3].push(obj)
+            }
+          })
+        })
+      } else if (this.state == '混团赛') {
+      } else if (this.state == '混团赛决赛') {
+      }
     },
   },
   destroyed() {
@@ -652,17 +880,18 @@ export default {
     }
   }
 }
-.personally {
-  display: flex;
-  justify-content: space-between;
-}
-.team {
+.personally,
+.team,
+.mixeTeam,
+.mixeTeamFinals {
   display: flex;
   justify-content: space-between;
 }
 .textLoading,
 .teamLoading,
-.personallyLoading {
+.personallyLoading,
+.mixeTeamLoading,
+.mixeTeamFinalsLoading {
   line-height: 150px;
   font-weight: 1000;
   font-size: 70px;
