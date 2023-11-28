@@ -78,7 +78,7 @@ import {
   startFire,
   endFire,
 } from '@api/competition'
-import { numToCapital } from '@/utils'
+import { numToCapital, infoMessage } from '@/utils'
 
 export default {
   name: 'gameInfo',
