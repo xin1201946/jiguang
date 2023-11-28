@@ -24,14 +24,27 @@ export const teamGroupManageTable = [
     dataIndex: 'groupName'
   },
   {
-    title: '教练',
-    align: 'center',
-    dataIndex: 'coachName'
-  },
-  {
     title: '领队',
     align: 'center',
     dataIndex: 'leaderName'
+  },
+  {
+    title: '教练',
+    align: 'center',
+    dataIndex: 'coachName',
+    customRender: text => {
+      if (text) {
+        const arr = text.split(',')
+        let str = ''
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i]) {
+            str += arr[i] + ','
+          }
+        }
+        return str.slice(0, -1)
+      }
+      return text
+    }
   },
   {
     title: '团队人数',
@@ -52,6 +65,5 @@ export const teamGroupManageTable = [
       customRender: 'operation'
     },
     width: 200
-    // dataIndex: ''
   },
 ]

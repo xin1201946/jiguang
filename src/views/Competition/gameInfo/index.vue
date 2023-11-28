@@ -199,7 +199,22 @@ export default {
      * 分组
      */
     handleGroup() {
-      this.$confirm({
+      infoMessage('此操作将给选手分组！是否继续？').then(() => {
+        stagePlayerGroup({
+          contestId: this.data.contestId, //赛事id
+          cproId: this.cproId, //赛事项目id
+          stageId: this.cproStageId, //项目阶段id
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('分组成功！')
+            this.groupActive = true
+            this.getTableList()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      })
+      /* this.$confirm({
         title: '提示',
         content: '此操作将给选手分组！是否继续？',
         onOk: () => {
@@ -218,7 +233,7 @@ export default {
           })
         },
         onCancel() {},
-      })
+      }) */
     },
     /**
      * 获取数据

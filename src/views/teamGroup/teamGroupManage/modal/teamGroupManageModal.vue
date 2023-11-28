@@ -6,7 +6,6 @@
     @cancel="handleCancel"
     :loading="loadingModal"
     :widths="width"
-    :footer="title !== '详情'"
   >
     <div v-if="type !== 3" class="teamGroupManageModal">
       <a-form-model
@@ -22,22 +21,22 @@
         <a-form-model-item label="团队名称" prop="groupName">
           <a-input :disabled="type === 1" v-model="formData.groupName"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="教练" prop="coachName">
+<!--        <a-form-model-item label="教练" prop="coachName">
           <a-input v-model="formData.coachName"></a-input>
-        </a-form-model-item>
+        </a-form-model-item>-->
         <a-form-model-item label="领队" prop="leaderName">
           <a-input v-model="formData.leaderName"></a-input>
         </a-form-model-item>
       </a-form-model>
     </div>
     <div v-else class="teamGroupManageModal">
-      <a-descriptions bordered :column="5">
+      <a-descriptions bordered :column="4">
         <a-descriptions-item :span="1" label="团队名称">
           {{ infos.groupName }}
         </a-descriptions-item>
-        <a-descriptions-item :span="1" label="教练">
+<!--        <a-descriptions-item :span="1" label="教练">
           {{ infos.coachName }}
-        </a-descriptions-item>
+        </a-descriptions-item>-->
         <a-descriptions-item :span="1" label="领队">
           {{ infos.leaderName }}
         </a-descriptions-item>
@@ -50,7 +49,25 @@
       </a-descriptions>
       <div style="margin-top: 20px" v-if="infos.groupProjectMap && Object.keys(infos.groupProjectMap).length">
         <div v-for="(item, i) in list" :key="i" style="margin-bottom: 20px">
-          <a-descriptions bordered :column="4" :title="item.title" >
+          <a-descriptions bordered :column="4"  >
+            <template slot="title">
+              <div style="display: flex; align-items: start;">
+                <span style="margin-top: 8px">
+                  {{item.title}}
+                </span>
+                <div style="margin-left: 50px">
+                  <a-form>
+                    <a-form-item
+                      :labelCol="{span: 6}"
+                      :wrapperCol="{span: 14}"
+                      label="教练"
+                    >
+                      <a-input v-model="item.value"></a-input>
+                    </a-form-item>
+                  </a-form>
+                </div>
+              </div>
+            </template>
             <template v-for="(key, index) in item.list">
               <a-descriptions-item :key="index + '项目'" :span="2" label="项目名称">{{ key.projectName }}</a-descriptions-item>
               <a-descriptions-item :key="index + '人'" :span="1" label="人数">{{ key.gpPlayerCount }}</a-descriptions-item>
@@ -58,17 +75,6 @@
             </template>
           </a-descriptions>
         </div>
-<!--        <template v-for="item in Object.keys(infos.groupProjectMap)">
-          <div style="margin-bottom: 20px">
-            <a-descriptions :key="item" bordered :column="4" :title="item">
-              <template v-for="(key, i) in infos.groupProjectMap[item]">
-                <a-descriptions-item :key="i + '项目'" :span="2" label="项目名称">{{ key.projectName }}</a-descriptions-item>
-                <a-descriptions-item :key="i + '人'" :span="1" label="人数">{{ key.gpPlayerCount }}</a-descriptions-item>
-                <a-descriptions-item :key="i + '分'" :span="1" label="分数">{{ key.gpScore }}</a-descriptions-item>
-              </template>
-            </a-descriptions>
-          </div>
-        </template>-->
       </div>
 
     </div>
@@ -77,7 +83,7 @@
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import { bizGroupSave, bizGroupUpdate } from '@api/teamGroup'
+import { bizGroupSave, bizGroupUpdate, bizGroupUpdateCoachName } from '@api/teamGroup'
 import { sorderFun } from '@/utils'
 
 
@@ -161,41 +167,55 @@ export default {
       this.contestId = contestId
       this.name = name
       this.width = '50%'
-      this.visible = true
       this.type = 3
-      this.title = '详情'
-
+      this.title = '团体项目'
       this.infos = reccord
-
       // 先男女 后 甲乙丙
-      const sexOrder = ['男', '女']
-      const order = [ '甲', '乙', '丙' ]
-      const keys = Object.keys(reccord.groupProjectMap)
-      this.list = sorderFun(
-        order,
-        sorderFun(sexOrder, keys).map(item => item.value)
-      ).map(item => ({
-        title: item.value,
-        list: reccord.groupProjectMap[item.value]
-      }))
+      if (reccord.groupProjectMap) {
+        const sexOrder = ['男', '女']
+        const order = ['甲', '乙', '丙']
+        const keys = Object.keys(reccord.groupProjectMap)
+        const sorderArr = sorderFun(order, sorderFun(sexOrder, keys).map(item => item.value)).map((item, i) => {
+          const obj = {
+            title: item.value,
+            list: reccord.groupProjectMap[item.value],
+            value: ''
+          }
+          if (reccord.coachNameArr) {
+            if (reccord.coachNameArr.length) {
+              obj.value = reccord.coachNameArr[i] || ''
+            }
+          }
+          return obj
+        })
+        this.list = sorderArr
+      }else {
+        this.list = []
+      }
+      this.visible = true
     },
     handleOk() {
-      this.$refs.form.validate((v) => {
-        if (v) {
-          if (this.type === 0) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            delete data.groupId
-            bizGroupSave({
-              ...data,
-              contestId: this.contestId
-            }).then(this.quit)
+      if (this.type === 3) {
+        const coachNameArr = this.list.map(item => item.value)
+        bizGroupUpdateCoachName({...this.infos, coachNameArr}).then(this.quit)
+      }else {
+        this.$refs.form.validate((v) => {
+          if (v) {
+            if (this.type === 0) {
+              const data = JSON.parse(JSON.stringify(this.formData))
+              delete data.groupId
+              bizGroupSave({
+                ...data,
+                contestId: this.contestId
+              }).then(this.quit)
+            }
+            if (this.type === 1) {
+              const data = JSON.parse(JSON.stringify(this.formData))
+              bizGroupUpdate(data).then(this.quit)
+            }
           }
-          if (this.type === 1) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            bizGroupUpdate(data).then(this.quit)
-          }
-        }
-      })
+        })
+      }
     },
     handleCancel() {
       this.visible = false

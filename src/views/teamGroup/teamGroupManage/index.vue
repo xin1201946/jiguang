@@ -39,7 +39,7 @@
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
-            <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>
+            <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">团体项目</a-button>
             <a-button type="primary" size="small" ghost icon="edit" @click="handleEdits(record)">编辑</a-button>
 <!--            <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
           </a-space>
