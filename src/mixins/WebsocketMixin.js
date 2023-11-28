@@ -3,7 +3,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 import Vue from 'vue'
 
 export const WebsocketMixin = {
-  mounted() {
+/*   mounted() {
     this.initWebSocket();
   },
   destroyed: function () {
@@ -13,7 +13,7 @@ export const WebsocketMixin = {
   methods:{
     initWebSocket: function () {
       let token = Vue.ls.get(ACCESS_TOKEN)
-      console.log("------------WebSocket连接成功");
+      // console.log("------------WebSocket连接成功");
       // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
       var userId = store.getters.userInfo.id;
       if(!this.socketUrl.startsWith('/')){
@@ -22,14 +22,14 @@ export const WebsocketMixin = {
       if(!this.socketUrl.endsWith('/')){
         this.socketUrl = this.socketUrl + '/'
       }
-      var url = window._CONFIG['domianURL'].replace("https://","wss://").replace("http://","ws://") + this.socketUrl + userId + "/" + token;
-      //update-begin-author:taoyan date:2022-4-22 for:  v2.4.6 的 websocket 服务端，存在性能和安全问题。 #3278
-      this.websock = new WebSocket(url, [token]);
-      //update-end-author:taoyan date:2022-4-22 for:  v2.4.6 的 websocket 服务端，存在性能和安全问题。 #3278
-      this.websock.onopen = this.websocketOnopen;
-      this.websock.onerror = this.websocketOnerror;
-      this.websock.onmessage = this.websocketOnmessage;
-      this.websock.onclose = this.websocketOnclose;
+      // var url = window._CONFIG['domianURL'].replace("https://","wss://").replace("http://","ws://") + this.socketUrl + userId + "/" + token;
+      // //update-begin-author:taoyan date:2022-4-22 for:  v2.4.6 的 websocket 服务端，存在性能和安全问题。 #3278
+      // this.websock = new WebSocket(url, [token]);
+      // //update-end-author:taoyan date:2022-4-22 for:  v2.4.6 的 websocket 服务端，存在性能和安全问题。 #3278
+      // this.websock.onopen = this.websocketOnopen;
+      // this.websock.onerror = this.websocketOnerror;
+      // this.websock.onmessage = this.websocketOnmessage;
+      // this.websock.onclose = this.websocketOnclose;
     },
     websocketOnopen: function () {
       console.log("WebSocket连接成功");
@@ -60,6 +60,6 @@ export const WebsocketMixin = {
         that.lockReconnect = false;
       }, 5000);
     },
-  }
+  } */
 
 }

@@ -218,7 +218,7 @@ export default {
       const data = {
         cproId: this.id,
         pageSize: this.pagination.pageSize,
-        pageNum: this.pagination.current
+        pageNum: this.pagination.current,
       }
       bizContestProjectStagePageList(data).then(res => {
         this.data = res.result.records

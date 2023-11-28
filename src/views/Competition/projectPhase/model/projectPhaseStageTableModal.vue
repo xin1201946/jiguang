@@ -285,73 +285,30 @@ export default {
       }
       return data
     },
+    quit(res) {
+      if (res.code === 200) {
+        this.$message.success(res.message)
+        this.$emit("list")
+        this.visible = false
+      }else {
+        this.$message.warning(res.message)
+        this.loading = false
+      }
+    },
     handleOk() {
       this.$refs.form.validate(v => {
         if (v) {
           this.loading = true
+          const data = {
+            ...this.okData(),
+            cproId: this.cproId,
+            contestId: this.$route.query.id
+          }
           if (this.type === 0) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            delete data.cproStageId
-            if (this.formData.integrationMethod === '3') {
-              delete data.ringHigh
-              delete data.ringLow
-            }
-            if (this.formData.integrationMethod === '4') {
-              delete data.targetScore
-              delete data.winSocre
-              delete data.drawScore
-              delete data.loserScore
-            }
-            if (this.formData.isGroupRank === '0') {
-              delete data.playerGroup
-              delete data.playerNum
-            }
-            bizContestProjectStageSave({
-              ...this.okData(),
-              cproId: this.cproId,
-              contestId: this.$route.query.id
-            }).then(res => {
-              if (res.code === 200) {
-                this.$message.success(res.message)
-                this.$emit("list")
-                this.visible = false
-              }else {
-                this.$message.warning(res.message)
-                this.loading = false
-              }
-            })
+            bizContestProjectStageSave(data).then(this.quit)
           }
           if (this.type === 1) {
-            const data = JSON.parse(JSON.stringify(this.formData))
-            if (this.formData.integrationMethod === '3') {
-              delete data.ringHigh
-              delete data.ringLow
-            }
-            if (this.formData.integrationMethod === '4') {
-              delete data.targetScore
-              delete data.winSocre
-              delete data.drawScore
-              delete data.loserScore
-            }
-            // 选择不参团
-            if (this.formData.isGroupRank === '0') {
-              delete data.playerGroup
-              delete data.playerNum
-            }
-            bizContestProjectStageUpdate({
-              ...this.okData(),
-              cproId: this.cproId,
-              contestId: this.$route.query.id
-            }).then(res => {
-              if (res.code === 200) {
-                this.$message.success(res.message)
-                this.$emit("list")
-                this.visible = false
-              }else {
-                this.$message.warning(res.message)
-                this.loading = false
-              }
-            })
+            bizContestProjectStageUpdate(data).then(this.quit)
           }
         }
       })

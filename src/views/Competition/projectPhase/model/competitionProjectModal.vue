@@ -33,9 +33,7 @@
       </a-form-model-item>
       <a-form-model-item label="项目组别" prop="projectGroup">
         <a-select v-model="formData.projectGroup">
-          <a-select-option value="甲组">甲组</a-select-option>
-          <a-select-option value="乙组">乙组</a-select-option>
-          <a-select-option value="丙组">丙组</a-select-option>
+          <a-select-option v-for="(item, i) in projectGroup" :value="item.value" :key="i">{{item.value}}</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="选手上限" prop="playerLimit">
@@ -77,6 +75,7 @@ import BizModal from '@comp/modal/BizModal.vue'
 import { bizContestProjectSave, bizContestProjectUpdate, bizContestQueryById } from '@api/competition'
 import { bizProjectList } from '@api/biz'
 import dayjs from 'dayjs'
+import { projectGroup } from '@views/Competition/participant/participant.config'
 export default {
   name: 'competitionProjectModal',
   components: {
@@ -84,6 +83,7 @@ export default {
   },
   data() {
     return {
+      projectGroup,
       title: "",
       visible: false,
       loading: false,
