@@ -153,7 +153,7 @@ export default {
       stageGroup: '',
       shootGroups: '',
       stageName: '',
-      state: '混团赛决赛',
+      state: '个人赛',
 
       isSpin: false,
       drawList: {
@@ -673,7 +673,7 @@ export default {
   methods: {
     getData() {
       if (this.state == '个人赛') {
-        littleScreen({ type: '步' }).then((res) => {
+        littleScreen({ type: '手' }).then((res) => {
           this.personallyList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -728,7 +728,7 @@ export default {
         })
       } else if (this.state == '抽签') {
       } else if (this.state == '团队赛') {
-        littleScreen({ type: '步' }).then((res) => {
+        littleScreen({ type: '手' }).then((res) => {
           this.teamList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -778,8 +778,8 @@ export default {
       } else if (this.state == '混团赛') {
       } else if (this.state == '混团赛决赛') {
         getMixeTeamFinalsListAPI({
-          contestId: "1",
-          stageId: "1"
+          contestId: 1,
+          stageId: 1,
         }).then((res) => {
           console.log(res)
         })
