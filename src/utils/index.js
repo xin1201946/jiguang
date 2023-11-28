@@ -127,3 +127,25 @@ export const radioStyle = {
   height: '30px',
   lineHeight: '30px'
 }
+
+/**
+ * @function sorderFun 排序方法
+ * @param {string[]} arrOrder 要排序的数组
+ * @param {string[]} arr 原数组
+ * @return {*[]}
+ */
+export function sorderFun (arrOrder, arr) {
+  const array = []
+  for (const item of arrOrder) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].includes(item)) {
+        array.push({
+          key: i,
+          value: arr[i],
+          order: item
+        })
+      }
+    }
+  }
+  return array
+}

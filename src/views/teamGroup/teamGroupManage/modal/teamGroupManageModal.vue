@@ -77,8 +77,8 @@
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import BizMixins from '@views/biz/bizMixins'
 import { bizGroupSave, bizGroupUpdate } from '@api/teamGroup'
+import { sorderFun } from '@/utils'
 
 
 export default {
@@ -166,31 +166,18 @@ export default {
       this.title = '详情'
 
       this.infos = reccord
+
       // 先男女 后 甲乙丙
       const sexOrder = ['男', '女']
-      const keys = Object.keys(reccord.groupProjectMap)
-      const arr = []
-      for (const item of sexOrder) {
-        for (let i = 0; i < keys.length; i++) {
-          if (keys[i].includes(item)){
-            arr.push(keys[i])
-          }
-        }
-      }
-      // 排序
       const order = [ '甲', '乙', '丙' ]
-      const obj = []
-      for (const item of order) {
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i].includes(item)) {
-            obj.push({
-              title: [arr[i]],
-              list: reccord.groupProjectMap[arr[i]]
-            })
-          }
-        }
-      }
-      this.list = obj
+      const keys = Object.keys(reccord.groupProjectMap)
+      this.list = sorderFun(
+        order,
+        sorderFun(sexOrder, keys).map(item => item.value)
+      ).map(item => ({
+        title: item.value,
+        list: reccord.groupProjectMap[item.value]
+      }))
     },
     handleOk() {
       this.$refs.form.validate((v) => {
