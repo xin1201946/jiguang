@@ -778,7 +778,7 @@ export default {
       } else if (this.state == '混团赛') {
       } else if (this.state == '混团赛决赛') {
         getMixeTeamFinalsListAPI({
-          contestId: "2",
+          contestId: "1",
           stageId: "1"
         }).then((res) => {
           console.log(res)
