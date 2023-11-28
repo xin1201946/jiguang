@@ -35,22 +35,24 @@
             >{{ item.label }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="参团选手" prop="playerGroup">
-          <a-select v-model="formData.playerGroup">
-            <a-select-option
-              v-for="item in playerGroup"
-              :key="item.value"
-              :value="item.value"
-            >{{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="参团人数" prop="playerNum">
-          <a-input
-            oninput="value=value.replace(/[^\d]/g,'')"
-            v-model="formData.playerNum"
-          ></a-input>
-        </a-form-model-item>
+        <template v-if="formData.isGroupRank !== '0'">
+          <a-form-model-item label="参团选手" prop="playerGroup">
+            <a-select v-model="formData.playerGroup">
+              <a-select-option
+                v-for="item in playerGroup"
+                :key="item.value"
+                :value="item.value"
+              >{{ item.label }}
+              </a-select-option>
+            </a-select>
+          </a-form-model-item>
+          <a-form-model-item label="参团人数" prop="playerNum">
+            <a-input
+              oninput="value=value.replace(/[^\d]/g,'')"
+              v-model="formData.playerNum"
+            ></a-input>
+          </a-form-model-item>
+        </template>
         <a-form-model-item label="积分方式" prop="integrationMethod">
           <a-select v-model="formData.integrationMethod">
             <a-select-option
@@ -245,6 +247,44 @@ export default {
     }
   },
   methods: {
+    okData() {
+      const data = JSON.parse(JSON.stringify(this.formData))
+      if (this.type === 0) {
+        delete data.cproStageId
+        if (this.formData.integrationMethod === '3') {
+          delete data.ringHigh
+          delete data.ringLow
+        }
+        if (this.formData.integrationMethod === '4') {
+          delete data.targetScore
+          delete data.winSocre
+          delete data.drawScore
+          delete data.loserScore
+        }
+        if (this.formData.isGroupRank === '0') {
+          delete data.playerGroup
+          delete data.playerNum
+        }
+      }
+      if (this.type === 1) {
+        if (this.formData.integrationMethod === '3') {
+          delete data.ringHigh
+          delete data.ringLow
+        }
+        if (this.formData.integrationMethod === '4') {
+          delete data.targetScore
+          delete data.winSocre
+          delete data.drawScore
+          delete data.loserScore
+        }
+        // 选择不参团
+        if (this.formData.isGroupRank === '0') {
+          delete data.playerGroup
+          delete data.playerNum
+        }
+      }
+      return data
+    },
     handleOk() {
       this.$refs.form.validate(v => {
         if (v) {
@@ -262,8 +302,12 @@ export default {
               delete data.drawScore
               delete data.loserScore
             }
+            if (this.formData.isGroupRank === '0') {
+              delete data.playerGroup
+              delete data.playerNum
+            }
             bizContestProjectStageSave({
-              ...data,
+              ...this.okData(),
               cproId: this.cproId,
               contestId: this.$route.query.id
             }).then(res => {
@@ -289,8 +333,13 @@ export default {
               delete data.drawScore
               delete data.loserScore
             }
+            // 选择不参团
+            if (this.formData.isGroupRank === '0') {
+              delete data.playerGroup
+              delete data.playerNum
+            }
             bizContestProjectStageUpdate({
-              ...data,
+              ...this.okData(),
               cproId: this.cproId,
               contestId: this.$route.query.id
             }).then(res => {

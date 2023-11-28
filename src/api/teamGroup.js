@@ -5,4 +5,4 @@ export const bizGroupSave = data => postAction('bizGroup/save', data)
 export const bizGroupUpdate = data => postAction('bizGroup/update', data)
 export const bizGroupQueryById = id => getAction(`bizGroup/queryById/${id}`)
 
-export const bizGroupUpdateBtn = () => getAction('bizGroup/updateBtn')
+export const bizGroupUpdateBtn = (params = {}) => getAction('bizGroup/updateBtn', params)
