@@ -204,6 +204,6 @@ export const participantModalUserTableColumns = [
     title: "项目组别",
     align: 'center',
     dataIndex: 'projectGroup',
-    customRender: text => getLabel(projectGroup, text)
+    // customRender: text => getLabel(projectGroup, text)
   },
 ]
