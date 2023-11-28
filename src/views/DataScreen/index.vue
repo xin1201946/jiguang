@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { littleScreen } from '@api/competition'
+import { littleScreen, getMixeTeamFinalsListAPI } from '@api/competition'
 // 个人赛和混团赛滚动成绩tabelList
 import TableListVue from './components/tableList.vue'
 // 排名
@@ -153,7 +153,7 @@ export default {
       stageGroup: '',
       shootGroups: '',
       stageName: '',
-      state: '排名',
+      state: '混团赛决赛',
 
       isSpin: false,
       drawList: {
@@ -777,6 +777,12 @@ export default {
         })
       } else if (this.state == '混团赛') {
       } else if (this.state == '混团赛决赛') {
+        getMixeTeamFinalsListAPI({
+          contestId: "2",
+          stageId: "1"
+        }).then((res) => {
+          console.log(res)
+        })
       }
     },
   },

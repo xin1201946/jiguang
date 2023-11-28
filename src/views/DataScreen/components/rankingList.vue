@@ -127,25 +127,25 @@ export default {
     .one {
       position: relative;
       width: 32%;
-      height: 100px;
+      height: 160px;
       text-align: center;
-      line-height: 100px;
+      line-height: 160px;
       font-size: 30px;
       font-weight: bolder;
       background: linear-gradient(to bottom, #ef2928, transparent);
       p {
         position: absolute;
         left: 50%;
-        top: -100%;
+        top: -80%;
         transform: translateX(-50%);
       }
     }
     .two {
       position: relative;
       width: 32%;
-      height: 100px;
+      height: 130px;
       text-align: center;
-      line-height: 100px;
+      line-height: 130px;
       font-size: 30px;
       font-weight: bolder;
       margin-top: 30px;
@@ -153,7 +153,7 @@ export default {
       p {
         position: absolute;
         left: 50%;
-        top: -100%;
+        top: -80%;
         transform: translateX(-50%);
       }
     }
@@ -170,7 +170,7 @@ export default {
       p {
         position: absolute;
         left: 50%;
-        top: -100%;
+        top: -80%;
         transform: translateX(-50%);
       }
     }

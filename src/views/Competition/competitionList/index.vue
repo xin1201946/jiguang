@@ -8,14 +8,7 @@
         <a-button type="primary" @click="handleAdd" icon="plus">创建赛事</a-button>
       </a-space>
     </template>
-    <a-table
-      :columns="columns"
-      rowKey="contestId"
-      :dataSource="data"
-      :pagination="pagination"
-      @change="handleTableChange"
-      bordered
-    >
+    <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange" bordered>
       <template slot="operation" slot-scope="text, record">
         <a-space>
           <!--          <a-button
@@ -25,30 +18,10 @@
             icon="edit"
             @click="handleEdita(record)"
           >编辑</a-button>-->
-          <a-button
-            v-if="record.contestStatus !== '0'"
-            type="primary"
-            size="small"
-            ghost
-            icon="check"
-            @click="toLink(record)"
-            >赛事安排</a-button
-          >
-          <a-button
-            v-if="record.contestStatus === '0'"
-            type="primary"
-            size="small"
-            ghost
-            icon="check"
-            @click="handleSubmit(record)"
-            >提交</a-button
-          >
-          <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)"
-            >设置比赛信息</a-button
-          >
-          <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)"
-            >参赛人员管理</a-button
-          >
+          <a-button v-if="record.contestStatus !== '0'" type="primary" size="small" ghost icon="check" @click="toLink(record)">赛事安排</a-button>
+          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
+          <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
+          <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
           <!-- <a-button ghost size="small" type="primary" icon="check-circle"
             @click="handleParticipantCheck(record)">审核</a-button> -->
           <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>

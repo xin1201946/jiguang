@@ -7,11 +7,7 @@
       <TreeCard>
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node
-              v-for="item in treeList"
-              :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup"
-            >
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup" :title="item.projectName + ' - ' + item.projectGroup">
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -45,14 +41,7 @@
         <div class="gameInfoTables" v-show="groupActive">
           <div class="gameInfoTables_group">
             <a-radio-group v-model="group">
-              <a-radio
-                @change="radioChangeHandle"
-                style="display: block; height: 30px; line-height: 30px"
-                v-for="item in groupList"
-                :value="item.group"
-                :key="item.group"
-              >{{ numToCapital(item.group) }}组</a-radio
-              >
+              <a-radio @change="radioChangeHandle" style="display: block; height: 30px; line-height: 30px" v-for="item in groupList" :value="item.group" :key="item.group">{{ numToCapital(item.group) }}组</a-radio>
             </a-radio-group>
           </div>
           <div class="gameInfoTables_table">
@@ -135,7 +124,6 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-
       })
     },
     /**
@@ -211,6 +199,20 @@ export default {
      * 分组
      */
     handleGroup() {
+      stagePlayerGroup({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('分组成功！')
+          this.groupActive = true
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+        // console.log(res)
+      })
       this.$refs.group.init()
     },
     /**
@@ -344,22 +346,7 @@ export default {
         }
       })
     },
-    groupListHandle() {
-      stagePlayerGroup({
-        contestId: this.data.contestId, //赛事id
-        cproId: this.cproId, //赛事项目id
-        stageId: this.cproStageId, //项目阶段id
-      }).then((res) => {
-        if (res.success) {
-          this.$message.success('分组成功！')
-          this.groupActive = true
-          this.getTableList()
-        } else {
-          this.$message.error(res.message)
-        }
-        // console.log(res)
-      })
-    },
+    groupListHandle() {},
   },
   mounted() {
     // this.$refs.query.init(gameInfoQuery)
