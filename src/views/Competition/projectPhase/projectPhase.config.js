@@ -9,7 +9,7 @@ export const integrationMethod = [
   },
   {
     value: '2',
-    label: "大环加十环"
+    label: "大环加好十环"
   },
   {
     value: '3',
@@ -55,7 +55,7 @@ export const playerGroup = [
 export const scoreModel = [
   {
     value: '0',
-    label: "计分射"
+    label: "记分射"
   },
 ]
 
