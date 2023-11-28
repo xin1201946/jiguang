@@ -36,8 +36,8 @@ export const projectGroup = [
     value: "男子丙组"
   },
   {
-    label: "女子组",
-    value: "女子组"
+    label: "女子丙组",
+    value: "女子丙组"
   },
 ]
 export const participantQuery = [
