@@ -45,11 +45,11 @@
             </a-radio-group>
           </div>
           <div class="gameInfoTables_table">
-            <a-table bordered rowKey="playerId" :columns="columns" :dataSource="dataSource">
+            <a-table bordered rowKey="i" :columns="columns" :dataSource="dataSource">
               <template slot="operation" slot-scope="text, record, index">
                 <a-space>
-                  <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
-<!--                  <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+<!--                  总环数为空不渲染成绩详情按钮-->
+                  <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                 </a-space>
               </template>
             </a-table>
@@ -167,7 +167,10 @@ export default {
           this.group = null
           this.groupList = []
           this.groupActive = false
-          this.dataSource = res.result[0].bizContestPlayerList
+          this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
+            ...item,
+            i
+          }))
         } else {
           if (!this.group) {
             this.group = res.result[0].group
@@ -184,10 +187,12 @@ export default {
      */
     radioChangeHandle(e) {
       this.group = e.target.value
-      // console.log(this.groupList)
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
-          this.dataSource = item.bizContestPlayerList
+          this.dataSource = item.bizContestPlayerList.map((item, i) => ({
+            ...item,
+            i
+          }))
         }
       })
     },

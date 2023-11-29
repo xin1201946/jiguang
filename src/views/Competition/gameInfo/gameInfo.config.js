@@ -62,7 +62,7 @@ export const gameInfoColumns = [
     align: 'center',
   },
   {
-    dataIndex: 'action',
+    dataIndex: 'isGroup',
     title: '是否团体排名',
     align: 'center',
   },
@@ -72,7 +72,7 @@ export const gameInfoColumns = [
     align: 'center',
   },
   {
-    // dataIndex: '',
+    dataIndex: 'totalScore',
     title: '总环数',
     align: 'center',
   },
