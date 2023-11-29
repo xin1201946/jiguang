@@ -135,6 +135,7 @@ export default {
     }
   },
   methods: {
+    // 添加
     init(contestId, name) {
       this.width = '520px'
       this.visible = true
@@ -149,6 +150,7 @@ export default {
         this.$refs.form.clearValidate()
       })
     },
+    // 编辑
     edit(reccord, contestId, name) {
       this.width = '520px'
       this.visible = true
@@ -163,6 +165,7 @@ export default {
         this.$refs.form.clearValidate()
       })
     },
+    // 详情
     info(reccord, contestId, name) {
       this.contestId = contestId
       this.name = name
@@ -194,6 +197,7 @@ export default {
       }
       this.visible = true
     },
+    // 确定
     handleOk() {
       if (this.type === 3) {
         const coachNameArr = this.list.map(item => item.value)
@@ -217,19 +221,11 @@ export default {
         })
       }
     },
+    // 取消
     handleCancel() {
       this.visible = false
     },
-    plus() {
-      if (this.formData.coach.length < 1)
-      this.formData.coach.push({
-        value: '',
-        key: Date.now()
-      })
-    },
-    minus(i) {
-      this.formData.coach.splice(i, 1)
-    },
+    // 接口回调
     quit(res) {
       if (res.code === 200) {
         this.$message.success(res.message)

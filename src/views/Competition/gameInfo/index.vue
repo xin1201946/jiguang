@@ -45,13 +45,20 @@
             </a-radio-group>
           </div>
           <div class="gameInfoTables_table">
-            <a-table rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
+            <a-table bordered rowKey="playerId" :columns="columns" :dataSource="dataSource">
+              <template slot="operation" slot-scope="text, record, index">
+                <a-space>
+                  <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+<!--                  <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+                </a-space>
+              </template>
+            </a-table>
           </div>
         </div>
-        <a-table v-show="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
+        <a-table bordered v-show="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
-        <GameInfoGroupModal ref="group" @list="groupListHandle"></GameInfoGroupModal>
+        <GameInfoGroupModal ref="group"></GameInfoGroupModal>
       </TreeCard>
     </div>
   </div>
@@ -108,6 +115,9 @@ export default {
     }
   },
   methods: {
+    handleInfo(record) {
+      this.$refs.group.edit(record)
+    },
     numToCapital,
     /**
      * 推送到pad
@@ -369,7 +379,6 @@ export default {
     groupListHandle() {},
   },
   mounted() {
-    // this.$refs.query.init(gameInfoQuery)
     this.data = JSON.parse(decodeURI(this.$route.query.row))
     this.getProjectList()
   },
@@ -400,6 +409,12 @@ export default {
       //选中后设置背景色及高度
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected::before {
         height: 30px;
+
+      }
+      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected{
+        .title{
+          color: #fff
+        }
       }
 
       li {
@@ -413,10 +428,10 @@ export default {
       }
     }
     .title {
+      color: #333;
       display: flex;
       width: 300px;
       justify-content: space-between;
-      //height: 50px;
       align-items: center;
     }
   }

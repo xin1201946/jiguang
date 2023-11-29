@@ -72,12 +72,36 @@ export const gameInfoColumns = [
     align: 'center',
   },
   {
+    // dataIndex: '',
+    title: '总环数',
+    align: 'center',
+  },
+  {
     title: '操作',
     align: 'center',
-    dataIndex: 'entryFormId',
+    dataIndex: 'playerId',
     scopedSlots: {
       customRender: 'operation'
     },
     width: 200
   }
+]
+
+export const gameInfoModalColumns = [
+  {
+    title: '环数',
+    align: 'center',
+  },
+  {
+    title: '组数',
+    align: 'center',
+  },
+  {
+    title: '成绩',
+    align: 'center',
+  },
+  {
+    title: '发序',
+    align: 'center',
+  },
 ]
