@@ -267,7 +267,8 @@ export default {
       bizPlayerFinalScorePageList(data).then(res => {
         if (res.code === 200) {
           if (res.result.records.length) {
-            this.getColumns(res.result.records[0].gunTotalGroup)
+            const arr = res.result.records.map(item => item.gunTotalGroup)
+            this.getColumns(Math.max(...[...new Set(arr)]))
           }
           this.$nextTick(() => {
             if (res.result.records.length) {

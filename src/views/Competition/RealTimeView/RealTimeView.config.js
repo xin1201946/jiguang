@@ -112,7 +112,7 @@ export const RealTimeViewTableColumns = [
     dataIndex: 'stageTotal',
     customRender: (text, record) => {
       if (record.integrationMethod === 2 || record.integrationMethod === '2') {
-        console.log(record)
+        // console.log(record)
         return text + '_x' + record.goodTotal
       }
       return text
