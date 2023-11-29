@@ -83,11 +83,9 @@ export default {
     info(data, record) {
       this.visible = true
       this.formData = data
-      // console.log(data)
-      // console.log(record)
       if (data.detailScoreList && data.detailScoreList.length) {
         const arr = []
-
+        // 过滤阶段
         const stageGroupArr = data.detailScoreList.filter(item => item.stageGroup === data.stageGroup)
         stageGroupArr.map(item => {
           arr.push(item.groupCount)
@@ -97,7 +95,6 @@ export default {
         this.list = list.map((item) => {
           return stageGroupArr.filter(i => i.groupCount === item)
         })
-        // console.log(this.list)
       }
     },
     handleOk() {
