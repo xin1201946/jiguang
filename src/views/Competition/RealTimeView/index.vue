@@ -102,7 +102,7 @@ export default {
       data: [],
       query: {
         playerName: undefined,
-        stageName: undefined,
+        cproStageId: undefined,
         groupName: undefined
       },
       columns: RealTimeViewTableColumns,

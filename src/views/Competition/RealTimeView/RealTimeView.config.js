@@ -53,7 +53,7 @@ export const RealTimeViewQuery = [
   {
     type: 'select',
     label: '阶段名称',
-    rules: ['stageName'],
+    rules: ['cproStageId'],
     placeholder: '请选择阶段名称',
     data: [],
     value: '',
