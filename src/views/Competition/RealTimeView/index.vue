@@ -35,7 +35,9 @@
             @submit="handleSearch"
           ></QuerySearch>
         </template>
-        <template slot="operator"></template>
+        <template slot="operator">
+          <RealTimeViewModal ref="modal"></RealTimeViewModal>
+        </template>
         <template slot="default">
           <a-table
             :columns="columns"
@@ -56,7 +58,6 @@
               </a-space>
             </template>
           </a-table>
-          <RealTimeViewModal ref="modal"></RealTimeViewModal>
         </template>
       </TreeCard>
     </div>
@@ -139,7 +140,7 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         // console.log(res.result)
         const result = res.result.map(item => ({
           label: item.playerName,
@@ -287,6 +288,9 @@ export default {
             this.pagination.current = res.result.current
             this.pagination.total = res.result.total
           })
+        } else{
+          this.data = []
+          this.pagination.total = 0
         }
       })
     },

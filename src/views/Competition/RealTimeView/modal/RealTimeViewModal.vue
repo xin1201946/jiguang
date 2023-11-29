@@ -30,10 +30,10 @@
           bordered
           :column="2"
           v-for="(item, i) in list"
-          :title="`第${numToCapital(i+1)}组`" :key="item"        >
+          :title="`第${numToCapital(i+1)}组`" :key="i" >
           <template v-for="(key, value) in item">
             <a-descriptions-item
-              :key="value"
+              :key="`${value}${i}`"
               :span="1"
               :label="`第${numToCapital(key.shootCode)}发`"
             >{{key.score}}</a-descriptions-item>

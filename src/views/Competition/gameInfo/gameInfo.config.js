@@ -88,10 +88,10 @@ export const gameInfoColumns = [
 ]
 
 export const gameInfoModalColumns = [
-  {
+ /*  {
     title: '环数',
     align: 'center',
-  },
+  }, */
   {
     title: '组数',
     align: 'center',
