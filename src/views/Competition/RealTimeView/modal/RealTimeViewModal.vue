@@ -83,20 +83,22 @@ export default {
     info(data, record) {
       this.visible = true
       this.formData = data
+      // console.log(data)
+      // console.log(record)
       if (data.detailScoreList && data.detailScoreList.length) {
         const arr = []
-        data.detailScoreList.map(item => {
+
+        const stageGroupArr = data.detailScoreList.filter(item => item.stageGroup === data.stageGroup)
+        stageGroupArr.map(item => {
           arr.push(item.groupCount)
           return item
         })
         const list = [...new Set(arr)]
         this.list = list.map((item) => {
-          return data.detailScoreList.filter(i => i.groupCount === item)
+          return stageGroupArr.filter(i => i.groupCount === item)
         })
-        console.log(this.list)
+        // console.log(this.list)
       }
-      // detailScoreList
-      // item.groupCount
     },
     handleOk() {
       this.visible = false
