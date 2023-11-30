@@ -5,11 +5,12 @@
     :loading="loading"
     @ok="handleOk"
     @cancel="handleCancel"
+    :width="900"
   >
     <div class="modal">
       <a-form>
         <a-form-item
-          :labelCol="{span: 6}"
+          :labelCol="{span: 4}"
           :wrapperCol="{span: 18}"
           label="激光训练器类型"
         >
@@ -77,8 +78,16 @@ export default {
           title: '激光训练器编号',
           dataIndex: 'deviceNum0',
           align: 'center',
-          customRender: (text, item) => {
-            return text + (item.deviceGunType === '0'? ' - 长款激光训练器' : item.deviceGunType === '1'? ' - 短款激光训练器' : '')
+          // customRender: (text, item) => {
+          //   return text + (item.deviceGunType === '0'? ' - 长款激光训练器' : item.deviceGunType === '1'? ' - 短款激光训练器' : '')
+          // }
+        },
+        {
+          dataIndex: 'deviceGunType',
+          align: 'center',
+          title: '激光训练器类型',
+          customRender: text => {
+            return text === '0'? '长款激光训练器' : text === '1'? '短款激光训练器' : ''
           }
         },
         {
@@ -126,14 +135,13 @@ export default {
   },
   methods: {
     handleClick() {
-      if (this.deviceType) {
-        this.tableList = this.tableLists.filter(item => item.deviceGunType === this.deviceType)
-      }else {
-        this.tableList = this.tableLists
-      }
+      console.log(this.deviceType)
+      this.getPcTableList({
+        deviceGunType: this.deviceType
+      })
     },
-    getPcTableList () {
-      return bizTabletPcList().then(res => {
+    getPcTableList (data) {
+      return bizTabletPcList(data).then(res => {
         this.tableList = res.result
         this.tableLists = res.result
         return
@@ -197,7 +205,7 @@ export default {
       this.loading = false
       this.title = "添加比赛设备"
       this.visible = true
-      this.getPcTableList().then(() => {
+      this.getPcTableList({}).then(() => {
         const arr = []
         for (const item of this.tableList) {
           for (const key of data) {
@@ -221,7 +229,7 @@ export default {
       this.title = "编辑比赛设备"
       this.loading = false
       this.visible = true
-      this.getPcTableList().then(() => {
+      this.getPcTableList({}).then(() => {
         this.$nextTick(() => {
           for (const key in this.formData){
             this.formData[key] = row[key]

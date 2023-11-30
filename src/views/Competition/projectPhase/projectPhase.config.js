@@ -13,7 +13,7 @@ export const integrationMethod = [
   },
   {
     value: '3',
-    label: "中数"
+    label: "小环加好十环"
   },
   {
     value: '4',
@@ -57,11 +57,15 @@ export const scoreModel = [
     value: '0',
     label: "记分射"
   },
+  {
+    value: '1',
+    label: "24发淘汰射"
+  },
 ]
 
 export const rules = {
   stageName: [
-    { required: true, message: '请输入阶段名称', trigger: 'blur' }
+    { required: true, message: '请选择阶段名称', trigger: 'blur' }
   ],
   stageOrder: [
     { required: true, message: '请输入阶段顺序', trigger: 'blur' }

@@ -238,5 +238,10 @@ export default {
 
 
 <style scoped lang="less">
-
+/deep/.ant-table-body{
+  &::-webkit-scrollbar{
+    display: block;
+    width: 0 !important;
+  }
+}
 </style>

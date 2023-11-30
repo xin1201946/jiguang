@@ -31,9 +31,16 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
+      <a-form-model-item label="比赛模式" prop="mode">
+        <a-select v-model="formData.mode">
+          <a-select-option value="0">个人赛</a-select-option>
+          <a-select-option value="1">混团赛</a-select-option>
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="项目组别" prop="projectGroup">
         <a-select v-model="formData.projectGroup">
-          <a-select-option v-for="(item, i) in projectGroup" :value="item.value" :key="i">{{item.value}}</a-select-option>
+          <a-select-option v-for="(item, i) in formData.mode === '1'? projectGroup1 : projectGroup" :value="item.value" :key="i">{{item.value}}</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="选手上限" prop="playerLimit">
@@ -41,7 +48,7 @@
           oninput="value=value.replace(/[^\d]/g,'')"
           v-model="formData.playerLimit"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="团队人数" prop="groupSize">
+      <a-form-model-item v-if="formData.mode !== '1'" label="团队人数" prop="groupSize">
         <a-input
           oninput="value=value.replace(/[^\d]/g,'')"
           v-model="formData.groupSize"></a-input>
@@ -60,12 +67,7 @@
           :disabledTime="disabledTime"
         ></a-range-picker>
       </a-form-model-item>
-      <a-form-model-item label="比赛模式" prop="mode">
-        <a-select v-model="formData.mode">
-          <a-select-option value="0">个人赛</a-select-option>
-          <a-select-option value="1">混团赛</a-select-option>
-        </a-select>
-      </a-form-model-item>
+
     </a-form-model>
   </BizModal>
 </template>
@@ -76,6 +78,22 @@ import { bizContestProjectSave, bizContestProjectUpdate, bizContestQueryById } f
 import { bizProjectList } from '@api/biz'
 import dayjs from 'dayjs'
 import { projectGroup } from '@views/Competition/participant/participant.config'
+
+const projectGroup1 = [
+  {
+    label: "甲组",
+    value: "甲组"
+  },
+  {
+    label: "乙组",
+    value: "乙组"
+  },
+  {
+    label: "丙组",
+    value: "丙组"
+  },
+]
+
 export default {
   name: 'competitionProjectModal',
   components: {
@@ -83,6 +101,7 @@ export default {
   },
   data() {
     return {
+      projectGroup1,
       projectGroup,
       title: "",
       visible: false,

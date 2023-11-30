@@ -6,6 +6,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
   >
+
     <div class="modes">
       <a-form-model
         :labelCol="{span: 6}"
@@ -15,7 +16,10 @@
         :model="formData"
       >
         <a-form-model-item label="阶段名称" prop="stageName">
-          <a-input v-model="formData.stageName"></a-input>
+<!--          <a-input v-model="formData.stageName"></a-input>-->
+          <a-select v-model="formData.stageName">
+            <a-select-option v-for="(item,i) in stageName" :key="i" :value="item.value">{{item.label}}</a-select-option>
+          </a-select>
         </a-form-model-item>
         <a-form-model-item label="阶段顺序" prop="stageOrder">
           <a-input
@@ -151,27 +155,29 @@
             >{{ item.label }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="默认组数" prop="groupCount">
-          <a-input
-            oninput="value=value.replace(/[^\d]/g,'')"
-            v-model="formData.groupCount"
-          ></a-input>
-        </a-form-model-item>
-        <a-form-model-item label="每组枪数">
-          <a-input
-            disabled
-            :readonly="true"
-            oninput="value=value.replace(/[^\d]/g,'')"
-            v-model="formData.gunsPerGroup"
-          ></a-input>
-        </a-form-model-item>
-        <a-form-model-item label="射击时长" prop="shootPeriod">
-          <a-input
-            oninput="value=value.replace(/[^\d]/g,'')"
-            v-model="formData.shootPeriod"
-            addon-after="分"
-          />
-        </a-form-model-item>
+        <template v-if="formData.scoreModel !== '1' && formData.integrationMethod !== '4'">
+          <a-form-model-item label="默认组数" prop="groupCount">
+            <a-input
+              oninput="value=value.replace(/[^\d]/g,'')"
+              v-model="formData.groupCount"
+            ></a-input>
+          </a-form-model-item>
+          <a-form-model-item label="每组枪数">
+            <a-input
+              disabled
+              :readonly="true"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              v-model="formData.gunsPerGroup"
+            ></a-input>
+          </a-form-model-item>
+          <a-form-model-item label="射击时长" prop="shootPeriod">
+            <a-input
+              oninput="value=value.replace(/[^\d]/g,'')"
+              v-model="formData.shootPeriod"
+              addon-after="分"
+            />
+          </a-form-model-item>
+        </template>
         <a-form-model-item label="是否试射" prop="isAdjustment">
           <a-select v-model="formData.isAdjustment">
             <a-select-option
@@ -204,7 +210,21 @@ import {
   scoreModel,
   rules
 } from '@views/Competition/projectPhase/projectPhase.config'
+const stageName = [
+  {
+    label: '资格赛',
+    value: '资格赛'
+  },
+  {
+    label: '淘汰赛',
+    value: '淘汰赛'
+  },
 
+  {
+    label: '金/铜牌赛',
+    value: '金/铜牌赛'
+  }
+]
 export default {
   name: 'projectPhaseStageTableModal',
   components: {
@@ -212,6 +232,7 @@ export default {
   },
   data() {
     return {
+      stageName,
       integrationMethod,
       isAdjustment,
       isGroupRank,

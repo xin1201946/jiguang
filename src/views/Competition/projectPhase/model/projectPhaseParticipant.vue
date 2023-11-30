@@ -19,7 +19,7 @@
         rowKey="playerId"
         size="small"
         :columns="columns"
-        :scroll="{ y: 200, x: 1200}"
+        :scroll="{ y: 200, x: 1300}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-button
@@ -112,7 +112,7 @@ export default {
           title: "项目组别",
           align: 'center',
           dataIndex: 'projectGroup',
-          customRender: text => getLabel(projectGroup, text)
+          // customRender: text => getLabel(projectGroup, text)
         },
         {
           title: "操作",
@@ -217,6 +217,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
+<style scoped lang="less">
+/deep/.ant-table-body{
+  &::-webkit-scrollbar{
+    display: block;
+    width: 0 !important;
+  }
+}
 </style>

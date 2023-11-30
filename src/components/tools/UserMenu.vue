@@ -38,11 +38,11 @@
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
-    <span class="action">
+<!--    <span class="action">
       <a class="logout_title" target="_blank" href="http://doc.jeecg.com">
         <a-icon type="question-circle-o"></a-icon>
       </a>
-    </span>
+    </span>-->
 <!--    <header-notice class="action" />-->
     <a-dropdown>
       <span class="action action-full ant-dropdown-link user-dropdown-menu">
@@ -50,18 +50,18 @@
         <span v-if="isDesktop()">欢迎您，{{ nickname() }}</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item key="0">
-          <router-link :to="{ name: 'account-center' }">
-            <a-icon type="user" />
-            <span>个人中心</span>
-          </router-link>
-        </a-menu-item>
-        <a-menu-item key="1">
-          <router-link :to="{ name: 'account-settings-base' }">
-            <a-icon type="setting" />
-            <span>账户设置</span>
-          </router-link>
-        </a-menu-item>
+<!--        <a-menu-item key="0">-->
+<!--          <router-link :to="{ name: 'account-center' }">-->
+<!--            <a-icon type="user" />-->
+<!--            <span>个人中心</span>-->
+<!--          </router-link>-->
+<!--        </a-menu-item>-->
+<!--        <a-menu-item key="1">-->
+<!--          <router-link :to="{ name: 'account-settings-base' }">-->
+<!--            <a-icon type="setting" />-->
+<!--            <span>账户设置</span>-->
+<!--          </router-link>-->
+<!--        </a-menu-item>-->
         <a-menu-item key="3" @click="systemSetting">
           <a-icon type="tool" />
           <span>系统设置</span>
@@ -70,10 +70,10 @@
           <a-icon type="setting" />
           <span>密码修改</span>
         </a-menu-item>
-        <a-menu-item key="5" @click="updateCurrentDepart">
-          <a-icon type="cluster" />
-          <span>切换部门</span>
-        </a-menu-item>
+<!--        <a-menu-item key="5" @click="updateCurrentDepart">-->
+<!--          <a-icon type="cluster" />-->
+<!--          <span>切换部门</span>-->
+<!--        </a-menu-item>-->
         <a-menu-item key="6" @click="clearCache">
           <a-icon type="sync" />
           <span>清理缓存</span>

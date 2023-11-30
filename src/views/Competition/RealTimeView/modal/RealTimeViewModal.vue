@@ -86,7 +86,9 @@ export default {
       if (data.detailScoreList && data.detailScoreList.length) {
         const arr = []
         // 过滤阶段
+        console.log(data.detailScoreList)
         const stageGroupArr = data.detailScoreList.filter(item => item.stageGroup === data.stageGroup)
+        console.log(stageGroupArr)
         stageGroupArr.map(item => {
           arr.push(item.groupCount)
           return item

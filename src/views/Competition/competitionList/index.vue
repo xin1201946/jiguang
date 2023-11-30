@@ -11,7 +11,7 @@
     <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange" bordered>
       <template slot="operation" slot-scope="text, record">
         <a-space>
-          <a-button v-if="record.contestStatus !== '0'" type="primary" size="small" ghost icon="check" @click="toLink(record)">赛事安排</a-button>
+          <a-button v-if="record.contestStatus !== '0' && record.contestStatus !== '1'" type="primary" size="small" ghost icon="check" @click="toLink(record)">赛事安排</a-button>
           <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
           <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
           <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>

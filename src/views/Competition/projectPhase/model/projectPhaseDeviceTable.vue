@@ -19,7 +19,7 @@
         rowKey="cproDeviceId"
         size="small"
         :columns="columns"
-        :scroll="{ y: 200, x: 1200}"
+        :scroll="{ y: 200, x: 1000}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -203,5 +203,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+/deep/.ant-table-body{
+  &::-webkit-scrollbar{
+    display: block;
+    width: 0 !important;
+  }
+}
 </style>

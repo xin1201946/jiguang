@@ -10,39 +10,41 @@
         </a-button>
       </a-space>
     </div>
-    <a-table
-      bordered
-      :pagination="pagination"
-      :data-source="data"
-      @change="handleTableChange"
-      rowKey="cproId"
-      size="small"
-      :customRow="customRow"
-      :columns="columns"
-      :row-selection="rowSelection"
-      :scroll="{ y: !disabled ? 130 : 180, x: 1200}"
-    >
-      <template slot="operation" slot-scope="text, record, index">
-        <a-space>
-          <a-button
-            type="primary"
-            size="small"
-            ghost
-            icon="edit"
-            @click="handleEdita(record)"
-            :disabled="disabled"
-          >编辑</a-button>
-          <a-button
-            type="danger"
-            size="small"
-            ghost
-            icon="delete"
-            :disabled="disabled"
-            @click="handleDelete(record)"
-          >删除</a-button>
-        </a-space>
-      </template>
-    </a-table>
+    <div style="width: 100%;">
+      <a-table
+        bordered
+        :pagination="pagination"
+        :data-source="data"
+        @change="handleTableChange"
+        rowKey="cproId"
+        size="small"
+        :customRow="customRow"
+        :columns="columns"
+        :row-selection="rowSelection"
+        :scroll="{ y: !disabled ? 130 : 180, x: 1380}"
+      >
+        <template slot="operation" slot-scope="text, record, index">
+          <a-space>
+            <a-button
+              type="primary"
+              size="small"
+              ghost
+              icon="edit"
+              @click="handleEdita(record)"
+              :disabled="disabled"
+            >编辑</a-button>
+            <a-button
+              type="danger"
+              size="small"
+              ghost
+              icon="delete"
+              :disabled="disabled"
+              @click="handleDelete(record)"
+            >删除</a-button>
+          </a-space>
+        </template>
+      </a-table>
+    </div>
     <CompetitionProjectModal ref="modal" @list="getList"></CompetitionProjectModal>
   </div>
 </template>
@@ -57,12 +59,13 @@ const columns = [
     title: "项目名称",
     dataIndex: "projectName",
     align: "center",
-    // width: 200
+    width: 200
   },
   {
     title: "项目组别",
     dataIndex: "projectGroup",
     align: "center",
+    width: 150
   },
   {
     title: "比赛模式",
@@ -103,7 +106,7 @@ const columns = [
     width: 400,
     customRender: (text, record) => {
       return `${record.projectTimeStart} - ${record.projectTimeEnd}`
-    }
+    },
   },
   {
     title: '操作',
@@ -236,6 +239,13 @@ export default {
 .competitionProject{
   &_operator{
     margin-bottom: 20px;
+  }
+  /deep/.ant-table-body{
+    &::-webkit-scrollbar{
+      box-sizing: border-box;
+      display: block;
+      width: 0 !important;
+    }
   }
 }
 </style>

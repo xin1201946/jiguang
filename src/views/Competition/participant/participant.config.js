@@ -39,6 +39,7 @@ export const projectGroup = [
     label: "女子丙组",
     value: "女子丙组"
   },
+
 ]
 export const participantQuery = [
   {
@@ -103,7 +104,7 @@ export const participantTableColumns = [
     title: "项目组别",
     align: 'center',
     dataIndex: 'projectGroup',
-    customRender: text => getLabel(projectGroup, text)
+    // customRender: text => getLabel(projectGroup, text)
   },
   {
     title: "操作",
@@ -154,7 +155,7 @@ export const participantTableColumnsAll = [
     title: "项目组别",
     align: 'center',
     dataIndex: 'projectGroup',
-    customRender: text => getLabel(projectGroup, text)
+    // customRender: text => getLabel(projectGroup, text)
   },
   {
     title: "操作",
