@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { littleScreen, getMixeTeamFinalsListAPI } from '@api/competition'
+import { littleScreen, getMixeTeamFinalsListAPI, getTeamScoresAPI } from '@api/competition'
 // 个人赛和混团赛滚动成绩tabelList
 import TableListVue from './components/tableList.vue'
 // 排名
@@ -153,7 +153,7 @@ export default {
       stageGroup: '',
       shootGroups: '',
       stageName: '',
-      state: '个人赛',
+      state: '团队赛',
 
       isSpin: false,
       drawList: {
@@ -595,13 +595,13 @@ export default {
             name: '代表队',
           },
           {
-            name: '靶位',
-          },
-          {
             name: '姓名',
           },
           {
             name: '环数',
+          },
+          {
+            name: '总环数',
           },
           {
             name: '总分',
@@ -610,28 +610,7 @@ export default {
             name: '目标分',
           },
         ],
-        List: [
-          [
-            {
-              排名: 1,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              环数: ['10', '10'],
-              总分: 8,
-              目标分: '16',
-            },
-            {
-              排名: 2,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              环数: ['20', '20'],
-              总分: 6,
-              目标分: '16',
-            },
-          ],
-        ],
+        List: [],
       },
 
       timer: null,
@@ -728,13 +707,16 @@ export default {
         })
       } else if (this.state == '抽签') {
       } else if (this.state == '团队赛') {
-        littleScreen({ type: '手' }).then((res) => {
+        getTeamScoresAPI({
+          contestId: 4,
+          cproStageId: 4,
+        }).then((res) => {
           this.teamList.List = [[], [], [], []]
           let data = res.result
-          this.projectName = data.projectName
-          this.stageGroup = data.stageGroup
+          this.projectName = data[0].projectName
+          this.stageGroup = data[0].projectGroup
           this.shootGroups = data.shootGroups
-          this.stageName = data.stageName
+          this.stageName = data[0].stageName
           this.teamList.title = [
             {
               name: '排名',
@@ -744,26 +726,21 @@ export default {
               name: '代表队',
             },
           ]
-          for (let i = 0; i < data.shootGroups; i++) {
-            this.teamList.title.push({
-              name: `${i + 1}0`,
-            })
-          }
           this.teamList.title.push({
             name: '总环数',
           })
-          data.players.forEach((item, index) => {
+          data.forEach((item, index) => {
             let obj = {
               id: item.playerName,
-              排名: item.rank,
+              排名: index + 1,
               代表队: item.groupName,
-              靶位: item.targetSite,
-              姓名: item.playerName,
-              总环数: item.total + '_x' + item.good,
+              总环数: `${item.stageTotal}_x${item.goodTotal ? item.goodTotal : 0}`,
             }
-            item.groupList.forEach((e, v) => {
-              obj[`${v + 1}0`] = e.gunGroupTotal
-            })
+            // if (item.detailScoreList) {
+            //   item.detailScoreList.forEach((e, v) => {
+            //     obj[`${v + 1}0`] = e.gunGroupTotal
+            //   })
+            // }
             if (index + 1 < 8) {
               this.teamList.List[0].push(obj)
             } else if (index + 1 < 16 && index + 1 > 7) {
@@ -779,9 +756,25 @@ export default {
       } else if (this.state == '混团赛决赛') {
         getMixeTeamFinalsListAPI({
           contestId: 1,
-          stageId: 1,
+          cproStageId: 1,
         }).then((res) => {
-          console.log(res)
+          this.mixeTeamFinalsList.List = [[]]
+          let data = res.result
+          this.projectName = data[0].projectName
+          this.stageName = data[0].stageName
+
+          data.forEach((item, index) => {
+            let obj = {
+              排名: index + 1,
+              代表队: item.groupName,
+              姓名: [item.player1Name, item.player2Name],
+              环数: [item.player1Score, item.player2Score],
+              总环数: item.stageTotal,
+              总分: item.total,
+              目标分: '16',
+            }
+            this.mixeTeamFinalsList.List[0].push(obj)
+          })
         })
       }
     },
@@ -799,7 +792,9 @@ export default {
   height: 100vh;
   overflow: hidden;
   // background: radial-gradient(rgb(30, 61, 163) 15.4639%, rgb(1, 9, 43) 99.4845%);
-  background: url(https://img.tukuppt.com/bg_grid/00/09/33/MLOtOYiX7W.jpg%21/fh/350) no-repeat center center/cover;
+  background: url(../../assets/350.jpg) no-repeat center center/cover;
+  // background: url(https://fujian.passboat.com/uploads/0108/1578471990000fa2f.png) no-repeat center center/cover;
+  // background: url(../../assets/20b1OOOPICe1.jpg) no-repeat center center/cover;
 
   padding: 30px;
   box-sizing: border-box;

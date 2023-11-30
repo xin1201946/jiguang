@@ -93,3 +93,5 @@ export const endFire = data => postAction("contest-process/endFire", data)
 export const littleScreen = data => getAction("contest-process/littleScreen", data)
 //屏幕展示 ---- 混团赛决赛
 export const getMixeTeamFinalsListAPI = data => postAction("bizTeamGoldScore/getTeamGoldList", data)
+//屏幕展示 ---- 团队赛
+export const getTeamScoresAPI = data => postAction("largeScreen/getTeamScores", data)
