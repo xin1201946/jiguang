@@ -202,6 +202,7 @@ export default {
     handleBack() {
       this.$nextTick(() => {
         this.closeCurrent()
+        this.$router.push("/competition/competitionList")
       })
     },
     /**
