@@ -127,6 +127,7 @@ export default {
           if (res.success) {
             this.$message.success('操作成功！成绩已删除！')
             this.edit(this.formData)
+            this.$emit('delSuccess')
           } else {
             this.$message.error(res.message)
           }

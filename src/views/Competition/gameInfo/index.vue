@@ -59,7 +59,7 @@
         <a-table bordered v-show="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
-        <GameInfoGroupModal ref="group"></GameInfoGroupModal>
+        <GameInfoGroupModal ref="group" @delSuccess="getTableList"></GameInfoGroupModal>
       </TreeCard>
     </div>
   </div>
