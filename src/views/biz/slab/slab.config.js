@@ -102,6 +102,7 @@ export const slabTableColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   }
 ]

@@ -83,7 +83,8 @@ export const gameInfoColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    width: 200
+    width: 220,
+    fixed: 'right',
   }
 ]
 const renderContent = (value, row, index) => {

@@ -163,6 +163,7 @@ export const participantTableColumnsAll = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   },
 ]

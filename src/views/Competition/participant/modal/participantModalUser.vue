@@ -16,6 +16,7 @@
       :row-selection="rowSelection"
       size="small"
       bordered
+      :scroll="{x: 900}"
     ></a-table>
   </BizModal>
 </template>

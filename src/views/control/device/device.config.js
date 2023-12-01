@@ -188,6 +188,7 @@ export const deviceTableColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    width: 200
+    fixed: 'right',
+    width: 400
   }
 ]

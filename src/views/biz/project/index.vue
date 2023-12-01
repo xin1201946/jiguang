@@ -20,6 +20,7 @@
         :pagination="pagination"
         @change="handleTableChange"
         rowKey="projectId"
+        :scroll="{x: 1400}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>

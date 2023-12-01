@@ -97,6 +97,7 @@ export const athletesColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   }
 ]

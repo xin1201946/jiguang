@@ -131,7 +131,7 @@ export const RealTimeViewTableColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    flex: 'right',
+    fixed: 'right',
     width: 100
   },
 ]

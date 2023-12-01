@@ -126,6 +126,7 @@ export const equipmentColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   }
 ]

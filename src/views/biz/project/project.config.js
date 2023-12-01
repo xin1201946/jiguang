@@ -56,6 +56,7 @@ export const projectColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   }
 ]

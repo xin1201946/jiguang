@@ -2,38 +2,34 @@
   <div class="user-wrapper" :class="theme">
     <!-- update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <!-- update-begin author:sunjianlei date:20191@20 for: 解决全局样式冲突的问题 -->
-    <!-- <a @click="handleFullscreen">数据大屏</a> -->
+    <a style="color: #fff" @click="handleFullscreen">数据大屏</a>
+
     <span class="action" @click="showClick">
       <a-icon type="search"></a-icon>
     </span>
-    <!--  -->
-    <a-dropdown>
-      <span class="action action-full ant-dropdown-link user-dropdown-menu">
-        <span>数据大屏</span>
-      </span>
-      <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item key="3" @click="handleFullscreen('个人赛')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>个人赛</span>
-        </a-menu-item>
-        <a-menu-item key="3" @click="handleFullscreen('个人赛决赛')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>个人赛决赛</span>
-        </a-menu-item>
-        <a-menu-item key="4" @click="handleFullscreen('团队赛')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/团队.png" alt="">
-          <span>团队赛</span>
-        </a-menu-item>
-        <a-menu-item key="6" @click="handleFullscreen('混团赛决赛')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/男女.png" alt="">
-          <span>混团赛</span>
-        </a-menu-item>
-      </a-menu>
-    </a-dropdown>
-    <!--  -->
     <!-- update-begin author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
-    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders" :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible = false">
-      <a-select class="search-input" showSearch :showArrow="false" placeholder="搜索菜单" optionFilterProp="children" :filterOption="filterOption" :open="isMobile() ? true : null" :getPopupContainer="(node) => node.parentNode" :style="isMobile() ? { width: '100%', marginBottom: '50px' } : {}" @change="searchMethods" @blur="hiddenClick">
+    <component
+      :is="searchMenuComp"
+      v-show="searchMenuVisible || isMobile()"
+      class="borders"
+      :visible="searchMenuVisible"
+      title="搜索菜单"
+      :footer="null"
+      @cancel="searchMenuVisible = false"
+    >
+      <a-select
+        class="search-input"
+        showSearch
+        :showArrow="false"
+        placeholder="搜索菜单"
+        optionFilterProp="children"
+        :filterOption="filterOption"
+        :open="isMobile() ? true : null"
+        :getPopupContainer="(node) => node.parentNode"
+        :style="isMobile() ? { width: '100%', marginBottom: '50px' } : {}"
+        @change="searchMethods"
+        @blur="hiddenClick"
+      >
         <a-select-option v-for="(site, index) in searchMenuOptions" :key="index" :value="site.id">{{
           site.meta.title
         }}</a-select-option>
@@ -42,30 +38,30 @@
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
-    <!--    <span class="action">
+<!--    <span class="action">
       <a class="logout_title" target="_blank" href="http://doc.jeecg.com">
         <a-icon type="question-circle-o"></a-icon>
       </a>
     </span>-->
-    <!--    <header-notice class="action" />-->
+<!--    <header-notice class="action" />-->
     <a-dropdown>
       <span class="action action-full ant-dropdown-link user-dropdown-menu">
         <!--        <a-avatar class="avatar" size="small" :src="getAvatar()"/>-->
         <span v-if="isDesktop()">欢迎您，{{ nickname() }}</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <!--        <a-menu-item key="0">-->
-        <!--          <router-link :to="{ name: 'account-center' }">-->
-        <!--            <a-icon type="user" />-->
-        <!--            <span>个人中心</span>-->
-        <!--          </router-link>-->
-        <!--        </a-menu-item>-->
-        <!--        <a-menu-item key="1">-->
-        <!--          <router-link :to="{ name: 'account-settings-base' }">-->
-        <!--            <a-icon type="setting" />-->
-        <!--            <span>账户设置</span>-->
-        <!--          </router-link>-->
-        <!--        </a-menu-item>-->
+<!--        <a-menu-item key="0">-->
+<!--          <router-link :to="{ name: 'account-center' }">-->
+<!--            <a-icon type="user" />-->
+<!--            <span>个人中心</span>-->
+<!--          </router-link>-->
+<!--        </a-menu-item>-->
+<!--        <a-menu-item key="1">-->
+<!--          <router-link :to="{ name: 'account-settings-base' }">-->
+<!--            <a-icon type="setting" />-->
+<!--            <span>账户设置</span>-->
+<!--          </router-link>-->
+<!--        </a-menu-item>-->
         <a-menu-item key="3" @click="systemSetting">
           <a-icon type="tool" />
           <span>系统设置</span>
@@ -74,10 +70,10 @@
           <a-icon type="setting" />
           <span>密码修改</span>
         </a-menu-item>
-        <!--        <a-menu-item key="5" @click="updateCurrentDepart">-->
-        <!--          <a-icon type="cluster" />-->
-        <!--          <span>切换部门</span>-->
-        <!--        </a-menu-item>-->
+<!--        <a-menu-item key="5" @click="updateCurrentDepart">-->
+<!--          <a-icon type="cluster" />-->
+<!--          <span>切换部门</span>-->
+<!--        </a-menu-item>-->
         <a-menu-item key="6" @click="clearCache">
           <a-icon type="sync" />
           <span>清理缓存</span>
@@ -177,11 +173,11 @@ export default {
     // update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框
   },
   methods: {
-    handleFullscreen(type) {
+    handleFullscreen() {
       // this.$router.push({
       //   path:'/DataScreen'
       // })
-      window.open('/DataScreen?type=' + type, '_blank')
+      window.open('/DataScreen', '_blank');
 
       var isFullscreen =
         document.fullScreenElement || //W3C
@@ -314,9 +310,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/ .ant-dropdown-menu-item{
-  align-items: center;
-}
 /* update_begin author:zhaoxin date:20191129 for: 让搜索框颜色能随主题颜色变换*/
 /* update-begin author:sunjianlei date:20191220 for: 解决全局样式冲突问题 */
 .user-wrapper .search-input {

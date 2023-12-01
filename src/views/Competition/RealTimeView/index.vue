@@ -46,6 +46,7 @@
             :pagination="pagination"
             @change="handleTableChange"
             bordered
+            :scroll="{x: 1400}"
           >
 <!--            <template slot="total" slot-scope="text, record, index">
               <a @click="$refs.modals.init">{{ text }}</a>

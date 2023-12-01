@@ -118,7 +118,9 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
+        @change="handleTableChange"
+        :scroll="{x: 1300}"
+      >
 
         <template slot="avatarslot" slot-scope="text, record, index">
           <div class="anty-img-wrap">
@@ -272,7 +274,7 @@
           {
             title: '负责部门',
             align: "center",
-            width: 180,
+            // width: 180,
             dataIndex: 'departIds_dictText'
           },
           {
@@ -286,7 +288,8 @@
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
-            width: 170
+            width: 170,
+            fixed: 'right'
           }
 
         ],
@@ -393,6 +396,6 @@
 
   }
 </script>
-<style scoped>
-  @import '~@assets/less/common.less'
+<style scoped lang="less">
+  @import '~@assets/less/common.less';
 </style>

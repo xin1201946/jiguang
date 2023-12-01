@@ -3,8 +3,15 @@
     <template slot="query">
       <QuerySearch ref="query" @submit="handleReset" @reset="handleReset"></QuerySearch>
     </template>
-    <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange"
-      bordered>
+    <a-table
+      :columns="columns"
+      rowKey="contestId"
+      :dataSource="data"
+      :pagination="pagination"
+      @change="handleTableChange"
+      bordered
+      :scroll="{x: 1400}"
+    >
       <template slot="operation" slot-scope="text, record">
         <a-space>
           <a-button ghost size="small" type="primary" icon="check-circle"

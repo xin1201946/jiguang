@@ -23,6 +23,7 @@
       @change="handleTableChange"
       :rowSelection="rowSelection"
       bordered
+      :scroll="{x: 1400}"
     >
       <template slot="operation" slot-scope="text, record, index">
         <a-space>

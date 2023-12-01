@@ -8,7 +8,7 @@
         <a-button type="primary" @click="handleAdd" icon="plus">创建赛事</a-button>
       </a-space>
     </template>
-    <a-table :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange" bordered>
+    <a-table :scroll="{x: 1400}" :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange" bordered>
       <template slot="operation" slot-scope="text, record">
         <a-space>
           <a-button v-if="record.contestStatus !== '0' && record.contestStatus !== '1'" type="primary" size="small" ghost icon="check" @click="toLink(record)">赛事安排</a-button>

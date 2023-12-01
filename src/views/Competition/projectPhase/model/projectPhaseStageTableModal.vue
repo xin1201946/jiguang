@@ -272,37 +272,6 @@ export default {
       const data = JSON.parse(JSON.stringify(this.formData))
       if (this.type === 0) {
         delete data.cproStageId
-        if (this.formData.integrationMethod === '3') {
-          delete data.ringHigh
-          delete data.ringLow
-        }
-        if (this.formData.integrationMethod === '4') {
-          delete data.targetScore
-          delete data.winSocre
-          delete data.drawScore
-          delete data.loserScore
-        }
-        if (this.formData.isGroupRank === '0') {
-          delete data.playerGroup
-          delete data.playerNum
-        }
-      }
-      if (this.type === 1) {
-        if (this.formData.integrationMethod === '3') {
-          delete data.ringHigh
-          delete data.ringLow
-        }
-        if (this.formData.integrationMethod === '4') {
-          delete data.targetScore
-          delete data.winSocre
-          delete data.drawScore
-          delete data.loserScore
-        }
-        // 选择不参团
-        if (this.formData.isGroupRank === '0') {
-          delete data.playerGroup
-          delete data.playerNum
-        }
       }
       return data
     },

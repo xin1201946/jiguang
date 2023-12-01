@@ -117,6 +117,6 @@ export const competitionListTableColumns = [
       customRender: 'operation'
     },
     width: 200,
-    fixed: 'right'
+    fixed: 'right',
   }
 ]

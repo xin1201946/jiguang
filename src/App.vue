@@ -39,7 +39,11 @@ export default {
 #app {
   height: 100%;
 }
-/* ::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   display: none;
-} */
+}*/
+.ant-table-body::-webkit-scrollbar{
+  display: block;
+  width: 0 !important;
+}
 </style>

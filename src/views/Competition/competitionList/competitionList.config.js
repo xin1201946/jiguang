@@ -69,20 +69,20 @@ export const competitionListTableColumns = [
     title: "赛事名称",
     dataIndex: "contestName",
     align: 'center',
-    // width: 200
+    width: 200
   },
   {
     title: "赛事类型",
     dataIndex: "contestType",
     align: 'center',
-    // width: 100
+    width: 100
   },
   {
     title: "选手类型",
     dataIndex: "playerType",
     align: 'center',
     customRender: text => getLabel(playerType, text),
-    // width: 100
+    width: 100
   },
   {
     title: "报名时间",
@@ -91,7 +91,7 @@ export const competitionListTableColumns = [
     customRender: (text, record) => {
       return `${record.registTimeStart} - ${record.registTimeEnd}`
     },
-    // width: 400
+    width: 400
   },
   {
     title: "比赛时间",
@@ -100,25 +100,25 @@ export const competitionListTableColumns = [
     customRender: (text, record) => {
       return `${record.contestTimeStart} - ${record.contestTimeEnd}`
     },
-    // width: 400
+    width: 400
   },
   {
     title: "主办方",
     dataIndex: "sponsor",
     align: 'center',
-    // width: 260
+    width: 260
   },
   {
     title: "比赛地点",
     dataIndex: "location",
     align: 'center',
-    // width: 260
+    width: 260
   },
   {
     title: "赛事状态",
     dataIndex: "contestStatus",
     align: 'center',
-    // width: 200,
+    width: 200,
     customRender: text => getLabel(status, text)
   },
   {
@@ -128,7 +128,7 @@ export const competitionListTableColumns = [
     scopedSlots: {
       customRender: 'operation'
     },
-    width: 400,
-    // fixed: 'right'
+    width: 460,
+    fixed: 'right',
   }
 ]
