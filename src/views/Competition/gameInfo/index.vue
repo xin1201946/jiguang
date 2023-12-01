@@ -32,7 +32,7 @@
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-show="group !== null" type="primary" @click="handleDraw">抽签</a-button>
-            <a-button v-show="group !== null" type="primary" @click="handleDraw">下一阶段</a-button>
+            <a-button v-show="group !== null" type="primary" @click="nextStageHandle">下一阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-show="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
@@ -48,8 +48,9 @@
             <a-table bordered rowKey="i" :columns="columns" :dataSource="dataSource">
               <template slot="operation" slot-scope="text, record, index">
                 <a-space>
-<!--                  总环数为空不渲染成绩详情按钮-->
+                  <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
                 </a-space>
               </template>
             </a-table>
@@ -84,6 +85,10 @@ import {
   fireAdjust,
   startFire,
   endFire,
+  nextStage,
+  getScoresByFinalScoreId,
+  stopPlayer,
+  delPlayerShootScore,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 
@@ -116,9 +121,28 @@ export default {
   },
   methods: {
     handleInfo(record) {
-      this.$refs.group.edit(record)
+      this.$refs.group.edit({ ...record, stageId: this.cproStageId })
     },
     numToCapital,
+    /**
+     * 停止比赛
+     */
+    handleStop(row) {
+      console.log(row)
+      infoMessage('此操作将停止该运动员继续比赛！是否继续？').then(() => {
+        stopPlayer({
+          playerId: row.playerId,
+          stageId: this.cproStageId, //项目阶段id
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('操作成功！该运动员已被停止比赛！')
+            this.getTableList()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      })
+    },
     /**
      * 推送到pad
      */
@@ -169,7 +193,7 @@ export default {
           this.groupActive = false
           this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
             ...item,
-            i
+            i,
           }))
         } else {
           if (!this.group) {
@@ -191,7 +215,7 @@ export default {
         if (item.group == this.group) {
           this.dataSource = item.bizContestPlayerList.map((item, i) => ({
             ...item,
-            i
+            i,
           }))
         }
       })
@@ -202,7 +226,23 @@ export default {
     handleBack() {
       this.$nextTick(() => {
         this.closeCurrent()
-        this.$router.push("/competition/competitionList")
+        this.$router.push('/competition/competitionList')
+      })
+    },
+    /**
+     * 下一阶段
+     */
+    nextStageHandle() {
+      infoMessage('此操作将进入下一阶段！是否继续？').then(() => {
+        nextStage({
+          stageId: this.cproStageId, //项目阶段id
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('操作成功！')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       })
     },
     /**
@@ -415,11 +455,10 @@ export default {
       //选中后设置背景色及高度
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected::before {
         height: 30px;
-
       }
-      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected{
-        .title{
-          color: #fff
+      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected {
+        .title {
+          color: #fff;
         }
       }
 

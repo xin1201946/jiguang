@@ -88,6 +88,14 @@ export const fireAdjust = data => postAction("contest-process/fireAdjust", data)
 export const startFire = data => postAction("contest-process/startFire", data)
 //结束比赛
 export const endFire = data => postAction("contest-process/endFire", data)
+//下一阶段
+export const nextStage = data => postAction("contest-process/nextStage", data)
+//查询运动员详细成绩
+export const getScoresByFinalScoreId = data => postAction("contest-process/getScoresByFinalScoreId", data)
+//停止运动员的比赛状态
+export const stopPlayer = data => postAction("contest-process/stopPlayer", data)
+//删除运动员信息
+export const delPlayerShootScore = data => getAction("contest-process/delPlayerShootScore", data)
 
 //屏幕展示 ---- 个人赛
 export const littleScreen = data => getAction("contest-process/littleScreen", data)

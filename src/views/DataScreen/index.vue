@@ -618,6 +618,7 @@ export default {
   },
   created() {
     this.getData()
+    document.body.style.overflow = 'hidden'
     setTimeout(() => {
       this.isSpin = true
       this.isTeam = true
@@ -786,6 +787,13 @@ export default {
 </script>
 
 <style scoped lang="less">
+v-deep ::-webkit-scrollbar {
+  width: 0 !important;
+}
+v-deep ::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0;
+}
 .container {
   position: relative;
   width: 100vw;

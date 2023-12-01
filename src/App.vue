@@ -39,7 +39,7 @@ export default {
 #app {
   height: 100%;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   display: none;
-}
+} */
 </style>
