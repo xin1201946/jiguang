@@ -61,6 +61,10 @@ export const scoreModel = [
     value: '1',
     label: "24发淘汰射"
   },
+  {
+    value: '2',
+    label: '拼分射'
+  }
 ]
 
 export const rules = {

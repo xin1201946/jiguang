@@ -36,6 +36,7 @@
         bordered
         :data-source="data"
         rowKey="groupId"
+        :scroll="{x: 1400}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>

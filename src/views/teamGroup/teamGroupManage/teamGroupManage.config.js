@@ -64,6 +64,7 @@ export const teamGroupManageTable = [
     scopedSlots: {
       customRender: 'operation'
     },
+    fixed: 'right',
     width: 200
   },
 ]
