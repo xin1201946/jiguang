@@ -6,8 +6,7 @@
         <a-descriptions-item label="性别" :span="1">{{formData.playerSex == '1' ? '男' : '女'}}</a-descriptions-item>
         <a-descriptions-item label="团体名称" :span="1">{{formData.groupName}}</a-descriptions-item>
         <a-descriptions-item label="靶位" :span="1">{{formData.targetSite}}</a-descriptions-item>
-        <a-descriptions-item label="总成绩" :span="1"></a-descriptions-item>
-        <a-descriptions-item label="总环数" :span="1">{{formData.totalScore}}</a-descriptions-item>
+        <a-descriptions-item label="总环数" :span="2">{{formData.totalScore}}</a-descriptions-item>
         <!--        <a-descriptions-item label="组数" :span="1"></a-descriptions-item>-->
       </a-descriptions>
       <h3>每次射击信息</h3>
