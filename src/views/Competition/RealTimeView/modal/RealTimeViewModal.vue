@@ -30,12 +30,12 @@
           bordered
           :column="2"
           v-for="(item, i) in list"
-          :title="`第${numToCapital(i+1)}组`" :key="i" >
+          :title="`第${i+1}组`" :key="i" >
           <template v-for="(key, value) in item">
             <a-descriptions-item
               :key="`${value}${i}`"
               :span="1"
-              :label="`第${numToCapital(key.shootCode)}发`"
+              :label="`第${key.shootCode}发`"
             >{{key.score}}</a-descriptions-item>
           </template>
         </a-descriptions>

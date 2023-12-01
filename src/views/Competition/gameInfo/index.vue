@@ -41,7 +41,7 @@
         <div class="gameInfoTables" v-show="groupActive">
           <div class="gameInfoTables_group">
             <a-radio-group v-model="group">
-              <a-radio class="gameInfoTables_group_radio" @change="radioChangeHandle" v-for="item in groupList" :value="item.group" :key="item.group">{{ numToCapital(item.group) }}组</a-radio>
+              <a-radio class="gameInfoTables_group_radio" @change="radioChangeHandle" v-for="item in groupList" :value="item.group" :key="item.group">{{ item.group }}组</a-radio>
             </a-radio-group>
           </div>
           <div class="gameInfoTables_table">
