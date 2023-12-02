@@ -97,17 +97,8 @@ export default {
      * 获取列表的
      */
     initialization() {
-      if (this.type === '个人赛') {
+      if (this.type === '个人赛' || this.type === '个人赛决赛') {
         this.defaultList()
-      } else if (this.type === '个人赛决赛') {
-        this.data = []
-        this.List.forEach((item, index) => {
-          this.data.push({
-            ...item,
-            position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 65) : '585',
-          })
-        })
-        this.TableList = this.data
       } else if (this.type === '团队赛') {
         this.teamtList()
       } else if (this.type === '混团赛' || this.type === '混团赛决赛') {

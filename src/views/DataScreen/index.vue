@@ -5,8 +5,8 @@
       <div class="left">
         <img class="logo" src="../../assets/logo1.png" alt="" />
         <div>
-          <h1 class="theme">2023年河北省青少年射击个人锦标赛河北省-保定市</h1>
-          <h1 class="title">{{ stageName }}-{{ projectName }}-{{stageGroup}}</h1>
+          <h1 class="theme">2023年河北省青少年射击个人锦标赛</h1>
+          <h1 class="title" v-if="state.indexOf('排名') == -1">{{ stageName }}-{{ projectName }}-{{stageGroup}}</h1>
         </div>
       </div>
       <div class="right">
@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="personally" v-if="state == '个人赛决赛' && isPersonallyFinals">
-      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
+      <a-carousel style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="个人赛决赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
         </div>
@@ -143,20 +143,26 @@
       </a-carousel>
     </div>
     <!-- 排名 -->
-    <div class="example" v-if="state == '排名' && !isTeam">
+    <div class="example" v-if="['团队排名','混合赛排名'].indexOf(state) !== -1 && !isTeam">
       <div>
         <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
         <p>加载中...请稍后！</p>
       </div>
     </div>
-    <div class="team" v-if="state == '排名' && isTeam">
+    <div class="team" v-if="['团队排名','混合赛排名'].indexOf(state) !== -1 && isTeam">
       <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
 </template>
 
 <script>
-import { littleScreen, getMixeTeamFinalsListAPI, getTeamScoresAPI } from '@api/competition'
+import {
+  littleScreen,
+  getMixeTeamFinalsListAPI,
+  getTeamScoresAPI,
+  getTeamTotalScores,
+  getMassingScores,
+} from '@api/competition'
 // 个人赛和混团赛滚动成绩tabelList
 import TableListVue from './components/tableList.vue'
 // 排名
@@ -169,7 +175,7 @@ export default {
       stageGroup: '',
       shootGroups: '',
       stageName: '',
-      state: '混团赛决赛',
+      state: '排名',
 
       isSpin: false,
       drawList: {
@@ -389,261 +395,7 @@ export default {
       isPersonallyFinals: false,
       personallyFinalsList: {
         title: [],
-        List: [
-          [
-            {
-              排名: 1,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 2,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 3,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 4,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 5,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 6,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 7,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-            {
-              排名: 8,
-              代表队: '某某莫某代表队',
-              姓名: '我是姓名',
-              靶位: '一号靶',
-              1: 10.9,
-              2: 10.9,
-              3: 10.9,
-              4: 10.9,
-              5: 10.9,
-              6: 10.9,
-              7: 10.9,
-              8: 10.9,
-              9: 10.9,
-              10: 10.9,
-              11: 10.9,
-              12: 10.9,
-              13: 10.9,
-              14: 10.9,
-              15: 10.9,
-              16: 10.9,
-              17: 10.9,
-              18: 10.9,
-              19: 10.9,
-              20: 10.9,
-              21: 10.9,
-              22: 10.9,
-              23: 10.9,
-              24: 10.9,
-              总环数: 290.9,
-            },
-          ],
-          [],
-          [],
-          [],
-        ],
+        List: [],
       },
 
       isTeam: false,
@@ -891,6 +643,7 @@ export default {
         List: [],
       },
 
+      rankingList: [],
       timer: null,
     }
   },
@@ -933,7 +686,7 @@ export default {
   methods: {
     getData() {
       if (this.state == '个人赛') {
-        littleScreen({ type: '手' }).then((res) => {
+        littleScreen({ type: this.$route.query.spear }).then((res) => {
           this.personallyList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -987,41 +740,53 @@ export default {
           })
         })
       } else if (this.state == '个人赛决赛') {
-        this.personallyFinalsList.title = [
-          {
-            name: '排名',
-            width: '80px',
-          },
-          {
-            name: '代表队',
-          },
-          {
-            name: '姓名',
-          },
-          {
-            name: '靶位',
-            width: '80px',
-          },
-          { name: 5, width: '70px' },
-          { name: 10, width: '70px' },
-          { name: 11, width: '70px' },
-          { name: 12, width: '70px' },
-          { name: 13, width: '70px' },
-          { name: 14, width: '70px' },
-          { name: 15, width: '70px' },
-          { name: 16, width: '70px' },
-          { name: 17, width: '70px' },
-          { name: 18, width: '70px' },
-          { name: 19, width: '70px' },
-          { name: 20, width: '70px' },
-          { name: 21, width: '70px' },
-          { name: 22, width: '70px' },
-          { name: 23, width: '70px' },
-          { name: 24, width: '70px' },
-          {
+        littleScreen({ type: this.$route.query.spear }).then((res) => {
+          this.personallyFinalsList.List = [[]]
+          let data = res.result
+          this.projectName = data.projectName
+          this.stageGroup = data.stageGroup
+          this.shootGroups = data.shootGroups
+          this.stageName = data.stageName
+          this.personallyFinalsList.title = [
+            {
+              name: '排名',
+              width: '80px',
+            },
+            {
+              name: '代表队',
+            },
+            {
+              name: '靶位',
+              width: '80px',
+            },
+            {
+              name: '姓名',
+            },
+          ]
+          data.shoots.forEach((item) => {
+            this.personallyFinalsList.title.push({
+              name: item,
+              width: '70px',
+            })
+          })
+          this.personallyFinalsList.title.push({
             name: '总环数',
-          },
-        ]
+          })
+          data.players.forEach((item, index) => {
+            let obj = {
+              id: item.playerName,
+              排名: item.rank,
+              代表队: item.groupName,
+              靶位: item.targetSite,
+              姓名: item.playerName,
+              总环数: item.total + '_x' + item.good,
+            }
+            item.groupList.forEach((e, v) => {
+              obj[e.groupCount] = e.gunGroupTotal
+            })
+            this.personallyFinalsList.List[0].push(obj)
+          })
+        })
       } else if (this.state == '抽签') {
       } else if (this.state == '团队赛') {
         getTeamScoresAPI({
@@ -1092,6 +857,29 @@ export default {
             }
             this.mixeTeamFinalsList.List[0].push(obj)
           })
+        })
+      } else if (this.state == '团队排名') {
+        getTeamTotalScores({
+          contestId: 4,
+        }).then((res) => {
+          this.rankingList = res.result
+        })
+      } else if (this.state == '混合赛排名') {
+        getMassingScores({
+          contestId: 4,
+          projectGroup: '甲组',
+          projectName: '10米激光手枪60发',
+          stageName: '资格赛',
+        }).then((res) => {
+          let arr = []
+          for (let i in res.result) {
+            console.log(i)
+            arr.push({
+              groupName: i,
+              total: res.result[i],
+            })
+          }
+          this.rankingList = arr
         })
       }
     },

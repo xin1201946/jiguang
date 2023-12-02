@@ -103,3 +103,7 @@ export const littleScreen = data => getAction("contest-process/littleScreen", da
 export const getMixeTeamFinalsListAPI = data => postAction("bizTeamGoldScore/getTeamGoldList", data)
 //屏幕展示 ---- 团队赛
 export const getTeamScoresAPI = data => postAction("largeScreen/getTeamScores", data)
+//屏幕展示 ---- 团队综合排名
+export const getTeamTotalScores = data => postAction("largeScreen/getTeamTotalScores", data)
+//屏幕展示 ---- 混团资格赛排名
+export const getMassingScores = data => postAction("largeScreen/getMassingScores", data)

@@ -8,64 +8,51 @@
           <p>总分</p>
         </div>
         <div class="content">
-          <div>
+          <div v-if="data[0]">
             <p style="color: #ef2928">①</p>
-            <p>某某队</p>
-            <p>100</p>
+            <p>{{data[0].groupName}}</p>
+            <p>{{data[0].total}}</p>
           </div>
-          <div>
+          <div v-if="data[1]">
             <p style="color: #ffc21f">②</p>
-            <p>某某队</p>
-            <p>98</p>
+            <p>{{data[1].groupName}}</p>
+            <p>{{data[1].total}}</p>
           </div>
-          <div>
+          <div v-if="data[2]">
             <p style="color: #7ec4ff">③</p>
-            <p>某某队</p>
-            <p>88</p>
+            <p>{{data[2].groupName}}</p>
+            <p>{{data[2].total}}</p>
           </div>
         </div>
       </div>
-      <div class="box">
+      <div class="box" v-if="this.data.length > 3">
         <div class="title">
           <p>排名</p>
           <p>代表队</p>
           <p>总分</p>
         </div>
         <div class="content">
-          <div>
-            <p>4</p>
-            <p>某某队</p>
-            <p>77</p>
-          </div>
-          <div>
-            <p>5</p>
-            <p>某某队</p>
-            <p>66</p>
-          </div>
-          <div>
-            <p>6</p>
-            <p>某某队</p>
-            <p>65</p>
-          </div>
-          <div>
-            <p>7</p>
-            <p>某某队</p>
-            <p>64</p>
-          </div>
+          <template v-for="(item, index) in data">
+            <div :key="item.groupName" v-if="index > 2">
+              <p>{{ index + 1 }}</p>
+              <p>{{ item.groupName }}</p>
+              <p>{{ item.total }}</p>
+            </div>
+          </template>
         </div>
       </div>
     </div>
     <div class="podium">
       <div class="two">
-        <p>某某队</p>
+        <p v-if="data[1]">{{this.data[1].groupName}}</p>
         <span>2</span>
       </div>
       <div class="one">
-        <p>某某队</p>
+        <p v-if="data[0]">{{this.data[0].groupName}}</p>
         <span>1</span>
       </div>
       <div class="three">
-        <p>某某队</p>
+        <p v-if="data[2]">{{this.data[2].groupName}}</p>
         <span>3</span>
       </div>
     </div>
@@ -76,7 +63,7 @@
 export default {
   props: {
     data: {
-      type: Object,
+      type: [Object, Array],
     },
   },
   data() {

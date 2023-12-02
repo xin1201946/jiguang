@@ -50,7 +50,7 @@
               <a-button @click.stop="handleEnd(i)">结束</a-button>
             </a-space>
             <a-table bordered rowKey="i" :columns="columns" :dataSource="dataSource" :loading="loading">
-              <template slot="operation" slot-scope="text, record, index">
+              <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
