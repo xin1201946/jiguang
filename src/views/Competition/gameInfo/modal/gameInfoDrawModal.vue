@@ -45,6 +45,12 @@ export default {
     },
     init() {
       this.visible = true
+      for (const key in this.formData) {
+        this.formData[key] = ""
+      }
+      this.$nextTick(() => {
+        this.$refs.form.clearValidate()
+      })
     },
   },
 }

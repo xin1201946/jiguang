@@ -49,8 +49,8 @@
               <a-button @click.stop="handleBisai(i)">开始</a-button>
               <a-button @click.stop="handleEnd(i)">结束</a-button>
             </a-space>
-            <a-table bordered rowKey="i" :columns="columns" :dataSource="dataSource" :loading="loading">
-              <template slot="operation" slot-scope="text, record">
+            <a-table bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
+              <template slot="operation" slot-scope="text, record, index">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
@@ -96,6 +96,7 @@ import {
   delPlayerShootScore,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
+import BizMixins from '@views/biz/bizMixins'
 
 export default {
   name: 'gameInfo',
@@ -123,9 +124,24 @@ export default {
 
       dataSource: [],
       loading: false,
+
+      pagination: {
+        current: 1,
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+      },
     }
   },
   methods: {
+    handleTableChange (pagination) {
+      this.pagination = pagination
+      // this.getList()
+    },
     handleInfo(record) {
       this.$refs.group.edit({ ...record, stageId: this.cproStageId })
     },

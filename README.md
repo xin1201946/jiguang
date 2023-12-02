@@ -31,14 +31,14 @@ Overview
           {}
         ],
         label: "",
-        placehorder: "",
+        placeholder: "",
         span: "",
         range: ["", ""]
       }
       type: input (输入), select (选择), range(日期选择)
       rules: 第零元素字符, v-model绑定值, 第一元素校验
       label: 表单左侧文字
-      placehorder: 表单提示文字
+      placeholder: 表单提示文字
       span: 表单占位格 数字类型 可加可不加 默认为4,label超出4字符后默认为5
       range: 日期选择查询开始和结束时间 可加可不加, 开始默认start结束默认end
       -
