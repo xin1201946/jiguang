@@ -12,12 +12,6 @@
                 <template slot="title">
                   <div class="title">
                     <span>{{ i.stageName }}</span>
-                    <a-space>
-                      <a-button @click.stop="handleZhunbei(i)" size="small">准备</a-button>
-                      <a-button @click.stop="handleShishe(i)" size="small">试射</a-button>
-                      <a-button @click.stop="handleBisai(i)" size="small">开始</a-button>
-                      <a-button @click.stop="handleEnd(i)" size="small">结束</a-button>
-                    </a-space>
                   </div>
                 </template>
               </a-tree-node>
@@ -31,27 +25,31 @@
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
-            <a-button v-show="group !== null" type="primary" @click="handleDraw">抽签</a-button>
-            <a-button v-show="group !== null" type="primary" @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
+            <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
+            <a-button v-if="group !== null" type="primary" @click="nextStageHandle">下一阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
-            <a-button v-show="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
+            <a-button type="primary" @click="getTableList">刷新</a-button>
           </a-space>
         </template>
         <div class="gameInfoTables" v-show="groupActive">
           <div class="gameInfoTables_group">
-            <a-radio-group v-model="group">
-              <a-radio class="gameInfoTables_group_radio" @change="radioChangeHandle" v-for="item in groupList" :value="item.group" :key="item.group">{{ item.group }}组</a-radio>
-            </a-radio-group>
+            <!-- <a-radio-group v-model="group" @change="radioChangeHandle">
+              <a-radio-button >{{ numToCapital(item.group) }}组</a-radio-button>
+            </a-radio-group> -->
+            <a-tabs v-model="group" @change="radioChangeHandle">
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group" :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
+            </a-tabs>
           </div>
           <div class="gameInfoTables_table">
-            <a-table
-              :scroll="{x: 1400}"
-              bordered
-              rowKey="i"
-              :columns="columns"
-              :dataSource="dataSource"
-            >
+            <a-space style="margin-bottom: 20px;">
+              <a-button @click.stop="handleZhunbei(i)">准备</a-button>
+              <a-button @click.stop="handleShishe(i)">试射</a-button>
+              <a-button @click.stop="handleBisai(i)">开始</a-button>
+              <a-button @click.stop="handleEnd(i)">结束</a-button>
+            </a-space>
+            <a-table bordered rowKey="i" :columns="columns" :dataSource="dataSource" :loading="loading">
               <template slot="operation" slot-scope="text, record, index">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
@@ -62,7 +60,8 @@
             </a-table>
           </div>
         </div>
-        <a-table bordered v-show="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
+        <!-- :dataSource="dataSource" -->
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
         <GameInfoGroupModal ref="group" @delSuccess="getTableList"></GameInfoGroupModal>
@@ -123,6 +122,7 @@ export default {
       data: {},
 
       dataSource: [],
+      loading: false,
     }
   },
   methods: {
@@ -188,35 +188,40 @@ export default {
      * 获取table数据
      */
     getTableList() {
+      this.loading = true
       getStagePlayerGroup({
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
-      }).then((res) => {
-        if (res.result[0].group === -1) {
-          this.group = null
-          this.groupList = []
-          this.groupActive = false
-          this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
-            ...item,
-            i,
-          }))
-        } else {
-          if (!this.group) {
-            this.group = res.result[0].group
-          }
-          this.groupList = res.result
-          this.groupActive = true
-          this.radioChangeHandle({ target: { value: res.result[0].group } })
-        }
-        // console.log(res)
       })
+        .then((res) => {
+          if (res.result[0].group === -1) {
+            this.group = null
+            this.groupList = []
+            this.groupActive = false
+            this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
+              ...item,
+              i,
+            }))
+          } else {
+            if (!this.group) {
+              this.group = res.result[0].group
+            }
+            this.groupList = res.result
+            this.groupActive = true
+            this.radioChangeHandle(res.result[0].group)
+          }
+          // console.log(res)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     /**
      * 选择组别
      */
     radioChangeHandle(e) {
-      this.group = e.target.value
+      this.group = e
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
           this.dataSource = item.bizContestPlayerList.map((item, i) => ({
@@ -435,7 +440,6 @@ export default {
     this.getProjectList()
   },
 }
-// display: block; height: 30px; line-height: 30px
 </script>
 
 <style scoped lang="less">
@@ -455,19 +459,7 @@ export default {
     padding: 0 20px;
     justify-content: space-between;
   }
-  @media screen and (max-width: 1300px) {
-    .gameInfoTables{
-      display: block !important;
-      &_group{
-        height: auto !important;
-        line-height: 40px !important;
-      }
-      .gameInfoTables_group_radio{
-        display: inline !important;
-      }
-    }
 
-  }
   .cards {
     height: calc(100% - @btnHeight - 10px);
     /deep/.ant-tree-child-tree.ant-tree-child-tree-open {
@@ -502,20 +494,12 @@ export default {
   .gameInfoTables {
     height: 100%;
     overflow: hidden;
-    display: flex;
-
     &_group {
-      min-width: 100px;
-      height: 100%;
+      width: 100%;
+      // height: 100%;
       overflow: auto;
     }
-    .gameInfoTables_group_radio{
-      display: block;
-      height: 30px;
-      line-height: 30px;
-    }
     &_table {
-      flex: 1;
       height: 100%;
       overflow: auto;
     }
