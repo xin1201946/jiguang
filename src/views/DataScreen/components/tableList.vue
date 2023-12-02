@@ -24,6 +24,20 @@
           </template>
         </div>
       </template>
+      <!-- 个人赛决赛 -->
+      <template v-if="type === '个人赛决赛'">
+        <div v-for="(item, index) in TableList" :key="index" class="common-list-item" :style="`position: absolute;left: 0; top: ${item.position}px;`">
+          <template v-for="(e, v) in TitleList">
+            <div v-if="e.name === '排名'" :key="v" :style="e.width ? `width:${e.width};flex:none` : ''">
+              {{ item[e.name] }}
+            </div>
+            <!-- :class="e.name == '排名' ? 'ranking' : ''" -->
+            <p v-if="e.name !== '排名'" :style="e.width ? `width:${e.width};flex:none` : ''" :key="v">
+              {{ item[e.name] }}
+            </p>
+          </template>
+        </div>
+      </template>
       <!-- 混团赛 -->
       <template v-if="type === '混团赛' || type === '混团赛决赛'">
         <div v-for="(item, index) in TableList" :key="index" class="common-list-item mixeTeam" :style="`position: absolute;left: 0; top: ${item.position}px;`">
@@ -85,6 +99,15 @@ export default {
     initialization() {
       if (this.type === '个人赛') {
         this.defaultList()
+      } else if (this.type === '个人赛决赛') {
+        this.data = []
+        this.List.forEach((item, index) => {
+          this.data.push({
+            ...item,
+            position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 65) : '585',
+          })
+        })
+        this.TableList = this.data
       } else if (this.type === '团队赛') {
         this.teamtList()
       } else if (this.type === '混团赛' || this.type === '混团赛决赛') {
