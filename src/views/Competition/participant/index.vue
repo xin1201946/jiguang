@@ -36,6 +36,7 @@
           <a-space v-if="status === '0'">
             <a-button v-show="t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
+            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
           </a-space>
         </template>
         <a-table
@@ -47,6 +48,7 @@
           @change="handleTableChange"
           bordered
           size="small"
+          :row-selection="rowSelection"
         >
           <template slot="operation" slot-scope="text, record">
             <a-space v-if="status === '0'">
@@ -114,10 +116,20 @@ export default {
       title: undefined,
       t: '全部',
       treeList: [],
-      status: ''
+      status: '',
+      selectedRowKeys: []
     }
   },
   computed: {
+    rowSelection() {
+      return {
+        type: 'checkbox',
+        selectedRowKeys: this.selectedRowKeys,
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.selectedRowKeys = selectedRowKeys
+        }
+      }
+    }
   },
   watch: {
     $route: {
@@ -138,6 +150,20 @@ export default {
     this.status = this.$route.query.status
   },
   methods: {
+    handleDeletes () {
+    //   bizContestPlayerDelete
+      deleteMessage("请确认是否删除当前选中的所有赛事人员信息").then(() => {
+        bizContestPlayerDelete(this.selectedRowKeys.join(',')).then(res => {
+          if (res.code === 200) {
+            this.pagination.current = 1
+            this.getList()
+          }else {
+            this.$message.warning(res.message)
+          }
+        })
+      })
+
+    },
     // 获取赛事id
     handleContest(contestId, id) {
       this.contestId = contestId
@@ -156,6 +182,7 @@ export default {
       this.id = data.cproId
       this.pagination.current = 1
       this.$nextTick(() => {
+        console.log(data)
         if (data.title) {
           this.columns = participantTableColumnsAll
         }else {
@@ -194,6 +221,7 @@ export default {
           this.data = res.result.records
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
+          this.selectedRowKeys = []
         }
       })
     },
@@ -228,6 +256,7 @@ export default {
         this.$message.warning("请先选择左侧项目, 再点击编辑人员名单按钮")
       }
     },
+    // playerId
     // 删除
     handleDelete(record) {
       if (this.t === '全部') {
