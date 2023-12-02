@@ -217,7 +217,7 @@ export default {
 }
 
 .tables {
-  height: 100%;
+  height: 670px;
   overflow-y: hidden;
 
   .project {
