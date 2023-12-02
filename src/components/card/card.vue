@@ -32,6 +32,9 @@ export default {
   /deep/.ant-card-body{
     height: 100%;
     overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>

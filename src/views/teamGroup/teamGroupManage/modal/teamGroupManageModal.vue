@@ -49,7 +49,7 @@
       </a-descriptions>
       <div style="margin-top: 20px" v-if="infos.groupProjectMap && Object.keys(infos.groupProjectMap).length">
         <div v-for="(item, i) in list" :key="i" style="margin-bottom: 20px">
-          <a-descriptions bordered :column="4"  >
+          <a-descriptions bordered :column="4"  v-if="item.list && item.list.length">
             <template slot="title">
               <div style="display: flex; align-items: start;">
                 <span style="margin-top: 8px">

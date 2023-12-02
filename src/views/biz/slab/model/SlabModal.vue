@@ -116,6 +116,28 @@ export default {
       }
     }
   },
+  watch: {
+    'formData.deviceNum0': {
+      handler (v) {
+        setTimeout(() => {
+          if (this.types['device'] && this.types['device'].length) {
+            const device = this.types.device.filter(item => item.deviceType === '0')
+            const row = device.filter(item => item.deviceNum === v)[0]
+            this.formData.deviceGunType = row.deviceGunType
+          }
+        },50)
+        /* this.$nextTick(() => {
+          if (this.types['device'] && this.types['device'].length) {
+            const device = this.types.device.filter(item => item.deviceType === '0')
+            const row = device.filter(item => item.deviceNum === v)[0]
+            this.formData.deviceGunType = row.deviceGunType
+          }
+        }) */
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   methods: {
     handleOk() {
       this.$refs.form.validate(v => {
@@ -149,7 +171,6 @@ export default {
     handleDeviceChange(v) {
       const device = this.types.device.filter(item => item.deviceType === '0')
       const row = device.filter(item => item.deviceNum === v)[0]
-      console.log(row)
       this.formData.deviceGunType = row.deviceGunType
     }
   }

@@ -5,19 +5,20 @@
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loading"
-    :width="700"
+    :width="800"
   >
-    <a-table
-      :pagination="pagination"
-      :columns="columns"
-      :data-source="data"
-      @change="handleTableChange"
-      rowKey="playerId"
-      :row-selection="rowSelection"
-      size="small"
-      bordered
-      :scroll="{x: 900}"
-    ></a-table>
+   <div class="modal">
+     <a-table
+       :pagination="pagination"
+       :columns="columns"
+       :data-source="data"
+       @change="handleTableChange"
+       rowKey="playerId"
+       :row-selection="rowSelection"
+       size="small"
+       bordered
+     ></a-table>
+   </div>
   </BizModal>
 </template>
 
@@ -142,6 +143,7 @@ export default {
             }
             return false
           })
+          console.log(arr)
           if (arr.length) {
             this.selectedRowKeys = arr.map(item => item.playerId)
             this.rows = arr
@@ -173,6 +175,9 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
+<style scoped lang="less">
+.modal{
+  height: 100%;
+  overflow-y: auto;
+}
 </style>

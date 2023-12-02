@@ -46,6 +46,7 @@
           rowKey="playerId"
           @change="handleTableChange"
           bordered
+          size="small"
         >
           <template slot="operation" slot-scope="text, record">
             <a-space v-if="status === '0'">

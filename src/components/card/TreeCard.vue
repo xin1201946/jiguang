@@ -7,14 +7,14 @@
     </div>
     <div class="treeCard_card">
       <a-card :bordered="false">
-        <div style="display: flex;flex-direction: column;height: 100%">
+        <div style="display: flex;flex-direction: column;height: 100%;overflow-y: auto;overflow-x: hidden">
           <div class="table-page-search-wrapper">
             <slot name="query"></slot>
           </div>
           <div class="table-operator">
             <slot name="operator"></slot>
           </div>
-          <div class="table">
+          <div >
             <slot></slot>
           </div>
         </div>
@@ -66,6 +66,9 @@ export default {
   }
   /deep/.ant-card-body{
     height: 100%;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   /deep/.ant-card{
     height: 100%;

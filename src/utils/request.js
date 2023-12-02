@@ -143,9 +143,9 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
-  if (response.data.code === 500) {
+ /*  if (response.data.code === 500) {
     Vue.prototype.$Jnotification.error({message: '系统提示', description: response.data.message})
-  }
+  } */
   return response.data
 }, err)
 
