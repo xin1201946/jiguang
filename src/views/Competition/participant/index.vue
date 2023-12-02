@@ -270,6 +270,10 @@ export default {
       }
 
     },
+    // 导入
+    handleImportExcels() {
+
+    },
     // 下载
     handleDownload() {
       bizContestPlayerGetImportTemplate()

@@ -144,7 +144,9 @@ export default {
             return false
           })
           console.log(arr)
-          if (arr.length) {
+          console.log(this.rows)
+          console.log(this.selectedRowKeysBf)
+          /* if (arr.length) {
             this.selectedRowKeys = arr.map(item => item.playerId)
             this.rows = arr
             this.selectedRowKeysBf = arr
@@ -152,7 +154,7 @@ export default {
             this.selectedRowKeys = []
             this.rows = []
             this.selectedRowKeysBf = []
-          }
+          } */
         }
       })
     },

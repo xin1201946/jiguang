@@ -157,13 +157,25 @@ const bizMixins = {
       }
       if (file.status === "done") {
         const {response} = file
+        console.log(response)
         if (response.code === 200) {
           this.$message.success(response.message)
           this.pagination.current = 1
           this.$nextTick(() => {
             this.getList()
           })
-        }else {
+        } else if(response.code === 201) {
+          let { message, result: { msg, fileUrl, fileName } } = response
+          let href = window._CONFIG['domianURL'] + fileUrl
+          this.$warning({
+            title: message,
+            content: (<div>
+                <span>{msg}</span><br/>
+                <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+              </div>
+            )
+          })
+        } else {
           this.$message.warning(response.message)
         }
       }
