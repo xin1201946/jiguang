@@ -12,10 +12,10 @@
         <a-form-item
           :labelCol="{span: 4}"
           :wrapperCol="{span: 18}"
-          label="激光训练器类型"
+          label="平板编号"
         >
           <div style="display: flex">
-            <a-select
+<!--            <a-select
               allowClear
               placeholder="请选择激光训练器类型"
               v-model="deviceType">
@@ -24,6 +24,18 @@
                 :key="item.value"
                 :value="item.value"
               >{{ item.label }}
+              </a-select-option>
+            </a-select>-->
+            <a-select
+              showSearch
+              allowClear
+              placeholder="请选择平板编号"
+              v-model="deviceType">
+              <a-select-option
+                v-for="item in tableList"
+                :key="item.tabletPcNum"
+                :value="item.tabletPcNum"
+              >{{ item.tabletPcNum }}
               </a-select-option>
             </a-select>
             <a-button
@@ -135,9 +147,8 @@ export default {
   },
   methods: {
     handleClick() {
-      console.log(this.deviceType)
       this.getPcTableList({
-        deviceGunType: this.deviceType
+        tabletPcNum: this.deviceType
       })
     },
     getPcTableList (data) {
