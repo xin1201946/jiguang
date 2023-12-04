@@ -15,8 +15,8 @@
           <a-descriptions-item :span="2" label="项目组别">{{formData.projectGroup}}</a-descriptions-item>
         </a-descriptions>
       </div>
-      <div class="printBody" id="printMe" ref="print">
-        <h2>射击成绩</h2>
+      <div class="printBody" id="printMe" ref="print" style="margin-top: 20px">
+<!--        <h2>射击成绩</h2>-->
         <div v-for="(item, i) in list" :key="i" class="list">
           <template v-if="item.list && item.list.length">
             <h3>{{item.title}}</h3>
@@ -33,7 +33,6 @@
 
 <script >
 import BizModal from '@comp/modal/BizModal.vue'
-
 export default {
   name: 'RealTimeViewPrint',
   components: {
@@ -78,10 +77,7 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('afterprint', () => {
-      document.body.innerHTML = this.html
-      // this.$router.go(0)
-    });
+
   },
   methods: {
     info(data) {
@@ -114,18 +110,77 @@ export default {
     handleCancel() {
       this.visible = false
     },
-    handlePrint() {
+    // 打印的
+    bodyContent() {
 
-      const body = document.body.innerHTML
-      // this.html = body
+      const list = (arr) => {
+        const l = arr.map(item => (
+          `<tr style="height: 50px; line-height: 50px">
+            <td align="center">${item.shootCode}</td>
+            <td align="center">${item.score}</td>
+            <td align="center">${item.beginTime}</td>
+            <td align="center">${item.xcoord}</td>
+            <td align="center">${item.ycoord}</td>
+          </tr>`
+        ))
+        console.log(l.join(""))
+        return `<tbody>${l.join("")}</tbody>`
+      }
+
+      const arr = this.list.map((item, i) => {
+        if (item.list.length) {
+          return (`<div>
+            <h3>${item.title}</h3>
+            <table align="center" cellspacing="0" border="1" style="width: 100%;">
+              <thead>
+                <tr style="height: 50px; line-height: 50px">
+                  <th style="width: 10%">发序</th>
+                  <th style="width: 15%">环数</th>
+                  <th style="width: 45%">时间</th>
+                  <th style="width: 15%">X</th>
+                  <th style="width: 15%">Y</th>
+                </tr>
+              </thead>
+              ${list(item.list)}
+            </table>
+          </div>`)
+        }
+        return ''
+      })
+      // console.log(arr)
+
+
+      return  (`<div style="height: auto">
+        <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
+          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
+            <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div><div style="width: 60%;text-align: center">${this.formData.playerName}</div>
+          </div>
+          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+            <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
+          </div>
+          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid;border-bottom: 1px solid">
+            <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div><div style="width: 60%;text-align: center">${this.formData.projectName}</div>
+          </div>
+          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+            <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px">
+          ${arr.join("</br>")}
+        </div>
+      </div>`)
+    },
+    handlePrint() {
       // const prints = document.querySelector('.prints').innerHTML
-      // document.body.innerHTML = prints
-      // window.print()
       const pwin = window.open(); //打开一个新窗口
-      // pwin.document.write(body); //写入打印内容
-      // pwin.document.close(); //额...这个我也不知道什么意思 哈哈
+      // pwin.document.write(prints); //写入打印内容
+      pwin.document.write(this.bodyContent())
       pwin.print(); //调用打印机
-      // pwin.close() //这个点取消和打印就会关闭新打开的窗口
+      pwin.close() //这个点取消和打印就会关闭新打开的窗口
+      pwin.addEventListener('afterprint', () => {
+        pwin.close()
+      });
     }
   }
 }
