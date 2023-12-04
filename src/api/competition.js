@@ -65,8 +65,9 @@ export const bizContestAudit = data => postAction("bizContest/audit", data)
 
 export const bizPlayerFinalScorePageList = data => postAction('bizPlayerFinalScore/page/list', data)
 export const bizPlayerFinalScoreSportsList = data => postAction('bizPlayerFinalScore/sportsList', data)
-export const bizPlayerFinalScoreSportsScoresList = data => postAction('bizPlayerFinalScore/sportsScoresList', data)
+export const bizPlayerFinalScoreSportsScoresList = data => postAction('bizPlayerFinalScore/sportsScoresList',data)
 export const bizPlayerFinalScoreQueryById = id => getAction(`bizPlayerFinalScore/queryById/${id}`)
+
 
 /**
  * 比赛安排
@@ -97,12 +98,6 @@ export const getScoresByFinalScoreId = data => postAction("contest-process/getSc
 export const stopPlayer = data => postAction("contest-process/stopPlayer", data)
 //删除运动员信息
 export const delPlayerShootScore = data => getAction("contest-process/delPlayerShootScore", data)
-//判罚
-export const penalty = data => postAction("contest-process/penalty", data)
-//查询编辑人员
-export const getStageInPlayerList = data => postAction("contest-process/getStageInPlayerList", data)
-//编辑人员确认接口
-export const editStagePlayer = data => postAction("contest-process/editStagePlayer", data)
 
 //屏幕展示 ---- 个人赛
 export const littleScreen = data => getAction("contest-process/littleScreen", data)
@@ -115,5 +110,5 @@ export const getTeamTotalScores = data => postAction("largeScreen/getTeamTotalSc
 //屏幕展示 ---- 混团资格赛排名
 export const getMassingScores = data => postAction("largeScreen/getMassingScores", data)
 
-//查询数据大屏接口 ---- 大屏列表
-export const getDataScreenList = data => postAction("bizConfig/list", data)
+// 混团金铜牌赛id查询
+export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/queryById/${id}`)

@@ -44,11 +44,17 @@
             :columns="columns"
             :data-source="data"
             rowKey="finalScoreId"
-            :pagination="pagination"
+            :pagination="projectName.includes('团体') ? false : pagination"
             @change="handleTableChange"
             bordered
             :scroll="{x: 1400}"
           >
+            <template slot="playerName" slot-scope="text, record, index">
+              <div v-html="text.join('<br/>')"></div>
+            </template>
+            <template slot="playerScore" slot-scope="text, record, index">
+              <div v-html="text.join('<br/>')"></div>
+            </template>
 <!--            <template slot="total" slot-scope="text, record, index">
               <a @click="$refs.modals.init">{{ text }}</a>
             </template>-->
@@ -72,6 +78,7 @@ import TreeCard from '@comp/card/TreeCard.vue'
 import RealTimeViewPrint from '@views/Competition/RealTimeView/modal/RealTimeViewPrint.vue'
 import BizMixins from '@views/biz/bizMixins'
 import {
+  massingColumns,
   RealTimeViewQuery,
   RealTimeViewTableColumns,
   RealTimeViewTreeStyle
@@ -84,7 +91,7 @@ import {
   bizContestProjectList,
   bizContestProjectStageList,
   bizPlayerFinalScorePageList,
-  bizPlayerFinalScoreQueryById
+  bizPlayerFinalScoreQueryById, bizTeamGoldScoreQueryById, getMixeTeamFinalsListAPI
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
@@ -113,7 +120,9 @@ export default {
       columns: RealTimeViewTableColumns,
       scroll: {
         x: 1500
-      }
+      },
+
+      projectName: ''
     }
   },
   computed: {},
@@ -214,6 +223,7 @@ export default {
               }
             })
             this.tree = data[0].value
+            this.projectName = data[0].projectName
             this.list = data
           }else {
             this.tree = ''
@@ -272,36 +282,57 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
-      bizPlayerFinalScorePageList(data).then(res => {
-        if (res.code === 200) {
-          if (res.result.records.length) {
-            const arr = res.result.records.map(item => item.gunTotalGroup)
-            this.getColumns(Math.max(...[...new Set(arr)]))
-          }
-          this.$nextTick(() => {
-            if (res.result.records.length) {
-              this.data = res.result.records.map(item => {
-                const obj = item
-                if (item.scoreList.length) {
-                  for (let i = 0; i < item.scoreList.length; i++) {
-                    obj['scoreList' + (i + 1)] = item.scoreList[i]
-                  }
-                }
-                return obj
-              })
-            }else {
-              this.data = []
+      if (this.projectName.includes("团体")){
+        this.columns = massingColumns
+        getMixeTeamFinalsListAPI(data).then(res => {
+          this.data = res.result.map(item => {
+            return {
+              ...item,
+              playerName: [item.player1Name , item.player2Name],
+              playerScore: [item.player1core , item.player2Score]
             }
-            this.pagination.current = res.result.current
-            this.pagination.total = res.result.total
           })
-        } else{
-          this.data = []
-          this.pagination.total = 0
-        }
-      })
+          this.pagination.current = res.result.current
+          this.pagination.total = res.result.total
+        })
+      }else {
+        // 混合团体不走这个接口
+        bizPlayerFinalScorePageList(data).then(res => {
+          if (res.code === 200) {
+            if (res.result.records.length) {
+              const arr = res.result.records.map(item => item.gunTotalGroup)
+              this.getColumns(Math.max(...[...new Set(arr)]))
+            }
+            this.$nextTick(() => {
+              if (res.result.records.length) {
+                this.data = res.result.records.map(item => {
+                  const obj = item
+                  if (item.scoreList.length) {
+                    for (let i = 0; i < item.scoreList.length; i++) {
+                      obj['scoreList' + (i + 1)] = item.scoreList[i]
+                    }
+                  }
+                  return obj
+                })
+              }else {
+                this.data = []
+              }
+              this.pagination.current = res.result.current
+              this.pagination.total = res.result.total
+            })
+          } else{
+            this.data = []
+            this.pagination.total = 0
+          }
+        })
+      }
     },
     handleTreeChange (v) {
+      this.list.forEach(item => {
+        if (item.cproId ===  v.target.value) {
+          this.projectName = item.projectName
+        }
+      })
       this.getStage()
     },
     handleBack() {
@@ -310,12 +341,18 @@ export default {
       })
     },
     handleInfo(record) {
-      // console.log()
-      bizPlayerFinalScoreQueryById(record.finalScoreId).then(res => {
-        if (res.code === 200) {
-          this.$refs.modal.info(res.result, record)
-        }
-      })
+      if (this.projectName.includes("团体")){
+        console.log(record)
+        /* bizTeamGoldScoreQueryById().then(res => {
+          console.log(res)
+        }) */
+      } else {
+        bizPlayerFinalScoreQueryById(record.finalScoreId).then(res => {
+          if (res.code === 200) {
+            this.$refs.modal.info(res.result, record)
+          }
+        })
+      }
     }
   },
 }

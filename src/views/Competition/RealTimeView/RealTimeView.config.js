@@ -258,3 +258,57 @@ export function autoPaginate(el) {
 function isElement(obj) {
   return obj.nodeType === 1;
 }
+
+
+export const massingColumns = [
+  {
+    title: '代表队',
+    align: 'center',
+    dataIndex: 'groupName'
+  },
+  {
+    title: '姓名',
+    align: 'center',
+    dataIndex: 'playerName',
+    scopedSlots: {
+      customRender: 'playerName'
+    },
+  },
+  {
+    title: '发序',
+    align: 'center',
+    dataIndex: 'shootCode'
+  },
+  {
+    title: '环数',
+    align: 'center',
+    dataIndex: 'playerScore',
+    scopedSlots: {
+      customRender: 'playerScore'
+    },
+  },
+  {
+    title: '总环数',
+    align: 'center',
+    dataIndex: 'stageTotal'
+  },
+  {
+    title: '总分',
+    align: 'center',
+    dataIndex: 'total'
+  },
+  {
+    title: '操作',
+    align: 'center',
+    scopedSlots: {
+      customRender: 'operation'
+    },
+    fixed: 'right',
+    width: 200
+  }
+  // {
+  //   title: '目标分',
+  //   align: 'center',
+  //   dataIndex: ''
+  // }
+]

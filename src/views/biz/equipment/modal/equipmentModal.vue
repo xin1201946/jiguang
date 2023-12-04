@@ -18,8 +18,8 @@
         <a-input :disabled="type === 1" v-model="formData.deviceNum"></a-input>
       </a-form-model-item>
       <a-form-model-item label="设备电量" prop="deviceVoltage">
-        <a-input v-model="formData.deviceVoltage" suffix="%">
-        </a-input>
+<!--        <a-input oninput="value = value.replace(/[^\d]/g,'')" style="width: 100%" v-model="formData.deviceVoltage" suffix="%"></a-input>-->
+        <a-input-number style="width: 100%" v-model="formData.deviceVoltage" :min="0" :max="100"></a-input-number>
       </a-form-model-item>
       <a-form-model-item label="设备类型" prop="deviceType">
         <a-select v-model="formData.deviceType">
@@ -111,6 +111,10 @@ export default {
     }
   },
   methods: {
+    input(value) {
+      console.log(value)
+      return value = value.replace(/[^\d]/g,'')
+    },
     handleOk() {
       this.$refs.form.validate(v => {
         if (v) {

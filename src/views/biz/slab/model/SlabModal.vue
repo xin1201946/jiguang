@@ -21,7 +21,7 @@
       </a-form-model-item>
 
       <a-form-model-item label="激光训练器编号" prop="deviceNum0">
-        <a-select v-model="formData.deviceNum0" @change="handleDeviceChange">
+        <a-select showSearch v-model="formData.deviceNum0" @change="handleDeviceChange">
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '0')"
             :key="item.deviceId"
@@ -30,7 +30,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="激光接收靶编号" prop="deviceNum1">
-        <a-select v-model="formData.deviceNum1">
+        <a-select showSearch v-model="formData.deviceNum1">
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '1')"
             :key="item.deviceId"
@@ -50,7 +50,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="当前模式" prop="tabletPcModel">
+      <a-form-model-item label="当前模式" prop="tabletPcModel" :rules="{ required: formData.tabletPcStatus === '1', message: '请选择当前模式', trigger: 'blur' }">
         <a-select v-model="formData.tabletPcModel">
           <a-select-option
             v-for="item in tabletPcModel"
@@ -102,7 +102,7 @@ export default {
            { required: true, message: '请输入平板编号', trigger: 'blur' }
         ],
         tabletPcName: [
-           { required: true, message: '请输入平板名称', trigger: 'blur' }
+           { required: false, message: '请输入平板名称', trigger: 'blur' }
         ],
         deviceNum0: [
            { required: true, message: '请选择激光训练器编号', trigger: 'blur' }
@@ -110,9 +110,9 @@ export default {
         deviceNum1: [
           { required: true, message: '请选择激光接收靶编号', trigger: 'blur' }
         ],
-        tabletPcModel: [
-          { required: true, message: '请选择当前模式', trigger: 'blur' }
-        ]
+        // tabletPcModel: [
+        //   { required: true, message: '请选择当前模式', trigger: 'blur' }
+        // ]
       }
     }
   },

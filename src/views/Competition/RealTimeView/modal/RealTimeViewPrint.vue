@@ -123,13 +123,12 @@ export default {
             <td align="center">${item.ycoord}</td>
           </tr>`
         ))
-        console.log(l.join(""))
         return `<tbody>${l.join("")}</tbody>`
       }
 
       const arr = this.list.map((item, i) => {
         if (item.list.length) {
-          return (`<div>
+          return (`<div style="margin-top: 20px">
             <h3>${item.title}</h3>
             <table align="center" cellspacing="0" border="1" style="width: 100%;">
               <thead>
@@ -149,8 +148,22 @@ export default {
       })
       // console.log(arr)
 
+        /* <style>
+        @media print {
 
-      return  (`<div style="height: auto">
+      }
+    </style> */
+      return  (`
+      <style>
+        @media print {
+          .prints{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+          }
+        }
+      </style>
+      <div class="print" style="height: auto">
         <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
           <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
             <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div><div style="width: 60%;text-align: center">${this.formData.playerName}</div>
@@ -165,8 +178,7 @@ export default {
             <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
           </div>
         </div>
-
-        <div style="margin-top: 20px">
+        <div">
           ${arr.join("</br>")}
         </div>
       </div>`)
