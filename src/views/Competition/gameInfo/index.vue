@@ -61,7 +61,11 @@
           </div>
         </div>
         <!-- :dataSource="dataSource" -->
-        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"></a-table>
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource">
+          <template slot="operation">
+
+          </template>
+        </a-table>
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
         <GameInfoGroupModal ref="group" @delSuccess="getTableList"></GameInfoGroupModal>
@@ -219,6 +223,7 @@ export default {
               ...item,
               i,
             }))
+            console.log(this.dataSource)
           } else {
             if (!this.group) {
               this.group = res.result[0].group
