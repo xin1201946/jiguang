@@ -64,7 +64,8 @@ export const bizContestAudit = data => postAction("bizContest/audit", data)
  */
 
 export const bizPlayerFinalScorePageList = data => postAction('bizPlayerFinalScore/page/list', data)
-
+export const bizPlayerFinalScoreSportsList = data => postAction('bizPlayerFinalScore/sportsList', data)
+export const bizPlayerFinalScoreSportsScoresList = data => postAction('bizPlayerFinalScore/sportsScoresList',data)
 export const bizPlayerFinalScoreQueryById = id => getAction(`bizPlayerFinalScore/queryById/${id}`)
 
 /**

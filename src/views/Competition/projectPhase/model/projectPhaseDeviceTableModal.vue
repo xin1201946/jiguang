@@ -12,21 +12,22 @@
         <a-form-item
           :labelCol="{span: 4}"
           :wrapperCol="{span: 18}"
-          label="平板编号"
+          label="激光训练器类型"
         >
           <div style="display: flex">
-<!--            <a-select
+            <a-select
+              showSearch
               allowClear
               placeholder="请选择激光训练器类型"
               v-model="deviceType">
               <a-select-option
                 v-for="item in deviceGunType"
                 :key="item.value"
-                :value="item.value"
+                :value="item.label"
               >{{ item.label }}
               </a-select-option>
-            </a-select>-->
-            <a-select
+            </a-select>
+<!--            <a-select
               showSearch
               allowClear
               placeholder="请选择平板编号"
@@ -37,7 +38,7 @@
                 :value="item.tabletPcNum"
               >{{ item.tabletPcNum }}
               </a-select-option>
-            </a-select>
+            </a-select>-->
             <a-button
               style="margin-left: 20px"
               type="primary"
@@ -147,8 +148,15 @@ export default {
   },
   methods: {
     handleClick() {
+      let value = ''
+      for (const item of deviceGunType) {
+        if (item.label === this.deviceType) {
+          value = item.value
+        }
+      }
+
       this.getPcTableList({
-        tabletPcNum: this.deviceType
+        deviceGunType: value
       })
     },
     getPcTableList (data) {
