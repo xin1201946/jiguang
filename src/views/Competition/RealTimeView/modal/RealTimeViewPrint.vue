@@ -178,7 +178,7 @@ export default {
             <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
           </div>
         </div>
-        <div">
+        <div>
           ${arr.join("</br>")}
         </div>
       </div>`)

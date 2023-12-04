@@ -6,6 +6,7 @@
     @cancel="handleCancel"
     :loading="loadingModal"
     :widths="width"
+    :footer="type !== 3"
   >
     <div v-if="type !== 3" class="teamGroupManageModal">
       <a-form-model
@@ -27,6 +28,20 @@
         <a-form-model-item label="领队" prop="leaderName">
           <a-input v-model="formData.leaderName"></a-input>
         </a-form-model-item>
+        <template v-for="(item,i) in formData.coachName">
+          <a-form-model-item :rules="{
+            required: true,
+            message: '请输入教练员',
+            trigger: 'blur'
+          }" :label="i === 0 && '教练'" :prop="'coachName.'+i+'.value'" :key="i" :labelCol="{span: 6}" :wrapperCol="{span: 14, offset: i!==0 ? 6 : 0}">
+            <div style="display: flex">
+              <a-input style="margin-right: 8px" v-model="item.value"></a-input>
+              <a-button v-show="i===0" style="margin-right: 8px" icon="plus" @click="plus"></a-button>
+              <a-button v-show="i!==0" icon="minus" @click="minus(i)"></a-button>
+            </div>
+          </a-form-model-item>
+        </template>
+
       </a-form-model>
     </div>
     <div v-else class="teamGroupManageModal">
@@ -56,15 +71,15 @@
                   {{item.title}}
                 </span>
                 <div style="margin-left: 50px">
-                  <a-form>
-                    <a-form-item
-                      :labelCol="{span: 6}"
-                      :wrapperCol="{span: 14}"
-                      label="教练"
-                    >
-                      <a-input v-model="item.value"></a-input>
-                    </a-form-item>
-                  </a-form>
+<!--                  <a-form>-->
+<!--                    <a-form-item-->
+<!--                      :labelCol="{span: 6}"-->
+<!--                      :wrapperCol="{span: 14}"-->
+<!--                      label="教练"-->
+<!--                    >-->
+<!--                      <a-input v-model="item.value"></a-input>-->
+<!--                    </a-form-item>-->
+<!--                  </a-form>-->
                 </div>
               </div>
             </template>
@@ -98,7 +113,9 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {
-        coachName: '',
+        coachName: [{
+          value: ''
+        }],
         leaderName: '',
         groupName: '',
         groupId: ''
@@ -111,13 +128,13 @@ export default {
             trigger: 'blur'
           }
         ],
-        coachName: [
+        /* coachName: [
           {
             required: true,
             message: '请输入教练',
             trigger: 'blur'
           }
-        ],
+        ], */
         leaderName: [
           {
             required: true,
@@ -160,7 +177,16 @@ export default {
       this.title = '修改'
       this.$nextTick(() => {
         for (const key in this.formData) {
-          this.formData[key] = reccord[key]
+          if (key !== 'coachName') {
+            this.formData[key] = reccord[key]
+          }
+        }
+        if (reccord.coachName) {
+          this.formData.coachName = reccord.coachName.split(",").map(item => ({value: item}))
+        }else {
+          this.formData.coachName = [{
+            value: ''
+          }]
         }
         this.$refs.form.clearValidate()
       })
@@ -215,6 +241,7 @@ export default {
             }
             if (this.type === 1) {
               const data = JSON.parse(JSON.stringify(this.formData))
+              data.coachName = data.coachName.map(item => item.value).join(",")
               bizGroupUpdate(data).then(this.quit)
             }
           }
@@ -236,6 +263,16 @@ export default {
       }
       this.loadingModal = false
     },
+    plus() {
+      if (this.formData.coachName.length < 10) {
+        this.formData.coachName.push({
+          value: ''
+        })
+      }
+    },
+    minus(i) {
+      this.formData.coachName.splice(i, 1)
+    }
   }
 }
 </script>

@@ -6,17 +6,21 @@
     :width="600"
     @cancel="handleCancel"
   >
-    <div style="height: 100%; overflow-y: auto">
+    <div class="modal">
       <a-descriptions bordered :column="4">
-        <a-descriptions-item :span="2" label="选手名称">{{ formData.playerName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="团体名称">{{formData.groupName}}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="阶段名称">{{ formData.stageName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目名称">{{formData.projectName}}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目组别">{{formData.projectGroup}}</a-descriptions-item>
       </a-descriptions>
-      <div v-for="item in list">
-        <h3></h3>
-        <a-table></a-table>
-      </div>
+<!--      <h3>{{ formData.player1Name }}</h3>-->
+      <br/>
+      <a-table bordered :pagination="false" :data-source="[...formData.detailScoreList1,...formData.detailScoreList2]" :columns="columns"></a-table>
+<!--      <h3>{{ formData.player2Name }}</h3>-->
+<!--      <a-table :pagination="false" :data-source="" :columns="columns"></a-table>-->
+    </div>
+    <div v-if="type === 0" style="height: 50px; display: flex;align-items: center;justify-content: flex-end">
+      <a-button type="primary" @click="handlePrint">打印</a-button>
     </div>
   </BizModal>
 </template>
@@ -34,24 +38,133 @@ export default {
       visible: false,
       type: 0,
       formData: {},
-      list: []
+      list: [],
+      columns: [
+        {
+          title: '姓名',
+          dataIndex: 'playerName',
+          align: 'center'
+        },
+        {
+          title: '发序',
+          dataIndex: 'shootCode',
+          align: 'center'
+        },
+        {
+          title: '环数',
+          dataIndex: 'score',
+          align: 'center'
+        },
+        {
+          title: '时间',
+          dataIndex: 'beginTime',
+          align: 'center'
+        },
+        {
+          title: 'X',
+          dataIndex: 'xcoord',
+          align: 'center'
+        },
+        {
+          title: 'Y',
+          dataIndex: 'ycoord',
+          align: 'center'
+        }
+      ]
     }
   },
   methods: {
     init(data) {
-      console.log(data)
-      this.formData = data[0]
+      // console.log(data)
+      this.type = 1
+      this.formData = data
       this.visible = true
-      this.list = data
+      this.list = [...data.detailScoreList1,...data.detailScoreList2]
+      // this.list = data
+    },
+    info(data) {
+      console.log(data)
+      this.type = 0
+      this.formData = data
+      this.visible = true
+      this.list = [
+        ...data.detailScoreList1,
+        ...data.detailScoreList2
+      ]
     },
     handleCancel() {
       this.visible = false
+    },
+
+    bodyContent() {
+      const arr = this.list.map(item => {
+        return `<tr style="height: 50px; line-height: 50px">
+            <td align="center">${item.playerName}</td>
+            <td align="center">${item.shootCode}</td>
+            <td align="center">${item.score}</td>
+            <td align="center">${item.beginTime}</td>
+            <td align="center">${item.xcoord}</td>
+            <td align="center">${item.ycoord}</td>
+          </tr>`
+      })
+      console.log(arr)
+
+        /*  */
+      return (`
+        <div style="height: auto">
+          <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">阶段名称:</div><div style="width: 60%;text-align: center">${this.formData.stageName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div><div style="width: 60%;text-align: center">${this.formData.projectName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
+            </div>
+          </div>
+          <div style="margin-top: 20px">
+            <table align="center" cellSpacing="0" border="1" style="width: 100%;" >
+              <thead>
+                <tr style="height: 50px; line-height: 50px" >
+                  <th style="width: 20%">姓名</th>
+                  <th style="width: 10%">发序</th>
+                  <th style="width: 10%">环数</th>
+                  <th style="width: 30%">时间</th>
+                  <th style="width: 15%">X</th>
+                  <th style="width: 15%">Y</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${arr.join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `)
+    },
+    handlePrint() {
+      const pwin = window.open(); //打开一个新窗口
+      // pwin.document.write(prints); //写入打印内容
+      pwin.document.write(this.bodyContent())
+      // pwin.document.write("打印")
+      pwin.print(); //调用打印机
+      pwin.close() //这个点取消和打印就会关闭新打开的窗口
+      pwin.addEventListener('afterprint', () => {
+        pwin.close()
+      });
     }
   }
 }
 </script>
 
 
-<style scoped lang="scss">
-
+<style scoped lang="less">
+.modal{
+  height: calc(100% - 50px);
+  overflow-y: auto;
+}
 </style>

@@ -38,6 +38,7 @@
         <template slot="operator">
           <RealTimeViewModal ref="modal"></RealTimeViewModal>
           <RealTimeViewPrint ref="print"></RealTimeViewPrint>
+          <PrintModal ref="printModal"></PrintModal>
         </template>
         <template slot="default">
           <a-table
@@ -58,6 +59,14 @@
 <!--            <template slot="total" slot-scope="text, record, index">
               <a @click="$refs.modals.init">{{ text }}</a>
             </template>-->
+            <template slot="info" slot-scope="text, record, index">
+              <a-space>
+                <!--                <a-icon type="profile" />-->
+                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>
+                <a-button type="primary" size="small" ghost icon="profile" @click="handlePrint(record)">成绩打印</a-button>
+                <!--                <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+              </a-space>
+            </template>
             <template slot="operation" slot-scope="text, record, index">
               <a-space>
 <!--                <a-icon type="profile" />-->
@@ -95,13 +104,15 @@ import {
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
+import PrintModal from '@views/Competition/RealTimeView/modal/printModal.vue'
 export default {
   name: 'RealTimeView',
   components: {
     TreeCard,
     QuerySearch,
     RealTimeViewModal,
-    RealTimeViewPrint
+    RealTimeViewPrint,
+    PrintModal
   },
   mixins: [BizMixins],
   data() {
@@ -141,7 +152,14 @@ export default {
   created() {},
   methods: {
     handlePrint(record) {
-      this.$refs.print.init(record)
+      bizTeamGoldScoreQueryById(record.teamGoldScoreId).then(res => {
+        if (res.code === 200) {
+          this.$refs.printModal.info(res.result)
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+
     },
     // 修改赛事
     handleContest() {
@@ -285,15 +303,17 @@ export default {
       if (this.projectName.includes("团体")){
         this.columns = massingColumns
         getMixeTeamFinalsListAPI(data).then(res => {
-          this.data = res.result.map(item => {
-            return {
-              ...item,
-              playerName: [item.player1Name , item.player2Name],
-              playerScore: [item.player1core , item.player2Score]
-            }
-          })
-          this.pagination.current = res.result.current
-          this.pagination.total = res.result.total
+          if (res.code === 200) {
+            this.data = res.result.map(item => {
+              return {
+                ...item,
+                playerName: [item.player1Name, item.player2Name],
+                playerScore: [item.player1Score, item.player2Score]
+              }
+            })
+          }else {
+            this.$message.error(res.message)
+          }
         })
       }else {
         // 混合团体不走这个接口
@@ -342,14 +362,19 @@ export default {
     },
     handleInfo(record) {
       if (this.projectName.includes("团体")){
-        console.log(record)
-        /* bizTeamGoldScoreQueryById().then(res => {
-          console.log(res)
-        }) */
+        bizTeamGoldScoreQueryById(record.teamGoldScoreId).then(res => {
+          if (res.code === 200) {
+            this.$refs.printModal.init(res.result)
+          }else {
+            this.$message.error(res.message)
+          }
+        })
       } else {
         bizPlayerFinalScoreQueryById(record.finalScoreId).then(res => {
           if (res.code === 200) {
             this.$refs.modal.info(res.result, record)
+          }else {
+            this.$message.error(res.message)
           }
         })
       }

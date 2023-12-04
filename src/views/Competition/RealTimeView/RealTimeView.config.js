@@ -301,7 +301,7 @@ export const massingColumns = [
     title: '操作',
     align: 'center',
     scopedSlots: {
-      customRender: 'operation'
+      customRender: 'info'
     },
     fixed: 'right',
     width: 200
