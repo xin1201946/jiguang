@@ -336,6 +336,10 @@ p {
         font-size: 24px;
         // background: #3d6198;
 
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
         background: #449dd1;
         border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         box-sizing: border-box;

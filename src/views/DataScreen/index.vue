@@ -14,30 +14,6 @@
       </div>
       <dv-decoration-10 style="width: 100%; height: 5px" />
     </div>
-    <!-- 抽签 -->
-    <div class="example" v-if="!isSpin && state == '抽签'">
-      <!-- <a-icon type="loading" class="loading" /> -->
-      <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
-      <p>正在抽签中...请稍后！</p>
-    </div>
-    <div class="draw" v-if="isSpin && state == '抽签'">
-      <a-carousel ref="draw1" style="width: 49%; min-height: 100%">
-        <div>
-          <TableListVue :TitleList="drawList.title" :List="drawList.List[0]" />
-        </div>
-        <div>
-          <TableListVue :TitleList="drawList.title" :List="drawList.List[1]" />
-        </div>
-      </a-carousel>
-      <a-carousel ref="draw2" style="width: 49%; min-height: 100%">
-        <div>
-          <TableListVue :TitleList="drawList.title" :List="drawList.List2[0]" />
-        </div>
-        <div>
-          <TableListVue :TitleList="drawList.title" :List="drawList.List2[1]" />
-        </div>
-      </a-carousel>
-    </div>
     <!-- 个人赛 -->
     <div class="personallyLoading" v-if="state.indexOf('个人资格赛') != -1 && !isPersonally">
       <div>即将开始</div>
@@ -657,16 +633,6 @@ export default {
       this.isPersonally = true
       this.isPersonallyFinals = true
       this.$nextTick(() => {
-        if (this.$refs.draw1) {
-          setInterval(() => {
-            this.$refs.draw1.next()
-          }, 10000)
-        }
-        if (this.$refs.draw2) {
-          setInterval(() => {
-            this.$refs.draw2.next()
-          }, 10000)
-        }
         if (this.$refs.personally1) {
           setInterval(() => {
             this.$refs.personally1.next()
@@ -687,6 +653,7 @@ export default {
     getData() {
       if (this.state.indexOf('个人资格赛') != -1) {
         littleScreen({ type: this.state }).then((res) => {
+          console.log(res)
           this.personallyList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -728,13 +695,13 @@ export default {
             item.groupList.forEach((e, v) => {
               obj[`${v + 1}0`] = e.groupTotal
             })
-            if (index + 1 < 8) {
+            if (index < 8) {
               this.personallyList.List[0].push(obj)
-            } else if (index + 1 < 16 && index + 1 > 7) {
+            } else if (index < 16 && index > 7) {
               this.personallyList.List[1].push(obj)
-            } else if (index + 1 < 24 && index + 1 > 15) {
+            } else if (index < 24 && index > 15) {
               this.personallyList.List[2].push(obj)
-            } else if (index + 1 < 32 && index + 1 > 23) {
+            } else if (index < 32 && index > 23) {
               this.personallyList.List[3].push(obj)
             }
           })
@@ -787,7 +754,6 @@ export default {
             this.personallyFinalsList.List[0].push(obj)
           })
         })
-      } else if (this.state == '抽签') {
       } else if (['步枪团体排名', '手枪团体排名'].indexOf(this.state) != -1) {
         getTeamScoresAPI({
           contestId: 4,
@@ -823,14 +789,14 @@ export default {
             //     obj[`${v + 1}0`] = e.gunGroupTotal
             //   })
             // }
-            if (index + 1 < 8) {
-              this.teamList.List[0].push(obj)
-            } else if (index + 1 < 16 && index + 1 > 7) {
-              this.teamList.List[1].push(obj)
-            } else if (index + 1 < 24 && index + 1 > 15) {
-              this.teamList.List[2].push(obj)
-            } else if (index + 1 < 32 && index + 1 > 23) {
-              this.teamList.List[3].push(obj)
+            if (index < 8) {
+              this.personallyList.List[0].push(obj)
+            } else if (index < 16 && index > 7) {
+              this.personallyList.List[1].push(obj)
+            } else if (index < 24 && index > 15) {
+              this.personallyList.List[2].push(obj)
+            } else if (index < 32 && index > 23) {
+              this.personallyList.List[3].push(obj)
             }
           })
         })
