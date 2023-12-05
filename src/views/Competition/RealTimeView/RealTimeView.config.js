@@ -71,22 +71,26 @@ export const RealTimeViewTableColumns = [
   {
     title: '姓名',
     align: 'center',
-    dataIndex: 'playerName'
+    dataIndex: 'playerName',
+    width: 100
   },
   {
     title: '项目',
     align: 'center',
-    dataIndex: 'projectName'
+    dataIndex: 'projectName',
+    width: 200
   },
   {
     title: '阶段',
     align: 'center',
-    dataIndex: 'stageName'
+    dataIndex: 'stageName',
+    width: 150
   },
   {
     title: '团体名称',
     align: 'center',
-    dataIndex: 'groupName'
+    dataIndex: 'groupName',
+    width: 150
   },
  /*  {
     title: '阶段状态',
@@ -98,12 +102,14 @@ export const RealTimeViewTableColumns = [
     title: '阶段组别',
     align: 'center',
     dataIndex: 'stageGroup',
+    width: 100
     // customRender: text => getLabel(stageStatus, text)
   },
   {
     title: '项目组别',
     align: 'center',
     dataIndex: 'projectGroup',
+    width: 150
     // customRender: text => getLabel(stageStatus, text)
   },
   {
@@ -116,14 +122,16 @@ export const RealTimeViewTableColumns = [
         return text + '_x' + record.goodTotal
       }
       return text
-    }
+    },
+    width: 100
     /* scopedSlots: {
       customRender: 'total'
     }, */
   },
   {
     title: "比赛成绩",
-    children: []
+    children: [],
+    width: 600
   },
   {
     title: "操作",

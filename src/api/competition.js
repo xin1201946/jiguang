@@ -120,3 +120,7 @@ export const getMassingScores = data => postAction("largeScreen/getMassingScores
 export const getDataScreenList = data => postAction("bizConfig/list", data)
 // 混团金铜牌赛id查询
 export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/queryById/${id}`)
+
+
+//个人最终成绩
+export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)

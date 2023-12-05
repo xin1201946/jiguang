@@ -48,7 +48,7 @@
             :pagination="projectName.includes('团体') ? false : pagination"
             @change="handleTableChange"
             bordered
-            :scroll="{x: 1400}"
+            :scroll="projectName.includes('团体')? {x: 1300}:{x: 2000}"
           >
             <template slot="playerName" slot-scope="text, record, index">
               <div v-html="text.join('<br/>')"></div>
@@ -180,14 +180,12 @@ export default {
           label: item.playerName,
           value: item.playerName
         }))
-        if (data.length) {
-          data.unshift({ label: '全部', value: '' })
-        }
         const query = RealTimeViewQuery.map(item => {
           if (item.label === '阶段名称' && item.type === 'select') {
             return {
               ...item,
-              data: data
+              data: data,
+              value: data[0].value
             }
           }
           if (item.type === 'search' && item.label === '姓名') {
@@ -268,29 +266,45 @@ export default {
     },
     // 获取比赛成绩表头
     getColumns(total) {
-      let children = []
-      for (let i = 0; i < total; i++) {
-        children.push({
-          // title: numToCapital((i + 1) * 10),
-          title: (i + 1) * 10,
-          align: 'center',
-          dataIndex: `scoreList${i+1}`
+      if (Array.isArray(total)){
+        let children = []
+        for (let i = 0; i < total.length; i++) {
+          children.push({
+            // title: numToCapital((i + 1) * 10),
+            title: total[i],
+            align: 'center',
+            dataIndex: `scoreList${i+1}`
+          })
+        }
+        this.columns = RealTimeViewTableColumns.map( item => {
+          if (item.children) {
+            return {
+              ...item,
+              children: children
+            }
+          }
+          return item
+        })
+      }else {
+        let children = []
+        for (let i = 0; i < total; i++) {
+          children.push({
+            // title: numToCapital((i + 1) * 10),
+            title: (i + 1) * 10,
+            align: 'center',
+            dataIndex: `scoreList${i+1}`
+          })
+        }
+        this.columns = RealTimeViewTableColumns.map( item => {
+          if (item.children) {
+            return {
+              ...item,
+              children: children
+            }
+          }
+          return item
         })
       }
-      // children.push({
-      //   title: '......',
-      //   align: 'center'
-      // })
-
-      this.columns = RealTimeViewTableColumns.map( item => {
-        if (item.children) {
-          return {
-            ...item,
-            children: children
-          }
-        }
-        return item
-      })
     },
     getList() {
       const data = {
@@ -319,26 +333,26 @@ export default {
         // 混合团体不走这个接口
         bizPlayerFinalScorePageList(data).then(res => {
           if (res.code === 200) {
-            if (res.result.records.length) {
-              const arr = res.result.records.map(item => item.gunTotalGroup)
+            const arr = res.result.pageList.records.map(item => item.gunTotalGroup)
+            const a = res.result.shoots
+            console.log(a)
+            if (a.length) {
+              this.getColumns(a)
+            }else {
               this.getColumns(Math.max(...[...new Set(arr)]))
             }
             this.$nextTick(() => {
-              if (res.result.records.length) {
-                this.data = res.result.records.map(item => {
-                  const obj = item
-                  if (item.scoreList.length) {
-                    for (let i = 0; i < item.scoreList.length; i++) {
-                      obj['scoreList' + (i + 1)] = item.scoreList[i]
-                    }
+              this.data = res.result.pageList.records.map(item => {
+                const obj = item
+                if (item.scoreList.length) {
+                  for (let i = 0; i < item.scoreList.length; i++) {
+                    obj['scoreList' + (i + 1)] = item.scoreList[i]
                   }
-                  return obj
-                })
-              }else {
-                this.data = []
-              }
-              this.pagination.current = res.result.current
-              this.pagination.total = res.result.total
+                }
+                return obj
+              })
+              this.pagination.current = res.result.pageList.current
+              this.pagination.total = res.result.pageList.total
             })
           } else{
             this.data = []

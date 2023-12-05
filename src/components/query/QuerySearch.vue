@@ -10,7 +10,7 @@
           <!--          选择器-->
           <template v-else-if="item.type === 'select'">
             <a-select
-              allowClear
+              :allowClear="item.value ? false : true"
               :placeholder="item.placeholder"
               v-decorator="item.rules"
             >
@@ -83,7 +83,7 @@ export default {
       formData: [],
       form: this.$form.createForm(this, { name: 'search' }),
       resets: [],
-
+      obj: {},
       fetching: false
     }
   },
@@ -94,8 +94,10 @@ export default {
         this.resets = []
         for (const item of arr) {
           this.resets.push(item.rules[0])
+          if (item.value) {
+            this.obj[item.rules[0]] = item.value
+          }
         }
-        // for (const item )
       } else {
         this.formData = []
         this.resets = []
@@ -129,6 +131,7 @@ export default {
     },
     handleReset() {
       this.form.resetFields(this.resets)
+      this.form.setFieldsValue(this.obj)
       this.$nextTick(() => {
         const obj = {}
         if (this.resets.length) {
@@ -136,7 +139,7 @@ export default {
             obj[item] = undefined
           }
         }
-        this.$emit('reset', obj)
+        this.$emit('reset', { ...obj, ...this.obj })
       })
     },
     fetchUser(value, data) {

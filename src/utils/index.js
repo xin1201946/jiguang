@@ -149,3 +149,20 @@ export function sorderFun (arrOrder, arr) {
   }
   return array
 }
+
+//
+export const getItem = (arr, key, value, children) => {
+  for (const item of arr) {
+    if (item[key] === value){
+      return item
+    }
+    if (children) {
+      if (Array.isArray(item[children]) && item[children].length){
+        const i = getItem(item[children], key, value, children)
+        if (i) {
+          return i
+        }
+      }
+    }
+  }
+}
