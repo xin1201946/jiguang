@@ -61,16 +61,16 @@ export default {
           title: '时间',
           align: 'center'
         },
-        {
-          dataIndex: 'xcoord',
-          title: 'X',
-          align: 'center'
-        },
-        {
-          dataIndex: 'ycoord',
-          title: 'Y',
-          align: 'center'
-        },
+        // {
+        //   dataIndex: 'xcoord',
+        //   title: 'X',
+        //   align: 'center'
+        // },
+        // {
+        //   dataIndex: 'ycoord',
+        //   title: 'Y',
+        //   align: 'center'
+        // },
       ],
       list: [],
       html: ''
@@ -119,8 +119,8 @@ export default {
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
             <td align="center">${item.beginTime}</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
+<!--            <td align="center">${item.xcoord}</td>-->
+<!--            <td align="center">${item.ycoord}</td>-->
           </tr>`
         ))
         return `<tbody>${l.join("")}</tbody>`
@@ -133,11 +133,11 @@ export default {
             <table align="center" cellspacing="0" border="1" style="width: 100%;">
               <thead>
                 <tr style="height: 50px; line-height: 50px">
-                  <th style="width: 10%">发序</th>
-                  <th style="width: 15%">环数</th>
-                  <th style="width: 45%">时间</th>
-                  <th style="width: 15%">X</th>
-                  <th style="width: 15%">Y</th>
+                  <th style="width: 25%">发序</th>
+                  <th style="width: 25%">环数</th>
+                  <th style="width: 50%">时间</th>
+<!--                  <th style="width: 15%">X</th>-->
+<!--                  <th style="width: 15%">Y</th>-->
                 </tr>
               </thead>
               ${list(item.list)}
