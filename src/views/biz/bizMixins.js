@@ -157,7 +157,7 @@ const bizMixins = {
       }
       if (file.status === "done") {
         const {response} = file
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
           this.$message.success(response.message)
           this.pagination.current = 1

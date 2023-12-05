@@ -43,7 +43,7 @@
               :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
             >
               <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
-                <a-select-option v-for="i in item.cproIds" :key="i.cproId" :value="i.cproId">{{i.projectName}}</a-select-option>
+                <a-select-option v-for="i in item.cproIds" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
@@ -135,6 +135,7 @@ export default {
       this.formData.data[i].cproId = ''
       this.formData.data[i].stageId = ''
       bizContestProjectList({contestId: this.formData.data[i].contestId}).then(res => {
+        // console.log(res)
         this.formData.data[i].cproIds = res.result
       })
     },
