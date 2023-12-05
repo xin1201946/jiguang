@@ -35,15 +35,19 @@ export default {
   },
 }
 </script>
-<style>
+<style l>
 #app {
   height: 100%;
 }
 /*::-webkit-scrollbar {
   display: none;
 }*/
-.ant-table-body::-webkit-scrollbar{
+.ant-table-body::-webkit-scrollbar {
   display: block;
   width: 0 !important;
+}
+.gameInfoEdit .ant-table-body::-webkit-scrollbar {
+  display: block;
+  width: 8px !important;
 }
 </style>

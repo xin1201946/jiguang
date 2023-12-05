@@ -39,7 +39,7 @@
       </a-carousel>
     </div>
     <!-- 个人赛 -->
-    <div class="personallyLoading" v-if="state == '个人赛' && !isPersonally">
+    <div class="personallyLoading" v-if="state.indexOf('个人资格赛') != -1 && !isPersonally">
       <div>即将开始</div>
       <div>2023年河北省青少年射击个人锦标赛</div>
       <div>
@@ -47,7 +47,7 @@
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="personally" v-if="state == '个人赛' && isPersonally">
+    <div class="personally" v-if="state.indexOf('个人资格赛') != -1 && isPersonally">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[0]" />
@@ -63,8 +63,8 @@
         </div>
       </a-carousel>
     </div>
-    <!-- 个人赛决赛 -->
-    <div class="personallyLoading" v-if="state == '个人赛决赛' && !isPersonallyFinals">
+    <!-- 个人赛淘汰赛 -->
+    <div class="personallyLoading" v-if="state.indexOf('个人淘汰赛') && !isPersonallyFinals">
       <div>即将开始</div>
       <div>2023年河北省青少年射击个人锦标赛</div>
       <div>
@@ -72,10 +72,10 @@
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="personally" v-if="state == '个人赛决赛' && isPersonallyFinals">
+    <div class="personally" v-if="state.indexOf('个人淘汰赛') && isPersonallyFinals">
       <a-carousel style="width: 100%; min-height: 100%">
         <div>
-          <TableListVue type="个人赛决赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
+          <TableListVue type="个人赛淘汰赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
         </div>
       </a-carousel>
     </div>
@@ -126,8 +126,8 @@
         </div>
       </a-carousel>
     </div> -->
-    <!-- 混团赛决赛 -->
-    <div class="mixeTeamFinalsLoading" v-if="state == '混团赛决赛' && !isTeam">
+    <!-- 混团赛金铜牌赛 -->
+    <div class="mixeTeamFinalsLoading" v-if="state.indexOf('') && !isTeam">
       <div>即将开始</div>
       <div>2023年河北省青少年射击团队锦标赛</div>
       <div>
@@ -135,21 +135,21 @@
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="mixeTeamFinals" v-if="state == '混团赛决赛' && isTeam">
+    <div class="mixeTeamFinals" v-if="state.indexOf('') && isTeam">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
-          <TableListVue type="混团赛决赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
+          <TableListVue type="混团赛金铜牌赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
         </div>
       </a-carousel>
     </div>
     <!-- 排名 -->
-    <div class="example" v-if="['团队排名','混合赛排名'].indexOf(state) !== -1 && !isTeam">
+    <div class="example" v-if="['综合排名','混团赛排名'].indexOf(state) !== -1 && !isTeam">
       <div>
         <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
         <p>加载中...请稍后！</p>
       </div>
     </div>
-    <div class="team" v-if="['团队排名','混合赛排名'].indexOf(state) !== -1 && isTeam">
+    <div class="team" v-if="['综合排名','混团赛排名'].indexOf(state) !== -1 && isTeam">
       <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
@@ -685,8 +685,8 @@ export default {
   },
   methods: {
     getData() {
-      if (this.state == '个人赛') {
-        littleScreen({ type: this.$route.query.spear }).then((res) => {
+      if (this.state.indexOf('个人资格赛') != -1) {
+        littleScreen({ type: this.state }).then((res) => {
           this.personallyList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -723,10 +723,10 @@ export default {
               代表队: item.groupName,
               靶位: item.targetSite,
               姓名: item.playerName,
-              总环数: item.total + '_x' + item.good,
+              总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
             }
             item.groupList.forEach((e, v) => {
-              obj[`${v + 1}0`] = e.gunGroupTotal
+              obj[`${v + 1}0`] = e.groupTotal
             })
             if (index + 1 < 8) {
               this.personallyList.List[0].push(obj)
@@ -739,8 +739,8 @@ export default {
             }
           })
         })
-      } else if (this.state == '个人赛决赛') {
-        littleScreen({ type: this.$route.query.spear }).then((res) => {
+      } else if (this.state.indexOf('个人淘汰赛') != -1) {
+        littleScreen({ type: this.state }).then((res) => {
           this.personallyFinalsList.List = [[]]
           let data = res.result
           this.projectName = data.projectName
@@ -779,16 +779,16 @@ export default {
               代表队: item.groupName,
               靶位: item.targetSite,
               姓名: item.playerName,
-              总环数: item.total + '_x' + item.good,
+              总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
             }
             item.groupList.forEach((e, v) => {
-              obj[e.groupCount] = e.gunGroupTotal
+              obj[e.groupCount] = e.groupTotal
             })
             this.personallyFinalsList.List[0].push(obj)
           })
         })
       } else if (this.state == '抽签') {
-      } else if (this.state == '团队赛') {
+      } else if (['步枪团体排名', '手枪团体排名'].indexOf(this.state) != -1) {
         getTeamScoresAPI({
           contestId: 4,
           cproStageId: 4,
@@ -816,7 +816,7 @@ export default {
               id: item.playerName,
               排名: index + 1,
               代表队: item.groupName,
-              总环数: `${item.stageTotal}_x${item.goodTotal ? item.goodTotal : 0}`,
+              总环数: `${item.stageTotal}-${item.goodTotal ? item.goodTotal : 0}x`,
             }
             // if (item.detailScoreList) {
             //   item.detailScoreList.forEach((e, v) => {
@@ -834,9 +834,9 @@ export default {
             }
           })
         })
-      } else if (this.state == '混团赛决赛') {
+      } else if (this.state == '混团赛金铜牌赛') {
         getMixeTeamFinalsListAPI({
-          contestId: 1,
+          contestId: 4,
           cproStageId: 1,
         }).then((res) => {
           this.mixeTeamFinalsList.List = [[]]
@@ -853,18 +853,25 @@ export default {
               环数: [item.player1Score, item.player2Score],
               总环数: item.stageTotal,
               总分: item.total,
-              目标分: '16',
             }
             this.mixeTeamFinalsList.List[0].push(obj)
           })
         })
-      } else if (this.state == '团队排名') {
+      } else if (this.state.indexOf('综合排名') !== -1) {
         getTeamTotalScores({
           contestId: 4,
         }).then((res) => {
           this.rankingList = res.result
         })
-      } else if (this.state == '混合赛排名') {
+      } else if (
+        [
+          '手枪混团铜牌赛排名',
+          '手枪混团金牌赛排名',
+          '手枪混团资格赛排名',
+          '步枪混团金牌赛排名',
+          '步枪混团资格赛排名',
+        ].indexOf(this.state) !== -1
+      ) {
         getMassingScores({
           contestId: 4,
           projectGroup: '甲组',

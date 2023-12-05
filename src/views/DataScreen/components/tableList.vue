@@ -1,6 +1,6 @@
 <template>
   <div class="common">
-    <!-- <h1 class="preface" v-if="type === '混团赛决赛'">
+    <!-- <h1 class="preface" v-if="type === '混团赛金铜牌赛'">
       发序: 1
     </h1> -->
 
@@ -24,8 +24,8 @@
           </template>
         </div>
       </template>
-      <!-- 个人赛决赛 -->
-      <template v-if="type === '个人赛决赛'">
+      <!-- 个人赛淘汰赛 -->
+      <template v-if="type === '个人赛淘汰赛'">
         <div v-for="(item, index) in TableList" :key="index" class="common-list-item" :style="`position: absolute;left: 0; top: ${item.position}px;`">
           <template v-for="(e, v) in TitleList">
             <div v-if="e.name === '排名'" :key="v" :style="e.width ? `width:${e.width};flex:none` : ''">
@@ -39,7 +39,7 @@
         </div>
       </template>
       <!-- 混团赛 -->
-      <template v-if="type === '混团赛' || type === '混团赛决赛'">
+      <template v-if="type === '混团赛' || type === '混团赛金铜牌赛'">
         <div v-for="(item, index) in TableList" :key="index" class="common-list-item mixeTeam" :style="`position: absolute;left: 0; top: ${item.position}px;`">
           <template v-for="(e, v) in TitleList">
             <div class="num" v-if="e.name === '排名'" :key="v" :style="e.width ? `width:${e.width};flex:none` : ''">
@@ -97,11 +97,11 @@ export default {
      * 获取列表的
      */
     initialization() {
-      if (this.type === '个人赛' || this.type === '个人赛决赛') {
+      if (this.type === '个人赛' || this.type === '个人赛淘汰赛') {
         this.defaultList()
       } else if (this.type === '团队赛') {
         this.teamtList()
-      } else if (this.type === '混团赛' || this.type === '混团赛决赛') {
+      } else if (this.type === '混团赛' || this.type === '混团赛金铜牌赛') {
         this.mixeTeamList()
       }
     },

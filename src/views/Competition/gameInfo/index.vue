@@ -24,10 +24,11 @@
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
+            <a-button v-if="group === null" type="primary" @click="editHandle">编辑参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button v-if="group !== null" type="primary" @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button type="primary" @click="getTableList">刷新</a-button>
@@ -44,24 +45,26 @@
           </div>
           <div class="gameInfoTables_table">
             <a-space style="margin-bottom: 20px;">
+              <span v-if="status">当前状态：{{status}}</span>
               <a-button @click.stop="handleZhunbei(i)">准备</a-button>
-              <a-button @click.stop="handleShishe(i)">试射</a-button>
+              <a-button @click.stop="handleShishe(i)" v-if="isAdjustment == '1'">试射</a-button>
               <a-button @click.stop="handleBisai(i)">开始</a-button>
               <a-button @click.stop="handleEnd(i)">结束</a-button>
             </a-space>
             <a-table bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
-              <template slot="operation" slot-scope="text, record, index">
+              <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
+                  <a-button type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
                 </a-space>
               </template>
             </a-table>
           </div>
         </div>
         <!-- :dataSource="dataSource" -->
-        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource">
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource" :pagination="false">
           <template slot="operation">
 
           </template>
@@ -69,6 +72,8 @@
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
         <GameInfoGroupModal ref="group" @delSuccess="getTableList"></GameInfoGroupModal>
+        <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
+        <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -81,6 +86,8 @@ import { gameInfoColumns, gameInfoQuery } from '@views/Competition/gameInfo/game
 import gameInfoTargetModal from '@views/Competition/gameInfo/modal/gameInfoTargetModal.vue'
 import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawModal.vue'
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
+import GameInfoPenaltyModal from '@views/Competition/gameInfo/modal/gameInfoPenalty.vue'
+import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
 import {
   bizContestProjectList,
@@ -95,9 +102,9 @@ import {
   startFire,
   endFire,
   nextStage,
-  getScoresByFinalScoreId,
   stopPlayer,
-  delPlayerShootScore,
+  penalty,
+  editStagePlayer,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 import BizMixins from '@views/biz/bizMixins'
@@ -111,6 +118,8 @@ export default {
     gameInfoTargetModal,
     gameInfoDrawModal,
     GameInfoGroupModal,
+    GameInfoPenaltyModal,
+    GameInfoEditModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -134,15 +143,63 @@ export default {
         pageSize: 10,
         total: 0,
         showTotal: (total, range) => {
-          return range[0] + "-" + range[1] + " 共" + total + "条"
+          return range[0] + '-' + range[1] + ' 共' + total + '条'
         },
         showQuickJumper: true,
         showSizeChanger: true,
       },
+
+      status: '',
+      stageName: '',
+      isAdjustment: '',
     }
   },
   methods: {
-    handleTableChange (pagination) {
+    editSuccessHandle(e) {
+      editStagePlayer(e).then((res) => {
+        if (res.success) {
+          this.$message.success('编辑参赛人员成功！')
+          this.getTableList()
+          this.$refs.edit.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    /**
+     * 编辑参赛人员
+     */
+    editHandle() {
+      this.$refs.edit.init({
+        cproStageId: this.cproStageId,
+        dataSource: this.dataSource,
+      })
+    },
+    handlePenalty(row) {
+      // 打开判罚
+      this.$refs.penalty.init(row)
+    },
+    /**
+     * 判罚扣分
+     */
+    setPenalty(e) {
+      penalty({
+        stageId: this.cproStageId, //阶段id
+        playerId: e.playerId, //运动员id
+        shootCode: e.shootCode, //发序
+        score: e.score, //环数
+      }).then((res) => {
+        console.log(res)
+        if (res.success) {
+          this.$message.success('改判成功！')
+          this.getTableList()
+          this.$refs.penalty.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handleTableChange(pagination) {
       this.pagination = pagination
       // this.getList()
     },
@@ -154,7 +211,6 @@ export default {
      * 停止比赛
      */
     handleStop(row) {
-      console.log(row)
       infoMessage('此操作将停止该运动员继续比赛！是否继续？').then(() => {
         stopPlayer({
           playerId: row.playerId,
@@ -215,22 +271,27 @@ export default {
         stageId: this.cproStageId, //项目阶段id
       })
         .then((res) => {
-          if (res.result[0].group === -1) {
-            this.group = null
-            this.groupList = []
-            this.groupActive = false
-            this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
-              ...item,
-              i,
-            }))
-            console.log(this.dataSource)
-          } else {
-            if (!this.group) {
-              this.group = res.result[0].group
+          if (res.success) {
+            if (res.result[0].group === -1) {
+              this.group = null
+              this.groupList = []
+              this.groupActive = false
+              this.status = ''
+              this.dataSource = res.result[0].bizContestPlayerList.map((item, i) => ({
+                ...item,
+                i,
+              }))
+            } else {
+              if (!this.group) {
+                this.group = res.result[0].group
+                this.status = res.result[0].status
+              }
+              this.groupList = res.result
+              this.groupActive = true
+              this.radioChangeHandle(res.result[0].group)
             }
-            this.groupList = res.result
-            this.groupActive = true
-            this.radioChangeHandle(res.result[0].group)
+          } else {
+            this.$message.error(res.message)
           }
           // console.log(res)
         })
@@ -245,6 +306,7 @@ export default {
       this.group = e
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
+          this.status = item.status
           this.dataSource = item.bizContestPlayerList.map((item, i) => ({
             ...item,
             i,
@@ -295,7 +357,9 @@ export default {
         }).then((res) => {
           if (res.success) {
             this.$message.success('分组成功！')
+            this.status = ''
             this.groupActive = true
+            this.group = null
             this.getTableList()
           } else {
             this.$message.error(res.message)
@@ -370,6 +434,21 @@ export default {
         }
         let result = []
         findParent(this.treeList, this.cproStageId, result)
+
+        function searchItem(data, target, list) {
+          data.forEach((item) => {
+            if (item.cproStageId == target) {
+              list.push(item)
+            }
+            if (item.children) {
+              searchItem(item.children, target, list)
+            }
+          })
+        }
+        let arr = []
+        searchItem(this.treeList, this.cproStageId, arr)
+        this.stageName = arr[0].stageName
+        this.isAdjustment = arr[0].isAdjustment
         this.cproId = result[0].cproId
         this.getTableList()
       } else {

@@ -12,37 +12,8 @@
         <span>数据大屏</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item key="1" @click="handleFullscreen('个人赛', '手枪')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>手枪个人赛</span>
-        </a-menu-item>
-        <a-menu-item key="2" @click="handleFullscreen('个人赛', '步枪')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>步枪个人赛</span>
-        </a-menu-item>
-        <a-menu-item key="3" @click="handleFullscreen('个人赛决赛', '手枪')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>手枪个人赛决赛</span>
-        </a-menu-item>
-        <a-menu-item key="4" @click="handleFullscreen('个人赛决赛', '步枪')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/个人.png" alt="">
-          <span>步枪个人赛决赛</span>
-        </a-menu-item>
-        <a-menu-item key="5" @click="handleFullscreen('团队赛', '')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/团队.png" alt="">
-          <span>团队赛</span>
-        </a-menu-item>
-        <a-menu-item key="6" @click="handleFullscreen('混团赛决赛', '')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/男女.png" alt="">
-          <span>混团赛</span>
-        </a-menu-item>
-        <a-menu-item key="7" @click="handleFullscreen('团队排名', '')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/男女.png" alt="">
-          <span>团队排名</span>
-        </a-menu-item>
-        <a-menu-item key="8" @click="handleFullscreen('混合赛排名', '')" style="display: flex; align: center;">
-          <img style="width: 12px;height: 12px;margin-right: 5px" src="../../assets/男女.png" alt="">
-          <span>混合赛排名</span>
+        <a-menu-item v-for="item in dataScreenList" :key="item.configId" @click="handleFullscreen(item.configName)" style="display: flex; align: center;">
+          <span>{{item.configName}}</span>
         </a-menu-item>
       </a-menu>
     </a-dropdown>
@@ -133,7 +104,7 @@ import { mixinDevice } from '@/utils/mixin.js'
 import { getFileAccessHttpUrl, getAction } from '@/api/manage'
 import Vue from 'vue'
 import { UI_CACHE_DB_DICT_DATA } from '@/store/mutation-types'
-
+import { getDataScreenList } from '@/api/competition'
 export default {
   name: 'UserMenu',
   mixins: [mixinDevice],
@@ -143,6 +114,8 @@ export default {
       searchMenuOptions: [],
       searchMenuComp: 'span',
       searchMenuVisible: false,
+
+      dataScreenList: [],
       // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
     }
   },
@@ -164,6 +137,11 @@ export default {
     let lists = []
     this.searchMenus(lists, this.permissionMenuList)
     this.searchMenuOptions = [...lists]
+
+    getDataScreenList({}).then((res) => {
+      this.dataScreenList = res.result
+      console.log(res)
+    })
   },
   mounted() {
     //如果是单点登录模式
