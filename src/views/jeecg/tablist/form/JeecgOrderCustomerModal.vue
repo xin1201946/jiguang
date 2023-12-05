@@ -130,7 +130,7 @@
         if (orderId) {
           this.edit({orderId}, '');
         } else {
-          this.$message.warning("请选择一个客户信息");
+          this.$message.error("请选择一个客户信息");
         }
       },
       detail(record) {
@@ -147,7 +147,7 @@
           this.hiding = true;
           this.disableSubmit = false;
         }
-        
+
         this.model = Object.assign({}, record);
         if (record.id) {
           this.hiding = false;

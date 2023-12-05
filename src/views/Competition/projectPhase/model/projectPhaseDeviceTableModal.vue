@@ -184,7 +184,7 @@ export default {
               this.$emit("list")
               this.visible = false
             }else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
               this.loading = false
             }
           })
@@ -207,7 +207,7 @@ export default {
               this.$emit("list")
               this.visible = false
             }else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
               this.loading = false
             }
           })

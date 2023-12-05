@@ -93,7 +93,7 @@
           if(res.success){
             this.dataSource = res.result
           }else{
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       },
@@ -103,7 +103,7 @@
             this.$message.success(res.message)
             this.loadData();
           }else{
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       },

@@ -144,7 +144,7 @@
         const that = this;
         //当设置指定用户类型，但用户为空时，后台报错
         if(this.userType &&!(this.userIds!=null && this.userIds.length >0)){
-            this.$message.warning('指定用户不能为空！')
+            this.$message.error('指定用户不能为空！')
             return;
           }
         // 触发表单验证

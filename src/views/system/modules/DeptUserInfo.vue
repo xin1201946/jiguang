@@ -199,7 +199,7 @@
         }
 
         if (this.selectedRowKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！');
+          this.$message.error('请选择一条记录！');
           return;
         } else {
           var ids = "";
@@ -315,7 +315,7 @@
             this.$message.success(res.message);
             this.loadData();
           } else {
-            this.$message.warning(res.message);
+            this.$message.error(res.message);
           }
         })
       },
@@ -324,7 +324,7 @@
           this.$refs.deptRoleUser.add(record,this.currentDeptId);
           this.$refs.deptRoleUser.title = "部门角色分配";
         }else{
-          this.$message.warning("请先选择一个部门!");
+          this.$message.error("请先选择一个部门!");
         }
       }
     }

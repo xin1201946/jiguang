@@ -124,7 +124,7 @@
       handleSubmit() {
         let that = this;
         if(!that.departId){
-          this.$message.warning('请点击选择一个部门!')
+          this.$message.error('请点击选择一个部门!')
         }
         let checkedKeys = [...that.checkedKeys, ...that.halfCheckedKeys]
         const permissionIds = checkedKeys.join(",")

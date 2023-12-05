@@ -456,7 +456,7 @@
       handleSave() {
         let queryParams = this.removeEmptyObject(this.queryParamsModel)
         if (this.isNullArray(queryParams)) {
-          this.$message.warning('空条件不能保存')
+          this.$message.error('空条件不能保存')
         } else {
           this.prompt.value = ''
           this.prompt.visible = true
@@ -465,7 +465,7 @@
       handlePromptOk() {
         let { value } = this.prompt
         if(!value){
-          this.$message.warning('保存名称不能为空')
+          this.$message.error('保存名称不能为空')
           return
         }
         // 取出查询条件

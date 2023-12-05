@@ -72,7 +72,7 @@
       },
       saveDataruleForRole(){
         if(!this.dataruleChecked || this.dataruleChecked.length==0){
-          this.$message.warning("请注意，现未勾选任何数据权限!")
+          this.$message.error("请注意，现未勾选任何数据权限!")
         }
         let params = {
           permissionId:this.functionId,

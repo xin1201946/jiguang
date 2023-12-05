@@ -250,7 +250,7 @@
         var fileType = file.type;
         if(this.fileType===FILE_TYPE_IMG){
           if(fileType.indexOf('image')<0){
-            this.$message.warning('请上传图片');
+            this.$message.error('请上传图片');
             this.uploadGoOn=false
             return false;
           }
@@ -394,7 +394,7 @@
           this.moveDisplay = 'none';
         });
       }
-    
+
       let picList = document.getElementById(this.containerId)?document.getElementById(this.containerId).getElementsByClassName('ant-upload-list-picture-card'):[];
       if(picList && picList.length>0){
         picList[0].addEventListener('mouseover',(ev)=>{

@@ -163,7 +163,7 @@
             this.options = res.result
             console.log("我是第一个",res)
           }else{
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
 
         })
@@ -210,7 +210,7 @@
               if(res.success){
                 this.options = res.result
               }else{
-                this.$message.warning(res.message)
+                this.$message.error(res.message)
               }
             })
           }

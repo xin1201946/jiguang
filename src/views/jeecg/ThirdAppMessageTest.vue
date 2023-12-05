@@ -173,7 +173,7 @@ export default {
               }
               this.dataSource.unshift(Object.assign({id: randomUUID()}, this.model, {response}))
             } else {
-              this.$message.warning(message)
+              this.$message.error(message)
             }
           }).finally(() => this.loading = false)
         }
@@ -191,11 +191,11 @@ export default {
             this.$set(record, 'recalled', true)
             this.$message.success(res.message)
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
-        }).catch(e => this.$message.warning(e.message || e))
+        }).catch(e => this.$message.error(e.message || e))
       } catch (e) {
-        this.$message.warning(e.message || e)
+        this.$message.error(e.message || e)
       }
     },
 

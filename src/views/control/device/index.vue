@@ -135,7 +135,7 @@ export default {
             })
             this.$message.success(res.message)
           }else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       })
@@ -162,7 +162,7 @@ export default {
           }
 
         }else {
-          this.$message.warning("请选择表格信息再点击批量项目控制按钮")
+          this.$message.error("请选择表格信息再点击批量项目控制按钮")
         }
       }
 
@@ -190,7 +190,7 @@ export default {
             this.$refs.device.init(arr.join(','))
           }
         }else{
-          this.$message.warning("请选择表格信息再点击批量设备控制按钮")
+          this.$message.error("请选择表格信息再点击批量设备控制按钮")
         }
       }
 
@@ -216,7 +216,7 @@ export default {
             this.$refs.display.init(arr.join(','))
           }
         }else{
-          this.$message.warning("请选择表格信息再点击批量显示控制按钮")
+          this.$message.error("请选择表格信息再点击批量显示控制按钮")
         }
       }
     }

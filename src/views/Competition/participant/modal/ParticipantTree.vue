@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     handleSelect(e) {
-      console.log(e.target.value)
+      // console.log(e.target.value)
       const key = this.treeData.filter(item => item.key === e.target.value)
       console.log(key)
       this.$emit("change", key[0])

@@ -229,7 +229,7 @@
             //查询条件加载后再请求数据
             this.loadData(1)
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       },
@@ -351,12 +351,12 @@
       handleSubmit() {
         if(!this.multi){
           if(this.table.selectionRows && this.table.selectionRows.length>1){
-            this.$message.warning("请选择一条记录")
+            this.$message.error("请选择一条记录")
             return false
           }
         }
         if(!this.table.selectionRows || this.table.selectionRows.length==0){
-          this.$message.warning("请选择一条记录")
+          this.$message.error("请选择一条记录")
           return false
         }
         this.$emit('ok', this.table.selectionRows);

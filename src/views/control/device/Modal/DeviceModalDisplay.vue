@@ -136,7 +136,7 @@ export default {
               this.handleCancel()
               this.$emit("list")
             }else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
             this.loadingModal = false
           })

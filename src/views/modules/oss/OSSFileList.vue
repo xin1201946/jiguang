@@ -148,12 +148,12 @@
         var fileType = file.type;
         if (fileType === 'image') {
           if (fileType.indexOf('image') < 0) {
-            this.$message.warning('请上传图片');
+            this.$message.error('请上传图片');
             return false;
           }
         } else if (fileType === 'file') {
           if (fileType.indexOf('image') >= 0) {
-            this.$message.warning('请上传文件');
+            this.$message.error('请上传文件');
             return false;
           }
         }

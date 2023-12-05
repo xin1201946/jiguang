@@ -224,7 +224,7 @@
       },
       remove(key) {
         if (key == indexKey) {
-          this.$message.warning('首页不能关闭!')
+          this.$message.error('首页不能关闭!')
           return
         }
         if (this.pageList.length === 1) {

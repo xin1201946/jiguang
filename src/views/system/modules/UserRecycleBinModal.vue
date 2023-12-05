@@ -66,7 +66,7 @@
       }
     }).catch(e => {
       console.error('查询已删除的用户失败：', e)
-      this.$message.warning('查询已删除的用户失败：' + (e.message || e))
+      this.$message.error('查询已删除的用户失败：' + (e.message || e))
     }).finally(() => {
       this.loading = false
     })

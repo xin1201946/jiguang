@@ -151,7 +151,7 @@ export default {
         // 返回的数据里必须包含 value 和 text 字段
         return res.result.map(item => ({value: item.id, text: item.name}))
       }
-      this.$message.warning('loadMenu失败：' + res.message)
+      this.$message.error('loadMenu失败：' + res.message)
       return []
     },
 

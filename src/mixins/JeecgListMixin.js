@@ -94,7 +94,7 @@ export const JeecgListMixin = {
           }
           //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
         }else{
-          this.$message.warning(res.message)
+          this.$message.error(res.message)
         }
       }).finally(() => {
         this.loading = false
@@ -165,7 +165,7 @@ export const JeecgListMixin = {
         return
       }
       if (this.selectedRowKeys.length <= 0) {
-        this.$message.warning('请选择一条记录！');
+        this.$message.error('请选择一条记录！');
         return;
       } else {
         var ids = "";
@@ -279,7 +279,7 @@ export const JeecgListMixin = {
       console.log("导出参数",param)
       downFile(this.url.exportXlsUrl,param).then((data)=>{
         if (!data) {
-          this.$message.warning("文件下载失败")
+          this.$message.error("文件下载失败")
           return
         }
         if (typeof window.navigator.msSaveBlob !== 'undefined') {
@@ -360,7 +360,7 @@ export const JeecgListMixin = {
     // update--autor:lvdandan-----date:20200630------for：修改下载文件方法名uploadFile改为downloadFile------
     downloadFile(text){
       if(!text){
-        this.$message.warning("未知的文件")
+        this.$message.error("未知的文件")
         return;
       }
       if(text.indexOf(",")>0){

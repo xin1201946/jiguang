@@ -103,7 +103,7 @@
                <a-menu-item>
                   <a @click="handleNotUse(record)">停用</a>
               </a-menu-item>
-           
+
               <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record)">
                   <a>删除</a>
@@ -135,8 +135,8 @@
   import {httpAction} from '@/api/manage'
   import { deleteAction } from '@/api/manage'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
-  
-  
+
+
   export default {
     name: "SysMessageTemplateList",
     mixins: [JeecgListMixin],
@@ -237,7 +237,7 @@
           if (res.success) {
             this.$message.success(res.message);
           } else {
-            this.$message.warning(res.message);
+            this.$message.error(res.message);
           }
         }).finally(() => {
           this.loadData()
@@ -251,7 +251,7 @@
       },
       handleMyEdit(record){
         if(record.useStatus == '1'){
-          this.$message.warning('此模板已被应用，禁止编辑!');
+          this.$message.error('此模板已被应用，禁止编辑!');
         }else{
           this.handleEdit(record);
         }
@@ -280,7 +280,7 @@
           }
         });
       },
-      
+
     }
   }
 </script>

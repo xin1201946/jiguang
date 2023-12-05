@@ -182,13 +182,13 @@ const bizMixins = {
             }
           })
         } else {
-          this.$message.warning(response.message)
+          this.$message.error(response.message)
         }
       }
     },
     downLoad(data, name) {
       if (!data || data.size === 0){
-        this.$message.warning("文件下载失败")
+        this.$message.error("文件下载失败")
       }else{
         const blob = new Blob([data], {type: 'application/vnd.ms-excel'})
         const url = window.URL.createObjectURL(blob)
@@ -208,7 +208,7 @@ const bizMixins = {
         this.handleCancel()
         this.$emit("list")
       }else {
-        this.$message.warning(res.message)
+        this.$message.error(res.message)
       }
       this.loadingModal = false
     },
@@ -224,7 +224,7 @@ const bizMixins = {
         })
         this.$message.success(res.message)
       }else {
-        this.$message.warning(res.message)
+        this.$message.error(res.message)
       }
     }
   }

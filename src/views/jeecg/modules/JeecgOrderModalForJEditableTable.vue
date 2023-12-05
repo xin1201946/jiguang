@@ -296,7 +296,7 @@
             this.$emit('ok')
             this.close()
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         }).finally(() => {
           this.confirmLoading = false

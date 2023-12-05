@@ -304,7 +304,7 @@ export default {
                 this.$emit("list")
                 this.$message.success(res.message)
               }else {
-                this.$message.warning(res.message)
+                this.$message.error(res.message)
               }
               this.loading = false
             })
@@ -321,7 +321,7 @@ export default {
                 this.$emit("list")
                 this.$message.success(res.message)
               }else {
-                this.$message.warning(res.message)
+                this.$message.error(res.message)
               }
               this.loading = false
             })

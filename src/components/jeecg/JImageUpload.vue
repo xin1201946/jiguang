@@ -138,7 +138,7 @@
       beforeUpload: function(file){
         var fileType = file.type;
         if(fileType.indexOf('image')<0){
-          this.$message.warning('请上传图片');
+          this.$message.error('请上传图片');
           return false;
         }
       },

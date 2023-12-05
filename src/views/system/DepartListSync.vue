@@ -275,7 +275,7 @@
         that.departTree = []
         //所有的树节点key信息
         that.allIds = []
-        
+
         that.iExpandedKeys = []
         //update-begin---author:wangshuai ---date:20220105  for：[JTC-364]sqlserver 部门导入导入失败，部门树数据丢失------------
         //部门树v-if用到了loading,和上传loading冲突了，换一个名称
@@ -366,7 +366,7 @@
       batchDel: function () {
         console.log(this.checkedKeys)
         if (this.checkedKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！')
+          this.$message.error('请选择一条记录！')
         } else {
           var ids = ''
           for (var a = 0; a < this.checkedKeys.length; a++) {
@@ -485,7 +485,7 @@
         this.$refs.form.validate((ok, err) => {
           if (ok) {
             if (!this.currSelected.id) {
-              this.$message.warning('请点击选择要修改部门!')
+              this.$message.error('请点击选择要修改部门!')
               return
             }
 
@@ -525,7 +525,7 @@
         } else if (num == 2) {
           let key = this.currSelected.key
           if (!key) {
-            this.$message.warning('请先点击选中上级部门！')
+            this.$message.error('请先点击选中上级部门！')
             return false
           }
           this.$refs.departModal.add(this.selectedKeys[0])

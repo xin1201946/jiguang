@@ -150,7 +150,7 @@ export default {
                 if (options != null) {
                   this.$warning(options)
                 } else {
-                  this.$message.warning(res.message)
+                  this.$message.error(res.message)
                 }
                 this.$emit('sync-error')
               }

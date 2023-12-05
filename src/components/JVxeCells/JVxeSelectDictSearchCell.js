@@ -202,7 +202,7 @@ export const DictSearchInputCell = {
             common.labelMap.set(item.value, [item])
           })
         } else {
-          this.$message.warning(message)
+          this.$message.error(message)
         }
       }).finally(() => {
         this.loading = false

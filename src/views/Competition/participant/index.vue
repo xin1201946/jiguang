@@ -34,7 +34,9 @@
         </template>
         <template slot="operator">
           <a-space v-if="status === '0'">
-            <a-button v-show="t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
+            <template v-show="t !== '全部'">
+              <a-button v-show="!t.includes('团体')" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
+            </template>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
             <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
           </a-space>
@@ -117,7 +119,8 @@ export default {
       t: '全部',
       treeList: [],
       status: '',
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      projectName: ''
     }
   },
   computed: {
@@ -158,7 +161,7 @@ export default {
             this.pagination.current = 1
             this.getList()
           }else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       })
@@ -178,11 +181,13 @@ export default {
       this.t = data.title
       // console.log(data)
       // console.log(data)
+      // console.log(data)
       // console.log(this.t)
+      console.log(data)
       this.id = data.cproId
       this.pagination.current = 1
       this.$nextTick(() => {
-        console.log(data)
+        // console.log(data)
         if (data.title) {
           this.columns = participantTableColumnsAll
         }else {
@@ -253,7 +258,7 @@ export default {
           }
         })
       }else {
-        this.$message.warning("请先选择左侧项目, 再点击编辑人员名单按钮")
+        this.$message.error("请先选择左侧项目, 再点击编辑人员名单按钮")
       }
     },
     // playerId
@@ -273,7 +278,7 @@ export default {
               })
               this.$message.success(res.message)
             } else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
           })
         })
@@ -292,7 +297,7 @@ export default {
               })
               this.$message.success(res.message)
             } else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
           })
         })
@@ -309,6 +314,8 @@ export default {
         .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
     handleTreeList(list) {
+      console.log(list)
+      // todo 需要去重
       this.treeList = list
     },
     handleAdds() {

@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -35,7 +35,7 @@
         @change="handleTableChange"
         @expand="handleExpand"
         v-bind="tableProps">
-        
+
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
@@ -59,7 +59,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SysCategoryModal from './modules/SysCategoryModal'
   import { deleteAction } from '@/api/manage'
-  
+
   export default {
     name: "SysCategoryList",
     mixins:[JeecgListMixin],
@@ -142,7 +142,7 @@
                 this.dataSource=[]
               }
             }else{
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
           }).finally(()=>{
             this.loading = false
@@ -178,7 +178,7 @@
                   record.hasChildrenField='0'
                 }
               }else{
-                this.$message.warning(res.message)
+                this.$message.error(res.message)
               }
             })
           }
@@ -328,8 +328,8 @@
           return Promise.resolve()
         }
       },
-      
-       
+
+
     }
   }
 </script>

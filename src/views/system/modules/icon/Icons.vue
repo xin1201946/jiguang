@@ -105,7 +105,7 @@ export default {
     },
     ok () {
       if (this.choosedIcon === '') {
-        this.$message.warning('尚未选择任何图标')
+        this.$message.error('尚未选择任何图标')
         return
       }
       this.reset()

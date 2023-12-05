@@ -5,9 +5,38 @@
     @ok="handleOk"
     @cancel="handleCancel"
     :loading="loading"
-    :width="800"
+    :width="900"
   >
    <div class="modal">
+     <div style="margin-bottom: 20px">
+       <a-form :labelCol="{span: 8}" :wrapperCol="{span: 16}">
+         <a-row :gutter="24">
+           <a-col :span="6">
+             <a-form-item colon label="姓名" >
+               <a-input allowClear style="width: 100%" v-model="formData.playerName"></a-input>
+             </a-form-item>
+           </a-col>
+           <a-col :span="7">
+             <a-form-item colon label="项目名称" >
+               <a-input allowClear style="width: 100%" v-model="formData.projectNames"></a-input>
+             </a-form-item>
+           </a-col>
+           <a-col :span="7">
+             <a-form-item colon label="项目组别">
+               <a-select allowClear style="width: 100%" v-model="formData.projectGroup">
+                 <a-select-option v-for="(item,i) in projectGroup" :key="i" :value="item.value">{{item.label}}</a-select-option>
+               </a-select>
+             </a-form-item>
+           </a-col>
+           <a-col :span="2">
+             <a-form-item :labelCol="{span: 0}" :wrapperCol="{span: 24}">
+               <a-button @click="search" type="primary" icon="search">查询</a-button>
+             </a-form-item>
+           </a-col>
+         </a-row>
+       </a-form>
+     </div>
+<!--     <br/>-->
      <a-table
        :pagination="pagination"
        :columns="columns"
@@ -24,7 +53,7 @@
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import { participantModalUserTableColumns } from '@views/Competition/participant/participant.config'
+import { participantModalUserTableColumns, projectGroup } from '@views/Competition/participant/participant.config'
 import { bizContestProjectPlayerPageList, bizContestProjectPlayerUpdatePlayer } from '@api/competition'
 import { infoMessage } from '@/utils'
 export default {
@@ -34,6 +63,7 @@ export default {
   },
   data() {
     return {
+      projectGroup,
       visible: false,
       title: '编辑人员名单',
       loading: false,
@@ -48,6 +78,11 @@ export default {
         showSizeChanger: true,
       },
       columns: participantModalUserTableColumns,
+      formData: {
+        projectGroup: '',
+        projectNames: '',
+        playerName: ''
+      },
       data: [],
       selectedRowKeys: [],
       selectedRowKeysBf: [],
@@ -67,6 +102,10 @@ export default {
     }
   },
   methods: {
+    search() {
+      this.pagination.current = 1
+      this.getList()
+    },
     handleOk () {
       if (this.selectedRowKeys.length) {
         // this.loading = true
@@ -89,7 +128,7 @@ export default {
                 this.handleCancel()
                 this.$emit("list")
               }else {
-                this.$message.warning(res.message)
+                this.$message.error(res.message)
               }
               this.loading = false
             })
@@ -105,7 +144,7 @@ export default {
               this.handleCancel()
               this.$emit("list")
             }else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
             this.loading = false
           })
@@ -129,6 +168,7 @@ export default {
         pageNum: this.pagination.current,
         pageSize: this.pagination.pageSize,
         contestId: this.obj.contestId,
+        ...this.formData,
         isAll: '1'
       }
       bizContestProjectPlayerPageList(data).then(res => {
@@ -163,12 +203,15 @@ export default {
       this.rows = selectedRows
     },
     inits(arr, arrs, query, name) {
-      console.log(name)
+      // console.log(name)
       this.projectName = name
       this.visible = true
       this.loading = false
       this.selectedRowKeys = arr
       this.selectedRowKeysBf = arrs
+      for (const key in this.formData ) {
+        this.formData[key] = ""
+      }
       this.rows = arrs
       this.obj = query
       this.getList()
@@ -181,5 +224,6 @@ export default {
 .modal{
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>

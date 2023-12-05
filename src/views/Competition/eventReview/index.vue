@@ -131,7 +131,7 @@ export default {
             })
             this.$message.success(res.message)
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       })

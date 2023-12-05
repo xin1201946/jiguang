@@ -104,7 +104,7 @@
         if (orderId) {
           this.edit({orderId}, '')
         } else {
-          this.$message.warning('请选择一条航班数据')
+          this.$message.error('请选择一条航班数据')
         }
       },
       detail(record) {

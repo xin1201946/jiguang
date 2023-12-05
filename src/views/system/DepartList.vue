@@ -325,7 +325,7 @@
       batchDel: function () {
         console.log(this.checkedKeys)
         if (this.checkedKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！')
+          this.$message.error('请选择一条记录！')
         } else {
           var ids = ''
           for (var a = 0; a < this.checkedKeys.length; a++) {
@@ -438,14 +438,14 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             if (!this.currSelected.id) {
-              this.$message.warning('请点击选择要修改部门!')
+              this.$message.error('请点击选择要修改部门!')
               return
             }
 
             //update-begin---author:wangshuai ---date:20200308  for：[JTC-119]在部门管理菜单下设置部门负责人
             this.currSelected.oldDirectorUserIds = this.oldDirectorUserIds
             //update-end---author:wangshuai ---date:20200308  for：[JTC-119]在部门管理菜单下设置部门负责人
-            
+
             httpAction(this.url.edit, this.currSelected, 'put').then((res) => {
               if (res.success) {
                 this.$message.success('保存成功!')
@@ -478,7 +478,7 @@
         } else if (num == 2) {
           let key = this.currSelected.key
           if (!key) {
-            this.$message.warning('请先点击选中上级部门！')
+            this.$message.error('请先点击选中上级部门！')
             return false
           }
           this.$refs.departModal.add(this.selectedKeys)
@@ -565,7 +565,7 @@
         }
       }
       //---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------
-      
+
     },
     created() {
       this.currFlowId = this.$route.params.id

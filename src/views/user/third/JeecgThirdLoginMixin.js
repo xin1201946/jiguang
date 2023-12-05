@@ -106,7 +106,7 @@ export const JeecgThirdLoginMixin = {
           this.doThirdLogin(token)
           this.thirdConfirmShow = false
         } else {
-          this.$message.warning(res.message)
+          this.$message.error(res.message)
         }
       }).finally(() => {
         this.thirdCreateUserLoding = false
@@ -121,7 +121,7 @@ export const JeecgThirdLoginMixin = {
           this.thirdLoginNoPassword()
           this.doThirdLogin(res.result)
         } else {
-          this.$message.warning(res.message)
+          this.$message.error(res.message)
         }
       })
     },
@@ -175,7 +175,7 @@ export const JeecgThirdLoginMixin = {
           this.bindingPhoneModal = false
           this.doThirdLogin(res.result)
         } else {
-          this.$message.warning(res.message)
+          this.$message.error(res.message)
         }
       })
     },

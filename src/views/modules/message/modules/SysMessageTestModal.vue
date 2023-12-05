@@ -52,7 +52,7 @@
 <script>
   import {httpAction} from '@/api/manage'
   import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
-  
+
   export default {
     name: "SysMessageTestModal",
     components:{
@@ -108,7 +108,7 @@
           if (res.success) {
             this.$message.success(res.message);
           } else {
-            this.$message.warning(res.message);
+            this.$message.error(res.message);
           }
         }).finally(() => {
           this.confirmLoading = false;

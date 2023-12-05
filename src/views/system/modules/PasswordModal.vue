@@ -101,7 +101,7 @@
                 this.$message.success(res.message);
                 this.$emit('ok');
               }else{
-                this.$message.warning(res.message);
+                this.$message.error(res.message);
               }
             }).finally(() => {
               this.confirmLoading = false;

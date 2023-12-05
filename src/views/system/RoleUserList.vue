@@ -442,7 +442,7 @@
           return
         }
         if (this.selectedRowKeys2.length <= 0) {
-          this.$message.warning('请选择一条记录！')
+          this.$message.error('请选择一条记录！')
           return
         } else {
           var ids = ''
@@ -481,7 +481,7 @@
             this.loadData2()
             this.$message.success(res.message)
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       },

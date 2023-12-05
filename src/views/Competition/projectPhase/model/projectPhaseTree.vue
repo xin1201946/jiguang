@@ -186,7 +186,7 @@ export default {
             if (res.code === 200) {
               this.$message.success(res.message)
             }else {
-              this.$message.warning(res.message)
+              this.$message.error(res.message)
             }
           })
         }

@@ -204,7 +204,7 @@
       },
       batchDel: function () {
         if (this.selectedRowKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！');
+          this.$message.error('请选择一条记录！');
           return;
         } else {
           var ids = "";

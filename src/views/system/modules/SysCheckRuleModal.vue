@@ -333,7 +333,7 @@
             this.$emit('ok')
             this.close()
           } else {
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         }).catch(e => {
           console.error(e)

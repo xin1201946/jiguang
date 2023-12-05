@@ -36,7 +36,7 @@
 
 
   </a-modal>
-    
+
 </template>
 
 <script>
@@ -139,7 +139,7 @@
         this.loadDepartList().then(()=>{
           this.visible=true
           if(!this.departList || this.departList.length<=0){
-            this.$message.warning("您尚未设置部门信息!")
+            this.$message.error("您尚未设置部门信息!")
             this.departClear()
           }
         })

@@ -89,7 +89,7 @@ export default {
           this.pagination.current = 1
           this.getList()
         }else {
-          this.$message.warning(res.message)
+          this.$message.error(res.message)
         }
       })
     },

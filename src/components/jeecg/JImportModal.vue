@@ -131,7 +131,7 @@
             this.visible=false
             this.$emit('ok')
           }else{
-            this.$message.warning(res.message)
+            this.$message.error(res.message)
           }
         })
       },
