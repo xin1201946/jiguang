@@ -55,8 +55,8 @@
           </a-form>
         </template>
         <template slot="operator">
-          <a-space>
-            <a-button v-show="this.stageArr.length" type="primary" @click="handlePrint">成绩打印</a-button>
+          <a-space v-show="this.stageArr.length">
+            <a-button :disabled="!data.length"  type="primary" @click="handlePrint">成绩打印</a-button>
           </a-space>
         </template>
         <template slot="default">
@@ -67,6 +67,7 @@
             :data-source="data"
             :pagination="false"
             @change="handleTableChange"
+            rowKey="i"
             bordered
           ></a-table>
           <a-empty v-show="!this.stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
@@ -303,14 +304,15 @@ export default {
     },
     // 查询
     handleSubmit() {
-      console.log(this.query)
+      // console.log(this.query)
       this.getList()
     },
     // 重置
     handleReset() {
-
+      this.query.cproStageId = this.stageArr[0].value
+      this.getList()
     },
-    // 成绩打印
+    // 资格
     bodyContent(){
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0].label
@@ -374,6 +376,7 @@ export default {
         </table>
       </div>`
     },
+    // 混团
     groupContent() {
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0].label
@@ -471,10 +474,111 @@ export default {
         </div>
       `
     },
-    handlePrint () {
-      // this.bodyContent()
+    // 淘汰
+    content(){
+      const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter(item => item.value === this.tree)[0].label
+      const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
+      let g = 0
+      if (this.groupArray && this.groupArray.length){
+        g = this.groupArray.length
+      }else {
+        g = group
+      }
+      const th = () => {
+        const arr = []
+        if (this.groupArray && this.groupArray.length){
+          for (const item of this.groupArray) {
+            arr.push(`<th>${item}</th>`)
+          }
+          return arr.join("")
+        }
+        for (let i = 0; i < group; i++) {
+          arr.push(`<th>${(i+1) * 10}</th>`)
+        }
+        return arr.join("")
+      }
+      const tr = this.data.map(item => {
+        const arr = []
+        for (let i = 0; i < item.scoreList.length; i++) {
+          arr.push(`<td>${item.scoreList[i]}</td>`)
+        }
+        const list = this.groupArray && this.groupArray.length ? this.groupArray : []
+        const array = []
+        if (list.length) {
+          for (let i = 0; i < list.length; i++){
+            if (i === 0){
+              array.push({
+                value: list[i],
+                arr: item.detailScoreList.slice(0, list[i])
+              })
+            }else {
+              array.push({
+                value: list[i],
+                arr: item.detailScoreList.slice(list[i-1], list[i])
+              })
+            }
+          }
+        }
+        // 最大多少行
+        const trs = Math.max(...array.map(i=>i.arr.length))
+        const rows = []
+        for (let i = 0; i < trs; i++) {
+          const j = []
+          for (const k of array) {
+            // console.log(k,  k.arr[i] )
+            j.push(`<td>${  k.arr[i] ? k.arr[i].score : "" }</td>`)
+          }
+          // console.log(j)
+          rows.push(`
+            <tr>
+              <td colspan="2"></td>
+              <td colspan="2"></td>
+              <td colspan="2"></td>
+              <td colspan="2"></td>
+              ${j.join("")}
+              <td colspan="2"></td>
+            </tr>
+          `)
+        }
+        // console.log(rows)
+        return (`
+          <tr>
+            <td colspan="2">${item.i}</td>
+            <td colspan="2">${item.targetSite}</td>
+            <td colspan="2">${item.playerName}</td>
+            <td colspan="2">${item.groupName}</td>
+            ${arr.join("")}
+            <td colspan="2">${item.stageTotal}</td>
+          </tr>
+          ${rows.join("")}
+        `)
+      })
 
-      // pwin.document.write(prints); //写入打印内容
+      return `
+      <style>td{text-align: center}th{border: 1px solid;}</style>
+      <div>
+        <h1 style="text-align: center">${contestName}</h1>
+        <h2 style="text-align: center">${this.dataTitle}成绩</h2>
+        <h3 style="text-align: center">${label}</h3>
+        <table align="center" cellspacing="0" border="0" style="width: 100%;">
+          <thead>
+            <tr>
+              <th rowspan="2" colspan="2">排名</th>
+              <th rowspan="2" colspan="2">靶位</th>
+              <th rowspan="2" colspan="2">姓名</th>
+              <th rowspan="2" colspan="2">团体</th>
+              <th colspan="${g}">组</th>
+              <th rowspan="2" colspan="2">总计</th>
+            </tr>
+            <tr>${th()}</tr>
+          </thead>
+          <tbody>${tr.join('')}
+          </tbody>
+        </table>
+      </div>`
+    },
+    handlePrint () {
       if (this.dataTitle.includes('团体')) {
         const pwin = window.open(); //打开一个新窗口
         pwin.document.write(this.groupContent())
@@ -484,15 +588,24 @@ export default {
           pwin.close()
         });
       }else{
-        const pwin = window.open(); //打开一个新窗口
-        pwin.document.write(this.bodyContent())
-        pwin.print(); //调用打印机
-        pwin.close() //这个点取消和打印就会关闭新打开的窗口
-        pwin.addEventListener('afterprint', () => {
-          pwin.close()
-        });
+        if (this.dataTitle.includes("淘汰赛")) {
+          const pwin = window.open(); //打开一个新窗口
+          pwin.document.write(this.content())
+          pwin.print(); //调用打印机
+          pwin.close() //这个点取消和打印就会关闭新打开的窗口
+          pwin.addEventListener('afterprint', () => {
+            pwin.close()
+          });
+        }else{
+          const pwin = window.open(); //打开一个新窗口
+          pwin.document.write(this.bodyContent())
+          pwin.print(); //调用打印机
+          pwin.close() //这个点取消和打印就会关闭新打开的窗口
+          pwin.addEventListener('afterprint', () => {
+            pwin.close()
+          });
+        }
       }
-
     },
     // 获取阶段名字
     handleStageChange(v) {

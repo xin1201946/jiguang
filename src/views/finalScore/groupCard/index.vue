@@ -29,7 +29,7 @@
           <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else/>
         </template>
         <template slot="query">
-          <a-form layout="inline" :form="form">
+          <a-form layout="inline" :form="form"  v-show="stageArr.length">
             <a-row :gutter="24">
               <a-col :span="6">
                 <a-form-item colon label="阶段名称">
@@ -55,21 +55,32 @@
           </a-form>
         </template>
         <template slot="operator">
-          <a-space>
-            <a-button type="primary" @click="handlePrint">成绩打印</a-button>
+          <a-space  v-show="stageArr.length">
+            <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
           </a-space>
         </template>
         <template slot="default">
           <a-table
+            v-show="stageArr.length"
             :columns="columns"
             :data-source="data"
-            rowKey="playerId"
-            :pagination="pagination"
+            rowKey="i"
+            :pagination="false"
             @change="handleTableChange"
             bordered
             :scroll="{x: 1400}"
           >
+            <a-table
+              :pagination="false"
+              bordered
+              slot="expandedRowRender"
+              slot-scope="record"
+              :columns="record.innerColumns"
+              :data-source="record.innerData"
+              :scroll="{x: 1400}"
+            ></a-table>
           </a-table>
+          <a-empty v-show="!stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
     </div>
@@ -85,9 +96,9 @@ import {
   bizContestList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScoreFinalSportsList
+  bizPlayerFinalScoreTeamSports
 } from '@api/competition'
-import { reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
+import { groupCardColumns, groupCardInnerColumns } from '@views/finalScore/groupCard/groupCard.config'
 export default {
   name: 'groupCard',
   components: {
@@ -118,7 +129,7 @@ export default {
       stageArr: [],
       title: '',
       group: 0,
-      columns: reportCardStageColumns,
+      columns: groupCardColumns,
       scroll: {
         x: 1500
       }
@@ -222,10 +233,11 @@ export default {
           // title: numToCapital((i + 1) * 10),
           title: (i + 1) * 10,
           align: 'center',
-          dataIndex: `scoreList${i+1}`
+          dataIndex: `teamScoreList${i+1}`
         })
       }
-      /* this.columns = RealTimeViewTableColumns.map( item => {
+      // console.log(total)
+      this.columns = groupCardColumns.map( item => {
         if (item.children) {
           return {
             ...item,
@@ -233,32 +245,94 @@ export default {
           }
         }
         return item
-      }) */
+      })
+      console.log(this.columns)
     },
     // 获取列表
     getList() {
       const data = {
         ...this.query,
-        // pageNum: this.pagination.current,
-        // pageSize: this.pagination.pageSize,
         contestId: this.contestId,
         cproId: this.tree,
       }
-      bizPlayerFinalScoreFinalSportsList(data).then(res => {
-        console.log(res)
+      this.getColumns(this.group)
+      bizPlayerFinalScoreTeamSports(data).then(res => {
         if (res.code === 200) {
-          this.dataTitle = res.result.title
-          this.data = res.result.data.sort((a, b) => b.stageTotal - a.stageTotal)/* .map((item, i) => {
+          console.log(res.result)
+          // this.dataTitle = res.result.title
+          const list = res.result.map(item => {
+            let total = 0
             const obj = {}
-            for (let k = 0; k < item.scoreList.length; k++) {
-              obj['scoreList' + (k + 1)] = item.scoreList[k]
+            for (let i = 0; i < item.teamScoreList.length; i++) {
+              if (!isNaN(Number(item.teamScoreList[i]))){
+                total += Number(item.teamScoreList[i])
+                obj[`teamScoreList${i+1}`] = item.teamScoreList[i]
+              }
             }
+            const t = item.shoots.length ? item.shoots : this.group
+            let children = []
+            if (Array.isArray(t)){
+              for (let i = 0; i < t.length; i++) {
+                children.push({
+                  // title: numToCapital((i + 1) * 10),
+                  title: t[i],
+                  align: 'center',
+                  dataIndex: `teamScoreList${i+1}`
+                })
+              }
+            }else {
+              for (let i = 0; i < t; i++) {
+                children.push({
+                  // title: numToCapital((i + 1) * 10),
+                  title: (i + 1) * 10,
+                  align: 'center',
+                  dataIndex: `teamScoreList${i+1}`
+                })
+              }
+            }
+            const innerColumns = groupCardInnerColumns.map(i => {
+              if (i.children){
+                return  {
+                  ...i,
+                  children: children
+                }
+              }
+              return i
+            })
+
             return {
               ...item,
               ...obj,
-              i: i + 1
+              total,
+              innerData: item.finalList.map(value => {
+                const obj = {}
+                let totals = 0
+                for (let i = 0; i < value.scoreList.length; i++){
+                  obj[`teamScoreList${i+1}`] = value.scoreList[i]
+                  if (!isNaN(Number(value.scoreList[i]))){
+                    totals += Number(value.scoreList[i])
+                  }
+                }
+                return {
+                  ...obj,
+                  ...value,
+                  total: totals
+                }
+              }).sort((a,b) => b.total - a.total)
+                .map((v,index) => ({
+                  ...v,
+                  i: index + 1
+                })),
+              innerColumns
             }
-          }) */
+          })
+          // this.group
+          this.data = list.sort((a,b) => b.total - a.total).map((item, i) => {
+            return {
+              ...item,
+              i: i+1
+            }
+          })
         }
       })
     },
@@ -268,15 +342,121 @@ export default {
     },
     // 查询
     handleSubmit() {
-
+      this.getList()
     },
     // 重置
     handleReset() {
-
+      this.query.cproStageId = this.stageArr[0].value
+      this.getList()
     },
     // 成绩打印
-    handlePrint () {
+    bodyContent() {
+      const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter(item => item.value === this.tree)[0].label
+      // todo 没有阶段数组不渲染打印按钮, 如果显示了这里需要修改
+      const stageName = this.data[0].finalList[0].stageName
 
+      // 父表格合并组数
+      console.log(this.data)
+      let g = 0
+      if (this.data[0].shoots.length){
+        g = this.data[0].shoots.length
+      }else {
+        const arr = []
+        for (const item of this.data){
+          arr.push(item.teamScoreList.length)
+        }
+        g = Math.max(...arr)
+      }
+      // 父表格头组值
+      const th = () => {
+        const ths = []
+        for (let i = 0; i < g; i++) {
+          if (this.data[0].shoots.length){
+            ths.push(`<th>${this.data[0].shoots[i]}</th>`)
+          }else {
+            ths.push(`<th>${ (i + 1) * 10 }</th>`)
+          }
+        }
+        return ths.join("")
+      }
+
+      // 子表格及父表格数据
+      const tr = () => {
+        const rows = this.data.map(item => {
+          const printTds = []
+          for (let i = 0; i < g; i++) {
+            printTds.push(`<td>${item.teamScoreList[i]}</td>`)
+          }
+
+          const trs = []
+          for (const value of item.finalList){
+            const tds = []
+            let total = 0
+            for (const key of value.scoreList){
+              tds.push(`<td>${key}</td>`)
+              if (!isNaN(Number(key))) {
+                total += Number(key)
+              }
+            }
+            trs.push(`
+              <tr>
+                <td></td>
+                <td>${value.playerName}</td>
+                ${tds.join("")}
+                <td>${total}</td>
+              </tr>
+            `)
+          }
+
+          return (`
+            <tr>
+              <td>${item.i}</td>
+              <td>${item.groupName}</td>
+              ${printTds.join("")}
+              <td>${item.total}</td>
+            </tr>
+            ${trs.join("")}
+          `)
+        })
+
+        return rows.join("")
+      }
+
+      return `
+      <style>td{text-align: center}.tables>thead>tr>th{border: 1px solid;}</style>
+      <div>
+        <h1 style="text-align: center">${contestName}</h1>
+        <h2 style="text-align: center">${stageName}</h2>
+        <h3 style="text-align: center">${label}</h3>
+        <h4 style="text-align: center">团体</h4>
+        <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;">
+          <thead>
+            <tr>
+              <th rowspan="2">排名</th>
+              <th rowspan="2">姓名</th>
+              <th colspan="${g}">组</th>
+              <th rowspan="2">总计</th>
+            </tr>
+            <tr>
+              ${th()}
+            </tr>
+          </thead>
+          <tbody>
+            ${tr()}
+          </tbody>
+        </table>
+      </div>`
+    },
+
+    handlePrint () {
+      const pwin = window.open(); //打开一个新窗口
+      pwin.document.write(this.bodyContent())
+      pwin.print(); //调用打印机
+      pwin.close() //这个点取消和打印就会关闭新打开的窗口
+      pwin.addEventListener('afterprint', () => {
+        pwin.close()
+      });
     }
   },
 }

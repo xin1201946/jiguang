@@ -122,5 +122,7 @@ export const getDataScreenList = data => postAction("bizConfig/list", data)
 export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/queryById/${id}`)
 
 
-//个人最终成绩
+//阶段最终成绩
 export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)
+// 团队最终成绩
+export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalScore/teamSports',data)
