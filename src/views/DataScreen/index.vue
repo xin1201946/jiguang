@@ -5,7 +5,7 @@
       <div class="left">
         <img class="logo" src="../../assets/logo1.png" alt="" />
         <div>
-          <h1 class="theme">2023年河北省青少年射击个人锦标赛</h1>
+          <h1 class="theme">2023年河北省青少年射击锦标赛</h1>
           <h1 class="title" v-if="state.indexOf('排名') == -1">{{ stageName }}-{{ projectName }}-{{stageGroup}}</h1>
         </div>
       </div>
@@ -14,10 +14,10 @@
       </div>
       <dv-decoration-10 style="width: 100%; height: 5px" />
     </div>
-    <!-- 个人赛 -->
+    <!-- 个人资格赛 -->
     <div class="personallyLoading" v-if="state.indexOf('个人资格赛') != -1 && !isPersonally">
       <div>即将开始</div>
-      <div>2023年河北省青少年射击个人锦标赛</div>
+      <div>2023年河北省青少年射击锦标赛</div>
       <div>
         {{ stageName }}-{{ projectName }}-{{stageGroup}}
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
@@ -40,15 +40,15 @@
       </a-carousel>
     </div>
     <!-- 个人赛淘汰赛 -->
-    <div class="personallyLoading" v-if="state.indexOf('个人淘汰赛') && !isPersonallyFinals">
+    <div class="personallyLoading" v-if="state.indexOf('个人淘汰赛') != -1 && !isPersonallyFinals">
       <div>即将开始</div>
-      <div>2023年河北省青少年射击个人锦标赛</div>
+      <div>2023年河北省青少年射击锦标赛</div>
       <div>
         {{ stageName }}-{{ projectName }}-{{stageGroup}}
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="personally" v-if="state.indexOf('个人淘汰赛') && isPersonallyFinals">
+    <div class="personally" v-if="state.indexOf('个人淘汰赛') != -1 && isPersonallyFinals">
       <a-carousel style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="个人赛淘汰赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
@@ -56,7 +56,7 @@
       </a-carousel>
     </div>
     <!-- 团队赛 -->
-    <div class="teamLoading" v-if="state == '团队赛' && !isTeam">
+    <div class="teamLoading" v-if="state.indexOf('团体排名') != -1 && !isTeam">
       <div>即将开始</div>
       <div>2023年河北省青少年射击团队锦标赛</div>
       <div>
@@ -64,7 +64,7 @@
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="team" v-if="state == '团队赛' && isTeam">
+    <div class="team" v-if="state.indexOf('团体排名') != -1 && isTeam">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[0]" />
@@ -80,30 +80,13 @@
         </div>
       </a-carousel>
     </div>
-    <!-- 混团赛 -->
-    <!-- <div class="mixeTeamLoading" v-if="state == '混团赛' && !isTeam">
-      <div>即将开始</div>
-      <div>2023年河北省青少年射击团队锦标赛</div>
-      <div>
-        {{ stageName }}-{{ projectName }}-{{stageGroup}}
-        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
-      </div>
-    </div>
-    <div class="mixeTeam" v-if="state == '混团赛' && isTeam">
-      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
-        <div>
-          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[0]" />
-        </div>
-        <div v-if="mixeTeamList.List[1].length != 0">
-          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[1]" />
-        </div>
-        <div v-if="mixeTeamList.List[2].length != 0">
-          <TableListVue type="混团赛" :TitleList="mixeTeamList.title" :List="mixeTeamList.List[1]" />
-        </div>
-      </a-carousel>
-    </div> -->
     <!-- 混团赛金铜牌赛 -->
-    <div class="mixeTeamFinalsLoading" v-if="state.indexOf('') && !isTeam">
+    <div class="mixeTeamFinalsLoading" v-if="[
+          '手枪混团铜牌赛排名',
+          '手枪混团金牌赛排名',
+          '步枪混团金牌赛排名',
+          '步枪混团铜牌赛排名',
+        ].indexOf(state) != -1 && !isMixeTeamFinals">
       <div>即将开始</div>
       <div>2023年河北省青少年射击团队锦标赛</div>
       <div>
@@ -111,7 +94,12 @@
         <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
       </div>
     </div>
-    <div class="mixeTeamFinals" v-if="state.indexOf('') && isTeam">
+    <div class="mixeTeamFinals" v-if="[
+          '手枪混团铜牌赛排名',
+          '手枪混团金牌赛排名',
+          '步枪混团金牌赛排名',
+          '步枪混团铜牌赛排名',
+        ].indexOf(state) != -1 && isMixeTeamFinals">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="混团赛金铜牌赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
@@ -119,13 +107,13 @@
       </a-carousel>
     </div>
     <!-- 排名 -->
-    <div class="example" v-if="['综合排名','混团赛排名'].indexOf(state) !== -1 && !isTeam">
+    <div class="example" v-if="['团队综合排名','混团赛排名'].indexOf(state) != -1 && !isTeam">
       <div>
         <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
         <p>加载中...请稍后！</p>
       </div>
     </div>
-    <div class="team" v-if="['综合排名','混团赛排名'].indexOf(state) !== -1 && isTeam">
+    <div class="team" v-if="['团队综合排名','混团赛排名'].indexOf(state) != -1 && isTeam">
       <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
@@ -362,231 +350,25 @@ export default {
           ],
         ],
       },
-
+      // 个人资格赛
       isPersonally: false,
       personallyList: {
         title: [],
         List: [[], [], [], []],
       },
+      // 个人淘汰赛
       isPersonallyFinals: false,
       personallyFinalsList: {
         title: [],
         List: [],
       },
-
+      // 团队赛
       isTeam: false,
       teamList: {
         title: [],
         List: [[], [], [], []],
       },
-
-      isMixeTeam: false,
-      mixeTeamList: {
-        title: [
-          {
-            name: '排名',
-            width: '80px',
-          },
-          {
-            name: '代表队',
-          },
-          {
-            name: '靶位',
-          },
-          {
-            name: '姓名',
-          },
-          {
-            name: '10',
-          },
-          {
-            name: '20',
-          },
-          {
-            name: '30',
-          },
-          {
-            name: '40',
-          },
-          {
-            name: '总环数',
-          },
-        ],
-        List: [
-          [
-            {
-              排名: 1,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 2,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 3,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 4,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 5,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-          ],
-          [
-            {
-              排名: 1,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 2,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 3,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 4,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 5,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-          ],
-          [
-            {
-              排名: 1,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 2,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 3,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 4,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-            {
-              排名: 5,
-              代表队: '保定',
-              靶位: ['1号靶', '2号靶'],
-              姓名: ['男', '女'],
-              10: ['20', '20'],
-              20: ['40', '40'],
-              30: ['60', '60'],
-              40: ['80', '80'],
-              总环数: '400_x5',
-            },
-          ],
-        ],
-      },
-
+      // 混团金铜牌赛
       isMixeTeamFinals: false,
       mixeTeamFinalsList: {
         title: [
@@ -612,24 +394,23 @@ export default {
           {
             name: '总分',
           },
-          {
-            name: '目标分',
-          },
         ],
-        List: [],
+        List: [[]],
       },
-
+      // 排名
       rankingList: [],
       timer: null,
     }
   },
   created() {
     this.state = this.$route.query.type
+    console.log(this.state)
     this.getData()
     document.body.style.overflow = 'hidden'
     setTimeout(() => {
       this.isSpin = true
       this.isTeam = true
+      this.isMixeTeamFinals = true
       this.isPersonally = true
       this.isPersonallyFinals = true
       this.$nextTick(() => {
@@ -800,10 +581,13 @@ export default {
             }
           })
         })
-      } else if (this.state == '混团赛金铜牌赛') {
+      } else if (
+        ['手枪混团铜牌赛排名', '手枪混团金牌赛排名', '步枪混团金牌赛排名', '步枪混团铜牌赛排名'].indexOf(this.state) !=
+        -1
+      ) {
         getMixeTeamFinalsListAPI({
-          contestId: 4,
-          cproStageId: 1,
+          screenName: this.state,
+          stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
         }).then((res) => {
           this.mixeTeamFinalsList.List = [[]]
           let data = res.result
@@ -815,11 +599,13 @@ export default {
               排名: index + 1,
               代表队: item.groupName,
               姓名: [item.player1Name, item.player2Name],
-              发序: item.shootCode,
-              环数: [item.player1Score, item.player2Score],
+              发序: item.shootCode ? item.shootCode : 0,
+              环数: [item.player1Score ? item.player1Score : 0, item.player2Score ? item.player2Score : 0],
+              // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
               总环数: item.stageTotal,
               总分: item.total,
             }
+            console.log(this.mixeTeamFinalsList.List[0])
             this.mixeTeamFinalsList.List[0].push(obj)
           })
         })
@@ -829,32 +615,30 @@ export default {
         }).then((res) => {
           this.rankingList = res.result
         })
-      } else if (
-        [
-          '手枪混团铜牌赛排名',
-          '手枪混团金牌赛排名',
-          '手枪混团资格赛排名',
-          '步枪混团金牌赛排名',
-          '步枪混团资格赛排名',
-        ].indexOf(this.state) !== -1
-      ) {
-        getMassingScores({
-          contestId: 4,
-          projectGroup: '甲组',
-          projectName: '10米激光手枪60发',
-          stageName: '资格赛',
-        }).then((res) => {
-          let arr = []
-          for (let i in res.result) {
-            console.log(i)
-            arr.push({
-              groupName: i,
-              total: res.result[i],
-            })
-          }
-          this.rankingList = arr
-        })
       }
+      // else if (
+      //   [
+      //     '手枪混团铜牌赛排名',
+      //     '手枪混团金牌赛排名',
+      //     '手枪混团资格赛排名',
+      //     '步枪混团金牌赛排名',
+      //     '步枪混团资格赛排名',
+      //   ].indexOf(this.state) !== -1
+      // ) {
+      //   getMassingScores({
+      //     screenName: this.state,
+      //   }).then((res) => {
+      //     let arr = []
+      //     for (let i in res.result) {
+      //       console.log(i)
+      //       arr.push({
+      //         groupName: i,
+      //         total: res.result[i],
+      //       })
+      //     }
+      //     this.rankingList = arr
+      //   })
+      // }
     },
   },
   destroyed() {

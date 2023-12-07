@@ -14,24 +14,28 @@
         <a-table rowKey="playerScoreId" size="middle" :columns="columns" :dataSource="dataSource" :pagination="false" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space>
+              <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record)">修改成绩</a-button>
               <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">删除成绩</a-button>
             </a-space>
           </template>
         </a-table>
       </div>
     </div>
+    <gameInfoEditResult ref="gameInfoEditResult" @ok="editResultHandle" />
   </BizModal>
 </template>
 
 <script>
+import gameInfoEditResult from '@views/Competition/gameInfo/modal/gameInfoEditResult.vue'
 import { gameInfoModalColumns } from '@views/Competition/gameInfo/gameInfo.config'
-import { getScoresByFinalScoreId, delPlayerShootScore } from '@api/competition'
+import { getScoresByFinalScoreId, delPlayerShootScore, updateScore } from '@api/competition'
 import BizModal from '@comp/modal/BizModal.vue'
 import { infoMessage } from '@/utils'
 export default {
   name: 'gameInfoGroupModal',
   components: {
     BizModal,
+    gameInfoEditResult,
   },
   data() {
     return {
@@ -72,6 +76,21 @@ export default {
     }
   },
   methods: {
+    editResultHandle(row) {
+      updateScore({
+        playerScoreId: row.playerScoreId,
+        score: row.score,
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('修改成功！')
+          this.$refs.gameInfoEditResult.handleCancel();
+          this.edit(this.formData)
+          this.$emit('success')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
     renderContent: (value, row, index) => {
       const obj = {
         children: value,
@@ -118,6 +137,10 @@ export default {
     handleCancel() {
       this.visible = false
     },
+    handleEdit(row) {
+      console.log()
+      this.$refs.gameInfoEditResult.init(row)
+    },
     handleStop(row) {
       infoMessage('此操作将删除该运动员选中的成绩！是否继续？').then(() => {
         delPlayerShootScore({
@@ -126,7 +149,7 @@ export default {
           if (res.success) {
             this.$message.success('操作成功！成绩已删除！')
             this.edit(this.formData)
-            this.$emit('delSuccess')
+            this.$emit('success')
           } else {
             this.$message.error(res.message)
           }

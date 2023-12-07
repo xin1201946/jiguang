@@ -28,7 +28,7 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button v-if="group !== null && stageName !== '金/铜牌赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button type="primary" @click="getTableList">刷新</a-button>
@@ -71,7 +71,7 @@
         </a-table>
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
         <gameInfoTargetModal></gameInfoTargetModal>
-        <GameInfoGroupModal ref="group" @delSuccess="getTableList"></GameInfoGroupModal>
+        <GameInfoGroupModal ref="group" @success="getTableList"></GameInfoGroupModal>
         <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
       </TreeCard>

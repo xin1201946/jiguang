@@ -98,6 +98,8 @@ export const getScoresByFinalScoreId = data => postAction("contest-process/getSc
 export const stopPlayer = data => postAction("contest-process/stopPlayer", data)
 //删除运动员信息
 export const delPlayerShootScore = data => getAction("contest-process/delPlayerShootScore", data)
+//修改成績
+export const updateScore = data => postAction("contest-process/updateScore", data)
 //判罚
 export const penalty = data => postAction("contest-process/penalty", data)
 //查询编辑人员

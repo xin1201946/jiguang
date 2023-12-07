@@ -51,8 +51,8 @@
             </p>
 
             <p class="arr" v-if="e.name !== '排名' && typeof item[e.name] == 'object'" :style="e.width ? `width:${e.width};flex:none` : ''" :key="v">
-              <span style="display: block">{{ item[e.name][0] }}</span>
-              <span style="display: block">{{ item[e.name][1] }}</span>
+              <span style="display: block">{{ item[e.name] ? item[e.name][0] : ''}}</span>
+              <span style="display: block">{{ item[e.name] ? item[e.name][1] : ''}}</span>
             </p>
           </template>
         </div>
@@ -104,6 +104,7 @@ export default {
       } else if (this.type === '混团赛' || this.type === '混团赛金铜牌赛') {
         this.mixeTeamList()
       }
+      this.$forceUpdate()
     },
     /**
      * 个人
@@ -225,17 +226,17 @@ export default {
           position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 115) : '585',
         })
       })
-      let idArr = this.TableList.map((item) => item['靶位'])
-      let newIdList = this.data.map((item) => item['靶位'])
+      let idArr = this.TableList.map((item) => item['代表队'])
+      let newIdList = this.data.map((item) => item['代表队'])
       if (idArr.length != 0) {
         for (let i in this.data) {
-          if (idArr.indexOf(this.data[i]['靶位']) === -1) {
+          if (idArr.indexOf(this.data[i]['代表队']) === -1) {
             this.TableList.push(this.data[i])
             setTimeout(() => {
               this.data[i].position = i * 115
             }, 100)
             this.TableList.forEach((e, index) => {
-              if (newIdList.indexOf(e['靶位']) === -1) {
+              if (newIdList.indexOf(e['代表队']) === -1) {
                 e.position = '585'
                 let obj = this.TableList[index]
                 this.TableList[index] = this.TableList[this.TableList.length - 1]
@@ -245,7 +246,7 @@ export default {
             })
           } else {
             this.TableList.forEach((e, index) => {
-              if (this.data[i]['靶位'] === e['靶位']) {
+              if (this.data[i]['代表队'] === e['代表队']) {
                 if (this.data[i]['排名'] == e['排名']) {
                   this.TableList[index] = {
                     ...this.data[i],
