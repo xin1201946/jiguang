@@ -578,32 +578,25 @@ export default {
         </table>
       </div>`
     },
+    // 打印
     handlePrint () {
-      if (this.dataTitle.includes('团体')) {
+      const print = (fn) => {
         const pwin = window.open(); //打开一个新窗口
-        pwin.document.write(this.groupContent())
+        pwin.document.write(fn)
         pwin.print(); //调用打印机
         pwin.close() //这个点取消和打印就会关闭新打开的窗口
         pwin.addEventListener('afterprint', () => {
           pwin.close()
         });
+      }
+      if (this.dataTitle.includes('团体')) {
+        print(this.groupContent())
       }else{
         if (this.dataTitle.includes("淘汰赛")) {
-          const pwin = window.open(); //打开一个新窗口
-          pwin.document.write(this.content())
-          pwin.print(); //调用打印机
-          pwin.close() //这个点取消和打印就会关闭新打开的窗口
-          pwin.addEventListener('afterprint', () => {
-            pwin.close()
-          });
+          print(this.content())
         }else{
-          const pwin = window.open(); //打开一个新窗口
-          pwin.document.write(this.bodyContent())
-          pwin.print(); //调用打印机
-          pwin.close() //这个点取消和打印就会关闭新打开的窗口
-          pwin.addEventListener('afterprint', () => {
-            pwin.close()
-          });
+          // 资格赛
+          print(this.bodyContent())
         }
       }
     },
