@@ -318,8 +318,7 @@ export default {
                   ...value,
                   total: totals
                 }
-              }).sort((a,b) => b.total - a.total)
-                .map((v,index) => ({
+              }).map((v,index) => ({
                   ...v,
                   i: index + 1
                 })),
@@ -327,7 +326,7 @@ export default {
             }
           })
           // this.group
-          this.data = list.sort((a,b) => b.total - a.total).map((item, i) => {
+          this.data = list.map((item, i) => {
             return {
               ...item,
               i: i+1
@@ -414,7 +413,7 @@ export default {
               <td>${item.i}</td>
               <td>${item.groupName}</td>
               ${printTds.join("")}
-              <td>${item.total}</td>
+              <td>${item.teamStageTotal}</td>
             </tr>
             ${trs.join("")}
           `)

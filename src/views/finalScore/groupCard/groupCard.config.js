@@ -17,7 +17,7 @@ export const groupCardColumns = [
   {
     title: '总计',
     align: 'center',
-    dataIndex: 'total'
+    dataIndex: 'teamStageTotal'
   },
 ]
 export const groupCardInnerColumns = [

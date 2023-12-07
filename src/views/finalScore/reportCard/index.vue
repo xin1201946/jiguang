@@ -269,7 +269,7 @@ export default {
             this.columns = reportCardFinalColumns
           }else if(res.result.title.includes('团体')){
             this.columns = reportCardFinalColumns
-            this.data = res.result.data.sort((a, b) => b.stageTotal - a.stageTotal).map((item, i) => {
+            this.data = res.result.data.map((item, i) => {
               return {
                 ...item,
                 i: i + 1
@@ -279,7 +279,7 @@ export default {
             // 组
             this.getColumns( (res.result.shoots && res.result.shoots.length) ?  res.result.shoots : this.group)
             this.groupArray = res.result.shoots
-            this.data = res.result.data.sort((a, b) => b.stageTotal - a.stageTotal).map((item, i) => {
+            this.data = res.result.data.map((item, i) => {
               const obj = {}
               for (let k = 0; k < item.scoreList.length; k++) {
                 obj['scoreList' + (k + 1)] = item.scoreList[k]
