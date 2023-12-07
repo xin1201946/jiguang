@@ -27,6 +27,7 @@
             v-model="formData.stageOrder"/>
         </a-form-model-item>
         <a-form-model-item
+        v-if="formData.stageName !== '金/铜牌赛'"
           label="是否团体排名"
           :labelCol="{span: 6}"
           :wrapperCol="{span: 14, offset: 1}"
@@ -68,7 +69,7 @@
           </a-select>
         </a-form-model-item>
         <!--      中数-->
-        <template v-if="formData.integrationMethod === '3'">
+<!--        <template v-if="formData.integrationMethod === '3'">
           <a-form-model-item label="环数区间" required>
             <a-row :gutter="24">
               <a-col :span=12>
@@ -97,7 +98,7 @@
               </a-col>
             </a-row>
           </a-form-model-item>
-        </template>
+        </template>-->
         <!--      目标积分-->
         <template v-if="formData.integrationMethod === '4'">
           <a-form-model-item
@@ -155,7 +156,7 @@
             >{{ item.label }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <template v-if="formData.scoreModel !== '1' && formData.integrationMethod !== '4'">
+        <template v-if="formData.scoreModel === '0' && formData.integrationMethod !== '4'">
           <a-form-model-item label="默认组数" prop="groupCount">
             <a-input
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -188,7 +189,7 @@
             </a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="晋级名次" prop="riseNum">
+        <a-form-model-item label="晋级名次" prop="riseNum" v-if="formData.stageName === '资格赛'">
           <a-input
             oninput="value=value.replace(/[^\d]/g,'')"
             v-model="formData.riseNum"
@@ -317,6 +318,7 @@ export default {
           if (key !== 'gunsPerGroup')
             this.formData[key] = ''
         }
+        this.formData.scoreModel = '0'
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
         }
@@ -332,6 +334,7 @@ export default {
         for (const key in this.formData) {
           this.formData[key] = row[key]
         }
+        // this.formData.scoreModel = '0'
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
         }
