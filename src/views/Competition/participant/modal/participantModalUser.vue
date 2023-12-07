@@ -54,7 +54,12 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import { participantModalUserTableColumns, projectGroup } from '@views/Competition/participant/participant.config'
-import { bizContestProjectPlayerPageList, bizContestProjectPlayerUpdatePlayer } from '@api/competition'
+import {
+  bizContestPlayerList,
+  bizContestProjectPlayerPageList,
+  bizContestProjectPlayerUpdatePlayer
+} from '@api/competition'
+
 import { infoMessage } from '@/utils'
 export default {
   name: 'participantModalUser',
@@ -165,17 +170,17 @@ export default {
     },
     getList() {
       const data = {
-        pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize,
+        // pageNum: this.pagination.current,
+        // pageSize: this.pagination.pageSize,
         contestId: this.obj.contestId,
         ...this.formData,
         isAll: '1'
       }
-      bizContestProjectPlayerPageList(data).then(res => {
+      bizContestPlayerList(data).then(res => {
         if (res.code === 200) {
-          this.data = res.result.records
-          this.pagination.current = res.result.current
-          this.pagination.total = res.result.total
+          this.data = res.result
+          // this.pagination.current = res.result.current
+          // this.pagination.total = res.result.total
 
           const arr = this.data.filter(item => {
             if (item.projectNames) {
@@ -183,9 +188,9 @@ export default {
             }
             return false
           })
-          console.log(arr)
-          console.log(this.rows)
-          console.log(this.selectedRowKeysBf)
+          // console.log(arr)
+          // console.log(this.rows)
+          // console.log(this.selectedRowKeysBf)
           /* if (arr.length) {
             this.selectedRowKeys = arr.map(item => item.playerId)
             this.rows = arr
@@ -203,6 +208,7 @@ export default {
       this.rows = selectedRows
     },
     inits(arr, arrs, query, name) {
+      this.pagination.current = 1
       // console.log(name)
       this.projectName = name
       this.visible = true

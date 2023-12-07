@@ -314,8 +314,7 @@ export default {
         .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
     handleTreeList(list) {
-      console.log(list)
-      // todo 需要去重
+      // console.log(list)
       this.treeList = list
     },
     handleAdds() {
