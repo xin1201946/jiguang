@@ -34,12 +34,12 @@
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-model-item label="报名时间" prop="registTime">
-              <a-range-picker style="width: 100%" valueFormat="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" :showTime="true" v-model="formData.registTime"></a-range-picker>
+              <a-range-picker style="width: 100%" valueFormat="YYYY-MM-DD" format="YYYY-MM-DD" :showTime="false" v-model="formData.registTime"></a-range-picker>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="比赛时间" prop="contestTime">
-              <a-range-picker v-model="formData.contestTime" style="width: 100%" valueFormat="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" :showTime="true" :disabledDate="disabledDate"></a-range-picker>
+              <a-range-picker v-model="formData.contestTime" style="width: 100%" valueFormat="YYYY-MM-DD" format="YYYY-MM-DD" :showTime="false" :disabledDate="disabledDate"></a-range-picker>
             </a-form-model-item>
           </a-col>
         </a-row>

@@ -89,6 +89,7 @@ import {
   bizContestProjectStageList, bizPlayerFinalScoreFinalSportsList
 } from '@api/competition'
 import { reportCardFinalColumns, reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
+import { Time } from '@/utils'
 export default {
   name: 'reportCard',
   components: {
@@ -265,9 +266,7 @@ export default {
       bizPlayerFinalScoreFinalSportsList(data).then(res => {
         // includes("团体")
         if (res.code === 200) {
-          if (this.title === '决赛') {
-            this.columns = reportCardFinalColumns
-          }else if(res.result.title.includes('团体')){
+          if(res.result.title.includes('团体')){
             this.columns = reportCardFinalColumns
             this.data = res.result.data.map((item, i) => {
               return {
@@ -292,9 +291,7 @@ export default {
             })
           }
           this.dataTitle = res.result.title
-
         }else {
-          // this.$message.error(res.message)
         }
       })
     },
@@ -317,7 +314,8 @@ export default {
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0].label
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
-
+      // const stage = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0]
+      const project = this.list.filter(item => item.value === this.tree)[0]
       let g = 0
       if (this.groupArray && this.groupArray.length){
         g = this.groupArray.length
@@ -338,7 +336,8 @@ export default {
         }
         return arr.join("")
       }
-      const tr = this.data.map(item => {
+      const datas = [...this.data,/*  ...this.data, ...this.data, ...this.data, ...this.data */]
+      const tr = datas.map(item => {
         const arr = []
         for (let i = 0; i < item.scoreList.length; i++) {
           arr.push(`<td>${item.scoreList[i]}</td>`)
@@ -354,14 +353,26 @@ export default {
           </tr>`
         )
       })
+      // console.log(Time(project.projectTimeStart, 'YYYY/MM/DD'))
+      // console.log(project.projectTimeStart)
       return `
-      <style>td{text-align: center}th{border: 1px solid;}</style>
+      <style>
+        td{text-align: center}
+        th{border: 1px solid;}
+        @media print {
+          @page{
+            margin-top: .3cm;
+            margin-bottom: 0cm;
+          }
+        }
+      </style>
       <div>
         <h1 style="text-align: center">${contestName}</h1>
         <h2 style="text-align: center">${this.dataTitle}成绩</h2>
         <h3 style="text-align: center">${label}</h3>
+        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
-          <thead>
+          <thead >
             <tr>
               <th rowspan="2" colspan="2">排名</th>
               <th rowspan="2" colspan="2">靶位</th>
@@ -373,7 +384,21 @@ export default {
             <tr>${th()}</tr>
           </thead>
           <tbody> ${tr.join("")} </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="${10 + g}">
+                <div style="height: 100px"></div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
+        <div style="height: 100px;position: fixed; bottom: 0;width: 100%">
+          <div style="height: 90px; width: 96%;border: 1px solid">
+            <div>
+              备注:
+            </div>
+          </div>
+        </div>
       </div>`
     },
     // 混团
@@ -382,6 +407,7 @@ export default {
       const label = this.list.filter(item => item.value === this.tree)[0].label
       const j = this.data.filter(item => item.stageGroup === 1)
       const y = this.data.filter(item => item.stageGroup === 2)
+      const project = this.list.filter(item => item.value === this.tree)[0]
       const jtr = () => {
         return j.map(item => {
           return `
@@ -466,6 +492,7 @@ export default {
           <h1 style="text-align: center">${contestName}</h1>
           <h2 style="text-align: center">${this.dataTitle}成绩</h2>
           <h3 style="text-align: center">${label}</h3>
+          <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
           <div>
             ${jdiv}
             <br/>
@@ -479,6 +506,7 @@ export default {
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0].label
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
+      const project = this.list.filter(item => item.value === this.tree)[0]
       let g = 0
       if (this.groupArray && this.groupArray.length){
         g = this.groupArray.length
@@ -556,11 +584,21 @@ export default {
       })
 
       return `
-      <style>td{text-align: center}th{border: 1px solid;}</style>
+      <style>
+        td{text-align: center}
+        th{border: 1px solid;}
+        @media print {
+          @page{
+            margin-top: .3cm;
+            margin-bottom: 0cm;
+          }
+        }
+      </style>
       <div>
         <h1 style="text-align: center">${contestName}</h1>
         <h2 style="text-align: center">${this.dataTitle}成绩</h2>
         <h3 style="text-align: center">${label}</h3>
+        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>
@@ -575,7 +613,21 @@ export default {
           </thead>
           <tbody>${tr.join('')}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="${10 + g}">
+                <div style="height: 100px"></div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
+        <div style="height: 100px;position: fixed; bottom: 0;width: 100%">
+          <div style="height: 90px; width: 96%;border: 1px solid">
+            <div>
+              备注:
+            </div>
+          </div>
+        </div>
       </div>`
     },
     // 打印
@@ -592,7 +644,7 @@ export default {
       if (this.dataTitle.includes('团体')) {
         print(this.groupContent())
       }else{
-        if (this.dataTitle.includes("淘汰赛")) {
+        if (this.dataTitle.includes("决赛") || this.dataTitle.includes("淘汰赛")) {
           print(this.content())
         }else{
           // 资格赛

@@ -47,9 +47,9 @@
           <a-range-picker
             style="width: 100%"
             :disabled="disabled"
-            valueFormat="YYYY-MM-DD HH:mm:ss"
-            format="YYYY-MM-DD HH:mm:ss"
-            :showTime="true"
+            valueFormat="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+            :showTime="false"
             v-model="data.registTime"
           ></a-range-picker>
         </a-form-model-item>
@@ -58,10 +58,10 @@
             :disabled="disabled"
             v-model="data.contestTime"
             style="width: 100%"
-            valueFormat="YYYY-MM-DD HH:mm:ss"
-            format="YYYY-MM-DD HH:mm:ss"
+            valueFormat="YYYY-MM-DD"
+            format="YYYY-MM-DD"
             :disabledDate="disabledDate"
-            :showTime="true"
+            :showTime="false"
           ></a-range-picker>
         </a-form-model-item>
         <a-form-model-item

@@ -27,7 +27,7 @@
             v-model="formData.stageOrder"/>
         </a-form-model-item>
         <a-form-model-item
-        v-if="formData.stageName !== '金/铜牌赛'"
+          v-if="formData.stageName !== '金/铜牌赛'"
           label="是否团体排名"
           :labelCol="{span: 6}"
           :wrapperCol="{span: 14, offset: 1}"
@@ -40,7 +40,8 @@
             >{{ item.label }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <template v-if="formData.isGroupRank !== '0'">
+<!--        阶段不是金童牌以及不是团队排名-->
+        <template v-if="formData.isGroupRank !== '0' && formData.stageName !== '金/铜牌赛'">
           <a-form-model-item label="参团选手" prop="playerGroup">
             <a-select v-model="formData.playerGroup">
               <a-select-option
@@ -217,8 +218,8 @@ const stageName = [
     value: '资格赛'
   },
   {
-    label: '淘汰赛',
-    value: '淘汰赛'
+    label: '决赛',
+    value: '决赛'
   },
 
   {

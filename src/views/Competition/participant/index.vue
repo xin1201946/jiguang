@@ -39,6 +39,7 @@
             </template>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
             <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
+            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
           </a-space>
         </template>
         <a-table
@@ -263,6 +264,11 @@ export default {
     },
     // playerId
     // 删除
+    handleAllDeletes() {
+      deleteMessage("请确认是否删除全部赛事人员信息").then(() => {
+
+      })
+    },
     handleDelete(record) {
       if (this.t === '全部') {
         deleteMessage('请确认是否删除当前赛事人员信息').then(() => {

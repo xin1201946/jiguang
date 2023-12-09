@@ -191,6 +191,8 @@ const bizMixins = {
         this.$message.error("文件下载失败")
       }else{
         const blob = new Blob([data], {type: 'application/vnd.ms-excel'})
+        // console.log(data)
+        // const blob = new Blob([data], {type: 'application/pdf'})
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.style.display = 'none'

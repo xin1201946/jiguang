@@ -55,7 +55,7 @@
             <template slot="operation" slot-scope="text, record, index">
               <a-space>
                 <!--                <a-icon type="profile" />-->
-                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>
+<!--                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>-->
                 <a-button type="primary" size="small" ghost icon="profile" @click="handlePrint(record)">成绩打印</a-button>
                 <!--                <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
@@ -73,7 +73,8 @@ import RealTimeViewPrint from '@views/Competition/RealTimeView/modal/RealTimeVie
 import BizMixins from '@views/biz/bizMixins'
 import {
   RealTimeViewQueryPrint,
-  RealTimeViewTableColumns, RealTimeViewTableColumnsPrint,
+  RealTimeViewTableColumns,
+  RealTimeViewTableColumnsPrint,
   RealTimeViewTreeStyle
 } from '@views/Competition/RealTimeView/RealTimeView.config'
 import { deleteMessage } from '@/utils'
@@ -83,8 +84,8 @@ import {
   bizContestPlayerList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScorePageList,
-  bizPlayerFinalScoreQueryById, bizPlayerFinalScoreSportsList, bizPlayerFinalScoreSportsScoresList
+  bizPlayerFinalScoreSportsList,
+  bizPlayerFinalScoreSportsScoresList
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
@@ -138,16 +139,8 @@ export default {
         playerId: record.playerId,
         cproId: this.tree
       }).then(res => {
-        // console.log(res)
-        // const body = document.body
-        // const main = document.createElement('div')
-        // const old = body.innerHTML
-        // const nld = main.innerHTML = "<div ></div>"
-        // body.innerHTML = nld
-        // window.print()
         this.$refs.print.init(res.result)
       })
-      // this.$refs.print.init(record)
     },
     // 修改赛事
     handleContest() {
@@ -162,8 +155,6 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }).then(res => {
-        // console.log(res)
-        // console.log(res.result)
         const result = res.result.map(item => ({
           label: item.playerName,
           value: item.playerName
@@ -172,12 +163,6 @@ export default {
           data.unshift({ label: '全部', value: '' })
         }
         const query = RealTimeViewQueryPrint.map(item => {
-          // if (item.label === '阶段名称' && item.type === 'select') {
-          //   return {
-          //     ...item,
-          //     data: data
-          //   }
-          // }
           if (item.type === 'search' && item.label === '姓名') {
             return {
               ...item,
@@ -227,7 +212,7 @@ export default {
                 label: `${item.projectName} - ${item.projectGroup}`,
                 value: item.cproId
               }
-            })
+            }).filter(item => !item.projectName.includes("团体"))
             this.tree = data[0].value
             this.list = data
           }else {
