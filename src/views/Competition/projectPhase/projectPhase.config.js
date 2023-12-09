@@ -66,6 +66,24 @@ export const scoreModel = [
     label: '拼分射'
   }
 ]
+export const stageName = [
+  {
+    label: '资格赛',
+    value: '资格赛',
+    id: 0
+  },
+  {
+    label: '决赛',
+    value: '决赛',
+    id: 1
+  },
+
+  {
+    label: '金/铜牌赛',
+    value: '金/铜牌赛',
+    id: 2
+  }
+]
 
 export const rules = {
   stageName: [

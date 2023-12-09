@@ -1,4 +1,4 @@
-import { deleteAction, download, getAction, postAction } from '@/api/manage'
+import { deleteAction, download, getAction, postAction, downFile } from '@/api/manage'
 
 /**
  * 赛事表
@@ -128,3 +128,7 @@ export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/query
 export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)
 // 团队最终成绩
 export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalScore/teamSports',data)
+
+// 导出抽签pdf
+// downloadFile
+export const contest_processGetSitePdf = param => downFile("contest-process/getSitePdf",param)

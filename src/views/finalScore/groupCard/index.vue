@@ -99,6 +99,7 @@ import {
   bizPlayerFinalScoreTeamSports
 } from '@api/competition'
 import { groupCardColumns, groupCardInnerColumns } from '@views/finalScore/groupCard/groupCard.config'
+import { Time } from '@/utils'
 export default {
   name: 'groupCard',
   components: {
@@ -354,9 +355,9 @@ export default {
       const label = this.list.filter(item => item.value === this.tree)[0].label
       // todo 没有阶段数组不渲染打印按钮, 如果显示了这里需要修改
       const stageName = this.data[0].finalList[0].stageName
-
+      const project = this.list.filter(item => item.value === this.tree)[0]
       // 父表格合并组数
-      console.log(this.data)
+      // console.log(this.data)
       let g = 0
       if (this.data[0].shoots.length){
         g = this.data[0].shoots.length
@@ -429,6 +430,7 @@ export default {
         <h2 style="text-align: center">${stageName}</h2>
         <h3 style="text-align: center">${label}</h3>
         <h4 style="text-align: center">团体</h4>
+        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>
@@ -444,7 +446,21 @@ export default {
           <tbody>
             ${tr()}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="${6 + g}">
+                <div style="height: 100%"></div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
+        <div>
+          <div style="height: 90px; width: 96%;border: 1px solid">
+            <div>
+              备注:
+            </div>
+          </div>
+        </div>
       </div>`
     },
 

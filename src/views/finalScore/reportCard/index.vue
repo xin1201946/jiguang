@@ -56,7 +56,9 @@
         </template>
         <template slot="operator">
           <a-space v-show="this.stageArr.length">
-            <a-button :disabled="!data.length"  type="primary" @click="handlePrint">成绩打印</a-button>
+<!--            :disabled="!data.length"-->
+            <a-button   type="primary" @click="handlePrint">成绩打印</a-button>
+            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>
           </a-space>
         </template>
         <template slot="default">
@@ -80,16 +82,22 @@
 <script>
 import TreeCard from '@comp/card/TreeCard.vue'
 import {
-  RealTimeViewTableColumns,
   RealTimeViewTreeStyle
 } from '@views/Competition/RealTimeView/RealTimeView.config'
 import {
   bizContestList,
   bizContestProjectList,
-  bizContestProjectStageList, bizPlayerFinalScoreFinalSportsList
+  bizContestProjectStageList,
+  bizPlayerFinalScoreFinalSportsList
 } from '@api/competition'
-import { reportCardFinalColumns, reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
+import { stageName } from '@views/Competition/projectPhase/projectPhase.config'
+import {
+  reportCardFinalColumns,
+  reportCardStageColumns
+} from '@views/finalScore/reportCard/reportCard.config'
 import { Time } from '@/utils'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 export default {
   name: 'reportCard',
   components: {
@@ -312,9 +320,10 @@ export default {
     // 资格
     bodyContent(){
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0].label
+      const label = this.list.filter(item => item.value === this.tree)[0]
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
       // const stage = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0]
+      // console.log(label)
       const project = this.list.filter(item => item.value === this.tree)[0]
       let g = 0
       if (this.groupArray && this.groupArray.length){
@@ -369,7 +378,10 @@ export default {
       <div>
         <h1 style="text-align: center">${contestName}</h1>
         <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-        <h3 style="text-align: center">${label}</h3>
+        <h3 style="text-align: center">
+          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
+          ${label.projectName}
+        </h3>
         <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead >
@@ -404,7 +416,7 @@ export default {
     // 混团
     groupContent() {
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0].label
+      const label = this.list.filter(item => item.value === this.tree)[0]
       const j = this.data.filter(item => item.stageGroup === 1)
       const y = this.data.filter(item => item.stageGroup === 2)
       const project = this.list.filter(item => item.value === this.tree)[0]
@@ -487,16 +499,25 @@ export default {
             </table>`: ''
 
       return `
-        <style>td{text-align: center}th{border: 1px solid;}</style>
-        <div >
-          <h1 style="text-align: center">${contestName}</h1>
-          <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-          <h3 style="text-align: center">${label}</h3>
-          <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
-          <div>
-            ${jdiv}
-            <br/>
-            ${ydiv}
+        <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
+        <div>
+          <div style="height: 92vh">
+            <h1 style="text-align: center">${contestName}</h1>
+            <h2 style="text-align: center">${this.dataTitle}成绩</h2>
+            <h3 style="text-align: center">${label.label}</h3>
+            <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+            <div>
+              ${jdiv}
+              <br/>
+              ${ydiv}
+            </div>
+          </div>
+          <div style="height: 8vh;position: fixed;bottom: 0">
+            <div style="height: 90px; width: 96%;border: 1px solid">
+              <div>
+                备注:
+              </div>
+            </div>
           </div>
         </div>
       `
@@ -633,13 +654,24 @@ export default {
     // 打印
     handlePrint () {
       const print = (fn) => {
-        const pwin = window.open(); //打开一个新窗口
+       /*  const pwin = window.open(); //打开一个新窗口
         pwin.document.write(fn)
         pwin.print(); //调用打印机
         pwin.close() //这个点取消和打印就会关闭新打开的窗口
         pwin.addEventListener('afterprint', () => {
           pwin.close()
+        }); */
+        const iframe= document.createElement("iframe");
+        document.body.appendChild(iframe);
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(fn);
+        iframe.contentWindow.print()
+        iframe.contentWindow.document.close();
+        iframe.contentWindow.addEventListener('afterprint', () => {
+          iframe.contentWindow.document.close()
+          document.body.removeChild(iframe)
         });
+        document.body.removeChild(iframe)
       }
       if (this.dataTitle.includes('团体')) {
         print(this.groupContent())
@@ -651,6 +683,38 @@ export default {
           print(this.bodyContent())
         }
       }
+    },
+    // 导出
+    handleExport () {
+      const stage = stageName.filter(item => this.dataTitle.includes(item.value))[0]
+      const parser = new DOMParser();
+      let htmlDoc;
+      switch (stage.id){
+        case 0:
+          // htmlDoc = parser.parseFromString(this.bodyContent(), 'text/html');
+          htmlDoc = this.bodyContent()
+          break
+        case 1:
+          htmlDoc = this.content()
+          // htmlDoc = parser.parseFromString(this.content(), 'text/html');
+          break
+        case 2:
+          htmlDoc = this.groupContent()
+          // htmlDoc = parser.parseFromString(this.groupContent(), 'text/html');
+          break
+      }
+      // const iframe= document.createElement("iframe");
+      // document.body.appendChild(iframe);
+      // iframe.contentWindow.document.open();
+      // iframe.contentWindow.document.write(htmlDoc);
+      // iframe.contentWindow.document.close();
+      // html2canvas(iframe.contentWindow.document.body).then(function(canvas) {
+      //   const pdf = new jsPDF(undefined, 'pt', 'a4');
+      //   pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pdf.internal.pageSize.width, canvas.height * pdf.internal.pageSize.width / canvas.width);
+      //   console.log(pdf)
+      //   pdf.save('example.pdf');
+      //   document.body.removeChild(iframe)
+      // });
     },
     // 获取阶段名字
     handleStageChange(v) {

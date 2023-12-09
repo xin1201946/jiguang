@@ -210,23 +210,9 @@ import {
   isGroupRank,
   playerGroup,
   scoreModel,
-  rules
+  rules,
+  stageName
 } from '@views/Competition/projectPhase/projectPhase.config'
-const stageName = [
-  {
-    label: '资格赛',
-    value: '资格赛'
-  },
-  {
-    label: '决赛',
-    value: '决赛'
-  },
-
-  {
-    label: '金/铜牌赛',
-    value: '金/铜牌赛'
-  }
-]
 export default {
   name: 'projectPhaseStageTableModal',
   components: {

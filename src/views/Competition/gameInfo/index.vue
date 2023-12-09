@@ -33,6 +33,7 @@
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button type="primary" @click="getTableList">刷新</a-button>
+            <a-button v-if="group !== null" type="primary" @click="handleExports">导出</a-button>
           </a-space>
         </template>
         <div class="gameInfoTables" v-show="groupActive">
@@ -106,6 +107,7 @@ import {
   stopPlayer,
   penalty,
   editStagePlayer,
+  contest_processGetSitePdf
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 import BizMixins from '@views/biz/bizMixins'
@@ -533,6 +535,29 @@ export default {
         } else {
           this.$message.error(res.message)
         }
+      })
+    },
+    handleExports() {
+      // 导出
+      const data = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id,
+        group: this.group// 组
+      }
+      contest_processGetSitePdf(data).then(res => {
+        const blob = new Blob([res], {type: 'text/plain'})
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.style.display = 'none'
+        a.href = url
+        a.setAttribute('download', "分组.pdf")
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+
+        // console.log(res)
       })
     },
     groupListHandle() {},
