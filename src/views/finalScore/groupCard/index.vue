@@ -449,12 +449,12 @@ export default {
           <tfoot>
             <tr>
               <td colspan="${6 + g}">
-                <div style="height: 100%"></div>
+                <div style="height: 100px"></div>
               </td>
             </tr>
           </tfoot>
         </table>
-        <div>
+        <div style="position: fixed;bottom: 0;width: 100%;height: 100px">
           <div style="height: 90px; width: 96%;border: 1px solid">
             <div>
               备注:
@@ -465,13 +465,24 @@ export default {
     },
 
     handlePrint () {
-      const pwin = window.open(); //打开一个新窗口
+      const iframe= document.createElement("iframe");
+      document.body.appendChild(iframe);
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write(this.bodyContent());
+      iframe.contentWindow.print()
+      iframe.contentWindow.document.close();
+      iframe.contentWindow.addEventListener('afterprint', () => {
+        iframe.contentWindow.document.close()
+        document.body.removeChild(iframe)
+      });
+      document.body.removeChild(iframe)
+      /* const pwin = window.open(); //打开一个新窗口
       pwin.document.write(this.bodyContent())
       pwin.print(); //调用打印机
       pwin.close() //这个点取消和打印就会关闭新打开的窗口
       pwin.addEventListener('afterprint', () => {
         pwin.close()
-      });
+      }); */
     }
   },
 }
