@@ -32,7 +32,7 @@
               {{ item[e.name] }}
             </div>
             <!-- :class="e.name == '排名' ? 'ranking' : ''" -->
-            <p v-if="e.name !== '排名'" :style="e.width ? `width:${e.width};flex:none` : ''" :key="v">
+            <p v-if="e.name !== '排名'" :style="e.width ? `min-width:${e.width};flex:none` : ''" :key="v">
               {{ item[e.name] }}
             </p>
           </template>
@@ -290,6 +290,10 @@ p {
     align-items: center;
     text-align: center;
     border-radius: 8px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     // background: rgba(255, 255, 255, 0.3);
     p {
       flex: 1;

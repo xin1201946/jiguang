@@ -51,59 +51,9 @@
     <div class="personally" v-if="state.indexOf('个人淘汰赛') != -1 && isPersonallyFinals">
       <a-carousel style="width: 100%; min-height: 100%">
         <div>
-          <TableListVue2 type="个人赛淘汰赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
+          <TableListVue type="个人赛淘汰赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
         </div>
       </a-carousel>
-      <div class="targetImage">
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
-          </div>
-        </div>
-      </div>
     </div>
     <!-- 团队赛 -->
     <div class="teamLoading" v-if="state.indexOf('团体排名') != -1 && !isTeam">
@@ -179,13 +129,10 @@ import {
 } from '@api/competition'
 // 个人赛和混团赛滚动成绩tabelList
 import TableListVue from './components/tableList.vue'
-import TableListVue2 from './components/tableList2.vue'
 // 排名
 import RankingList from './components/rankingList.vue'
-// 靶图
-import EchatTarget from '../view/targetmap/modules/EchatTarget.vue'
 export default {
-  components: { TableListVue, RankingList, EchatTarget, TableListVue2 },
+  components: { TableListVue, RankingList },
   data() {
     return {
       projectName: '',
@@ -556,7 +503,6 @@ export default {
             },
             {
               name: '代表队',
-              width: '120px',
             },
             {
               name: '靶位',
@@ -710,32 +656,6 @@ v-deep ::-webkit-scrollbar {
   width: 0 !important;
   height: 0;
 }
-.targetImage {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  .box {
-    position: relative;
-    flex: 0 0 25%;
-    display: flex;
-    align-items: center;
-    width: 25%;
-    height: 150px;
-    overflow: hidden;
-    .name {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      color: #fff;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .wrap {
-      width: 100%;
-      height: 300px;
-    }
-  }
-}
 .container {
   position: relative;
   width: 100vw;
@@ -836,7 +756,6 @@ v-deep ::-webkit-scrollbar {
 .mixeTeam,
 .mixeTeamFinals {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
 }
 .textLoading,

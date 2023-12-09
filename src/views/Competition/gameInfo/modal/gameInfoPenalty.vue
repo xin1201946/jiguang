@@ -7,6 +7,9 @@
       <a-form-model-item label="分数">
         <a-input v-model="formData.score" />
       </a-form-model-item>
+      <a-form-model-item label="备注">
+        <a-input v-model="formData.remarkPenalty" />
+      </a-form-model-item>
     </a-form-model>
   </BizModal>
 </template>
