@@ -359,6 +359,7 @@ export default {
             <td colspan="2">${item.groupName}</td>
             ${arr.join("")}
             <td colspan="2">${item.stageTotal}</td>
+            <td>${item.i<=8?"QF":""}</td>
           </tr>`
         )
       })
@@ -392,6 +393,7 @@ export default {
               <th rowspan="2" colspan="2">团体</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
+              <th rowspan="2">备注</th>
             </tr>
             <tr>${th()}</tr>
           </thead>
@@ -587,6 +589,7 @@ export default {
               <td colspan="2"></td>
               ${j.join("")}
               <td colspan="2"></td>
+              <td></td>
             </tr>
           `)
         }
@@ -599,6 +602,7 @@ export default {
             <td colspan="2">${item.groupName}</td>
             ${arr.join("")}
             <td colspan="2">${item.stageTotal}</td>
+            <td>${item.i <= 8 ? 'QF' : ''}</td>
           </tr>
           ${rows.join("")}
         `)
@@ -629,6 +633,7 @@ export default {
               <th rowspan="2" colspan="2">团体</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
+              <th rowspan="2">备注</th>
             </tr>
             <tr>${th()}</tr>
           </thead>
