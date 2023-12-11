@@ -321,6 +321,7 @@ p {
       overflow: hidden;
       transition: 0.5s;
       box-shadow: 0 1px 10px 0 #7ecdfa;
+      background: #449dd1;
       div {
         flex: 1;
         // background: #ef4b4c;

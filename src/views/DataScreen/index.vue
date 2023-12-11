@@ -42,7 +42,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -50,7 +50,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -58,15 +58,15 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
-              <EchatTarget :dots="[{x: 20, y: 33},{x: 200, y: 330}]" />
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
+              <EchatTarget :dots="[{x: 0, y: 33},{x: 0, y: 330}]" />
             </div>
           </div>
         </div>
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -74,7 +74,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -82,7 +82,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -90,7 +90,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -98,7 +98,7 @@
         <div class="flex">
           <div class="box">
             <div class="name">某某某</div>
-            <div class="wrap">
+            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
               <EchatTarget />
             </div>
           </div>
@@ -432,7 +432,7 @@ export default {
   created() {
     document.body.style.overflow = 'hidden'
 
-    console.log(this.$getDpi(16))
+    console.log(this.$getDpi(45.5))
     this.state = this.$route.query.type
     this.getData()
     this.timer = setInterval(() => {
@@ -481,7 +481,7 @@ export default {
           this.personallyList.title.push({
             name: '总环数',
           })
-          if (data.players) {
+          if (data.players && data.players.length != 0) {
             data.players.forEach((item, index) => {
               let obj = {
                 id: item.playerName,
@@ -542,7 +542,7 @@ export default {
           this.personallyFinalsList.title.push({
             name: '总环数',
           })
-          if (data.players) {
+          if (data.players && data.players.length != 0) {
             data.players.forEach((item, index) => {
               let obj = {
                 id: item.playerName,
@@ -562,7 +562,7 @@ export default {
           }
         })
       } else if (['步枪团体排名', '手枪团体排名'].indexOf(this.state) != -1) {
-        getTeamScoresAPI({ type: this.state }).then((res) => {
+        getTeamScoresAPI({ screenName: this.state }).then((res) => {
           this.teamList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data[0].projectName
@@ -617,7 +617,7 @@ export default {
           this.projectName = data[0].projectName
           this.stageName = data[0].stageName
           this.stageGroup = data[0].projectGroup
-          if (data) {
+          if (data && data.length != 0) {
             data.forEach((item, index) => {
               let obj = {
                 排名: index + 1,
@@ -696,8 +696,11 @@ v-deep ::-webkit-scrollbar {
     height: 150px;
     overflow: hidden;
     .box {
-      width: 300px;
-      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 300.5px;
+      height: 300.5px;
       .name {
         position: absolute;
         left: 0;
@@ -707,11 +710,12 @@ v-deep ::-webkit-scrollbar {
         font-weight: bold;
       }
       .shouqiang {
-        width: 295px;
-        height: 295px;
+        width: 300px;
+        height: 300px;
       }
-      .buqiang{
-        
+      .buqiang {
+        width: 300.4px;
+        height: 300.4px;
       }
     }
   }
