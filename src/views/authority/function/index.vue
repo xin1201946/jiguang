@@ -141,7 +141,7 @@
             :model="formData"
             :wrapperCol="{span: 18}"
           >
-            <a-row :gutter="24" v-for="(item,index) in formData.data.filter(item => item.configName.includes('团队综合排名'))" :key="index">
+            <a-row :gutter="24" v-for="(item,index) in formData.data.filter(item => item.configName.includes('混团资格赛'))" :key="index">
               <a-col :span="3">
                 <a-form-model-item :labelCol="{span: 0}">
                   <b>{{item.configName}}</b>
