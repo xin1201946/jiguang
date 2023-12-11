@@ -53,7 +53,7 @@
         <a-form-model-item label="项目一(10米手枪)">
           <a-select allowClear v-model="formData.project1">
             <a-select-option
-              v-for="item in list"
+              v-for="item in list.filter(i => i.projectGroup === formData.projectGroup)"
               :key="item.cproId"
               :value="item.projectName"
             >{{ item.projectName }}
@@ -75,7 +75,7 @@
             allowClear
             v-model="formData.project2">
             <a-select-option
-              v-for="item in list"
+              v-for="item in list.filter(i => i.projectGroup === formData.projectGroup)"
               :key="item.cproId"
               :value="item.projectName"
             >{{ item.projectName }}
@@ -95,7 +95,7 @@
             allowClear
             v-model="formData.project3">
             <a-select-option
-              v-for="item in list"
+              v-for="item in list.filter(i => i.projectGroup === formData.projectGroup)"
               :key="item.cproId"
               :value="item.projectName"
             >{{ item.projectName }}

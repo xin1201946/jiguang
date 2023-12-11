@@ -34,12 +34,10 @@
         </template>
         <template slot="operator">
           <a-space v-if="status === '0'">
-            <template v-show="t !== '全部'">
-              <a-button v-show="!t.includes('团体')" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
-            </template>
+            <a-button v-show="!t.includes('团体') && t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
             <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
-            <a-button v-show="t === '全部'" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
+            <a-button type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
           </a-space>
         </template>
         <a-table
@@ -56,11 +54,11 @@
           <template slot="operation" slot-scope="text, record">
             <a-space v-if="status === '0'">
               <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
-              <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+<!--              <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
             </a-space>
             <a-space v-else>
               <a-button disabled type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
-              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+<!--              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
             </a-space>
           </template>
         </a-table>
@@ -121,7 +119,8 @@ export default {
       treeList: [],
       status: '',
       selectedRowKeys: [],
-      projectName: ''
+      projectName: '',
+      rows: []
     }
   },
   computed: {
@@ -131,6 +130,7 @@ export default {
         selectedRowKeys: this.selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {
           this.selectedRowKeys = selectedRowKeys
+          this.rows = selectedRows
         }
       }
     }
@@ -243,10 +243,15 @@ export default {
     // 删除
     // 全部删除
     handleAllDeletes() {
+      const data = {}
+      if (this.t === '全部'){
+        data.contestId = this.contestId
+      }else {
+        data.contestId = this.contestId
+        data.cproId = this.id
+      }
       deleteMessage("请确认是否删除全部赛事人员信息").then(() => {
-        bizContestPlayerDeleteAll({
-          contestId: this.contestId
-        }).then(res => {
+        bizContestPlayerDeleteAll(data).then(res => {
           if (res.code === 200) {
             this.pagination.current = 1
             this.getList()
@@ -259,7 +264,15 @@ export default {
     // 批量删除
     handleDeletes () {
       deleteMessage("请确认是否删除当前选中的所有赛事人员信息").then(() => {
-        bizContestPlayerDelete(this.selectedRowKeys.join(',')).then(res => {
+        const data = {
+          id: this.selectedRowKeys.join(','),
+        }
+        if (this.t === '全部') {
+          data.contestId = this.contestId
+        }else{
+          data.cproId = this.id
+        }
+        bizContestPlayerDelete(data).then(res => {
           if (res.code === 200) {
             this.pagination.current = 1
             this.getList()
@@ -267,6 +280,7 @@ export default {
             this.$message.error(res.message)
           }
         })
+
       })
 
     },

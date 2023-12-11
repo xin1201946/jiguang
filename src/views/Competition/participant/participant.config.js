@@ -1,9 +1,9 @@
 import { getLabel } from '@/utils'
 export const sexData = [
-  {
+  /* {
     value: '0',
     label: '未知'
-  },
+  }, */
   {
     value: '1',
     label: '男'

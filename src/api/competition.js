@@ -45,7 +45,9 @@ export const bizContestProjectStageDelete = id => deleteAction(`bizContestProjec
  */
 
 export const bizContestPlayerGetImportTemplate = () => download("bizContestPlayer/getImportTemplate")
-export const bizContestPlayerDelete = (id) => deleteAction(`bizContestPlayer/delete/${id}`)
+export const bizContestPlayerDelete = (param) => {
+  return getAction(`bizContestPlayer/delete`, param)
+}
 // 全部删除
 export const bizContestPlayerDeleteAll = param => getAction("bizContestPlayer/deleteAll", param)
 

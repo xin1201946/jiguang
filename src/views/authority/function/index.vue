@@ -16,13 +16,7 @@
     <div>
       <a-tabs>
         <a-tab-pane key="1" tab="步枪">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
-            <a-space>
-              <a-button type="primary" @click="handleClick(1)">
-                更新
-              </a-button>
-            </a-space>
-          </div>
+
           <a-form-model
             :labelCol="{span: 6}"
             ref="form"
@@ -72,15 +66,17 @@
               </template>
             </a-row>
           </a-form-model>
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="手枪">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
             <a-space>
-              <a-button type="primary" @click="handleClick(2)">
+              <a-button type="primary" @click="handleClick(1)">
                 更新
               </a-button>
+              <a-button @click="handleReset(1)">重置</a-button>
             </a-space>
           </div>
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="手枪">
+
           <a-form-model
             :labelCol="{span: 6}"
             ref="form2"
@@ -130,15 +126,16 @@
               </template>
             </a-row>
           </a-form-model>
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="团队">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
             <a-space>
-              <a-button type="primary" @click="handleClick(3)">
+              <a-button type="primary" @click="handleClick(2)">
                 更新
               </a-button>
+              <a-button @click="handleReset(2)">重置</a-button>
             </a-space>
           </div>
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="团队">
           <a-form-model
             :labelCol="{span: 6}"
             ref="form3"
@@ -188,6 +185,14 @@
               </template>
             </a-row>
           </a-form-model>
+          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
+            <a-space>
+              <a-button type="primary" @click="handleClick(3)">
+                更新
+              </a-button>
+              <a-button @click="handleReset(3)">重置</a-button>
+            </a-space>
+          </div>
         </a-tab-pane>
       </a-tabs>
 
@@ -328,6 +333,57 @@ export default {
         })
       }
 
+    },
+    handleReset(num) {
+      if (num === 1) {
+        const data = this.formData.data.filter(item => item.configName.includes("步枪")).map(item => {
+          return {
+            ...item,
+            contestId: null,
+            cproId: null,
+            stageId: null
+          }
+        })
+        const dataAll = this.formData.data.filter(item => !item.configName.includes("步枪"))
+        this.formData.data = [...dataAll, ...data]
+        // this.$refs.form.resetFields()
+        this.$refs.form.clearValidate()
+        bizConfigUpdateBatch(this.formData.data)
+      }
+      if (num === 2) {
+        console.log(num)
+        const data = this.formData.data.filter(item => item.configName.includes("手枪")).map(item => {
+          const obj = {
+            ...item,
+            contestId: "",
+            cproId: "",
+            stageId: ""
+          }
+          return obj
+        })
+        const dataAll = this.formData.data.filter(item => !item.configName.includes("手枪"))
+        this.formData.data = [...dataAll, ...data]
+        // this.$refs.form2.resetFields()
+        this.$refs.form2.clearValidate()
+        bizConfigUpdateBatch(this.formData.data)
+      }
+      if (num === 3) {
+        const data = this.formData.data.filter(item => item.configName.includes("团队")).map(item => {
+          return {
+            ...item,
+            contestId: null,
+            cproId: null,
+            stageId: null
+          }
+        })
+        const dataAll = this.formData.data.filter(item => !item.configName.includes("!团队"))
+
+        this.formData.data = [...dataAll, ...data]
+
+        // this.$refs.form3.resetFields()
+        this.$refs.form3.clearValidate()
+        bizConfigUpdateBatch(this.formData.data)
+      }
     }
   }
 }
