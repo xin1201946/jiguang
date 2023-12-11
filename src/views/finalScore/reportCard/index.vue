@@ -57,8 +57,8 @@
         <template slot="operator">
           <a-space v-show="this.stageArr.length">
 <!--            :disabled="!data.length"-->
-            <a-button   type="primary" @click="handlePrint">成绩打印</a-button>
-            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>
+            <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
+<!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
           </a-space>
         </template>
         <template slot="default">

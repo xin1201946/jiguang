@@ -454,7 +454,7 @@ export default {
             </tr>
           </tfoot>
         </table>
-        <div style="position: fixed;bottom: 0;width: 100%;height: 100px">
+        <div style="position: fixed;bottom: 0px;width: 100%;height: 100px;left: 0px">
           <div style="height: 90px; width: 96%;border: 1px solid">
             <div>
               备注:
