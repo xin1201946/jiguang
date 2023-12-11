@@ -147,7 +147,9 @@ service.interceptors.response.use((response) => {
     Vue.prototype.$Jnotification.error({message: '系统提示', description: response.data.message})
   } */
   // console.log(response)
-  sessionStorage.setItem("fileName", response.headers["Content-Disposition"])
+  if (response.headers["Content-Disposition"]) {
+    sessionStorage.setItem("fileName", response.headers["Content-Disposition"])
+  }
   return response.data
 }, err)
 

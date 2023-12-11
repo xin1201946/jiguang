@@ -39,7 +39,7 @@
             </template>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
             <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
-            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
+<!--            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>-->
           </a-space>
         </template>
         <a-table

@@ -34,7 +34,6 @@
               :disabled="disabled"
               @click="handleEdit(record)"
             >编辑</a-button>-->
-<!--            :disabled="disabled"-->
             <a-button
               type="primary"
               size="small"
