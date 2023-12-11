@@ -363,7 +363,6 @@ export default {
         })
         const dataAll = this.formData.data.filter(item => !item.configName.includes("手枪"))
         this.formData.data = [...dataAll, ...data]
-        // this.$refs.form2.resetFields()
         this.$refs.form2.clearValidate()
         bizConfigUpdateBatch(this.formData.data)
       }
