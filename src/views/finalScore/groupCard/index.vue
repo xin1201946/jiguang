@@ -352,7 +352,7 @@ export default {
     // 成绩打印
     bodyContent() {
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0].label
+      const label = this.list.filter(item => item.value === this.tree)[0]
       // todo 没有阶段数组不渲染打印按钮, 如果显示了这里需要修改
       const stageName = this.data[0].finalList[0].stageName
       const project = this.list.filter(item => item.value === this.tree)[0]
@@ -428,7 +428,10 @@ export default {
       <div>
         <h1 style="text-align: center">${contestName}</h1>
         <h2 style="text-align: center">${stageName}</h2>
-        <h3 style="text-align: center">${label}</h3>
+        <h3 style="text-align: center">
+          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
+          ${label.projectName}
+        </h3>
         <h4 style="text-align: center">团体</h4>
         <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;">

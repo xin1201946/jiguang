@@ -527,7 +527,7 @@ export default {
     // 淘汰
     content(){
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0].label
+      const label = this.list.filter(item => item.value === this.tree)[0]
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
       const project = this.list.filter(item => item.value === this.tree)[0]
       let g = 0
@@ -622,7 +622,10 @@ export default {
       <div>
         <h1 style="text-align: center">${contestName}</h1>
         <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-        <h3 style="text-align: center">${label}</h3>
+        <h3 style="text-align: center">
+          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
+          ${label.projectName}
+        </h3>
         <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
