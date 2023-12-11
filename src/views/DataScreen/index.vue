@@ -450,7 +450,6 @@ export default {
     getData() {
       if (this.state.indexOf('个人资格赛') != -1) {
         littleScreen({ type: this.state }).then((res) => {
-          console.log(res)
           this.personallyList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data.projectName
@@ -464,7 +463,6 @@ export default {
             },
             {
               name: '代表队',
-              width: '120px',
             },
             {
               name: '靶位',
@@ -504,7 +502,7 @@ export default {
             }
           })
         })
-      } else if (this.state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1) {
+      } else if (this.state.indexOf('个人决赛') != -1 || this.state.indexOf('个人淘汰赛') != -1) {
         littleScreen({ type: this.state }).then((res) => {
           this.personallyFinalsList.List = [[]]
           let data = res.result
@@ -519,7 +517,6 @@ export default {
             },
             {
               name: '代表队',
-              width: '120px',
             },
             {
               name: '靶位',
