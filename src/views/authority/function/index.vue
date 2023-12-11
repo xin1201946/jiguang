@@ -18,7 +18,7 @@
         <a-tab-pane key="1" tab="步枪">
           <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
             <a-space>
-              <a-button type="primary" @click="handleClick">
+              <a-button type="primary" @click="handleClick(1)">
                 更新
               </a-button>
             </a-space>
@@ -74,14 +74,14 @@
         <a-tab-pane key="2" tab="手枪">
           <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
             <a-space>
-              <a-button type="primary" @click="handleClick">
+              <a-button type="primary" @click="handleClick(2)">
                 更新
               </a-button>
             </a-space>
           </div>
           <a-form-model
             :labelCol="{span: 6}"
-            ref="form"
+            ref="form2"
             :model="formData"
             :wrapperCol="{span: 18}"
           >
@@ -130,14 +130,14 @@
         <a-tab-pane key="3" tab="团队">
           <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
             <a-space>
-              <a-button type="primary" @click="handleClick">
+              <a-button type="primary" @click="handleClick(3)">
                 更新
               </a-button>
             </a-space>
           </div>
           <a-form-model
             :labelCol="{span: 6}"
-            ref="form"
+            ref="form3"
             :model="formData"
             :wrapperCol="{span: 18}"
           >
@@ -275,24 +275,53 @@ export default {
         this.formData.data[i].stageIds = res.result
       })
     },
-    handleClick() {
+    handleClick(num) {
       const list = JSON.parse(JSON.stringify(this.formData.data))
       const arr = list.map(item => {
         delete item.stageIds
         delete item.cproIds
         return item
       })
-      this.$refs.form.validate(v => {
-        if (v) {
-          bizConfigUpdateBatch(arr).then(res => {
-            if (res.code === 200) {
-              this.$message.success(res.message)
-            }else {
-              this.$message.error(res.message)
-            }
-          })
-        }
-      })
+      if (num === 1) {
+        this.$refs.form.validate(v => {
+          if (v) {
+            bizConfigUpdateBatch(arr).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+              }else {
+                this.$message.error(res.message)
+              }
+            })
+          }
+        })
+      }
+      if (num === 2) {
+        this.$refs.form2.validate(v => {
+          if (v) {
+            bizConfigUpdateBatch(arr).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+              }else {
+                this.$message.error(res.message)
+              }
+            })
+          }
+        })
+      }
+      if (num === 3) {
+        this.$refs.form3.validate(v => {
+          if (v) {
+            bizConfigUpdateBatch(arr).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+              }else {
+                this.$message.error(res.message)
+              }
+            })
+          }
+        })
+      }
+
     }
   }
 }
