@@ -376,11 +376,11 @@ export default {
             stageId: null
           }
         })
-        const dataAll = this.formData.data.filter(item => !item.configName.includes("!团队"))
+        const dataAll = this.formData.data.filter(item => !item.configName.includes("团队"))
 
         this.formData.data = [...dataAll, ...data]
 
-        // this.$refs.form3.resetFields()
+        this.$refs.form3.resetFields()
         this.$refs.form3.clearValidate()
         bizConfigUpdateBatch(this.formData.data)
       }
