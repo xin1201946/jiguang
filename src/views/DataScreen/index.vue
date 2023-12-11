@@ -471,36 +471,42 @@ export default {
               name: '姓名',
             },
           ]
-          for (let i = 0; i < data.shootGroups; i++) {
-            this.personallyList.title.push({
-              name: `${i + 1}0`,
-            })
+          if (data.shootGroups) {
+            for (let i = 0; i < data.shootGroups; i++) {
+              this.personallyList.title.push({
+                name: `${i + 1}0`,
+              })
+            }
           }
           this.personallyList.title.push({
             name: '总环数',
           })
-          data.players.forEach((item, index) => {
-            let obj = {
-              id: item.playerName,
-              排名: item.rank,
-              代表队: item.groupName,
-              靶位: item.targetSite,
-              姓名: item.playerName,
-              总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-            }
-            item.groupList.forEach((e, v) => {
-              obj[`${v + 1}0`] = e.groupTotal
+          if (data.players) {
+            data.players.forEach((item, index) => {
+              let obj = {
+                id: item.playerName,
+                排名: item.rank,
+                代表队: item.groupName,
+                靶位: item.targetSite,
+                姓名: item.playerName,
+                总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+              }
+              item.groupList.forEach((e, v) => {
+                obj[`${v + 1}0`] = e.groupTotal
+              })
+              if (index < 8) {
+                this.personallyList.List[0].push(obj)
+              } else if (index < 16 && index > 7) {
+                this.personallyList.List[1].push(obj)
+              } else if (index < 24 && index > 15) {
+                this.personallyList.List[2].push(obj)
+              } else if (index < 32 && index > 23) {
+                this.personallyList.List[3].push(obj)
+              }
             })
-            if (index < 8) {
-              this.personallyList.List[0].push(obj)
-            } else if (index < 16 && index > 7) {
-              this.personallyList.List[1].push(obj)
-            } else if (index < 24 && index > 15) {
-              this.personallyList.List[2].push(obj)
-            } else if (index < 32 && index > 23) {
-              this.personallyList.List[3].push(obj)
-            }
-          })
+          } else {
+            this.personallyList.List = [[], [], [], []]
+          }
         })
       } else if (this.state.indexOf('个人决赛') != -1 || this.state.indexOf('个人淘汰赛') != -1) {
         littleScreen({ type: this.state }).then((res) => {
@@ -525,35 +531,38 @@ export default {
               name: '姓名',
             },
           ]
-          data.shoots.forEach((item) => {
-            this.personallyFinalsList.title.push({
-              name: item,
-              width: '70px',
+          if (data.shoots) {
+            data.shoots.forEach((item) => {
+              this.personallyFinalsList.title.push({
+                name: item,
+                width: '70px',
+              })
             })
-          })
+          }
           this.personallyFinalsList.title.push({
             name: '总环数',
           })
-          data.players.forEach((item, index) => {
-            let obj = {
-              id: item.playerName,
-              排名: item.rank,
-              代表队: item.groupName,
-              靶位: item.targetSite,
-              姓名: item.playerName,
-              总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-            }
-            item.groupList.forEach((e, v) => {
-              obj[e.groupCount] = e.groupTotal
+          if (data.players) {
+            data.players.forEach((item, index) => {
+              let obj = {
+                id: item.playerName,
+                排名: item.rank,
+                代表队: item.groupName,
+                靶位: item.targetSite,
+                姓名: item.playerName,
+                总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+              }
+              item.groupList.forEach((e, v) => {
+                obj[e.groupCount] = e.groupTotal
+              })
+              this.personallyFinalsList.List[0].push(obj)
             })
-            this.personallyFinalsList.List[0].push(obj)
-          })
+          } else {
+            this.personallyFinalsList.List = [[]]
+          }
         })
       } else if (['步枪团体排名', '手枪团体排名'].indexOf(this.state) != -1) {
-        getTeamScoresAPI({
-          contestId: 4,
-          cproStageId: 4,
-        }).then((res) => {
+        getTeamScoresAPI({ type: this.state }).then((res) => {
           this.teamList.List = [[], [], [], []]
           let data = res.result
           this.projectName = data[0].projectName
@@ -608,20 +617,23 @@ export default {
           this.projectName = data[0].projectName
           this.stageName = data[0].stageName
           this.stageGroup = data[0].projectGroup
-          data.forEach((item, index) => {
-            let obj = {
-              排名: index + 1,
-              代表队: item.groupName,
-              姓名: [item.player1Name, item.player2Name],
-              发序: item.shootCode ? item.shootCode : 0,
-              环数: [item.player1Score ? item.player1Score : 0, item.player2Score ? item.player2Score : 0],
-              // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
-              总环数: item.stageTotal,
-              总分: item.total,
-            }
-            console.log(this.mixeTeamFinalsList.List[0])
-            this.mixeTeamFinalsList.List[0].push(obj)
-          })
+          if (data) {
+            data.forEach((item, index) => {
+              let obj = {
+                排名: index + 1,
+                代表队: item.groupName,
+                姓名: [item.player1Name, item.player2Name],
+                发序: item.shootCode ? item.shootCode : 0,
+                环数: [item.player1Score ? item.player1Score : 0, item.player2Score ? item.player2Score : 0],
+                // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
+                总环数: item.stageTotal,
+                总分: item.total,
+              }
+              this.mixeTeamFinalsList.List[0].push(obj)
+            })
+          } else {
+            this.mixeTeamFinalsList.List = [[]]
+          }
         })
       } else if (this.state.indexOf('综合排名') !== -1) {
         getTeamTotalScores({
@@ -694,9 +706,12 @@ v-deep ::-webkit-scrollbar {
         font-size: 24px;
         font-weight: bold;
       }
-      .wrap {
-        width: 300px;
-        height: 300px;
+      .shouqiang {
+        width: 295px;
+        height: 295px;
+      }
+      .buqiang{
+        
       }
     }
   }
