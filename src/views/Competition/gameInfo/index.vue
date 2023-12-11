@@ -32,8 +32,9 @@
             <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary" @click="nextStageHandle">结束阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
+            <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
-            <a-button v-if="group !== null" type="primary" @click="handleExports">导出</a-button>
+
           </a-space>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
@@ -551,7 +552,7 @@ export default {
         const a = document.createElement('a')
         a.style.display = 'none'
         a.href = url
-        a.setAttribute('download', '分组.pdf')
+        a.setAttribute('download', '靶位导出.pdf')
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)

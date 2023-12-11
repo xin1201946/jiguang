@@ -21,6 +21,9 @@
         :columns="columns"
         :scroll="{ y: 200, x: 1000}"
       >
+        <template slot="targetSite" slot-scope="text, record, index">
+          <a-input :disabled="disabled" oninput="value=value.replace(/[^\d]/g,'')" @focus="handleBindFocus(record, index)" v-model="record.targetSite"></a-input>
+        </template>
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
 <!--            <a-button
@@ -31,6 +34,7 @@
               :disabled="disabled"
               @click="handleEdit(record)"
             >编辑</a-button>-->
+<!--            :disabled="disabled"-->
             <a-button
               type="primary"
               size="small"
@@ -60,7 +64,11 @@
 </template>
 
 <script>
-import { bizContestProjectDeviceDelete, bizContestProjectDevicePageList } from '@api/competition'
+import {
+  bizContestProjectDeviceDelete,
+  bizContestProjectDevicePageList,
+  bizContestProjectDeviceUpdate
+} from '@api/competition'
 import { deleteMessage } from '@/utils'
 import ProjectPhaseDeviceTableModal from '@views/Competition/projectPhase/model/projectPhaseDeviceTableModal.vue'
 import ProjectPhaseDeviceTableModalBind
@@ -84,7 +92,10 @@ const columns = [
   {
     title: "靶位",
     dataIndex: "targetSite",
-    align: 'center'
+    align: 'center',
+    scopedSlots: {
+      customRender: 'targetSite'
+    },
   },
   {
     title: '操作',
@@ -151,7 +162,32 @@ export default {
       this.$refs.modal.edit(record,this.id)
     },
     handleBind(record) {
-      this.$refs.bind.bind(record, this.id)
+      bizContestProjectDeviceUpdate({
+        ...record,
+        cproId: this.id,
+        contestId: this.$route.query.id
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('靶位绑定成功')
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+      // this.$refs.bind.bind(record, this.id)
+    },
+    handleBindFocus(record, index) {
+      if (!record.targetSite){
+        if (index === 0){
+          record.targetSite = "1"
+        }else {
+          // console.log(this.data[index - 1].targetSite)
+          if (this.data[index - 1].targetSite.toString().length) {
+            record.targetSite = Number(this.data[index - 1].targetSite) + 1
+          }else {
+            record.targetSite = index + 1
+          }
+        }
+      }
     },
     handleDelete(record) {
       deleteMessage('删除项目设备,是否删除该条信息').then(() => {
@@ -205,7 +241,7 @@ export default {
 <style scoped lang="less">
 /deep/.ant-table-body{
   &::-webkit-scrollbar{
-    display: block;
+    display: block !important;
     width: 0 !important;
   }
 }
