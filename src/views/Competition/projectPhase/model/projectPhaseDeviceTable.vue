@@ -22,7 +22,13 @@
         :scroll="{ y: 200, x: 1000}"
       >
         <template slot="targetSite" slot-scope="text, record, index">
-          <a-input :disabled="disabled" oninput="value=value.replace(/[^\d]/g,'')" @focus="handleBindFocus(record, index)" v-model="record.targetSite"></a-input>
+          <a-input
+            :disabled="disabled"
+            oninput="value=value.replace(/[^\d]/g,'')"
+            @focus="handleBindFocus(record, index)"
+            v-model="record.targetSite"
+            @blur="handleBind(record)"
+          ></a-input>
         </template>
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -34,14 +40,14 @@
               :disabled="disabled"
               @click="handleEdit(record)"
             >编辑</a-button>-->
-            <a-button
+<!--            <a-button
               type="primary"
               size="small"
               ghost
               icon="bind"
               :disabled="disabled"
               @click="handleBind(record)"
-            >绑定靶位</a-button>
+            >绑定靶位</a-button>-->
             <a-button
               type="danger"
               :disabled="disabled"

@@ -46,6 +46,9 @@ export const bizContestProjectStageDelete = id => deleteAction(`bizContestProjec
 
 export const bizContestPlayerGetImportTemplate = () => download("bizContestPlayer/getImportTemplate")
 export const bizContestPlayerDelete = (id) => deleteAction(`bizContestPlayer/delete/${id}`)
+// 全部删除
+export const bizContestPlayerDeleteAll = param => getAction("bizContestPlayer/deleteAll", param)
+
 export const bizContestProjectPlayerPageList = (data) => postAction('bizContestProjectPlayer/page/list', data)
 export const bizContestPlayerList = data => postAction("bizContestProjectPlayer/list", data)
 export const bizContestPlayerUpdate = data => postAction("bizContestPlayer/update", data)
@@ -132,3 +135,4 @@ export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalS
 // 导出抽签pdf
 // downloadFile
 export const contest_processGetSitePdf = param => downFile("contest-process/getSitePdf",param)
+

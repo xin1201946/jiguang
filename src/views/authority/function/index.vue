@@ -3,19 +3,26 @@
     <template slot="operator">
 <!--      <a-row :gutter="24">-->
 <!--        <a-col :span="18">-->
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;">
-            <a-space>
-              <a-button type="primary" @click="handleClick">
-                更新
-              </a-button>
-            </a-space>
-          </div>
+<!--          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;">-->
+<!--            <a-space>-->
+<!--              <a-button type="primary" @click="handleClick">-->
+<!--                更新-->
+<!--              </a-button>-->
+<!--            </a-space>-->
+<!--          </div>-->
 <!--        </a-col>-->
 <!--      </a-row>-->
     </template>
     <div>
       <a-tabs>
         <a-tab-pane key="1" tab="步枪">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+            <a-space>
+              <a-button type="primary" @click="handleClick">
+                更新
+              </a-button>
+            </a-space>
+          </div>
           <a-form-model
             :labelCol="{span: 6}"
             ref="form"
@@ -65,6 +72,13 @@
           </a-form-model>
         </a-tab-pane>
         <a-tab-pane key="2" tab="手枪">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+            <a-space>
+              <a-button type="primary" @click="handleClick">
+                更新
+              </a-button>
+            </a-space>
+          </div>
           <a-form-model
             :labelCol="{span: 6}"
             ref="form"
@@ -114,6 +128,13 @@
           </a-form-model>
         </a-tab-pane>
         <a-tab-pane key="3" tab="团队">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+            <a-space>
+              <a-button type="primary" @click="handleClick">
+                更新
+              </a-button>
+            </a-space>
+          </div>
           <a-form-model
             :labelCol="{span: 6}"
             ref="form"

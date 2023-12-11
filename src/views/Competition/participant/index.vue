@@ -39,7 +39,7 @@
             </template>
             <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
             <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
-<!--            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>-->
+            <a-button v-show="t === '全部'" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
           </a-space>
         </template>
         <a-table
@@ -90,7 +90,7 @@ import {
   bizContestPlayerDelete,
   bizContestPlayerGetImportTemplate,
   bizContestProjectPlayerPageList,
-  bizContestPlayerList, bizContestProjectPlayerDelete
+  bizContestPlayerList, bizContestProjectPlayerDelete, bizContestPlayerDeleteAll
 } from '@api/competition'
 export default {
   name: 'participant',
@@ -154,20 +154,6 @@ export default {
     this.status = this.$route.query.status
   },
   methods: {
-    handleDeletes () {
-    //   bizContestPlayerDelete
-      deleteMessage("请确认是否删除当前选中的所有赛事人员信息").then(() => {
-        bizContestPlayerDelete(this.selectedRowKeys.join(',')).then(res => {
-          if (res.code === 200) {
-            this.pagination.current = 1
-            this.getList()
-          }else {
-            this.$message.error(res.message)
-          }
-        })
-      })
-
-    },
     // 获取赛事id
     handleContest(contestId, id) {
       this.contestId = contestId
@@ -180,15 +166,9 @@ export default {
     // 左侧树回调方法
     handleTreeChange(data) {
       this.t = data.title
-      // console.log(data)
-      // console.log(data)
-      // console.log(data)
-      // console.log(this.t)
-      console.log(data)
       this.id = data.cproId
       this.pagination.current = 1
       this.$nextTick(() => {
-        // console.log(data)
         if (data.title) {
           this.columns = participantTableColumnsAll
         }else {
@@ -205,8 +185,6 @@ export default {
     },
     // 点击返回赛事列表
     handleBack() {
-      // this.closeCurrent()
-      // this.$route.go(-1)
       this.$nextTick(() => {
         this.$router.push('/competition/competitionList')
         this.closeCurrent()
@@ -262,13 +240,37 @@ export default {
         this.$message.error("请先选择左侧项目, 再点击编辑人员名单按钮")
       }
     },
-    // playerId
     // 删除
+    // 全部删除
     handleAllDeletes() {
       deleteMessage("请确认是否删除全部赛事人员信息").then(() => {
-
+        bizContestPlayerDeleteAll({
+          contestId: this.contestId
+        }).then(res => {
+          if (res.code === 200) {
+            this.pagination.current = 1
+            this.getList()
+          }else {
+            this.$message.error(res.message)
+          }
+        })
       })
     },
+    // 批量删除
+    handleDeletes () {
+      deleteMessage("请确认是否删除当前选中的所有赛事人员信息").then(() => {
+        bizContestPlayerDelete(this.selectedRowKeys.join(',')).then(res => {
+          if (res.code === 200) {
+            this.pagination.current = 1
+            this.getList()
+          }else {
+            this.$message.error(res.message)
+          }
+        })
+      })
+
+    },
+    // 单个删除
     handleDelete(record) {
       if (this.t === '全部') {
         deleteMessage('请确认是否删除当前赛事人员信息').then(() => {
@@ -320,7 +322,6 @@ export default {
         .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
     handleTreeList(list) {
-      // console.log(list)
       this.treeList = list
     },
     handleAdds() {
