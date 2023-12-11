@@ -586,21 +586,16 @@ export default {
               id: item.playerName,
               排名: index + 1,
               代表队: item.groupName,
-              总环数: `${item.stageTotal}-${item.goodTotal ? item.goodTotal : 0}x`,
+              总环数: `${item.stageTotal}`,
             }
-            // if (item.detailScoreList) {
-            //   item.detailScoreList.forEach((e, v) => {
-            //     obj[`${v + 1}0`] = e.gunGroupTotal
-            //   })
-            // }
             if (index < 8) {
-              this.personallyList.List[0].push(obj)
+              this.teamList.List[0].push(obj)
             } else if (index < 16 && index > 7) {
-              this.personallyList.List[1].push(obj)
+              this.teamList.List[1].push(obj)
             } else if (index < 24 && index > 15) {
-              this.personallyList.List[2].push(obj)
+              this.teamList.List[2].push(obj)
             } else if (index < 32 && index > 23) {
-              this.personallyList.List[3].push(obj)
+              this.teamList.List[3].push(obj)
             }
           })
         })
