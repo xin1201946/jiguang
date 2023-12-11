@@ -17,7 +17,7 @@ import Antd, { version } from 'ant-design-vue'
 // console.log('ant-design-vue version:', version)
 
 import Viser from 'viser-vue'
-import 'ant-design-vue/dist/antd.less';  // or 'ant-design-vue/dist/antd.less'
+import 'ant-design-vue/dist/antd.less'  // or 'ant-design-vue/dist/antd.less'
 
 import '@/permission' // permission control
 import '@/utils/filter' // base filter
@@ -43,15 +43,17 @@ import config from '@/defaultSettings'
 
 import JDictSelectTag from './components/dict/index.js'
 import hasPermission from '@/utils/hasPermission'
-import vueBus from '@/utils/vueBus';
+import vueBus from '@/utils/vueBus'
 import JeecgComponents from '@/components/jeecg/index'
 import '@/assets/less/JAreaLinkage.less'
 import VueAreaLinkage from 'vue-area-linkage'
 import '@/components/jeecg/JVxeTable/install'
 import '@/components/JVxeCells/install'
+import getDpi from '@/utils/getDpi'
 //表单验证
 import { rules } from '@/utils/rules'
 Vue.prototype.rules = rules
+Vue.prototype.$getDpi = getDpi
 Vue.config.productionTip = false
 Vue.use(Storage, config.storageOptions)
 Vue.use(Antd)
@@ -61,9 +63,9 @@ Vue.use(hasPermission)
 Vue.use(JDictSelectTag)
 Vue.use(Print)
 Vue.use(preview)
-Vue.use(vueBus);
-Vue.use(JeecgComponents);
-Vue.use(VueAreaLinkage);
+Vue.use(vueBus)
+Vue.use(JeecgComponents)
+Vue.use(VueAreaLinkage)
 Vue.use(dataV)
 SSO.init(() => {
   main()
@@ -72,7 +74,7 @@ function main() {
   new Vue({
     router,
     store,
-    mounted () {
+    mounted() {
       store.commit('SET_SIDEBAR_TYPE', Vue.ls.get(SIDEBAR_TYPE, true))
       store.commit('TOGGLE_THEME', Vue.ls.get(DEFAULT_THEME, config.navTheme))
       store.commit('TOGGLE_LAYOUT_MODE', Vue.ls.get(DEFAULT_LAYOUT_MODE, config.layout))
@@ -83,7 +85,7 @@ function main() {
       store.commit('TOGGLE_WEAK', Vue.ls.get(DEFAULT_COLOR_WEAK, config.colorWeak))
       store.commit('TOGGLE_COLOR', Vue.ls.get(DEFAULT_COLOR, config.primaryColor))
       store.commit('SET_TOKEN', Vue.ls.get(ACCESS_TOKEN))
-      store.commit('SET_MULTI_PAGE',Vue.ls.get(DEFAULT_MULTI_PAGE,config.multipage))
+      store.commit('SET_MULTI_PAGE', Vue.ls.get(DEFAULT_MULTI_PAGE, config.multipage))
     },
     render: h => h(App)
   }).$mount('#app')

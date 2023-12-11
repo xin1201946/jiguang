@@ -36,17 +36,15 @@
             <a-button v-if="group !== null" type="primary" @click="handleExports">导出</a-button>
           </a-space>
         </template>
-        <div class="gameInfoTables" v-show="groupActive">
+        <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
-            <!-- <a-radio-group v-model="group" @change="radioChangeHandle">
-              <a-radio-button >{{ numToCapital(item.group) }}组</a-radio-button>
-            </a-radio-group> -->
             <a-tabs v-model="group" @change="radioChangeHandle">
               <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group" :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
             <a-space style="margin-bottom: 20px;">
+              <span>总人数：{{this.dataSource.length}}</span>
               <span v-if="status">当前状态：{{status}}</span>
               <a-button @click.stop="handleZhunbei(i)">准备</a-button>
               <a-button @click.stop="handleShishe(i)" v-if="isAdjustment == '1'">试射</a-button>
@@ -65,7 +63,9 @@
             </a-table>
           </div>
         </div>
-        <!-- :dataSource="dataSource" -->
+        <a-space style="margin-bottom: 20px;" v-if="!groupActive && this.dataSource.length != 0">
+          <span>总人数：{{this.dataSource.length}}</span>
+        </a-space>
         <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource" :pagination="false">
           <template slot="operation">
 
@@ -107,7 +107,7 @@ import {
   stopPlayer,
   penalty,
   editStagePlayer,
-  contest_processGetSitePdf
+  contest_processGetSitePdf,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 import BizMixins from '@views/biz/bizMixins'
@@ -191,7 +191,7 @@ export default {
         playerId: e.playerId, //运动员id
         shootCode: e.shootCode, //发序
         score: e.score, //环数
-        remarkPenalty: e.remarkPenalty //备注
+        remarkPenalty: e.remarkPenalty, //备注
       }).then((res) => {
         console.log(res)
         if (res.success) {
@@ -543,15 +543,15 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id,
-        group: this.group// 组
+        group: this.group, // 组
       }
-      contest_processGetSitePdf(data).then(res => {
-        const blob = new Blob([res], {type: 'text/plain'})
+      contest_processGetSitePdf(data).then((res) => {
+        const blob = new Blob([res], { type: 'text/plain' })
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.style.display = 'none'
         a.href = url
-        a.setAttribute('download', "分组.pdf")
+        a.setAttribute('download', '分组.pdf')
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)

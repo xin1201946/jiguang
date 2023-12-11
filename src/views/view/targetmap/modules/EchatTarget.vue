@@ -70,18 +70,22 @@
       </g>
     </g>
     <g class="dot">
-      <circle v-for="(item, i) in dots"></circle>
+      <circle v-for="(item, i) in dots" :key="i" r="6" fill="red" :cx="item.x" :cy="item.y">
+      </circle>
     </g>
   </svg>
 </template>
 
 <script>
 export default {
+  props: {
+    dots: {
+      type: [Object, Array],
+    },
+  },
   name: 'echarTarget',
-  data(){
-    return {
-      dots: []
-    }
+  data() {
+    return {}
   },
   mounted() {
     const svg = this.$refs.svg
@@ -94,35 +98,40 @@ export default {
      */
     setOption(option) {
       this.dots = option
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped lang="less">
-*{
+* {
   user-select: none;
 }
-.target{
-  circle{
+.dian {
+  width: 10px;
+  height: 10px;
+  background: red;
+}
+.target {
+  circle {
     stroke-width: 6;
     fill: transparent;
   }
   circle:nth-of-type(1),
   circle:nth-of-type(2),
-  circle:nth-of-type(3){
+  circle:nth-of-type(3) {
     stroke: #ccc;
   }
-  circle:nth-of-type(4){
-    fill: #8F94A2;
-    stroke: #8F94A2;
+  circle:nth-of-type(4) {
+    fill: #8f94a2;
+    stroke: #8f94a2;
   }
   circle:nth-of-type(5),
   circle:nth-of-type(6),
   circle:nth-of-type(7),
   circle:nth-of-type(8),
   circle:nth-of-type(9),
-  circle:nth-of-type(10){
+  circle:nth-of-type(10) {
     stroke: #fff;
   }
   g:nth-of-type(4),
@@ -131,9 +140,9 @@ export default {
   g:nth-of-type(7),
   g:nth-of-type(8),
   g:nth-of-type(9),
-  g:nth-of-type(10){
-    text{
-      fill: #fff
+  g:nth-of-type(10) {
+    text {
+      fill: #fff;
     }
   }
 }

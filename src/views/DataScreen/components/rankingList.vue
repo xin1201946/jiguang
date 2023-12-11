@@ -10,7 +10,7 @@
         <div class="content">
           <div v-if="data[0]">
             <p style="color: #ef2928">①</p>
-            <p>{{data[0].groupName}}</p>
+            <p> {{data[0].groupName}}</p>
             <p>{{data[0].total}}</p>
           </div>
           <div v-if="data[1]">
@@ -100,6 +100,10 @@ export default {
             flex: 1;
             text-align: center;
             font-size: 26px;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
         }
       }
@@ -125,6 +129,10 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
+        font-size: 26px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
     .two {
@@ -142,6 +150,10 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
+        font-size: 26px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
     .three {
@@ -159,6 +171,10 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
+        font-size: 26px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
   }

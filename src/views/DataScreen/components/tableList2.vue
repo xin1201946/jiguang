@@ -1,9 +1,5 @@
 <template>
   <div class="common">
-    <!-- <h1 class="preface" v-if="type === '混团赛金铜牌赛'">
-      发序: 1
-    </h1> -->
-
     <div class="common-tit">
       <p v-for="(item, index) in TitleList" :key="index" :style="item.width ? `width:${item.width};flex:none` : ''">
         {{ item.name }}
@@ -66,6 +62,10 @@ export default {
     initialization() {
       if (this.type === '个人赛' || this.type === '个人赛淘汰赛') {
         this.defaultList()
+      } else if (this.type === '团队赛') {
+        this.teamtList()
+      } else if (this.type === '混团赛' || this.type === '混团赛金铜牌赛') {
+        this.mixeTeamList()
       }
       this.$forceUpdate()
     },
@@ -105,11 +105,11 @@ export default {
                 if (this.data[i]['排名'] == e['排名']) {
                   this.TableList[index] = {
                     ...this.data[i],
-                    position: e.position,
+                    position: i * 50,
                   }
                   // console.log('相同', this.data[i])
                 } else {
-                  // console.log('列表中存在，但位置改变', this.data, this.data[i], i, i * 55)
+                  // console.log('列表中存在，但位置改变', this.data, this.data[i], i, i * 50)
                   this.TableList[index] = {
                     ...this.data[i],
                     position: i * 50,
@@ -151,11 +151,12 @@ p {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    // background: rgba(255, 255, 255, 0.3);
     p {
       flex: 1;
       font-weight: 1000;
       font-size: 24px;
-      line-height: 50px;
+      line-height: 40px;
       margin-bottom: 0;
     }
   }
@@ -166,12 +167,14 @@ p {
     overflow: hidden;
     &-item {
       display: flex;
+      width: 100%;
       text-align: center;
       overflow: hidden;
       transition: 0.5s;
       box-shadow: 0 1px 10px 0 #7ecdfa;
       div {
         flex: 1;
+        // background: #ef4b4c;
         font-size: 24px;
         line-height: 40px;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -182,7 +185,8 @@ p {
       }
       p {
         flex: 1;
-        font-size: 20px;
+        font-size: 22px;
+        // background: #3d6198;
 
         text-overflow: ellipsis;
         overflow: hidden;
@@ -191,6 +195,8 @@ p {
         background: #449dd1;
         border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         box-sizing: border-box;
+        // border-top: 1px solid #fff;
+        // box-shadow: 0 5px 10px 0 #000;
       }
     }
   }

@@ -6,7 +6,7 @@
         <img class="logo" src="../../assets/logo1.png" alt="" />
         <div>
           <h1 class="theme">2023年河北省青少年射击锦标赛</h1>
-          <h1 class="title" v-if="state.indexOf('排名') == -1">{{ stageName }}-{{ projectName }}-{{stageGroup}}</h1>
+          <h1 class="title" v-if="['团队综合排名','混团赛排名'].indexOf(state) == -1">{{ stageName }}-{{ projectName }}-{{stageGroup}}</h1>
         </div>
       </div>
       <div class="right">
@@ -15,15 +15,7 @@
       <dv-decoration-10 style="width: 100%; height: 5px" />
     </div>
     <!-- 个人资格赛 -->
-    <div class="personallyLoading" v-if="state.indexOf('个人资格赛') != -1 && !isPersonally">
-      <div>即将开始</div>
-      <div>2023年河北省青少年射击锦标赛</div>
-      <div>
-        {{ stageName }}-{{ projectName }}-{{stageGroup}}
-        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
-      </div>
-    </div>
-    <div class="personally" v-if="state.indexOf('个人资格赛') != -1 && isPersonally">
+    <div class="personally" v-if="state.indexOf('个人资格赛') != -1">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[0]" />
@@ -40,81 +32,81 @@
       </a-carousel>
     </div>
     <!-- 个人赛淘汰赛 -->
-    <div class="personallyLoading" v-if="state.indexOf('个人淘汰赛') != -1 && !isPersonallyFinals">
-      <div>即将开始</div>
-      <div>2023年河北省青少年射击锦标赛</div>
-      <div>
-        {{ stageName }}-{{ projectName }}-{{stageGroup}}
-        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
-      </div>
-    </div>
-    <div class="personally" v-if="state.indexOf('个人淘汰赛') != -1 && isPersonallyFinals">
+    <div class="personally" v-if="state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1">
       <a-carousel style="width: 100%; min-height: 100%">
         <div>
           <TableListVue2 type="个人赛淘汰赛" :TitleList="personallyFinalsList.title" :List="personallyFinalsList.List[0]" />
         </div>
       </a-carousel>
       <div class="targetImage">
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget :dots="[{x: 20, y: 33},{x: 200, y: 330}]" />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="name">某某某</div>
-          <div class="wrap">
-            <EchatTarget />
+        <div class="flex">
+          <div class="box">
+            <div class="name">某某某</div>
+            <div class="wrap">
+              <EchatTarget />
+            </div>
           </div>
         </div>
       </div>
     </div>
     <!-- 团队赛 -->
-    <div class="teamLoading" v-if="state.indexOf('团体排名') != -1 && !isTeam">
-      <div>即将开始</div>
-      <div>2023年河北省青少年射击团队锦标赛</div>
-      <div>
-        {{ stageName }}-{{ projectName }}-{{stageGroup}}
-        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
-      </div>
-    </div>
-    <div class="team" v-if="state.indexOf('团体排名') != -1 && isTeam">
+    <div class="team" v-if="state.indexOf('团体排名') != -1">
       <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[0]" />
@@ -130,40 +122,21 @@
         </div>
       </a-carousel>
     </div>
-    <!-- 混团赛金铜牌赛 -->
-    <div class="mixeTeamFinalsLoading" v-if="[
-          '手枪混团铜牌赛排名',
-          '手枪混团金牌赛排名',
-          '步枪混团金牌赛排名',
-          '步枪混团铜牌赛排名',
-        ].indexOf(state) != -1 && !isMixeTeamFinals">
-      <div>即将开始</div>
-      <div>2023年河北省青少年射击团队锦标赛</div>
-      <div>
-        {{ stageName }}-{{ projectName }}-{{stageGroup}}
-        <dv-decoration-9 style="width: 300px; height: 300px; font-size: 20px">加载中</dv-decoration-9>
-      </div>
-    </div>
+    <!-- 混团 -->
     <div class="mixeTeamFinals" v-if="[
           '手枪混团铜牌赛排名',
           '手枪混团金牌赛排名',
           '步枪混团金牌赛排名',
           '步枪混团铜牌赛排名',
-        ].indexOf(state) != -1 && isMixeTeamFinals">
-      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
+        ].indexOf(state) != -1">
+      <a-carousel style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="混团赛金铜牌赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
         </div>
       </a-carousel>
     </div>
     <!-- 排名 -->
-    <div class="example" v-if="['团队综合排名','混团赛排名'].indexOf(state) != -1 && !isTeam">
-      <div>
-        <dv-decoration-9 style="width: 300px; height: 300px"></dv-decoration-9>
-        <p>加载中...请稍后！</p>
-      </div>
-    </div>
-    <div class="team" v-if="['团队综合排名','混团赛排名'].indexOf(state) != -1 && isTeam">
+    <div class="team" v-if="['团队综合排名','混团赛排名'].indexOf(state) != -1">
       <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
@@ -409,7 +382,7 @@ export default {
         title: [],
         List: [[], [], [], []],
       },
-      // 个人淘汰赛
+      // 个人决赛
       isPersonallyFinals: false,
       personallyFinalsList: {
         title: [],
@@ -453,35 +426,25 @@ export default {
       // 排名
       rankingList: [],
       timer: null,
+      next: null,
     }
   },
   created() {
-    this.state = this.$route.query.type
-    console.log(this.state)
-    this.getData()
     document.body.style.overflow = 'hidden'
-    setTimeout(() => {
-      this.isSpin = true
-      this.isTeam = true
-      this.isMixeTeamFinals = true
-      this.isPersonally = true
-      this.isPersonallyFinals = true
-      this.$nextTick(() => {
-        if (this.$refs.personally1) {
-          setInterval(() => {
-            this.$refs.personally1.next()
-          }, 10000)
-        }
-        // if (this.$refs.personally2) {
-        //   setInterval(() => {
-        //     this.$refs.personally2.next()
-        //   }, 10000)
-        // }
-        this.timer = setInterval(() => {
-          this.getData()
-        }, 3000)
-      })
+
+    console.log(this.$getDpi(16))
+    this.state = this.$route.query.type
+    this.getData()
+    this.timer = setInterval(() => {
+      this.getData()
     }, 3000)
+  },
+  mounted() {
+    if (this.$refs.personally1) {
+      this.next = setInterval(() => {
+        this.$refs.personally1.next()
+      }, 10000)
+    }
   },
   methods: {
     getData() {
@@ -541,7 +504,7 @@ export default {
             }
           })
         })
-      } else if (this.state.indexOf('个人淘汰赛') != -1) {
+      } else if (this.state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1) {
         littleScreen({ type: this.state }).then((res) => {
           this.personallyFinalsList.List = [[]]
           let data = res.result
@@ -560,7 +523,6 @@ export default {
             },
             {
               name: '靶位',
-              width: '80px',
             },
             {
               name: '姓名',
@@ -666,7 +628,7 @@ export default {
         })
       } else if (this.state.indexOf('综合排名') !== -1) {
         getTeamTotalScores({
-          contestId: 4,
+          configName: this.state,
         }).then((res) => {
           this.rankingList = res.result
         })
@@ -698,6 +660,7 @@ export default {
   },
   destroyed() {
     clearInterval(this.timer)
+    clearInterval(this.next)
   },
 }
 </script>
@@ -714,25 +677,30 @@ v-deep ::-webkit-scrollbar {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  .box {
+  .flex {
     position: relative;
     flex: 0 0 25%;
     display: flex;
     align-items: center;
+    justify-content: center;
     width: 25%;
     height: 150px;
     overflow: hidden;
-    .name {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      color: #fff;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .wrap {
-      width: 100%;
+    .box {
+      width: 300px;
       height: 300px;
+      .name {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .wrap {
+        width: 300px;
+        height: 300px;
+      }
     }
   }
 }

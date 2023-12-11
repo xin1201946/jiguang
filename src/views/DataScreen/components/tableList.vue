@@ -1,9 +1,5 @@
 <template>
   <div class="common">
-    <!-- <h1 class="preface" v-if="type === '混团赛金铜牌赛'">
-      发序: 1
-    </h1> -->
-
     <div class="common-tit">
       <p v-for="(item, index) in TitleList" :key="index" :style="item.width ? `width:${item.width};flex:none` : ''">
         {{ item.name }}
@@ -142,7 +138,7 @@ export default {
                 if (this.data[i]['排名'] == e['排名']) {
                   this.TableList[index] = {
                     ...this.data[i],
-                    position: e.position,
+                    position: i * 65,
                   }
                   // console.log('相同', this.data[i])
                 } else {
