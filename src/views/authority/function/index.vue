@@ -47,7 +47,7 @@
               </a-select>
             </a-form-model-item>
           </a-col>
-          <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
+          <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
             <a-form-model-item
               label="阶段名称"
               :prop="'data.' + index + '.stageId'"
