@@ -290,10 +290,15 @@ export default {
               if (!this.group) {
                 this.group = res.result[0].group
                 this.status = res.result[0].status
+                this.groupList = res.result
+                this.groupActive = true
                 this.radioChangeHandle(res.result[0].group)
+              } else {
+                this.status = res.result[0].status
+                this.groupList = res.result
+                this.groupActive = true
+                this.radioChangeHandle(this.group)
               }
-              this.groupList = res.result
-              this.groupActive = true
             }
           } else {
             this.$message.error(res.message)
