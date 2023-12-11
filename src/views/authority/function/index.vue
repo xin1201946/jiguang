@@ -16,7 +16,7 @@
     <div>
       <a-tabs>
         <a-tab-pane key="1" tab="步枪">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
             <a-space>
               <a-button type="primary" @click="handleClick(1)">
                 更新
@@ -29,50 +29,52 @@
             :model="formData"
             :wrapperCol="{span: 18}"
           >
-            <a-row :gutter="24" v-for="(item,index) in formData.data.filter(item => item.configName.includes('步枪'))" :key="index">
-              <a-col :span="3">
-                <a-form-model-item :labelCol="{span: 0}">
-                  <b>{{item.configName}}</b>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-model-item
-                  :prop="'data.' + index + '.contestId'"
-                  :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
-                  label="赛事名称">
-                  <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
-                    <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                <a-form-model-item
-                  label="项目名称"
-                  :prop="'data.' + index + '.cproId'"
-                  :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
-                    <!--                configName-->
-                    <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                <a-form-model-item
-                  label="阶段名称"
-                  :prop="'data.' + index + '.stageId'"
-                  :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.stageId">
-                    <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
+            <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
+              <template v-if="item.configName.includes('步枪')">
+                <a-col :span="3">
+                  <a-form-model-item :labelCol="{span: 0}">
+                    <b>{{item.configName}}</b>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5">
+                  <a-form-model-item
+                    :prop="'data.' + index + '.contestId'"
+                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    label="赛事名称">
+                    <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
+                      <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
+                  <a-form-model-item
+                    label="项目名称"
+                    :prop="'data.' + index + '.cproId'"
+                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
+                      <!--                configName-->
+                      <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
+                  <a-form-model-item
+                    label="阶段名称"
+                    :prop="'data.' + index + '.stageId'"
+                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.stageId">
+                      <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form-model>
         </a-tab-pane>
         <a-tab-pane key="2" tab="手枪">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
             <a-space>
               <a-button type="primary" @click="handleClick(2)">
                 更新
@@ -85,50 +87,52 @@
             :model="formData"
             :wrapperCol="{span: 18}"
           >
-            <a-row :gutter="24" v-for="(item,index) in formData.data.filter(item => item.configName.includes('手枪'))" :key="index">
-              <a-col :span="3">
-                <a-form-model-item :labelCol="{span: 0}">
-                  <b>{{item.configName}}</b>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-model-item
-                  :prop="'data.' + index + '.contestId'"
-                  :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
-                  label="赛事名称">
-                  <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
-                    <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                <a-form-model-item
-                  label="项目名称"
-                  :prop="'data.' + index + '.cproId'"
-                  :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
-                    <!--                configName-->
-                    <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                <a-form-model-item
-                  label="阶段名称"
-                  :prop="'data.' + index + '.stageId'"
-                  :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.stageId">
-                    <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
+            <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
+              <template v-if="item.configName.includes('手枪')">
+                <a-col :span="3">
+                  <a-form-model-item :labelCol="{span: 0}">
+                    <b>{{item.configName}}</b>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5">
+                  <a-form-model-item
+                    :prop="'data.' + index + '.contestId'"
+                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    label="赛事名称">
+                    <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
+                      <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
+                  <a-form-model-item
+                    label="项目名称"
+                    :prop="'data.' + index + '.cproId'"
+                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
+                      <!--                configName-->
+                      <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
+                  <a-form-model-item
+                    label="阶段名称"
+                    :prop="'data.' + index + '.stageId'"
+                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.stageId">
+                      <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form-model>
         </a-tab-pane>
         <a-tab-pane key="3" tab="团队">
-          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-end;width: 80%">
+          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;width: 80%">
             <a-space>
               <a-button type="primary" @click="handleClick(3)">
                 更新
@@ -141,45 +145,47 @@
             :model="formData"
             :wrapperCol="{span: 18}"
           >
-            <a-row :gutter="24" v-for="(item,index) in formData.data.filter(item => item.configName.includes('团队'))" :key="index">
-              <a-col :span="3">
-                <a-form-model-item :labelCol="{span: 0}">
-                  <b>{{item.configName}}</b>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-model-item
-                  :prop="'data.' + index + '.contestId'"
-                  :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
-                  label="赛事名称">
-                  <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
-                    <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                <a-form-model-item
-                  label="项目名称"
-                  :prop="'data.' + index + '.cproId'"
-                  :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
-                    <!--                configName-->
-                    <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                <a-form-model-item
-                  label="阶段名称"
-                  :prop="'data.' + index + '.stageId'"
-                  :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
-                >
-                  <a-select allowClear v-model="item.stageId">
-                    <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
-                  </a-select>
-                </a-form-model-item>
-              </a-col>
+            <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
+              <template v-if="item.configName.includes('团队')">
+                <a-col :span="3">
+                  <a-form-model-item :labelCol="{span: 0}">
+                    <b>{{item.configName}}</b>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5">
+                  <a-form-model-item
+                    :prop="'data.' + index + '.contestId'"
+                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    label="赛事名称">
+                    <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
+                      <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
+                  <a-form-model-item
+                    label="项目名称"
+                    :prop="'data.' + index + '.cproId'"
+                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
+                      <!--                configName-->
+                      <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
+                  <a-form-model-item
+                    label="阶段名称"
+                    :prop="'data.' + index + '.stageId'"
+                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
+                  >
+                    <a-select allowClear v-model="item.stageId">
+                      <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form-model>
         </a-tab-pane>
