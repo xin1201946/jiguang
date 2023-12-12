@@ -66,14 +66,19 @@
               </template>
             </a-row>
           </a-form-model>
-          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
-            <a-space>
-              <a-button type="primary" @click="handleClick(1)">
-                更新
-              </a-button>
-              <a-button @click="handleReset(1)">重置</a-button>
-            </a-space>
-          </div>
+          <a-row :gutter="24">
+            <a-col :span="18">
+              <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
+                <a-space>
+                  <a-button type="primary" @click="handleClick(1)">
+                    更新
+                  </a-button>
+                  <a-button @click="handleReset(1)">重置</a-button>
+                </a-space>
+              </div>
+            </a-col>
+          </a-row>
+
         </a-tab-pane>
         <a-tab-pane key="2" tab="手枪">
 
@@ -126,14 +131,19 @@
               </template>
             </a-row>
           </a-form-model>
-          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
-            <a-space>
-              <a-button type="primary" @click="handleClick(2)">
-                更新
-              </a-button>
-              <a-button @click="handleReset(2)">重置</a-button>
-            </a-space>
-          </div>
+          <a-row :gutter="24">
+            <a-col :span="18">
+              <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
+                <a-space>
+                  <a-button type="primary" @click="handleClick(2)">
+                    更新
+                  </a-button>
+                  <a-button @click="handleReset(2)">重置</a-button>
+                </a-space>
+              </div>
+            </a-col>
+          </a-row>
+
         </a-tab-pane>
         <a-tab-pane key="3" tab="团队">
           <a-form-model
@@ -185,14 +195,19 @@
               </template>
             </a-row>
           </a-form-model>
-          <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
-            <a-space>
-              <a-button type="primary" @click="handleClick(3)">
-                更新
-              </a-button>
-              <a-button @click="handleReset(3)">重置</a-button>
-            </a-space>
-          </div>
+          <a-row :gutter="24">
+            <a-col :span="8">
+              <div style="height: 40px;display: flex;align-items: center; justify-content: center;">
+                <a-space>
+                  <a-button type="primary" @click="handleClick(3)">
+                    更新
+                  </a-button>
+                  <a-button @click="handleReset(3)">重置</a-button>
+                </a-space>
+              </div>
+            </a-col>
+          </a-row>
+
         </a-tab-pane>
       </a-tabs>
 
