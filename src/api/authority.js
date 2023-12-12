@@ -4,3 +4,5 @@ export const bizConfigList = (data = {}) => postAction('bizConfig/list', data)
 
 //批量更新
 export const bizConfigUpdateBatch = data => postAction("bizConfig/updateBatch", data)
+
+export const bizConfigReset = param => getAction("bizConfig/reset", param)

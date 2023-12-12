@@ -363,8 +363,6 @@ export default {
           </tr>`
         )
       })
-      // console.log(Time(project.projectTimeStart, 'YYYY/MM/DD'))
-      // console.log(project.projectTimeStart)
       return `
       <style>
         td{text-align: center}
@@ -374,6 +372,10 @@ export default {
             margin-top: .3cm;
             margin-bottom: 0cm;
           }
+        }
+        td:nth-of-type(4){
+          text-align: left;
+          text-indent: 4rem
         }
       </style>
       <div>

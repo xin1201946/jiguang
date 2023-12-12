@@ -202,7 +202,7 @@
 
 <script>
 import Card from '@comp/card/card.vue'
-import { bizConfigList, bizConfigUpdateBatch } from '@api/authority'
+import { bizConfigList, bizConfigReset, bizConfigUpdateBatch } from '@api/authority'
 import { bizContestList, bizContestProjectList, bizContestProjectStageList } from '@api/competition'
 export default {
   name: 'function',
@@ -344,11 +344,12 @@ export default {
             stageId: null
           }
         })
+        const str = data[0].configType
         const dataAll = this.formData.data.filter(item => !item.configName.includes("步枪"))
         this.formData.data = [...dataAll, ...data]
-        // this.$refs.form.resetFields()
-        this.$refs.form.clearValidate()
-        bizConfigUpdateBatch(this.formData.data)
+        bizConfigReset({
+          configType: str
+        })
       }
       if (num === 2) {
         console.log(num)
@@ -361,27 +362,32 @@ export default {
           }
           return obj
         })
+        const str = data[0].configType
         const dataAll = this.formData.data.filter(item => !item.configName.includes("手枪"))
         this.formData.data = [...dataAll, ...data]
-        this.$refs.form2.clearValidate()
-        bizConfigUpdateBatch(this.formData.data)
+        bizConfigReset({
+          configType: str
+        })
       }
       if (num === 3) {
-        const data = this.formData.data.filter(item => item.configName.includes("团队")).map(item => {
-          return {
+        const list = JSON.parse(JSON.stringify(this.formData.data))
+        const data = list.filter(item => item.configName.includes("团队")).map(item => {
+          const obj = {
             ...item,
-            contestId: null,
-            cproId: null,
-            stageId: null
+            contestId: "",
+            cproId: "",
+            stageId: ""
           }
+          return obj
         })
+        const str = data[0].configType
+
         const dataAll = this.formData.data.filter(item => !item.configName.includes("团队"))
 
         this.formData.data = [...dataAll, ...data]
-
-        this.$refs.form3.resetFields()
-        this.$refs.form3.clearValidate()
-        bizConfigUpdateBatch(this.formData.data)
+        bizConfigReset({
+          configType: str
+        })
       }
     }
   }
