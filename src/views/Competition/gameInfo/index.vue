@@ -4,7 +4,7 @@
       <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
     </div>
     <div class="cards">
-      <TreeCard>
+      <TreeCard ref="treeCard">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
             <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup" :title="item.projectName + ' - ' + item.projectGroup">
@@ -307,6 +307,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
+          this.$refs.treeCard.loading = false
         })
     },
     /**
@@ -426,6 +427,7 @@ export default {
      * 左侧功能
      */
     onSelect(keys, event) {
+      this.$refs.treeCard.loading = true;
       // isLeaf 为true时是最底层
       // keys 阶段id
       if (event.node.isLeaf) {
@@ -466,6 +468,7 @@ export default {
         this.draw = false
         this.group = null
         this.groupActive = false
+        this.$refs.treeCard.loading = false;
       }
     },
     onExpand() {},

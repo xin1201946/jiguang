@@ -581,23 +581,27 @@ export default {
           this.teamList.title.push({
             name: '总环数',
           })
-          data.forEach((item, index) => {
-            let obj = {
-              id: item.playerName,
-              排名: index + 1,
-              代表队: item.groupName,
-              总环数: `${item.stageTotal}`,
-            }
-            if (index < 8) {
-              this.teamList.List[0].push(obj)
-            } else if (index < 16 && index > 7) {
-              this.teamList.List[1].push(obj)
-            } else if (index < 24 && index > 15) {
-              this.teamList.List[2].push(obj)
-            } else if (index < 32 && index > 23) {
-              this.teamList.List[3].push(obj)
-            }
-          })
+          if (data && data.length != 0) {
+            data.forEach((item, index) => {
+              let obj = {
+                id: item.playerName,
+                排名: index + 1,
+                代表队: item.groupName,
+                总环数: `${item.stageTotal}`,
+              }
+              if (index < 8) {
+                this.teamList.List[0].push(obj)
+              } else if (index < 16 && index > 7) {
+                this.teamList.List[1].push(obj)
+              } else if (index < 24 && index > 15) {
+                this.teamList.List[2].push(obj)
+              } else if (index < 32 && index > 23) {
+                this.teamList.List[3].push(obj)
+              }
+            })
+          } else {
+            this.teamList.List = [[], [], [], []]
+          }
         })
       } else if (
         ['手枪混团铜牌赛排名', '手枪混团金牌赛排名', '步枪混团金牌赛排名', '步枪混团铜牌赛排名'].indexOf(this.state) !=
