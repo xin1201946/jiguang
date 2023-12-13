@@ -5,64 +5,72 @@
       <a-space>
         <!-- <a-button type="primary" @click="handleBack">返回赛事列表</a-button> -->
         <a-page-header :title="title" @back="handleBack" />
-        <a-upload
-          accept=".xlsx, xls"
-          name="file"
-          method="post"
-          :showUploadList="false"
-          :multiple="false"
-          :headers="tokenHeader"
-          :action="importExcelUrl"
-          :data="(file) => ({ file, contestId })"
-          @change="handleImportExcel"
-          :disabled="status !== '0'"
-        >
-          <a-button :disabled="status !== '0'" type="primary" icon="import">导入参赛人员</a-button>
-        </a-upload>
+<!--        this.treeList-->
+        <template v-if="this.treeList.length">
+          <a-upload
+            accept=".xlsx, xls"
+            name="file"
+            method="post"
+            :showUploadList="false"
+            :multiple="false"
+            :headers="tokenHeader"
+            :action="importExcelUrl"
+            :data="(file) => ({ file, contestId })"
+            @change="handleImportExcel"
+            :disabled="status !== '0'"
+          >
+            <a-button :disabled="status !== '0'" type="primary" icon="import">导入参赛人员</a-button>
+          </a-upload>
+        </template>
+        <template v-else>
+          <a-button @click="handleImport" :disabled="status !== '0'" type="primary" icon="import">导入参赛人员</a-button>
+        </template>
         <a-button :disabled="status !== '0'" type="primary" icon="download" @click="handleDownload">下载参赛人员模板</a-button>
       </a-space>
     </div>
     <!--    内容-->
     <div class="cardTrue">
-      <TreeCard>
-        <!--        左侧树-->
-        <template slot="tree">
-          <ParticipantTree @change="handleTreeChange" @contest="handleContest" @treeList="handleTreeList"/>
-        </template>
-        <template slot="query">
-          <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
-        </template>
-        <template slot="operator">
-          <a-space v-if="status === '0'">
-            <a-button v-show="!t.includes('团体') && t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
-            <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
-            <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
-            <a-button type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
-          </a-space>
-        </template>
-        <a-table
-          :scroll="{x: 1400}"
-          :columns="columns"
-          :data-source="data"
-          :pagination="pagination"
-          rowKey="playerId"
-          @change="handleTableChange"
-          bordered
-          size="small"
-          :row-selection="rowSelection"
-        >
-          <template slot="operation" slot-scope="text, record">
+      <a-spin :spinning="loading">
+        <TreeCard>
+          <!--        左侧树-->
+          <template slot="tree">
+            <ParticipantTree @change="handleTreeChange" @contest="handleContest" @treeList="handleTreeList"/>
+          </template>
+          <template slot="query">
+            <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
+          </template>
+          <template slot="operator">
             <a-space v-if="status === '0'">
-              <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
-<!--              <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
-            </a-space>
-            <a-space v-else>
-              <a-button disabled type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
-<!--              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+              <a-button v-show="!t.includes('团体') && t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
+              <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
+              <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
+              <a-button type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
             </a-space>
           </template>
-        </a-table>
-      </TreeCard>
+          <a-table
+            :scroll="{x: 1400}"
+            :columns="columns"
+            :data-source="data"
+            :pagination="pagination"
+            rowKey="playerId"
+            @change="handleTableChange"
+            bordered
+            size="small"
+            :row-selection="rowSelection"
+          >
+            <template slot="operation" slot-scope="text, record">
+              <a-space v-if="status === '0'">
+                <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
+                <!--              <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+              </a-space>
+              <a-space v-else>
+                <a-button disabled type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
+                <!--              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
+              </a-space>
+            </template>
+          </a-table>
+        </TreeCard>
+      </a-spin>
       <!--      编辑-->
       <ParticipantModal ref="modal" @list="handleList"></ParticipantModal>
       <!--      编辑人员名单-->
@@ -83,12 +91,14 @@ import QuerySearch from '@comp/query/QuerySearch.vue'
 import BizMixins from '@views/biz/bizMixins'
 import ParticipantModal from '@views/Competition/participant/modal/participantModal.vue'
 import ParticipantModalUser from '@views/Competition/participant/modal/participantModalUser.vue'
-import { deleteMessage } from '@/utils'
+import { deleteMessage, infoMessage } from '@/utils'
 import {
   bizContestPlayerDelete,
   bizContestPlayerGetImportTemplate,
   bizContestProjectPlayerPageList,
-  bizContestPlayerList, bizContestProjectPlayerDelete, bizContestPlayerDeleteAll
+  bizContestPlayerList,
+  bizContestProjectPlayerDelete,
+  bizContestPlayerDeleteAll
 } from '@api/competition'
 export default {
   name: 'participant',
@@ -103,6 +113,7 @@ export default {
   inject: ["closeCurrent"],
   data() {
     return {
+      loading: false,
       id: undefined,
       columns: participantTableColumns,
       data: [],
@@ -154,6 +165,9 @@ export default {
     this.status = this.$route.query.status
   },
   methods: {
+    handleImport() {
+      infoMessage("当前赛事没有项目信息,请先创建项目信息,再导入参赛人员.")
+    },
     // 获取赛事id
     handleContest(contestId, id) {
       this.contestId = contestId
@@ -384,7 +398,12 @@ export default {
 /deep/.ant-page-header {
   padding: 16px 24px 16px 10px !important;
 }
-
+/deep/.ant-spin-nested-loading{
+  height: 100%;
+}
+/deep/.ant-spin-container{
+  height: 100%;
+}
 /deep/.ant-page-header-back {
   font-size: 20px;
 }

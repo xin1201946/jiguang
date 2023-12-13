@@ -16,28 +16,28 @@ export const sexData = [
 
 export const projectGroup = [
   {
-    label: "男子甲组",
-    value: "男子甲组"
+    label: "甲组男子",
+    value: "甲组男子"
   },
   {
-    label: "女子甲组",
-    value: "女子甲组"
+    label: "甲组女子",
+    value: "甲组女子"
   },
   {
-    label: "男子乙组",
-    value: "男子乙组"
+    label: "乙组男子",
+    value: "乙组男子"
   },
   {
-    label: "女子乙组",
-    value: "女子乙组"
+    label: "乙组女子",
+    value: "乙组女子"
   },
   {
-    label: "男子丙组",
-    value: "男子丙组"
+    label: "丙组男子",
+    value: "丙组男子"
   },
   {
-    label: "女子丙组",
-    value: "女子丙组"
+    label: "丙组女子",
+    value: "丙组女子"
   },
 
 ]

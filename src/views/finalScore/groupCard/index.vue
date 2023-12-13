@@ -355,6 +355,7 @@ export default {
       const label = this.list.filter(item => item.value === this.tree)[0]
       // todo 没有阶段数组不渲染打印按钮, 如果显示了这里需要修改
       const stageName = this.data[0].finalList[0].stageName
+      console.log(this.data[0].finalList[0])
       const project = this.list.filter(item => item.value === this.tree)[0]
       // 父表格合并组数
       // console.log(this.data)
@@ -386,7 +387,7 @@ export default {
         const rows = this.data.map(item => {
           const printTds = []
           for (let i = 0; i < g; i++) {
-            printTds.push(`<td>${item.teamScoreList[i]}</td>`)
+            printTds.push(`<td style="background: #ccc">${item.teamScoreList[i]}</td>`)
           }
 
           const trs = []
@@ -410,11 +411,11 @@ export default {
           }
 
           return (`
-            <tr>
-              <td>${item.i}</td>
-              <td>${item.groupName}</td>
+            <tr style="background: #ccc">
+              <td style="background: #ccc">${item.i}</td>
+              <td style="background: #ccc">${item.groupName}</td>
               ${printTds.join("")}
-              <td>${item.teamStageTotal}</td>
+              <td style="background: #ccc">${item.teamStageTotal}</td>
             </tr>
             ${trs.join("")}
           `)
@@ -424,16 +425,25 @@ export default {
       }
 
       return `
-      <style>td{text-align: center}.tables>thead>tr>th{border: 1px solid;}</style>
+      <style>
+      h1,h2,h3,h4,p{
+        margin: 0;
+        padding: 0;
+      }
+        td{text-align: right}.tables>thead>tr>th{border: 1px solid;}
+        td:nth-of-type(2){
+        text-align: left;
+        }
+      </style>
       <div>
         <h1 style="text-align: center">${contestName}</h1>
-        <h2 style="text-align: center">${stageName}</h2>
-        <h3 style="text-align: center">
-          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
-          ${label.projectName}
-        </h3>
+        <h2 style="text-align: center">
+          ${label.projectGroup}${label.projectName}
+        </h2>
+        <h3 style="text-align: center">${stageName}</h3>
+
         <h4 style="text-align: center">团体</h4>
-        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>

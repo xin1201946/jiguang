@@ -151,14 +151,19 @@ const bizMixins = {
    // 导入
     handleImportExcel(info) {
       const { file } = info
-      console.log(file)
+      if (this.loading !== undefined){
+        this.loading = true
+      }
+
       if (file.status === "uploading") {
 
       }
       if (file.status === "done") {
         const {response} = file
-        // console.log(response)
         if (response.code === 200) {
+          if (this.loading !== undefined){
+            this.loading = false
+          }
           this.$message.success(response.message)
           this.pagination.current = 1
           this.$nextTick(() => {
@@ -178,6 +183,9 @@ const bizMixins = {
               this.pagination.current = 1
               this.$nextTick(() => {
                 this.getList()
+                if (this.loading !== undefined){
+                  this.loading = false
+                }
               })
             }
           })

@@ -319,12 +319,14 @@ export default {
     },
     // 资格
     bodyContent(){
+      const contest = this.treeList.filter(item => item.contestId === this.contestId)[0]
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0]
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
       // const stage = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0]
       // console.log(label)
       const project = this.list.filter(item => item.value === this.tree)[0]
+      // console.log(contest)
       let g = 0
       if (this.groupArray && this.groupArray.length){
         g = this.groupArray.length
@@ -355,17 +357,17 @@ export default {
           `<tr>
             <td colspan="2">${item.i}</td>
             <td colspan="2">${item.targetSite}</td>
-            <td colspan="2">${item.playerName}</td>
-            <td colspan="2">${item.groupName}</td>
+            <td colspan="2" style="text-align: left">${item.playerName}</td>
+            <td colspan="2" style="text-align: left">${item.groupName}</td>
             ${arr.join("")}
             <td colspan="2">${item.stageTotal}</td>
-            <td>${item.i<=8?"QF":""}</td>
+            <td>${item.i<=8?"Q":""}</td>
           </tr>`
         )
       })
       return `
       <style>
-        td{text-align: center}
+        td{text-align: right}
         th{border: 1px solid;}
         @media print {
           @page{
@@ -375,24 +377,36 @@ export default {
         }
         td:nth-of-type(4){
           text-align: left;
-          text-indent: 4rem
+          /*text-indent: 4rem*/
+        }
+        td:nth-of-type(3){
+          text-align: left;
+          /*text-indent: 4rem*/
+        }
+        td:last-of-type{
+         /*text-align: left;*/
+        }
+        h1,h2,h3,p{
+          margin: 0;
+          padding: 0;
         }
       </style>
       <div>
         <h1 style="text-align: center">${contestName}</h1>
-        <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-        <h3 style="text-align: center">
-          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
-          ${label.projectName}
-        </h3>
-        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+
+        <h2 style="text-align: center">
+          ${label.projectGroup}${label.projectName}
+        </h2>
+        <h3 style="text-align: center">资格赛</h3>
+        <p style="text-align: center">${contest.location}</p>
+        <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead >
             <tr>
               <th rowspan="2" colspan="2">排名</th>
               <th rowspan="2" colspan="2">靶位</th>
-              <th rowspan="2" colspan="2">姓名</th>
-              <th rowspan="2" colspan="2">团体</th>
+              <th rowspan="2" colspan="2" style="text-align: left">姓名</th>
+              <th rowspan="2" colspan="2" style="text-align: left">代表队</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
               <th rowspan="2">备注</th>
@@ -409,9 +423,9 @@ export default {
           </tfoot>
         </table>
         <div style="height: 100px;position: fixed; bottom: 0;width: 100%">
-          <div style="height: 90px; width: 96%;border: 1px solid">
-            <div>
-              备注:
+          <div style="height: 90px; width: 96%;border: 0px solid">
+            <div style="display: flex;width: 100%;justify-content: flex-end;height: 100%;align-items: center">
+              抗议截止时间:
             </div>
           </div>
         </div>
@@ -419,29 +433,33 @@ export default {
     },
     // 混团
     groupContent() {
+      const contest = this.treeList.filter(item => item.contestId === this.contestId)[0]
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0]
       const j = this.data.filter(item => item.stageGroup === 1)
       const y = this.data.filter(item => item.stageGroup === 2)
       const project = this.list.filter(item => item.value === this.tree)[0]
       const jtr = () => {
-        return j.map(item => {
+        return j.map((item,k) => {
           return `
             <tr>
               <td>${item.i}</td>
-              <td>${item.groupName}</td>
+              <td style="text-align: left">${item.groupName}</td>
               <td>${item.stageTotal}</td>
               <td>${item.total}</td>
+              <td>${k === 0? '金牌': k === 1? '银牌': '' }</td>
             </tr>
             <tr>
               <td></td>
-              <td>${item.player1Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td>${item.player2Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
@@ -449,23 +467,26 @@ export default {
         }).join("")
       }
       const ytr = () => {
-        return y.map(item => {
+        return y.map((item, k) => {
           return `
             <tr>
               <td>${item.i}</td>
-              <td>${item.groupName}</td>
-              <td>${item.stageTotal}</td>
+              <td style="text-align: left">${item.groupName}</td>
               <td>${item.total}</td>
+              <td>${item.stageTotal}</td>
+              <td>${k === 0? '铜牌': '' }</td>
             </tr>
             <tr>
               <td></td>
-              <td>${item.player1Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td>${item.player2Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
@@ -478,45 +499,61 @@ export default {
               <thead>
                 <tr>
                   <th>排名</th>
-                  <th>团队名称</th>
-                  <th>总环数</th>
+                  <th style="text-align: left">姓名</th>
                   <th>总分</th>
+                  <th>总环数</th>
+                  <th>备注</th>
                 </tr>
               </thead>
               <tbody>
                 ${jtr()}
               </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">
+                    <div style="height: 100px"></div>
+                  </td>
+                </tr>
+              </tfoot>
             </table>`: ''
       const ydiv = y.length ? `<h4>铜牌赛</h4>
             <table align="center" cellspacing="0" border="0" style="width: 100%;">
               <thead>
                 <tr>
                   <th>排名</th>
-                  <th>团队名称</th>
-                  <th>总环数</th>
+                  <th style="text-align: left">姓名</th>
                   <th>总分</th>
+                  <th>总环数</th>
+                  <th>备注</th>
                 </tr>
               </thead>
               <tbody>
                 ${ytr()}
               </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4">
+                    <div style="height: 100px"></div>
+                  </td>
+                </tr>
+              </tfoot>
             </table>`: ''
-
       return `
         <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
         <div>
-          <div style="height: 92vh">
+          <div style="height: 90vh">
             <h1 style="text-align: center">${contestName}</h1>
-            <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-            <h3 style="text-align: center">${label.label}</h3>
-            <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+            <h2 style="text-align: center">${label.label.split("-").reverse().join('')}</h2>
+            <h3 style="text-align: center">奖牌赛</h3>
+            <p style="text-align: center">${contest.location}</p>
+            <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
             <div>
               ${jdiv}
               <br/>
               ${ydiv}
             </div>
           </div>
-          <div style="height: 8vh;position: fixed;bottom: 0">
+          <div style="height: 100px;position: fixed;bottom: 0;width: 100%">
             <div style="height: 90px; width: 96%;border: 1px solid">
               <div>
                 备注:
@@ -635,7 +672,7 @@ export default {
               <th rowspan="2" colspan="2">排名</th>
               <th rowspan="2" colspan="2">靶位</th>
               <th rowspan="2" colspan="2">姓名</th>
-              <th rowspan="2" colspan="2">团体</th>
+              <th rowspan="2" colspan="2">代表队</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
               <th rowspan="2">备注</th>
