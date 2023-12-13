@@ -33,6 +33,7 @@
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
+            <a-button v-if="group !== null" type="primary" @click="handleDate">时间管理</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
 
           </a-space>
@@ -81,6 +82,7 @@
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
 
         <GameInfoRemarkModal ref="remark" @ok="remarkSuccessHandle" />
+        <GameInfoDateModal ref="date"></GameInfoDateModal>
       </TreeCard>
     </div>
   </div>
@@ -89,7 +91,7 @@
 <script>
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
-import { gameInfoColumns, gameInfoQuery } from '@views/Competition/gameInfo/gameInfo.config'
+import { gameInfoColumns } from '@views/Competition/gameInfo/gameInfo.config'
 import gameInfoTargetModal from '@views/Competition/gameInfo/modal/gameInfoTargetModal.vue'
 import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawModal.vue'
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
@@ -97,6 +99,7 @@ import GameInfoPenaltyModal from '@views/Competition/gameInfo/modal/gameInfoPena
 import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vue'
 import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemark.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
+import GameInfoDateModal from '@views/Competition/gameInfo/modal/gameInfoDateModal.vue'
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -114,10 +117,9 @@ import {
   penalty,
   editStagePlayer,
   contest_processGetSitePdf,
-  remark,
+  remark, contest_processGetStageGroupTime
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
-import BizMixins from '@views/biz/bizMixins'
 
 export default {
   name: 'gameInfo',
@@ -131,6 +133,7 @@ export default {
     GameInfoPenaltyModal,
     GameInfoEditModal,
     GameInfoRemarkModal,
+    GameInfoDateModal
   },
   inject: ['closeCurrent'],
   data() {
@@ -166,6 +169,20 @@ export default {
     }
   },
   methods: {
+    // 时间管理
+    handleDate() {
+      console.log(this.data)
+      const obj = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+      }
+      contest_processGetStageGroupTime(obj).then(res => {
+        if (res.code === 200){
+          this.$refs.date.init(res.result, obj)
+        }
+      })
+    },
     editSuccessHandle(e) {
       editStagePlayer(e).then((res) => {
         if (res.success) {
@@ -499,6 +516,7 @@ export default {
         this.groupActive = false
         this.$refs.treeCard.loading = false
       }
+
     },
     onExpand() {},
     handleZhunbei(row) {

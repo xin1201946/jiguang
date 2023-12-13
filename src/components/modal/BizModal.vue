@@ -12,8 +12,8 @@
     </div>
     <div v-if="footer === true" style="display: flex; justify-content: flex-end;margin-top: 20px">
       <a-space>
-        <a-button @click="handleCancel">取消</a-button>
-        <a-button :loading="loading" type="primary" @click="handleOk">确定</a-button>
+        <a-button @click="handleCancel">{{ cancelText }}</a-button>
+        <a-button :loading="loading" type="primary" @click="handleOk">{{ okText }}</a-button>
       </a-space>
     </div>
 <!--    <template slot="footer">
@@ -51,6 +51,14 @@ export default {
     footer: {
       type: Boolean,
       default: true
+    },
+    okText: {
+      type: String,
+      default: "确定"
+    },
+    cancelText: {
+      type: String,
+      default: "取消"
     }
   },
   data() {

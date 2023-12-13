@@ -112,7 +112,7 @@ export default {
           dataIndex: 'idCardNum',
         },
         {
-          title: "团体名称",
+          title: "代表队",
           align: 'center',
           dataIndex: 'groupName',
         },

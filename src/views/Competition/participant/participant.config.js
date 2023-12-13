@@ -55,8 +55,8 @@ export const participantQuery = [
     rules: [
       'groupName',
     ],
-    label: '团体名称',
-    placeholder: '请输入团体名称'
+    label: '代表队',
+    placeholder: '请输入代表队'
   },
   {
     type: 'select',
@@ -96,7 +96,7 @@ export const participantTableColumns = [
     dataIndex: 'idCardNum',
   },
   {
-    title: "团体名称",
+    title: "代表队",
     align: 'center',
     dataIndex: 'groupName',
   },
@@ -142,7 +142,7 @@ export const participantTableColumnsAll = [
     dataIndex: 'idCardNum',
   },
   {
-    title: "团体名称",
+    title: "代表队",
     align: 'center',
     dataIndex: 'groupName',
   },
@@ -193,7 +193,7 @@ export const participantModalUserTableColumns = [
     dataIndex: 'idCardNum',
   },
   {
-    title: "团体名称",
+    title: "代表队",
     align: 'center',
     dataIndex: 'groupName',
   },

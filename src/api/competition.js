@@ -140,3 +140,7 @@ export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalS
 // downloadFile
 export const contest_processGetSitePdf = param => downFile("contest-process/getSitePdf",param)
 
+// 查询组别比赛时间
+export const contest_processGetStageGroupTime = data => postAction("contest-process/getStageGroupTime", data)
+//更新组别比赛时间
+export const contest_processUpdateStageGroupTime = data => postAction("contest-process/updateStageGroupTime", data)
