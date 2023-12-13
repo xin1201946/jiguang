@@ -12,7 +12,7 @@
         <span>数据大屏</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item v-for="item in dataScreenList" :key="item.configId" @click="handleFullscreen(item.configName)" style="display: flex; align: center;">
+        <a-menu-item v-for="item in dataScreenList" :key="item.configId" @click="handleFullscreen(item)" style="display: flex; align: center;">
           <span>{{item.configName}}</span>
         </a-menu-item>
       </a-menu>
@@ -171,12 +171,17 @@ export default {
     // update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框
   },
   methods: {
-    handleFullscreen(type, spear) {
-      // this.$router.push({
-      //   path:'/DataScreen'
-      // })
-      window.open('/DataScreen?type=' + type + '&spear=' + spear, '_blank')
-
+    handleFullscreen(row, spear) {
+      // 原先的
+      // const pin = window.open('/DataScreen?type=' + row.configName + '&spear=' + spear, '_blank')
+      // 现在的
+      const pin = window.open("/DataScreen", "_blank")
+      pin.name = JSON.stringify({
+        ...row,
+        spear
+      })
+      pin.document.body.style.margin = "0"
+      pin.document.body.style.padding = "0"
       var isFullscreen =
         document.fullScreenElement || //W3C
         document.msFullscreenElement || //IE

@@ -333,7 +333,8 @@ export const constantRouterMap = [
       {
         path: '/DataScreen/index',
         name: '/DataScreen/index',
-        component: () => import('@/views/DataScreen/index'),
+        // component: () => import('@/views/DataScreen/index'),
+        component: () => import('@/views/DataScreen/dataScreen.vue'),
         meta: {title: '数据大屏'},
       },
     ]

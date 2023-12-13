@@ -156,7 +156,7 @@ export default {
   created() {
     document.body.style.overflow = 'hidden'
 
-    console.log(this.$getDpi(45.5))
+    // console.log(this.$getDpi(45.5))
     this.state = this.$route.query.type
     this.getData()
     this.timer = setInterval(() => {
