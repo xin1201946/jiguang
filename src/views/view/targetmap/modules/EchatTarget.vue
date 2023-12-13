@@ -70,7 +70,7 @@
       </g>
     </g>
     <g class="dot">
-      <circle v-for="(item, i) in dots" :key="i" r="6" fill="red" :cx="item.x" :cy="item.y">
+      <circle v-for="(item, i) in dots" :key="i" :r="state.indexOf('手枪') != -1 ? '44':'8'" fill="red" :cx="item.x" :cy="item.y">
       </circle>
     </g>
   </svg>
@@ -82,6 +82,9 @@ export default {
     dots: {
       type: [Object, Array],
     },
+    state:{
+      type: String
+    }
   },
   name: 'echarTarget',
   data() {
@@ -108,8 +111,8 @@ export default {
   user-select: none;
 }
 .dian {
-  width: 10px;
-  height: 10px;
+  width: 100px;
+  height: 100px;
   background: red;
 }
 .target {
