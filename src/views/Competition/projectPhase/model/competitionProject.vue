@@ -184,7 +184,7 @@ export default {
         this.data = res.result.records
         if (this.data.length) {
           this.selectedRowKeys = [this.data[0].cproId]
-          this.$emit("change", [this.data[0].cproId], this.data[0].projectName)
+          this.$emit("change", [this.data[0].cproId], this.data[0].projectName, this.data[0])
         }
         this.pagination.current = res.result.current
         this.pagination.total = res.result.total
@@ -196,14 +196,14 @@ export default {
         on: {
           click(){
             that.selectedRowKeys = [record.cproId]
-            that.$emit("change", [record.cproId], record.projectName)
+            that.$emit("change", [record.cproId], record.projectName, record)
           }
         }
       }
     },
     handleChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
-      this.$emit("change", selectedRowKeys, selectedRows[0].projectName)
+      this.$emit("change", selectedRowKeys, selectedRows[0].projectName, selectedRows[0])
     },
     handleTableChange (pagination) {
       this.pagination = pagination

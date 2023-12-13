@@ -32,7 +32,7 @@
                 <ProjectPhaseDeviceTable :disabled="disabled" ref="device" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="2" tab="参赛人员">
-                <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId"/>
+                <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId" :mode="mode"/>
               </a-tab-pane>
             </a-tabs>
           </div>
@@ -70,7 +70,8 @@ export default {
       cproId: "",
       check: '',
       contestId: '',
-      projectName: ''
+      projectName: '',
+      mode: '0'
     }
   },
   computed: {
@@ -112,7 +113,8 @@ export default {
         this.tree = data
       })
     },
-    getChange(cproId, name) {
+    getChange(cproId, name, data) {
+      this.mode = data.mode
       this.cproId = String(cproId)
       this.projectName = name
     },

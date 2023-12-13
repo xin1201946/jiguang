@@ -4,6 +4,7 @@
       <div style="margin-bottom: 20px" v-if="!disabled">
         <a-space>
           <a-button
+            v-if="mode === '0'"
             type="primary"
             @click="handleAdd"
             icon="plus"
@@ -63,6 +64,10 @@ export default {
     },
     disabled: {
       type: Boolean
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data() {
