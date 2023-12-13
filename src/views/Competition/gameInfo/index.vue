@@ -80,7 +80,7 @@
         <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
 
-        <GameInfoRemarkModal ref="remark" @confirm="editSuccessHandle" />
+        <GameInfoRemarkModal ref="remark" @confirm="remarkSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -114,6 +114,7 @@ import {
   penalty,
   editStagePlayer,
   contest_processGetSitePdf,
+  remark,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 import BizMixins from '@views/biz/bizMixins'
@@ -129,7 +130,7 @@ export default {
     GameInfoGroupModal,
     GameInfoPenaltyModal,
     GameInfoEditModal,
-    GameInfoRemarkModal
+    GameInfoRemarkModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -194,6 +195,22 @@ export default {
      */
     handleRemark(row) {
       this.$refs.remark.init(row)
+    },
+    remarkSuccessHandle() {
+      remark({
+        stageId: this.cproStageId, //阶段id
+        playerId: e.playerId, //运动员id
+        remark: e.remark, //备注
+      }).then((res) => {
+        console.log(res)
+        if (res.success) {
+          this.$message.success('操作成功！')
+          this.getTableList()
+          this.$refs.remark.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     /**
      * 判罚扣分

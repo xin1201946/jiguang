@@ -107,6 +107,8 @@ export const delPlayerShootScore = data => getAction("contest-process/delPlayerS
 export const updateScore = data => postAction("contest-process/updateScore", data)
 //判罚
 export const penalty = data => postAction("contest-process/penalty", data)
+// 备注
+export const remark = data => postAction("contest-process/remark", data)
 //查询编辑人员
 export const getStageInPlayerList = data => postAction("contest-process/getStageInPlayerList", data)
 //编辑人员确认接口

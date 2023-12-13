@@ -2,9 +2,9 @@
   <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
     <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 14 }" :rules="rules" ref="form" :model="formData">
       <a-form-model-item label="比赛状态">
-        <a-radio-group v-model="formData.status">
-          <a-radio value="DNF">未完成比赛</a-radio>
-          <a-radio value="DNS">未参加比赛</a-radio>
+        <a-radio-group v-model="formData.remark">
+          <a-radio value="DNF">未完成比赛-DNF</a-radio>
+          <a-radio value="DNS">未参加比赛-NDS</a-radio>
         </a-radio-group>
       </a-form-model-item>
     </a-form-model>
@@ -24,19 +24,6 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {},
-      rules: {
-        score: {
-          validator: (rule, value, callback) => {
-            if (value < 0) {
-              callback('分数不得小于0！')
-            } else if (value > 10.9) {
-              callback('分数不得大于10.9！')
-            } else {
-              callback()
-            }
-          },
-        },
-      },
     }
   },
   methods: {
