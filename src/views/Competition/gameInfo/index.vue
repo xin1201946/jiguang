@@ -52,7 +52,7 @@
               <a-button @click.stop="handleBisai(i)">开始</a-button>
               <a-button @click.stop="handleEnd(i)">结束</a-button>
             </a-space>
-            <a-table bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
+            <a-table :rowClassName="(r, i) => r.remarkPenalty ? 'red':'' " bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
               <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
@@ -186,10 +186,6 @@ export default {
         dataSource: this.dataSource,
       })
     },
-    handlePenalty(row) {
-      // 打开判罚
-      this.$refs.penalty.init(row)
-    },
     /**
      * 打开备注
      */
@@ -211,6 +207,10 @@ export default {
           this.$message.error(res.message)
         }
       })
+    },
+    // 打开判罚
+    handlePenalty(row) {
+      this.$refs.penalty.init(row)
     },
     /**
      * 判罚扣分
@@ -609,6 +609,9 @@ export default {
 
 <style scoped lang="less">
 @btnHeight: 50px;
+/deep/.red {
+  background: rgba(209, 35, 4, 0.3);
+}
 .gameInfo {
   height: 100%;
   overflow: hidden;
