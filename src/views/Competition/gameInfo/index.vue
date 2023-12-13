@@ -59,6 +59,8 @@
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
                   <a-button type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
+
+                  <a-button type="danger" size="small" ghost icon="retweet" @click="handleRemark(record)">备注</a-button>
                 </a-space>
               </template>
             </a-table>
@@ -77,6 +79,8 @@
         <GameInfoGroupModal ref="group" @success="getTableList"></GameInfoGroupModal>
         <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
+
+        <GameInfoRemarkModal ref="remark" @confirm="editSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -91,6 +95,7 @@ import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawMod
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
 import GameInfoPenaltyModal from '@views/Competition/gameInfo/modal/gameInfoPenalty.vue'
 import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vue'
+import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemark.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
 import {
   bizContestProjectList,
@@ -124,6 +129,7 @@ export default {
     GameInfoGroupModal,
     GameInfoPenaltyModal,
     GameInfoEditModal,
+    GameInfoRemarkModal
   },
   inject: ['closeCurrent'],
   data() {
@@ -182,6 +188,12 @@ export default {
     handlePenalty(row) {
       // 打开判罚
       this.$refs.penalty.init(row)
+    },
+    /**
+     * 打开备注
+     */
+    handleRemark(row) {
+      this.$refs.remark.init(row)
     },
     /**
      * 判罚扣分
@@ -427,7 +439,7 @@ export default {
      * 左侧功能
      */
     onSelect(keys, event) {
-      this.$refs.treeCard.loading = true;
+      this.$refs.treeCard.loading = true
       // isLeaf 为true时是最底层
       // keys 阶段id
       if (event.node.isLeaf) {
@@ -468,7 +480,7 @@ export default {
         this.draw = false
         this.group = null
         this.groupActive = false
-        this.$refs.treeCard.loading = false;
+        this.$refs.treeCard.loading = false
       }
     },
     onExpand() {},
