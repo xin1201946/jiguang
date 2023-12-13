@@ -294,7 +294,7 @@ p {
     p {
       flex: 1;
       font-weight: 1000;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 80px;
       margin-bottom: 0;
     }
@@ -325,7 +325,7 @@ p {
       div {
         flex: 1;
         // background: #ef4b4c;
-        font-size: 24px;
+        font-size: 22px;
         line-height: 50px;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         font-weight: bolder;

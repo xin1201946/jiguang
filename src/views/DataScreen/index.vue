@@ -43,7 +43,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="[{x: 0, y: 33},{x: 0, y: 330}]" />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
           <div class="box">
             <div class="name">某某某</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget />
+              <EchatTarget :dots="dos" />
             </div>
           </div>
         </div>
@@ -161,6 +161,33 @@ export default {
   components: { TableListVue, RankingList, EchatTarget, TableListVue2 },
   data() {
     return {
+      dos: [
+        {
+          x: 79,
+          y: 89,
+        },
+        {
+          x: 81,
+          y: 83,
+        },
+        {
+          x: 81,
+          y: 77,
+        },
+        {
+          x: 78,
+          y: 77,
+        },
+        {
+          x: 79,
+          y: 76,
+        },
+        {
+          x: 80,
+          y: 76,
+        },
+      ],
+
       projectName: '',
       stageGroup: '',
       shootGroups: '',
@@ -725,7 +752,8 @@ v-deep ::-webkit-scrollbar {
   height: 100vh;
   overflow: hidden;
   // background: radial-gradient(rgb(30, 61, 163) 15.4639%, rgb(1, 9, 43) 99.4845%);
-  background: url(../../assets/350.jpg) no-repeat center center/cover;
+  // background: url(../../assets/350.jpg) no-repeat center center/cover;
+  background: #001441;
   // background: url(https://fujian.passboat.com/uploads/0108/1578471990000fa2f.png) no-repeat center center/cover;
   // background: url(../../assets/20b1OOOPICe1.jpg) no-repeat center center/cover;
 
