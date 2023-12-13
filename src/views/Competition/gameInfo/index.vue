@@ -80,7 +80,7 @@
         <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
 
-        <GameInfoRemarkModal ref="remark" @confirm="remarkSuccessHandle" />
+        <GameInfoRemarkModal ref="remark" @ok="remarkSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -196,7 +196,7 @@ export default {
     handleRemark(row) {
       this.$refs.remark.init(row)
     },
-    remarkSuccessHandle() {
+    remarkSuccessHandle(e) {
       remark({
         stageId: this.cproStageId, //阶段id
         playerId: e.playerId, //运动员id

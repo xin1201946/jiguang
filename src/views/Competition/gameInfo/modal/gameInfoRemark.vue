@@ -1,6 +1,6 @@
 <template>
   <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
-    <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 14 }" :rules="rules" ref="form" :model="formData">
+    <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }" :rules="rules" ref="form" :model="formData">
       <a-form-model-item label="比赛状态">
         <a-radio-group v-model="formData.remark">
           <a-radio value="DNF">未完成比赛-DNF</a-radio>
@@ -24,6 +24,7 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {},
+      rules: {},
     }
   },
   methods: {
