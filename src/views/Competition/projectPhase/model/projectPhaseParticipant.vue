@@ -10,6 +10,9 @@
             icon="plus"
           >编辑人员名单
           </a-button>
+          <div v-if="mode === '1'" style="color: #bbb">
+            混合团体参赛人员通过资格赛自动生成
+          </div>
         </a-space>
       </div>
       <a-table

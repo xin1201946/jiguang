@@ -41,11 +41,14 @@
           </template>
           <template slot="operator">
             <a-space v-if="status === '0'">
-              <a-button v-show="!t.includes('团体') && t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
-              <a-button v-show="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
+              <a-button v-if="!t.includes('团体') && t !== '全部'" icon="edit" type="primary" @click="handleUserEdit">编辑人员名单</a-button>
+              <a-button v-if="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
               <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
               <a-button type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
             </a-space>
+            <div v-show="t.includes('团体')" style="color: #bbb">
+              混合团体参赛人员通过资格赛自动生成
+            </div>
           </template>
           <a-table
             :scroll="{x: 1400}"
