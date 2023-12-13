@@ -16,20 +16,7 @@
     </div>
     <!-- 个人资格赛 -->
     <div class="personally" v-if="state.indexOf('个人资格赛') != -1">
-      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
-        <div>
-          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[0]" />
-        </div>
-        <div v-if="personallyList.List[1].length != 0">
-          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[1]" />
-        </div>
-        <div v-if="personallyList.List[2].length != 0">
-          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[2]" />
-        </div>
-        <div v-if="personallyList.List[3].length != 0">
-          <TableListVue type="个人赛" :TitleList="personallyList.title" :List="personallyList.List[3]" />
-        </div>
-      </a-carousel>
+      <TableListVue type="个人赛" :TitleList="personallyList.title" :List="[...personallyList.List[0], ...personallyList.List[1], ...personallyList.List[2]]" style="width: 100%; min-height: 100%"/>
     </div>
     <!-- 个人赛淘汰赛 -->
     <div class="personally" v-if="state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1">
@@ -39,67 +26,11 @@
         </div>
       </a-carousel>
       <div class="targetImage">
-        <div class="flex">
+        <div class="flex" v-for="(item, index) in personallyFinalsList.List[0]" :key="index">
           <div class="box">
-            <div class="name">某某某</div>
+            <div class="name">{{item['姓名']}}</div>
             <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
-            </div>
-          </div>
-        </div>
-        <div class="flex">
-          <div class="box">
-            <div class="name">某某某</div>
-            <div :class="state.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
-              <EchatTarget :dots="dos" :state="state" />
+              <EchatTarget :dots="item.playerScores" :state="state" />
             </div>
           </div>
         </div>
@@ -107,7 +38,8 @@
     </div>
     <!-- 团队赛 -->
     <div class="team" v-if="state.indexOf('团体排名') != -1">
-      <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
+      <TameRankingList style="width: 100%; min-height: 100%" type="团队赛" :TitleList="teamList.title" :List="teamList.List[0]" />
+      <!-- <a-carousel ref="personally1" style="width: 100%; min-height: 100%">
         <div>
           <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[0]" />
         </div>
@@ -120,7 +52,7 @@
         <div v-if="teamList.List[3].length != 0">
           <TableListVue type="团队赛" :TitleList="teamList.title" :List="teamList.List[3]" />
         </div>
-      </a-carousel>
+      </a-carousel> -->
     </div>
     <!-- 混团 -->
     <div class="mixeTeamFinals" v-if="[
@@ -155,39 +87,13 @@ import TableListVue from './components/tableList.vue'
 import TableListVue2 from './components/tableList2.vue'
 // 排名
 import RankingList from './components/rankingList.vue'
+import TameRankingList from './components/tameRankingList.vue'
 // 靶图
 import EchatTarget from '../view/targetmap/modules/EchatTarget.vue'
 export default {
-  components: { TableListVue, RankingList, EchatTarget, TableListVue2 },
+  components: { TableListVue, RankingList, EchatTarget, TableListVue2, TameRankingList },
   data() {
     return {
-      dos: [
-        {
-          x: 80 * 3.94,
-          y: 80 * 3.94,
-        },
-        // {
-        //   x: 81 * 3.95,
-        //   y: 83 * 3.95,
-        // },
-        // {
-        //   x: 81 * 3.95,
-        //   y: 77 * 3.95,
-        // },
-        // {
-        //   x: 78 * 3.95,
-        //   y: 77 * 3.95,
-        // },
-        // {
-        //   x: 79 * 3.95,
-        //   y: 76 * 3.95,
-        // },
-        // {
-        //   x: 80,
-        //   y: 76,
-        // },
-      ],
-
       projectName: '',
       stageGroup: '',
       shootGroups: '',
@@ -284,6 +190,7 @@ export default {
             },
             {
               name: '靶位',
+              width: '80px',
             },
             {
               name: '姓名',
@@ -369,6 +276,7 @@ export default {
                 靶位: item.targetSite,
                 姓名: item.playerName,
                 总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                playerScores: item.playerScores,
               }
               item.groupList.forEach((e, v) => {
                 obj[e.groupCount] = e.groupTotal
@@ -395,27 +303,45 @@ export default {
             {
               name: '代表队',
             },
+            {
+              name: '姓名',
+            },
           ]
+          if (data[0].groupCount) {
+            for (let i = 0; i < data[0].groupCount; i++) {
+              this.teamList.title.push({
+                name: `${i + 1}0`,
+              })
+            }
+          }
+
           this.teamList.title.push({
             name: '总环数',
           })
           if (data && data.length != 0) {
             data.forEach((item, index) => {
-              let obj = {
-                id: item.playerName,
-                排名: index + 1,
-                代表队: item.groupName,
-                总环数: `${item.stageTotal}`,
-              }
-              if (index < 8) {
-                this.teamList.List[0].push(obj)
-              } else if (index < 16 && index > 7) {
-                this.teamList.List[1].push(obj)
-              } else if (index < 24 && index > 15) {
-                this.teamList.List[2].push(obj)
-              } else if (index < 32 && index > 23) {
-                this.teamList.List[3].push(obj)
-              }
+              item.playerList.forEach((e, v) => {
+                let obj = {
+                  id: item.playerName,
+                  排名: index + 1,
+                  姓名: e.playerName,
+                  代表队: item.groupName,
+                  总环数: `${item.stageTotal}`,
+                }
+                e.groupList.forEach((s, c) => {
+                  obj[`${c + 1}0`] = s.groupTotal
+                })
+                if (index < 8) {
+                  this.teamList.List[0].push(obj)
+                } else if (index < 16 && index > 7) {
+                  this.teamList.List[1].push(obj)
+                } else if (index < 24 && index > 15) {
+                  this.teamList.List[2].push(obj)
+                } else if (index < 32 && index > 23) {
+                  this.teamList.List[3].push(obj)
+                }
+                console.log(this.teamList.List[0])
+              })
             })
           } else {
             this.teamList.List = [[], [], [], []]
@@ -510,14 +436,14 @@ v-deep ::-webkit-scrollbar {
     align-items: center;
     justify-content: center;
     width: 25%;
-    height: 150px;
+    height: 156px;
     overflow: hidden;
     .box {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 300.5px;
-      height: 300.5px;
+      width: 300px;
+      height: 300px;
       .name {
         position: absolute;
         left: 0;
@@ -531,8 +457,8 @@ v-deep ::-webkit-scrollbar {
         height: 300px;
       }
       .buqiang {
-        width: 300.4px;
-        height: 300.4px;
+        width: 300px;
+        height: 300px;
       }
     }
   }
@@ -557,25 +483,25 @@ v-deep ::-webkit-scrollbar {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 120px;
+    height: 80px;
     margin-bottom: 20px;
     .left {
       display: flex;
       align-items: center;
       .logo {
         width: 150px;
-        height: 32px;
+        height: 26px;
         margin-bottom: 20px;
       }
       .theme {
         color: #fff;
         font-weight: 1000;
-        font-size: 30px;
+        font-size: 24px;
       }
       .title {
         color: #fff;
         font-weight: 1000;
-        font-size: 30px;
+        font-size: 24px;
       }
     }
     .right {
@@ -583,7 +509,7 @@ v-deep ::-webkit-scrollbar {
         display: inline-block;
         color: #fff;
         font-weight: 1000;
-        font-size: 30px;
+        font-size: 24px;
       }
     }
   }

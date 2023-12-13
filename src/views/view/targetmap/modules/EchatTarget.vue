@@ -70,7 +70,7 @@
       </g>
     </g>
     <g class="dot">
-      <circle v-for="(item, i) in dots" :key="i" :r="state.indexOf('手枪') != -1 ? '44':'8'" fill="red" :cx="item.x" :cy="item.y">
+      <circle v-for="(item, i) in dots" :key="i" :r="state.indexOf('手枪') != -1 ? '44':'8'" fill="red" :cx="item.x_coord * 3.94" :cy="item.y_coord * 3.94">
       </circle>
     </g>
   </svg>
@@ -82,9 +82,9 @@ export default {
     dots: {
       type: [Object, Array],
     },
-    state:{
-      type: String
-    }
+    state: {
+      type: String,
+    },
   },
   name: 'echarTarget',
   data() {

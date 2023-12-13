@@ -47,9 +47,7 @@ export default {
   watch: {
     List: {
       handler(newList, oldList) {
-        if (this.List) {
-          this.initialization()
-        }
+        this.initialization()
       },
       deep: true,
       immediate: true,

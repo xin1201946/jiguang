@@ -80,7 +80,9 @@ export default {
   watch: {
     List: {
       handler(newList, oldList) {
-        this.initialization()
+        if (this.List) {
+          this.initialization()
+        }
       },
       deep: true,
       immediate: true,
@@ -108,7 +110,7 @@ export default {
       this.List.forEach((item, index) => {
         this.data.push({
           ...item,
-          position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 40) : '999',
+          position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 65) : '585',
         })
       })
       let idArr = this.TableList.map((item) => item['靶位'])
@@ -119,11 +121,11 @@ export default {
             // console.log('列表中不存在', this.data[i])
             this.TableList.push(this.data[i])
             setTimeout(() => {
-              this.data[i].position = i * 40
+              this.data[i].position = i * 65
             }, 100)
             this.TableList.forEach((e, index) => {
               if (newIdList.indexOf(e['靶位']) === -1) {
-                e.position = '999'
+                e.position = '585'
                 let obj = this.TableList[index]
                 this.TableList[index] = this.TableList[this.TableList.length - 1]
                 this.TableList[this.TableList.length - 1] = obj
@@ -136,14 +138,14 @@ export default {
                 if (this.data[i]['排名'] == e['排名']) {
                   this.TableList[index] = {
                     ...this.data[i],
-                    position: i * 40,
+                    position: i * 65,
                   }
                   // console.log('相同', this.data[i])
                 } else {
                   // console.log('列表中存在，但位置改变', this.data, this.data[i], i, i * 65)
                   this.TableList[index] = {
                     ...this.data[i],
-                    position: i * 40,
+                    position: i * 65,
                   }
                 }
               }
@@ -227,7 +229,7 @@ export default {
           if (idArr.indexOf(this.data[i]['代表队']) === -1) {
             this.TableList.push(this.data[i])
             setTimeout(() => {
-              this.data[i].position = i * 50
+              this.data[i].position = i * 115
             }, 100)
             this.TableList.forEach((e, index) => {
               if (newIdList.indexOf(e['代表队']) === -1) {
@@ -300,7 +302,7 @@ p {
   &-list {
     position: relative;
     width: 100%;
-    height: 800px;
+    height: 575px;
     overflow: hidden;
     .mixeTeam {
       align-items: center;
