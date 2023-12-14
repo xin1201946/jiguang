@@ -32,7 +32,7 @@
                 <ProjectPhaseDeviceTable :disabled="disabled" ref="device" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="2" tab="参赛人员">
-                <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId" :mode="mode"/>
+                <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId" :mode="mode" />
               </a-tab-pane>
             </a-tabs>
           </div>
@@ -53,7 +53,7 @@ import ProjectPhaseStageTable from '@views/Competition/projectPhase/model/projec
 import projectPhaseParticipant from '@views/Competition/projectPhase/model/projectPhaseParticipant.vue'
 export default {
   name: 'projectPhase',
-  inject: ["closeCurrent"],
+  inject: ['closeCurrent'],
   components: {
     TreeCard,
     Card,
@@ -61,17 +61,17 @@ export default {
     CompetitionProject,
     ProjectPhaseStageTable,
     ProjectPhaseDeviceTable,
-    projectPhaseParticipant
+    projectPhaseParticipant,
   },
   data() {
     return {
       tree: {},
-      id: "",
-      cproId: "",
+      id: '',
+      cproId: '',
       check: '',
       contestId: '',
       projectName: '',
-      mode: '0'
+      mode: '0',
     }
   },
   computed: {
@@ -80,7 +80,7 @@ export default {
         return false
       }
       return true
-    }
+    },
   },
   watch: {
     $route: {
@@ -90,22 +90,22 @@ export default {
         this.getInfo(n.query)
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     handleBack() {
       this.$nextTick(() => {
         if (this.check === '1') {
           this.$router.push('/Competition/eventReview')
-        }else {
+        } else {
           this.$router.push('/competition/competitionList')
         }
         this.closeCurrent()
       })
     },
     getInfo({ id }) {
-      bizContestQueryById(id).then(res => {
+      bizContestQueryById(id).then((res) => {
         this.id = id
         const data = JSON.parse(JSON.stringify(res.result))
         data.contestTime = [data.contestTimeStart, data.contestTimeEnd]
@@ -134,15 +134,15 @@ export default {
       })
     },
     // 提交
-    clickSubmit(){
+    clickSubmit() {
       let parms = {
         contestId: this.contestId,
-        contestStatus: '1'
+        contestStatus: '1',
       }
       bizContestAudit(parms).then((res) => {
         if (res.success) {
           this.$message.success(res.message)
-          this.handleBack();
+          this.handleBack()
         } else {
           this.$message.error(res.message)
         }
@@ -152,12 +152,12 @@ export default {
     clickApproved() {
       let parms = {
         contestId: this.contestId,
-        contestStatus: '2'
+        contestStatus: '2',
       }
       bizContestAudit(parms).then((res) => {
         if (res.success) {
           this.$message.success(res.message)
-          this.handleBack();
+          this.handleBack()
         } else {
           this.$message.error(res.message)
         }
@@ -167,18 +167,18 @@ export default {
     clickReviewrejection() {
       let parms = {
         contestId: this.contestId,
-        contestStatus: '0'
+        contestStatus: '0',
       }
       bizContestAudit(parms).then((res) => {
         if (res.success) {
           this.$message.success('审核已驳回！')
-          this.handleBack();
+          this.handleBack()
         } else {
           this.$message.error(res.message)
         }
       })
     },
-  }
+  },
 }
 </script>
 
@@ -236,6 +236,5 @@ export default {
       justify-content: center;
     }
   }
-
 }
 </style>
