@@ -85,6 +85,13 @@ export const competitionListTableColumns = [
     width: 100
   },
   {
+    title: "赛事状态",
+    dataIndex: "contestStatus",
+    align: 'center',
+    width: 200,
+    customRender: text => getLabel(status, text)
+  },
+  {
     title: "报名时间",
     dataIndex: "registTime",
     align: 'center',
@@ -113,13 +120,6 @@ export const competitionListTableColumns = [
     dataIndex: "location",
     align: 'center',
     width: 260
-  },
-  {
-    title: "赛事状态",
-    dataIndex: "contestStatus",
-    align: 'center',
-    width: 200,
-    customRender: text => getLabel(status, text)
   },
   {
     title: '操作',

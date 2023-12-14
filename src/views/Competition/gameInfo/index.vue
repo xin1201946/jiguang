@@ -4,6 +4,12 @@
       <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
     </div>
     <div class="cards">
+      <div class="example" v-if="loading2">
+        <div>
+          <a-spin />
+          <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
+        </div>
+      </div>
       <TreeCard ref="treeCard">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
@@ -117,7 +123,8 @@ import {
   penalty,
   editStagePlayer,
   contest_processGetSitePdf,
-  remark, contest_processGetStageGroupTime
+  remark,
+  contest_processGetStageGroupTime,
 } from '@api/competition'
 import { numToCapital, infoMessage } from '@/utils'
 
@@ -133,11 +140,13 @@ export default {
     GameInfoPenaltyModal,
     GameInfoEditModal,
     GameInfoRemarkModal,
-    GameInfoDateModal
+    GameInfoDateModal,
   },
   inject: ['closeCurrent'],
   data() {
     return {
+      loading2: false,
+
       treeList: [],
       cproStageId: null,
       cproId: null,
@@ -177,8 +186,8 @@ export default {
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
       }
-      contest_processGetStageGroupTime(obj).then(res => {
-        if (res.code === 200){
+      contest_processGetStageGroupTime(obj).then((res) => {
+        if (res.code === 200) {
           this.$refs.date.init(res.result, obj)
         }
       })
@@ -280,18 +289,23 @@ export default {
      * 推送到pad
      */
     pushPadHandle() {
+      this.loading2 = true
       propePlayerSiteToPad({
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
-      }).then((res) => {
-        if (res.success) {
-          this.$message.success('推送成功！')
-        } else {
-          this.$message.error(res.message)
-        }
       })
+        .then((res) => {
+          if (res.success) {
+            this.$message.success('推送成功！')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+        .finally(() => {
+          this.loading2 = false
+        })
     },
     /**
      * 导入
@@ -516,7 +530,6 @@ export default {
         this.groupActive = false
         this.$refs.treeCard.loading = false
       }
-
     },
     onExpand() {},
     handleZhunbei(row) {
@@ -647,7 +660,23 @@ export default {
   }
 
   .cards {
+    position: relative;
     height: calc(100% - @btnHeight - 10px);
+    .example {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 9999;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 4px;
+    }
     /deep/.ant-tree-child-tree.ant-tree-child-tree-open {
       //选中后设置背景色及高度
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal.ant-tree-node-selected::before {
