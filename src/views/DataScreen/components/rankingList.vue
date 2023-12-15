@@ -89,7 +89,7 @@ export default {
           flex: 1;
           text-align: center;
           font-weight: bolder;
-          font-size: 30px;
+          font-size: 26px;
         }
       }
       .content {
@@ -99,7 +99,7 @@ export default {
           p {
             flex: 1;
             text-align: center;
-            font-size: 26px;
+            font-size: 22px;
 
             text-overflow: ellipsis;
             overflow: hidden;
@@ -129,7 +129,7 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
-        font-size: 26px;
+        font-size: 24px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -150,7 +150,7 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
-        font-size: 26px;
+        font-size: 24px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -171,7 +171,7 @@ export default {
         left: 50%;
         top: -80%;
         transform: translateX(-50%);
-        font-size: 26px;
+        font-size: 24px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

@@ -1,28 +1,5 @@
 <template>
   <div class="boxMixed">
-    <div class="head">
-      <div class='top'>
-        <div>
-          <div class="left">
-            <img class="logo" src="@/assets/logo1.png" alt="" />
-            <div>
-              <!-- {{ data.configName }} -->
-              {{ stageName }}-{{ projectName }}-{{ stageGroup }}
-            </div>
-          </div>
-          <!-- <div>{{ logoTitle }}</div> -->
-        </div>
-        <div class='right'>
-          <div>
-            <div class="nameTitle">
-              <div>{{ '1208青少年射击比赛' }}</div>
-              <div style="margin-left: 15px;">{{ "保定市星光酒店" }}</div>
-            </div>
-            <div class="times">2023-12-14 09:06</div>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- 混团信息 -->
     <div class="mixeTeamFinals">
       <a-carousel style="width: 100%; min-height: 100%">
@@ -77,7 +54,7 @@ export default {
         projectName: undefined,
         stageGroup: undefined,
         stageName: undefined,
-        state:'',
+        state: '',
       },
     }
   },
@@ -94,7 +71,7 @@ export default {
   methods: {
     // 混团列表
     getData() {
-      console.log(this.state);
+      console.log(this.state)
       getMixeTeamFinalsListAPI({
         screenName: this.state,
         stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
@@ -122,7 +99,7 @@ export default {
           this.mixeTeamFinalsList.List = [[]]
         }
       })
-    }
+    },
   },
   destroyed() {
     clearInterval(this.timer)
