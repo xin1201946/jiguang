@@ -1,6 +1,7 @@
 <template>
   <dv-border-box-8 :dur="20" class="DataScreen container">
     <div class="box_box">
+      <!-- 头部 -->
       <div class="head">
         <div class='top'>
           <div>
@@ -28,14 +29,13 @@
         <div>时间：2023-12-14</div>
       </div> -->
       </div>
-      <!--    个人资格赛表头-->
+      <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i'
-          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
-      <div style="width: 100%;height: 100%;" v-if="shootGroups < 5">
+      <div style="width: 100%;height: 100%;" v-if="shootGroups < 5 && logoTitle == '个人资格赛'">
         <!--    整页的滚动-->
         <div class="foots" ref="scorllBox">
           <div class="footContent" ref="scorllArr">
@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div style="width: 100%;height: 100%;" v-else>
+      <div style="width: 100%;height: 100%;" v-if="shootGroups > 5 && logoTitle == '个人资格赛'">
         <!--    前8位-->
         <div class='finalEight'>
           <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
@@ -77,6 +77,26 @@
               <div style="width: 80px">{{ item.rank }}</div>
               <div style="width: 80px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
+              <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;">
+                {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+              </div>
+              <div style="width: 150px;">{{ item.total }}</div>
+              <div style="flex: 1;">{{ item.notes }}</div>
+              <div style="width: 60px">{{ item.bePromoted }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 100%;height: 100%;" v-if="['步枪团体排名', '手枪团体排名'].indexOf(this.logoTitle) != -1">
+        <!--    整页的滚动-->
+        <div class="foots" ref="scorllBox">
+          <div class="footContent" ref="scorllArr">
+            <div v-for="(item, i) in listsList" :key="i" class="finalEightRow">
+              <div style="width: 80px">{{ item.rank }}</div>
+              <div style="width: 80px">{{ item.targetSite }}</div>
+              <div style="width: 140px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
               <div v-for="k in shootGroups" :key="k" style="width: 80px;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
@@ -122,17 +142,19 @@ export default {
       projectName: '',
       stageGroup: '',
       stageName: '',
+
+      teamList: [],
     }
   },
   computed: {
     logoTitle() {
       const data = JSON.parse(window.name)
       const configName = data.configName
-      if (configName.includes("个人资格赛")) {
-        return "个人成绩"
-      }
-
-    }
+      return configName
+      // if (configName.includes('个人资格赛')) {
+      //   return '个人成绩'
+      // }
+    },
   },
   mounted() {
     this.getList()
@@ -145,7 +167,7 @@ export default {
     upload() {
       const box = this.$refs.scorllBox
       const arr = this.$refs.scorllArr
-      const arr2 = document.createElement("div")
+      const arr2 = document.createElement('div')
       arr2.innerHTML = arr.innerHTML
       const thit = this
       function scrolls() {
@@ -176,11 +198,11 @@ export default {
         this.animation = undefined
       }
     },
-    // 个人
+    // 个人资格赛
     geren(old) {
       littleScreen({
-        type: this.data.configName
-      }).then(res => {
+        type: this.data.configName,
+      }).then((res) => {
         const { result } = res
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
@@ -201,7 +223,7 @@ export default {
           },
           {
             name: '代表队',
-            align: 'left'
+            align: 'left',
           },
         ]
         if (result.shootGroups) {
@@ -209,20 +231,20 @@ export default {
           for (let i = 0; i < result.shootGroups; i++) {
             this.th.push({
               name: `${i + 1}0`,
-              width: '80px'
+              width: '80px',
             })
           }
         }
-        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px', })
-        console.log(old === "old")
-        if (old === "old") {
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
+        console.log(old === 'old')
+        if (old === 'old') {
           this.oldList = result.players
         }
         // 判断到没有到50发
         if (result.shootGroups) {
           this.shootGroups = result.shootGroups
           if (this.shootGroups < 5) {
-            this.listsList = result.players.map(item => {
+            this.listsList = result.players.map((item) => {
               return {
                 ...item,
                 total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
@@ -232,23 +254,27 @@ export default {
             })
           } else {
             // 设置前8名
-            this.finalEight = result.players.filter(item => item.rank <= 8).map((item, i) => {
-              return {
-                ...item,
-                total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                notes: '备注.费电还是看会看多少个备注.费电还是看会看多少个备注.费电还是看会看多少个',
-                bePromoted: 'Q',
-              }
-            })
+            this.finalEight = result.players
+              .filter((item) => item.rank <= 8)
+              .map((item, i) => {
+                return {
+                  ...item,
+                  total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                  notes: '备注.费电还是看会看多少个备注.费电还是看会看多少个备注.费电还是看会看多少个',
+                  bePromoted: 'Q',
+                }
+              })
             // 除了前8名
-            this.list = result.players.filter(item => item.rank > 8).map(item => {
-              return {
-                ...item,
-                total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                notes: '---',
-                bePromoted: '',
-              }
-            })
+            this.list = result.players
+              .filter((item) => item.rank > 8)
+              .map((item) => {
+                return {
+                  ...item,
+                  total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                  notes: '---',
+                  bePromoted: '',
+                }
+              })
           }
         }
         this.$nextTick(() => {
@@ -256,17 +282,67 @@ export default {
         })
       })
     },
+    // 个人决赛
+    gerenjuesaii(old) {},
     // 团体
     tuanti() {
       getTeamScoresAPI({
-        screenName: this.data.configName
+        screenName: this.data.configName,
+      }).then((res) => {
+        const { result } = res
+        this.projectName = result[0].projectName
+        this.stageGroup = result[0].stageGroup
+        this.stageName = result[0].stageName
+        this.th = [
+          {
+            name: '排名',
+            width: '80px',
+          },
+          {
+            name: '代表队',
+          },
+          {
+            name: '姓名',
+          },
+        ]
+        if (result[0].groupCount) {
+          for (let i = 0; i < result[0].groupCount; i++) {
+            this.th.push({
+              name: `${i + 1}0`,
+              width: '80px',
+            })
+          }
+        }
+        this.th.push({ name: '总环数', width: '150px' })
+        if (result && result.length != 0) {
+          result.forEach((item, index) => {
+            item.playerList.forEach((e, v) => {
+              let obj = {
+                id: item.playerName,
+                排名: index + 1,
+                姓名: e.playerName,
+                代表队: item.groupName,
+                总环数: `${item.stageTotal}`,
+              }
+              e.groupList.forEach((s, c) => {
+                obj[`${c + 1}0`] = s.groupTotal
+              })
+              this.teamList.push(obj)
+            })
+          })
+        } else {
+          this.teamList = []
+        }
+        this.$nextTick(() => {
+          this.upload()
+        })
       })
     },
     // 团队
     tuandui() {
       getTeamTotalScores({
         configName: this.data.configName,
-      })
+      }).then((res) => {})
     },
     // 混团
     huntuan() {
@@ -277,35 +353,41 @@ export default {
     },
     getData() {
       const data = JSON.parse(window.name)
-      if (data.configName.includes("个人")) {
+      if (data.configName.includes('个人资格赛')) {
         this.geren()
       }
-      if (data.configName.includes("团体")) {
+      if (data.configName.includes('个人决赛')) {
+        this.gerenjuesaii()
+      }
+      if (data.configName.includes('团体')) {
         this.tuanti()
       }
-      if (data.configName.includes("混团")) {
+      if (data.configName.includes('混团')) {
         this.huntuan()
       }
-      if (data.configName.includes("团队")) {
+      if (data.configName.includes('团队')) {
         this.tuandui()
       }
     },
     getList() {
       const data = JSON.parse(window.name)
-      if (data.configName.includes("个人")) {
-        this.geren("old")
+      if (data.configName.includes('个人资格赛')) {
+        this.geren('old')
       }
-      if (data.configName.includes("团体")) {
+      if (data.configName.includes('个人决赛')) {
+        this.gerenjuesaii('old')
+      }
+      if (data.configName.includes('团体')) {
         this.tuanti()
       }
-      if (data.configName.includes("混团")) {
+      if (data.configName.includes('混团')) {
         this.huntuan()
       }
-      if (data.configName.includes("团队")) {
+      if (data.configName.includes('团队')) {
         this.tuandui()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -319,10 +401,10 @@ export default {
   background: #001441;
   box-sizing: border-box;
   color: #fff;
-  border: 2px solid #2174B6;
+  border: 2px solid #2174b6;
 }
-.box_box{
-  width:100%;
+.box_box {
+  width: 100%;
   height: 100%;
   padding: 30px 30px 10px 30px;
   // border: 2px solid #2174B6;
@@ -369,9 +451,9 @@ export default {
   height: 45px;
   line-height: 40px;
   margin-bottom: 5px;
-  border-bottom: 2px solid #2174B6;
+  border-bottom: 2px solid #2174b6;
 
-  &>div {
+  & > div {
     flex: 1;
     text-align: center;
   }
@@ -381,7 +463,7 @@ export default {
   // display: flex;
   // justify-content: space-between;
   padding-bottom: 5px;
-  border-bottom: 2px solid #2174B6;
+  border-bottom: 2px solid #2174b6;
 }
 
 .finalEightRow {
