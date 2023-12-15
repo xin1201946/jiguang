@@ -43,7 +43,7 @@ export default {
         },
         {
           dataIndex: 'groupName',
-          title: '团体名称',
+          title: '代表队',
           align: 'center',
         },
         {

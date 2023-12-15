@@ -126,7 +126,7 @@ import {
   remark,
   contest_processGetStageGroupTime,
 } from '@api/competition'
-import { numToCapital, infoMessage } from '@/utils'
+import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
 export default {
   name: 'gameInfo',
@@ -612,22 +612,35 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id,
-        group: this.group, // 组
+        // group: this.group, // 组
       }
-      contest_processGetSitePdf(data).then((res) => {
-        const blob = new Blob([res], { type: 'text/plain' })
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.style.display = 'none'
-        a.href = url
-        a.setAttribute('download', '靶位导出.pdf')
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
+      // console.log(data)
+      const dc = () => {
+        contest_processGetSitePdf(data).then((res) => {
+          const blob = new Blob([res], { type: 'text/plain' })
+          const url = window.URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.style.display = 'none'
+          a.href = url
+          a.setAttribute('download', '靶位导出.pdf')
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          window.URL.revokeObjectURL(url)
 
-        // console.log(res)
-      })
+          // console.log(res)
+        })
+      }
+      // console.log(this.dataSource)
+      const list = this.dataSource.map(item => item.targetSite).filter(item => item)
+      // console.log(list)
+      if (list.length) {
+        dc()
+      }else {
+        infoMessage("当前组别未进行抽签，是否确认导出。").then(res => {
+          dc()
+        })
+      }
     },
     groupListHandle() {},
   },

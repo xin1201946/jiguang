@@ -1,18 +1,5 @@
 <template>
   <Card>
-    <template slot="operator">
-<!--      <a-row :gutter="24">-->
-<!--        <a-col :span="18">-->
-<!--          <div style="height: 40px;display: flex;align-items: center; justify-content: flex-start;">-->
-<!--            <a-space>-->
-<!--              <a-button type="primary" @click="handleClick">-->
-<!--                更新-->
-<!--              </a-button>-->
-<!--            </a-space>-->
-<!--          </div>-->
-<!--        </a-col>-->
-<!--      </a-row>-->
-    </template>
     <div>
       <a-tabs>
         <a-tab-pane key="1" tab="步枪">

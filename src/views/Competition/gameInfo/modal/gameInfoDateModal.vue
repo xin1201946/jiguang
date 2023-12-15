@@ -5,7 +5,6 @@
     @ok="handleOk"
     @cancel="handleCancel"
     ok-text="更新"
-    :width="700"
   >
     <div class="modal">
       <h3>{{ title }}</h3>
@@ -15,37 +14,21 @@
       >
         <template v-for="(item, i) in formData.data">
           <a-form-model-item
-            :label="numToCapital(item.stageGroup)+'组'" :key="i">
-            <a-row :gutter="24">
-              <a-col :span="12">
-                <a-form-model-item
-                  label="开始时间"
-                  :labelCol="{ span: 6 }"
-                  :wrapperCol="{ span: 17, offset: 1 }"
-                >
-                  <a-date-picker
-                    style="width: 100%"
-                    v-model="item.sgTimeStart"
-                    format="YYYY-MM-DD HH:mm:ss"
-                    valueFormat="YYYY-MM-DD HH:mm:ss"
-                  ></a-date-picker>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-model-item
-                  label="结束时间"
-                  :labelCol="{ span: 6 }"
-                  :wrapperCol="{ span: 17, offset: 1 }"
-                >
-                  <a-date-picker
-                    style="width: 100%"
-                    v-model="item.sgTimeEnd"
-                    format="YYYY-MM-DD HH:mm:ss"
-                    valueFormat="YYYY-MM-DD HH:mm:ss"
-                  ></a-date-picker>
-                </a-form-model-item>
-              </a-col>
-            </a-row>
+            :labelCol="{ span: 2 }"
+            :wrapperCol="{ span: 19, offset: 1 }"
+            :label="numToCapital(item.stageGroup)+'组'"
+            :key="i"
+          >
+            <a-range-picker
+              style='width: 100%'
+              v-model="item.times"
+              format="YYYY-MM-DD HH:mm"
+              valueFormat="YYYY-MM-DD HH:mm"
+              :showTime="{
+                format: 'HH:mm',
+                valueFormat: 'HH:mm'
+              }"
+            ></a-range-picker>
           </a-form-model-item>
         </template>
       </a-form-model>
@@ -77,14 +60,25 @@ export default {
     numToCapital,
     init(data, obj) {
       this.obj = obj
-      this.formData.data = data
+      this.formData.data = data.map(item => {
+        return {
+          ...item,
+          times: []
+        }
+      })
       this.title = `${data[0].projectGroup + data[0].cproName} - ${data[0].stageName}`
       this.visible = true
     },
     handleOk() {
       contest_processUpdateStageGroupTime({
         ...this.obj,
-        list: this.formData.data
+        list: this.formData.data.map(item => {
+          const obj = JSON.parse(JSON.stringify(item))
+          obj.sgTimeStart = item.times[0]
+          obj.sgTimeEnd = item.times[1]
+          delete item.times
+          return obj
+        })
       }).then(res => {
         if (res.success) {
           this.$message.success(res.message || "更新成功")
