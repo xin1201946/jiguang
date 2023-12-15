@@ -28,6 +28,7 @@
                 format: 'HH:mm',
                 valueFormat: 'HH:mm'
               }"
+              :disabledTime="(dates, partial) => disabledTime(dates, partial, i)"
             ></a-range-picker>
           </a-form-model-item>
         </template>
@@ -38,9 +39,9 @@
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
-import { numToCapital } from '@/utils'
+import { numToCapital, Time } from '@/utils'
 import { contest_processUpdateStageGroupTime } from '@api/competition'
-
+import dayjs from 'dayjs'
 export default {
   name: 'gameInfoDateModal',
   components: {
@@ -88,6 +89,27 @@ export default {
     },
     handleCancel() {
       this.visible = false
+    },
+    range(count) {
+      return Array.from(Array(count).keys());
+    },
+    disabledTime(dates, partial, i) {
+      const start = dayjs(this.formData.data[i].times[0]); // 获取开始时间
+      const end = dayjs(this.formData.data[i].times[1]); // 获取结束时间
+      console.log(start)
+      // console.log(dates)
+      if (partial === "start") {
+        return {
+          disabledHours: () => this.range(24).slice(end.hour() + 1),
+          disabledMinutes: () => this.range(60),
+        }
+      }
+      if (partial === "end") {
+        return {
+          disabledHours: () => this.range(24).slice(0, start.hour()),
+          disabledMinutes: () => this.range(60),
+        }
+      }
     }
   }
 }
