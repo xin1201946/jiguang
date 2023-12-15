@@ -63,7 +63,7 @@ export default {
       this.formData.data = data.map(item => {
         return {
           ...item,
-          times: []
+          times: [item.sgTimeStart, item.sgTimeEnd]
         }
       })
       this.title = `${data[0].projectGroup + data[0].cproName} - ${data[0].stageName}`

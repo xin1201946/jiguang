@@ -511,13 +511,7 @@ export default {
               <tbody>
                 ${jtr()}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="5">
-                    <div style="height: 100px"></div>
-                  </td>
-                </tr>
-              </tfoot>
+
             </table>`: ''
       const ydiv = y.length ? `<h4>铜牌赛</h4>
             <table align="center" cellspacing="0" border="0" style="width: 100%;">
@@ -533,14 +527,18 @@ export default {
               <tbody>
                 ${ytr()}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="4">
-                    <div style="height: 100px"></div>
-                  </td>
-                </tr>
-              </tfoot>
+
             </table>`: ''
+
+      // 混团备注
+      const beizhu = this.rank.length && (
+        `
+         <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
+          <div style="margin-bottom: 6px">备注</div>
+          <div>${this.rank.join("，")}</div>
+        </div style="margin-bottom: 6px">
+`
+      ) || ""
       return `
         <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
         <div>
@@ -556,17 +554,19 @@ export default {
               ${ydiv}
             </div>
           </div>
-          <div style="height: 100px;position: fixed;bottom: 0;width: 100%">
-            <div style="height: 90px; width: 96%;border: 1px solid">
-              <div>
-                备注:
-              </div>
-            </div>
+          <div style="position: fixed; bottom: 0;width: 100%">
+          <div style="width: 96%;border: 0px solid">
+            ${beizhu}
+<!--            <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">-->
+<!--              抗议截止时间:-->
+<!--              <div style='width: 20%'></div>-->
+<!--            </div>-->
           </div>
+        </div>
         </div>
       `
     },
-    // 淘汰
+    // 决赛 || 淘汰赛
     content(){
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0]

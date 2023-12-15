@@ -20,7 +20,7 @@
                 <a-col :span="5">
                   <a-form-model-item
                     :prop="'data.' + index + '.contestId'"
-                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}"
                     label="赛事名称">
                     <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
                       <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
@@ -31,7 +31,7 @@
                   <a-form-model-item
                     label="项目名称"
                     :prop="'data.' + index + '.cproId'"
-                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
                       <!--                configName-->
@@ -43,7 +43,7 @@
                   <a-form-model-item
                     label="阶段名称"
                     :prop="'data.' + index + '.stageId'"
-                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.stageId">
                       <template v-if="item.configName.includes('个人资格赛')">
@@ -93,7 +93,7 @@
                 <a-col :span="5">
                   <a-form-model-item
                     :prop="'data.' + index + '.contestId'"
-                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}"
                     label="赛事名称">
                     <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
                       <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
@@ -104,7 +104,7 @@
                   <a-form-model-item
                     label="项目名称"
                     :prop="'data.' + index + '.cproId'"
-                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
                       <!--                configName-->
@@ -116,7 +116,7 @@
                   <a-form-model-item
                     label="阶段名称"
                     :prop="'data.' + index + '.stageId'"
-                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
+                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.stageId">
                       <template v-if="item.configName.includes('个人资格赛')">
@@ -248,6 +248,9 @@ export default {
         if (res.code === 200) {
           this.formData.data = res.result.map(item => {
             return {
+              contestIdBool: false,
+              cproIdBool: false,
+              stageIdBool: false,
               ...item,
               cproIds: [],
               stageIds: []
@@ -276,6 +279,29 @@ export default {
       })
     },
     rulesDisabled(item) {
+      if (item.configName.includes("步枪")) {
+        if (item.configName.includes('金牌赛')) {
+          if (item.contestId || item.cproId || item.stageId) {
+            const data = []
+            const list = JSON.parse(JSON.stringify(this.formData.data))
+            for (let i = 0; i < list.length; i++) {
+              if (list[i].configName.includes("铜牌")) {
+                if (list[i].configName.includes("步枪")) {
+                  list[i].contestIdBool = true
+                  list[i].cproIdBool = true
+                  list[i].stageIdBool = true
+                }
+              }
+              data.push(list[i])
+            }
+            // console.log(data.filter(item => item.configName.includes("步枪")))
+          }
+        }
+        if (item.configName.includes('铜牌赛')) {
+
+        }
+      }
+
       if (item.contestId || item.cproId || item.stageId){
         return true
       }
