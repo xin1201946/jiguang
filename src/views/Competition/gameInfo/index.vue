@@ -65,9 +65,10 @@
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
-                  <a-button type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
 
-                  <a-button type="danger" size="small" ghost icon="retweet" @click="handleRemark(record)">备注</a-button>
+                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
+
+                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="retweet" @click="handleRemark(record)">备注</a-button>
                 </a-space>
               </template>
             </a-table>
@@ -524,6 +525,7 @@ export default {
         this.cproId = result[0].cproId
         this.getTableList()
       } else {
+
         this.cproStageId = null
         this.draw = false
         this.group = null

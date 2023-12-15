@@ -684,18 +684,16 @@ export default {
           </thead>
           <tbody>${tr.join('')}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="${10 + g}">
-                <div style="height: 100px"></div>
-              </td>
-            </tr>
-          </tfoot>
         </table>
-        <div style="height: 100px;position: fixed; bottom: 0;width: 100%">
-          <div style="height: 90px; width: 96%;border: 1px solid">
-            <div>
-              备注:
+        <div style="position: fixed; bottom: 0;width: 100%">
+          <div style="width: 96%;border: 0px solid">
+            <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
+              <div style="margin-bottom: 6px">备注</div>
+              <div>${this.rank.join("，")}</div>
+            </div style="margin-bottom: 6px">
+            <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
+              抗议截止时间:
+              <div style='width: 20%'></div>
             </div>
           </div>
         </div>

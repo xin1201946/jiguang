@@ -46,7 +46,15 @@
                     :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.stageId">
-                      <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      <template v-if="item.configName.includes('个人资格赛')">
+                        <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
+                      <template v-else-if="item.configName.includes('个人决赛')">
+                        <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
+                      <template v-else>
+                        <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
                     </a-select>
                   </a-form-model-item>
                 </a-col>
@@ -111,7 +119,15 @@
                     :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.stageId">
-                      <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      <template v-if="item.configName.includes('个人资格赛')">
+                        <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
+                      <template v-else-if="item.configName.includes('个人决赛')">
+                        <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
+                      <template v-else>
+                        <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
+                      </template>
                     </a-select>
                   </a-form-model-item>
                 </a-col>

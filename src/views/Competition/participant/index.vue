@@ -360,6 +360,7 @@ export default {
       this.handleAdd()
     },
     handleEdits(record) {
+      console.log(this.treeList)
       this.$refs.modal.list = this.treeList
       this.handleEdit(record)
     }
