@@ -69,9 +69,10 @@
         <text text-anchor="middle" x="315" y="322" font-size="18">10</text>
       </g>
     </g>
-    <g class="dot">
-      <circle v-for="(item, i) in dots" :key="i" :r="state.indexOf('手枪') != -1 ? '44':'8'" fill="red" :cx="item.x_coord * 3.94" :cy="item.y_coord * 3.94">
+    <g class="dot" v-for="(item, i) in dots" :key="i">
+      <circle :r="state.indexOf('手枪') != -1 ? '44':'8'" :fill="i == dots.length -1 ? '#ef563e' : '#bbbbbb'" :cx="item.x_coord * 3.94" :cy="item.y_coord * 3.94">
       </circle>
+      <text text-anchor="middle" :x="item.x_coord * 3.94" :y="item.y_coord * 3.94" font-size="18">{{item.shootCode}}</text>
     </g>
   </svg>
 </template>

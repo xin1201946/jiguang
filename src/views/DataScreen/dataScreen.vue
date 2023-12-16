@@ -97,12 +97,11 @@
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
             <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-            <div v-for="k in item.groupList" :key="k.id" style="width: 80px;">
-              {{ k.groupTotal }}
+            <div v-for="k in shootGroups" :key="k.id" style="width: 80px;">
+              {{item[k]}}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
             <div style="flex: 1;">{{ item.notes }}</div>
-            <div style="width: 60px">{{ item.bePromoted }}</div>
           </div>
         </div>
         <div class="targetImage">
@@ -401,6 +400,7 @@ export default {
           },
         ]
         if (result.shoots) {
+          this.shootGroups = result.shoots
           result.shoots.forEach((item) => {
             this.th.push({
               name: item,
@@ -408,7 +408,7 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
@@ -417,15 +417,22 @@ export default {
               notes: '---',
               bePromoted: '',
             }
-            item.groupList.forEach((e, v) => {
-              obj[e.groupCount] = e.groupTotal
+            result.shoots.forEach((k) => {
+              obj[k] = ''
             })
+            item.groupList.forEach((e, v) => {
+              result.shoots.forEach((k) => {
+                if (k == e.groupCount) {
+                  obj[k] = e.groupTotal
+                }
+              })
+            })
+
             this.finalEight.push(obj)
           })
         } else {
           this.finalEight = []
         }
-        console.log(this.finalEight)
       })
     },
     // 团体赛
@@ -446,7 +453,7 @@ export default {
           {
             name: '代表队',
             align: 'left',
-            width: '300px'
+            width: '300px',
           },
           {
             name: '姓名',
