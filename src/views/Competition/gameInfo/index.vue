@@ -614,7 +614,7 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id,
-        // group: this.group, // 组
+        group: this.group, // 组
       }
       // console.log(data)
       const dc = () => {
@@ -629,13 +629,9 @@ export default {
           a.click()
           document.body.removeChild(a)
           window.URL.revokeObjectURL(url)
-
-          // console.log(res)
         })
       }
-      // console.log(this.dataSource)
       const list = this.dataSource.map(item => item.targetSite).filter(item => item)
-      // console.log(list)
       if (list.length) {
         dc()
       }else {
