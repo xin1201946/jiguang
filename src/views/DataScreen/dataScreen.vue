@@ -274,6 +274,11 @@ export default {
       littleScreen({
         type: this.data.configName,
       }).then((res) => {
+        this.finalEight = []
+        this.list = []
+        this.listsList = []
+        this.fiftyRounds = '0';
+
         const { result } = res
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
@@ -630,7 +635,7 @@ export default {
 
     .left {
       display: flex;
-      .logo{
+      .logo {
         height: 80px;
         margin-top: -20px;
       }
