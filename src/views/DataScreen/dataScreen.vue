@@ -15,10 +15,10 @@
         <div class='right'>
           <div>
             <div class="nameTitle">
-              <div>{{ '1208青少年射击比赛' }}</div>
-              <div style="margin-left: 15px;">{{ "保定市星光酒店" }}</div>
+              <div>{{ contestName }}</div>
+              <div style="margin-left: 15px;">{{ addr }}</div>
             </div>
-            <div class="times">2023-12-14 09:06</div>
+            <div class="times">{{ bisaiTime }}</div>
           </div>
         </div>
       </div>
@@ -31,8 +31,7 @@
     <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i'
-          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -136,16 +135,14 @@
       </div>
     </div>
     <!-- 混团赛 -->
-    <div class="box_box"
-      v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+    <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
       <mixedClusterIndex></mixedClusterIndex>
     </div>
     <!-- 团队赛 -->
     <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i'
-          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -238,6 +235,10 @@ export default {
       teamList: [],
       rankingList: [],
       fiftyRounds: '0',
+
+      bisaiTime: '',
+      contestName: '',
+      addr: '',
     }
   },
   computed: {
@@ -301,6 +302,9 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
         // 设置表头
         this.th = [
           {
@@ -388,6 +392,9 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
         this.th = [
           {
             name: '排名',
@@ -667,7 +674,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  &>div {
+  & > div {
     flex: 1;
     text-align: center;
   }
