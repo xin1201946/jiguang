@@ -54,9 +54,9 @@ export default {
         //
         timer: null,
         // 标题
-        projectName: undefined,
-        stageGroup: undefined,
-        stageName: undefined,
+        // projectName: undefined,
+        // stageGroup: undefined,
+        // stageName: undefined,
         state: '',
       },
     }
@@ -81,9 +81,9 @@ export default {
       }).then((res) => {
         this.mixeTeamFinalsList.List = [[]]
         let data = res.result
-        this.projectName = data[0].projectName
-        this.stageName = data[0].stageName
-        this.stageGroup = data[0].projectGroup
+        // this.projectName = data[0].projectName
+        // this.stageName = data[0].stageName
+        // this.stageGroup = data[0].projectGroup
         if (data && data.length != 0) {
           data.forEach((item, index) => {
             let obj = {

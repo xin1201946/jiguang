@@ -49,14 +49,15 @@
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
               </div>
               <div style="width: 150px;">{{ item.total }}</div>
-              <div style="flex: 1;">{{ item.notes }}</div>
+              <div style="flex: 1;">{{ item.remarkPenalty }}</div>
               <div style="width: 60px">{{ item.bePromoted }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div style="width: 100%;height: 100%;" v-if="fiftyRounds !== '0' && logoTitle.indexOf('个人资格赛') != -1">
+      <div style="width: 100%;height: 100%;" v-if="fiftyRounds != '0' && logoTitle.indexOf('个人资格赛') != -1">
         <!--    前8位-->
+        {{ fiftyRounds }}
         <div class='finalEight'>
           <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
             <div style="width: 80px">{{ item.rank }}</div>
@@ -67,7 +68,7 @@
               {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
-            <div style="flex: 1;">{{ item.notes }}</div>
+            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
             <div style="width: 60px">{{ item.bePromoted }}</div>
           </div>
         </div>
@@ -83,7 +84,7 @@
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
               </div>
               <div style="width: 150px;">{{ item.total }}</div>
-              <div style="flex: 1;">{{ item.notes }}</div>
+              <div style="flex: 1;">{{ item.remarkPenalty }}</div>
               <div style="width: 60px">{{ item.bePromoted }}</div>
             </div>
           </div>
@@ -98,11 +99,12 @@
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
             <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-            <div v-for="k in shootGroups" :key="k.id" style="width: 80px;">
-              {{item[k]}}
+            <div v-for="k in item.groupList" :key="k.id" style="width: 80px;">
+              {{ k.groupTotal }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
-            <div style="flex: 1;">{{ item.notes }}</div>
+            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
+            <div style="width: 60px">{{ item.bePromoted }}</div>
           </div>
         </div>
         <div class="targetImage">
@@ -159,7 +161,7 @@
               <div v-for="k in item.groupList" :key="k.id" style="width: 80px;">
                 {{ k.groupTotal }}
               </div>
-              <div style="width: 150px;">{{ '个人成急急急' }}</div>
+              <div style="width: 150px;">{{ item.stageTotal }}</div>
               <div style="width: 150px;">{{ item.total }}</div>
             </div>
           </div>
@@ -236,7 +238,7 @@ export default {
 
       teamList: [],
       rankingList: [],
-      fiftyRounds:'',
+      fiftyRounds: '0',
     }
   },
   computed: {
@@ -333,37 +335,26 @@ export default {
           this.oldList = result.players
         }
         // 判断到没有到50发
-        if (result.shootGroups) {
-          this.shootGroups = result.shootGroups
-          result.players.map((item) => {
-            item.groupList.map((it, i) => {
-              // console.log(it, i, '123', it.groupCount === 5, it.groupCount === 5 && it.groupTotal != '0')
+        result.players.map((item) => {
+          item.groupList.map((it, i) => {
+            // console.log(it, i, '123', it.groupTotal, it.groupCount === 5 && it.groupTotal != '0')
+            if (it.groupCount === 5 && it.groupTotal != '0') {
               this.fiftyRounds = it.groupTotal
-              if (it.groupCount === 5 && it.groupTotal != '0') {
-                // 设置前8名
-                this.finalEight = result.players
-                  .filter((item) => item.rank <= 8)
-                  .map((item, i) => {
-                    return {
-                      ...item,
-                      total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                      notes: '---',
-                      bePromoted: 'Q',
-                    }
-                  })
-                // 除了前8名
-                this.list = result.players
-                  .filter((item) => item.rank > 8)
-                  .map((item) => {
-                    return {
-                      ...item,
-                      total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                      notes: '---',
-                      bePromoted: '',
-                    }
-                  })
-              } else {
-                this.listsList = result.players.map((item) => {
+              // 设置前8名
+              this.finalEight = result.players
+                .filter((item) => item.rank <= 8)
+                .map((item, i) => {
+                  return {
+                    ...item,
+                    total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                    notes: '---',
+                    bePromoted: 'Q',
+                  }
+                })
+              // 除了前8名
+              this.list = result.players
+                .filter((item) => item.rank > 8)
+                .map((item) => {
                   return {
                     ...item,
                     total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
@@ -371,35 +362,8 @@ export default {
                     bePromoted: '',
                   }
                 })
-              }
-            })
-          })
-          return
-          if (this.shootGroups < 5) {
-            this.listsList = result.players.map((item) => {
-              return {
-                ...item,
-                total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                notes: '---',
-                bePromoted: '',
-              }
-            })
-          } else {
-            // 设置前8名
-            this.finalEight = result.players
-              .filter((item) => item.rank <= 8)
-              .map((item, i) => {
-                return {
-                  ...item,
-                  total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                  notes: '---',
-                  bePromoted: 'Q',
-                }
-              })
-            // 除了前8名
-            this.list = result.players
-              .filter((item) => item.rank > 8)
-              .map((item) => {
+            } else {
+              this.listsList = result.players.map((item) => {
                 return {
                   ...item,
                   total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
@@ -407,8 +371,9 @@ export default {
                   bePromoted: '',
                 }
               })
-          }
-        }
+            }
+          })
+        })
         this.$nextTick(() => {
           this.upload()
         })
@@ -443,7 +408,6 @@ export default {
           },
         ]
         if (result.shoots) {
-          this.shootGroups = result.shoots
           result.shoots.forEach((item) => {
             this.th.push({
               name: item,
@@ -451,7 +415,7 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
@@ -460,22 +424,15 @@ export default {
               notes: '---',
               bePromoted: '',
             }
-            result.shoots.forEach((k) => {
-              obj[k] = ''
-            })
             item.groupList.forEach((e, v) => {
-              result.shoots.forEach((k) => {
-                if (k == e.groupCount) {
-                  obj[k] = e.groupTotal
-                }
-              })
+              obj[e.groupCount] = e.groupTotal
             })
-
             this.finalEight.push(obj)
           })
         } else {
           this.finalEight = []
         }
+        console.log(this.finalEight)
       })
     },
     // 团体赛
@@ -496,7 +453,7 @@ export default {
           {
             name: '代表队',
             align: 'left',
-            width: '300px',
+            width: '300px'
           },
           {
             name: '姓名',
@@ -552,6 +509,11 @@ export default {
       getMixeTeamFinalsListAPI({
         screenName: this.data.configName,
         stageGroup: this.data.configName.includes('金牌赛') ? 1 : 2,
+      }).then((res) => {
+        const { result } = res
+        this.projectName = result[0].projectName
+        this.stageGroup = result[0].stageGroup
+        this.stageName = result[0].stageName
       })
     },
     getData() {
