@@ -34,8 +34,11 @@
                 format: 'HH:mm',
                 valueFormat: 'HH:mm'
               }"
+              :input-read-only="true"
               :disabledTime="(dates, partial) => disabledTime(dates, partial, i)"
             ></a-range-picker>
+<!--            :disabled-date="(c) => disabledDate(c, i)"-->
+<!--             -->
           </a-form-model-item>
         </template>
       </a-form-model>
@@ -48,6 +51,7 @@ import BizModal from '@comp/modal/BizModal.vue'
 import { numToCapital, Time } from '@/utils'
 import { contest_processUpdateStageGroupTime } from '@api/competition'
 import dayjs from 'dayjs'
+import moment from 'dayjs'
 export default {
   name: 'gameInfoDateModal',
   components: {
@@ -103,21 +107,39 @@ export default {
     range(count) {
       return Array.from(Array(count).keys());
     },
+    disabledDate(current, i) {
+      // return current && current < moment(this.formData.data[i].times[0]).endOf('day');
+      return false
+    },
     disabledTime(dates, partial, i) {
       const start = dayjs(this.formData.data[i].times[0]); // 获取开始时间
       const end = dayjs(this.formData.data[i].times[1]); // 获取结束时间
-      console.log(start)
-      // console.log(dates)
+
       if (partial === "start") {
         return {
-          disabledHours: () => this.range(24).slice(end.hour() + 1),
-          disabledMinutes: () => this.range(60),
+          disabledHours: () => {
+            const startDate = new Date(this.formData.data[i].times[0]).getDate();
+            const endDate = new Date(this.formData.data[i].times[1]).getDate();
+            if (startDate === endDate) {
+              return this.range(24).slice(end.hour() + 1, 24)
+            }
+            return []
+          },
+          disabledMinutes: () => [],
         }
       }
       if (partial === "end") {
         return {
-          disabledHours: () => this.range(24).slice(0, start.hour()),
-          disabledMinutes: () => this.range(60),
+          disabledHours: () => {
+            const startDate = new Date(this.formData.data[i].times[0]).getDate();
+            const endDate = new Date(this.formData.data[i].times[1]).getDate();
+            console.log(this.range(24).slice(0, start.hour() + 1))
+            if (startDate === endDate) {
+              return this.range(24).slice(0, start.hour() + 1)
+            }
+            return []
+          },
+          disabledMinutes: () => [],
         }
       }
     }
