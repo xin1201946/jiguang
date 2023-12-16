@@ -4,7 +4,9 @@
       <div class='top'>
         <div>
           <div class="left">
-            <img class="logo" src="../../assets/logo1.png" alt="" />
+            <img class="logo" :src="
+                data.configName.indexOf('手枪') != -1 ? shou:
+                data.configName.indexOf('步枪') != -1 ? bu:shou" alt="" />
             <div v-if="data.configName != '团队综合排名'">
               {{ stageName }}-{{ projectName }}<span v-if="stageGroup">-{{ stageGroup }}</span>
             </div>
@@ -182,6 +184,9 @@ export default {
   components: { Display, mixedClusterIndex, EchatTarget, RankingList },
   data() {
     return {
+      shou: require('@/assets/logoS.png'),
+      bu: require('@/assets/logoB.png'),
+
       title: '',
       data: JSON.parse(window.name),
       time: null,
@@ -625,6 +630,10 @@ export default {
 
     .left {
       display: flex;
+      .logo{
+        height: 80px;
+        margin-top: -20px;
+      }
     }
 
     .right {
