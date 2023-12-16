@@ -103,7 +103,7 @@
               {{ item[k] }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
-            <div style="flex: 1;">{{ item.notes }}</div>
+            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
           </div>
         </div>
         <div class="targetImage">
@@ -330,7 +330,7 @@ export default {
                   return {
                     ...item,
                     total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                    notes: '---',
+                    notes: '',
                     bePromoted: 'Q',
                   }
                 })
@@ -341,7 +341,7 @@ export default {
                   return {
                     ...item,
                     total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                    notes: '---',
+                    notes: '',
                     bePromoted: '',
                   }
                 })
@@ -350,7 +350,7 @@ export default {
                 return {
                   ...item,
                   total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-                  notes: '---',
+                  notes: '',
                   bePromoted: '',
                 }
               })
@@ -405,7 +405,7 @@ export default {
             let obj = {
               ...item,
               total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
-              notes: '---',
+              notes: '',
               bePromoted: '',
             }
             result.shoots.forEach((k) => {
@@ -591,7 +591,7 @@ export default {
       .name {
         position: absolute;
         left: 0;
-        bottom: 0;
+        top: 0;
         color: #fff;
         font-size: 24px;
         font-weight: bold;
