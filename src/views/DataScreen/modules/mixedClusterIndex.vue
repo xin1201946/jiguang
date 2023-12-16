@@ -74,7 +74,6 @@ export default {
   methods: {
     // 混团列表
     getData() {
-      console.log(this.state)
       getMixeTeamFinalsListAPI({
         screenName: this.state,
         stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
