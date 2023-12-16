@@ -469,8 +469,10 @@ export default {
                 ...item,
                 ...e,
                 rank: v == 0 ? index + 1 : item.playerList[v - 1].groupName == e.groupName ? '' : index + 1,
-                total: v == 0 ? item.stageTotal : item.playerList[v - 1].groupName == e.groupName ? '' : item.stageTotal,
-                groupName: v == 0 ? item.groupName : item.playerList[v - 1].groupName == e.groupName ? '' : item.groupName,
+                total:
+                  v == 0 ? item.stageTotal : item.playerList[v - 1].groupName == e.groupName ? '' : item.stageTotal,
+                groupName:
+                  v == 0 ? item.groupName : item.playerList[v - 1].groupName == e.groupName ? '' : item.groupName,
               }
               e.groupList.forEach((s, c) => {
                 obj[`${c + 1}0`] = s.groupTotal
