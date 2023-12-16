@@ -31,11 +31,12 @@
     <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i'
+          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
-      <div style="width: 100%;height: 100%;" v-if="shootGroups < 5 && logoTitle.indexOf('个人资格赛') != -1">
+      <div style="width: 100%;height: 100%;" v-if="fiftyRounds === '0' && logoTitle.indexOf('个人资格赛') != -1">
         <!--    整页的滚动-->
         <div class="foots" ref="scorllBox">
           <div class="footContent" ref="scorllArr">
@@ -54,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div style="width: 100%;height: 100%;" v-if="shootGroups > 5 && logoTitle.indexOf('个人资格赛') != -1">
+      <div style="width: 100%;height: 100%;" v-if="fiftyRounds !== '0' && logoTitle.indexOf('个人资格赛') != -1">
         <!--    前8位-->
         <div class='finalEight'>
           <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
@@ -107,7 +108,7 @@
         <div class="targetImage">
           <div class="flex" v-for="(item) in finalEight" :key="item.targetSite">
             <div class="box">
-              <div class="name">{{item.playerName}}</div>
+              <div class="name">{{ item.playerName }}</div>
               <div :class="logoTitle.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
                 <EchatTarget :dots="item.playerScores" :state="logoTitle" />
               </div>
@@ -134,14 +135,16 @@
       </div>
     </div>
     <!-- 混团赛 -->
-    <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+    <div class="box_box"
+      v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
       <mixedClusterIndex></mixedClusterIndex>
     </div>
     <!-- 团队赛 -->
     <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i'
+          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -164,7 +167,7 @@
       </div>
     </div>
     <!-- 排名 -->
-    <div class="box_box" v-if="data.configName === '团队综合排名' ">
+    <div class="box_box" v-if="data.configName === '团队综合排名'">
       <div class="head">
         <div class='top'>
           <div>
@@ -233,6 +236,7 @@ export default {
 
       teamList: [],
       rankingList: [],
+      fiftyRounds:'',
     }
   },
   computed: {
@@ -325,13 +329,52 @@ export default {
           }
         }
         this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
-        console.log(old === 'old')
         if (old === 'old') {
           this.oldList = result.players
         }
         // 判断到没有到50发
         if (result.shootGroups) {
           this.shootGroups = result.shootGroups
+          result.players.map((item) => {
+            item.groupList.map((it, i) => {
+              // console.log(it, i, '123', it.groupCount === 5, it.groupCount === 5 && it.groupTotal != '0')
+              this.fiftyRounds = it.groupTotal
+              if (it.groupCount === 5 && it.groupTotal != '0') {
+                // 设置前8名
+                this.finalEight = result.players
+                  .filter((item) => item.rank <= 8)
+                  .map((item, i) => {
+                    return {
+                      ...item,
+                      total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                      notes: '---',
+                      bePromoted: 'Q',
+                    }
+                  })
+                // 除了前8名
+                this.list = result.players
+                  .filter((item) => item.rank > 8)
+                  .map((item) => {
+                    return {
+                      ...item,
+                      total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                      notes: '---',
+                      bePromoted: '',
+                    }
+                  })
+              } else {
+                this.listsList = result.players.map((item) => {
+                  return {
+                    ...item,
+                    total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                    notes: '---',
+                    bePromoted: '',
+                  }
+                })
+              }
+            })
+          })
+          return
           if (this.shootGroups < 5) {
             this.listsList = result.players.map((item) => {
               return {
@@ -557,10 +600,12 @@ export default {
 
 <style scoped lang='less'>
 @height: 46px;
+
 .targetImage {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+
   .flex {
     position: relative;
     flex: 0 0 25%;
@@ -570,12 +615,14 @@ export default {
     width: 25%;
     height: 190px;
     overflow: hidden;
+
     .box {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 300px;
       height: 300px;
+
       .name {
         position: absolute;
         left: 0;
@@ -584,10 +631,12 @@ export default {
         font-size: 24px;
         font-weight: bold;
       }
+
       .shouqiang {
         width: 300px;
         height: 300px;
       }
+
       .buqiang {
         width: 300px;
         height: 300px;
@@ -595,6 +644,7 @@ export default {
     }
   }
 }
+
 .container {
   position: relative;
   height: 100vh;
@@ -604,6 +654,7 @@ export default {
   color: #fff;
   border: 2px solid #2174b6;
 }
+
 .box_box {
   width: 100%;
   height: 100%;
@@ -655,7 +706,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  & > div {
+  &>div {
     flex: 1;
     text-align: center;
   }

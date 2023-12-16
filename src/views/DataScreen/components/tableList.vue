@@ -283,11 +283,11 @@ p {
     display: flex;
     align-items: center;
     text-align: center;
-    border-radius: 8px;
-
+    // border-radius: 8px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    border-bottom: 2px solid #2174b6;
     // background: rgba(255, 255, 255, 0.3);
     p {
       flex: 1;

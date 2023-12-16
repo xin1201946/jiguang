@@ -33,15 +33,18 @@ export default {
           },
           {
             name: '姓名',
+            width: '140px',
           },
           {
             name: '发序',
           },
           {
             name: '环数',
+            width: '160px',
           },
           {
             name: '总环数',
+            width: '160px',
           },
           {
             name: '总分',
