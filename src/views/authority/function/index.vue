@@ -279,29 +279,36 @@ export default {
       })
     },
     rulesDisabled(item) {
-      if (item.configName.includes("步枪")) {
-        if (item.configName.includes('金牌赛')) {
-          if (item.contestId || item.cproId || item.stageId) {
-            const data = []
-            const list = JSON.parse(JSON.stringify(this.formData.data))
-            for (let i = 0; i < list.length; i++) {
-              if (list[i].configName.includes("铜牌")) {
-                if (list[i].configName.includes("步枪")) {
-                  list[i].contestIdBool = true
-                  list[i].cproIdBool = true
-                  list[i].stageIdBool = true
-                }
-              }
-              data.push(list[i])
-            }
-            // console.log(data.filter(item => item.configName.includes("步枪")))
+      const bool = (str, i, list) => {
+        if (item.contestId || item.cproId || item.stageId){
+          if (list[i].configName.includes(str)) {
+            this.formData.data[i].contestIdBool = true
+            this.formData.data[i].cproIdBool = true
+            this.formData.data[i].stageIdBool = true
+          }
+        }else {
+          if (list[i].configName.includes(str)) {
+            this.formData.data[i].contestIdBool = false
+            this.formData.data[i].cproIdBool = false
+            this.formData.data[i].stageIdBool = false
           }
         }
-        if (item.configName.includes('铜牌赛')) {
-
+      }
+      const list = JSON.parse(JSON.stringify(this.formData.data))
+      for(let i = 0; i < list.length; i++) {
+        if (item.configName.includes('步枪混团金牌赛排名')) {
+          bool("步枪混团铜牌赛排名", i, list)
+        }
+        if (item.configName.includes('步枪混团铜牌赛排名')) {
+          bool("步枪混团金牌赛排名", i, list)
+        }
+        if (item.configName.includes('手枪混团金牌赛排名')) {
+          bool("手枪混团铜牌赛排名", i, list)
+        }
+        if (item.configName.includes('手枪混团铜牌赛排名')) {
+          bool("手枪混团金牌赛排名", i, list)
         }
       }
-
       if (item.contestId || item.cproId || item.stageId){
         return true
       }
