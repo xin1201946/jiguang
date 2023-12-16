@@ -117,7 +117,7 @@ export const editStagePlayer = data => postAction("contest-process/editStagePlay
 //屏幕展示 ---- 个人赛
 export const littleScreen = data => getAction("contest-process/littleScreen", data)
 //屏幕展示 ---- 混团赛决赛
-export const getMixeTeamFinalsListAPI = data => postAction("bizTeamGoldScore/getTeamGoldList", data)
+export const getMixeTeamFinalsListAPI = data => postAction("largeScreen/getTeamGoldList", data)
 //屏幕展示 ---- 团队赛
 export const getTeamScoresAPI = data => postAction("largeScreen/getTeamScores", data)
 //屏幕展示 ---- 团队综合排名

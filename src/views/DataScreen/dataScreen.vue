@@ -509,9 +509,12 @@ export default {
         stageGroup: this.data.configName.includes('金牌赛') ? 1 : 2,
       }).then((res) => {
         const { result } = res
-        this.projectName = result[0].projectName
-        this.stageGroup = result[0].stageGroup
-        this.stageName = result[0].stageName
+        this.projectName = result.projectName
+        this.stageGroup = result.stageGroup
+        this.stageName = result.stageName
+        this.contestName = result.contestName
+        this.addr = result.addr
+        this.bisaiTime = result.time
       })
     },
     getData() {

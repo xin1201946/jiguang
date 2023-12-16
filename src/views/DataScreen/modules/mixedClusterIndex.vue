@@ -80,7 +80,7 @@ export default {
         stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
       }).then((res) => {
         this.mixeTeamFinalsList.List = [[]]
-        let data = res.result
+        let data = res.result.scoreList
         // this.projectName = data[0].projectName
         // this.stageName = data[0].stageName
         // this.stageGroup = data[0].projectGroup
