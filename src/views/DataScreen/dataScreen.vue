@@ -57,7 +57,6 @@
       </div>
       <div style="width: 100%;height: 100%;" v-if="fiftyRounds != '0' && logoTitle.indexOf('个人资格赛') != -1">
         <!--    前8位-->
-        {{ fiftyRounds }}
         <div class='finalEight'>
           <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
             <div style="width: 80px">{{ item.rank }}</div>
@@ -78,7 +77,7 @@
             <div v-for="(item, i) in list" :key="i" class="finalEightRow">
               <div style="width: 80px">{{ item.rank }}</div>
               <div style="width: 80px">{{ item.targetSite }}</div>
-              <div style="width: 100px">{{ item.playerName }}</div>
+              <div style="width: 140px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
               <div v-for="k in shootGroups" :key="k" style="width: 80px;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
