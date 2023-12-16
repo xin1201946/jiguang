@@ -17,6 +17,12 @@
             :labelCol="{ span: 2 }"
             :wrapperCol="{ span: 19, offset: 1 }"
             :label="numToCapital(item.stageGroup)+'组'"
+            :prop="'data.' + i + '.times'"
+            :rules="{
+              message: '请选择开始时间和结束时间',
+              required: true,
+              trigger: 'change'
+            }"
             :key="i"
           >
             <a-range-picker
@@ -71,19 +77,23 @@ export default {
       this.visible = true
     },
     handleOk() {
-      contest_processUpdateStageGroupTime({
-        ...this.obj,
-        list: this.formData.data.map(item => {
-          const obj = JSON.parse(JSON.stringify(item))
-          obj.sgTimeStart = item.times[0]
-          obj.sgTimeEnd = item.times[1]
-          delete item.times
-          return obj
-        })
-      }).then(res => {
-        if (res.success) {
-          this.$message.success(res.message || "更新成功")
-          this.handleCancel()
+      this.$refs.form.validate(v => {
+        if (v) {
+          contest_processUpdateStageGroupTime({
+            ...this.obj,
+            list: this.formData.data.map(item => {
+              const obj = JSON.parse(JSON.stringify(item))
+              obj.sgTimeStart = item.times[0]
+              obj.sgTimeEnd = item.times[1]
+              delete item.times
+              return obj
+            })
+          }).then(res => {
+            if (res.success) {
+              this.$message.success(res.message || "更新成功")
+              this.handleCancel()
+            }
+          })
         }
       })
     },

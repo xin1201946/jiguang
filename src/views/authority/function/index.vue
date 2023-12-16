@@ -34,7 +34,6 @@
                     :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}"
                   >
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
-                      <!--                configName-->
                       <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
                     </a-select>
                   </a-form-model-item>
