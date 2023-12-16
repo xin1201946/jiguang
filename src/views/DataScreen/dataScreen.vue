@@ -5,12 +5,13 @@
         <div>
           <div class="left">
             <img class="logo" src="../../assets/logo1.png" alt="" />
-            <div>
-              <!-- {{ data.configName }} -->
-              {{ stageName }}-{{ projectName }}-{{ stageGroup }}
+            <div v-if="data.configName != '团队综合排名'">
+              {{ stageName }}-{{ projectName }}<span v-if="stageGroup">-{{ stageGroup }}</span>
+            </div>
+            <div v-else>
+              {{ data.configName }}
             </div>
           </div>
-          <!-- <div>{{ logoTitle }}</div> -->
         </div>
         <div class='right'>
           <div>
@@ -22,16 +23,13 @@
           </div>
         </div>
       </div>
-      <!-- <div class='bottom'>
-        <div>{{ logoTitle }}</div>
-        <div>时间：2023-12-14</div>
-      </div> -->
     </div>
     <!-- 个人赛 -->
     <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i'
+          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -97,12 +95,11 @@
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
             <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-            <div v-for="k in item.groupList" :key="k.id" style="width: 80px;">
-              {{ k.groupTotal }}
+            <div v-for="k in shootGroups" :key="k.id" style="width: 80px;">
+              {{ item[k] }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
-            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
-            <div style="width: 60px">{{ item.bePromoted }}</div>
+            <div style="flex: 1;">{{ item.notes }}</div>
           </div>
         </div>
         <div class="targetImage">
@@ -135,14 +132,16 @@
       </div>
     </div>
     <!-- 混团赛 -->
-    <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+    <div class="box_box"
+      v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
       <mixedClusterIndex></mixedClusterIndex>
     </div>
     <!-- 团队赛 -->
     <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i'
+          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -166,33 +165,6 @@
     </div>
     <!-- 排名 -->
     <div class="box_box" v-if="data.configName === '团队综合排名'">
-      <div class="head">
-        <div class='top'>
-          <div>
-            <div class="left">
-              <img class="logo" src="../../assets/logo1.png" alt="" />
-              <div>
-                {{ data.configName }}
-                <!-- {{ stageName }}-{{ projectName }}-{{ stageGroup }} -->
-              </div>
-            </div>
-            <!-- <div>{{ logoTitle }}</div> -->
-          </div>
-          <div class='right'>
-            <div>
-              <div class="nameTitle">
-                <!-- <div>{{ '1208青少年射击比赛' }}</div> -->
-                <!-- <div style="margin-left: 15px;">{{ "保定市星光酒店" }}</div> -->
-              </div>
-              <!-- <div class="times">2023-12-14 09:06</div> -->
-            </div>
-          </div>
-        </div>
-        <!-- <div class='bottom'>
-        <div>{{ logoTitle }}</div>
-        <div>时间：2023-12-14</div>
-      </div> -->
-      </div>
       <RankingList :data="rankingList" />
     </div>
   </dv-border-box-8>
@@ -231,14 +203,13 @@ export default {
       projectName: '',
       stageGroup: '',
       stageName: '',
+      contestName: undefined,
+      addr: undefined,
+      bisaiTime: undefined,
 
       teamList: [],
       rankingList: [],
       fiftyRounds: '0',
-
-      bisaiTime: '',
-      contestName: '',
-      addr: '',
     }
   },
   computed: {
@@ -302,9 +273,6 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
-        this.bisaiTime = result.time
-        this.contestName = result.contestName
-        this.addr = result.addr
         // 设置表头
         this.th = [
           {
@@ -392,9 +360,6 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
-        this.bisaiTime = result.time
-        this.contestName = result.contestName
-        this.addr = result.addr
         this.th = [
           {
             name: '排名',
@@ -414,6 +379,7 @@ export default {
           },
         ]
         if (result.shoots) {
+          this.shootGroups = result.shoots
           result.shoots.forEach((item) => {
             this.th.push({
               name: item,
@@ -421,7 +387,7 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
@@ -430,15 +396,22 @@ export default {
               notes: '---',
               bePromoted: '',
             }
-            item.groupList.forEach((e, v) => {
-              obj[e.groupCount] = e.groupTotal
+            result.shoots.forEach((k) => {
+              obj[k] = ''
             })
+            item.groupList.forEach((e, v) => {
+              result.shoots.forEach((k) => {
+                if (k == e.groupCount) {
+                  obj[k] = e.groupTotal
+                }
+              })
+            })
+
             this.finalEight.push(obj)
           })
         } else {
           this.finalEight = []
         }
-        console.log(this.finalEight)
       })
     },
     // 团体赛
@@ -448,9 +421,12 @@ export default {
       }).then((res) => {
         this.listsList = []
         const { result } = res
-        this.projectName = result[0].projectName
-        this.stageGroup = result[0].stageGroup
-        this.stageName = result[0].stageName
+        this.projectName = result.projectName
+        this.contestName = result.contestName
+        this.addr = result.addr
+        this.bisaiTime = result.time
+        this.stageGroup = ''
+        this.stageName = '团体排名'
         this.th = [
           {
             name: '排名',
@@ -459,15 +435,15 @@ export default {
           {
             name: '代表队',
             align: 'left',
-            width: '300px'
+            width: '300px',
           },
           {
             name: '姓名',
             width: '140px',
           },
         ]
-        if (result[0].groupCount) {
-          for (let i = 0; i < result[0].groupCount; i++) {
+        if (result.scoreList[0].groupCount) {
+          for (let i = 0; i < result.scoreList[0].groupCount; i++) {
             this.th.push({
               name: `${i + 1}0`,
               width: '80px',
@@ -475,8 +451,8 @@ export default {
           }
         }
         this.th.push({ name: '个人成绩', width: '150px' }, { name: '总环数', width: '150px' })
-        if (result && result.length != 0) {
-          result.forEach((item, index) => {
+        if (result && result.scoreList.length != 0) {
+          result.scoreList.forEach((item, index) => {
             item.playerList.forEach((e, v) => {
               let obj = {
                 ...item,
@@ -506,8 +482,14 @@ export default {
       getTeamTotalScores({
         configName: this.data.configName,
       }).then((res) => {
-        console.log(res)
-        this.rankingList = res.result
+        console.log(res, '123')
+        this.projectName = res.result.projectName
+        this.contestName = res.result.contestName
+        this.addr = res.result.addr
+        this.bisaiTime = res.result.time
+        this.stageName = res.result.stageName
+        this.stageGroup = ''
+        this.rankingList = res.result.scoreList
       })
     },
     // 混团
@@ -674,7 +656,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  & > div {
+  &>div {
     flex: 1;
     text-align: center;
   }
