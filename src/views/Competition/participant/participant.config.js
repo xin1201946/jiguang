@@ -131,10 +131,7 @@ export const participantTableColumnsAll = [
     title: "性别",
     align: 'center',
     dataIndex: 'playerSex',
-    customRender: text => {
 
-      return getLabel(sexData, text)
-    }
   },
   {
     title: "身份证号",
@@ -150,6 +147,10 @@ export const participantTableColumnsAll = [
     title: "项目名称",
     dataIndex: 'projectNames',
     align: 'center',
+    width:'160px',
+    customRender: (text, row) => {
+      return `${row.project1 ? row.project1 : ''}  ${row.project2?row.project2:''} ${row.projectNames?row.projectNames:''}`
+    }
   },
   {
     title: "项目组别",
@@ -201,6 +202,10 @@ export const participantModalUserTableColumns = [
     title: "项目名称",
     dataIndex: 'projectNames',
     align: 'center',
+    width:'160px',
+    customRender: (text, row) => {
+      return `${row.project1 ? row.project1 : ''} ${row.project2?row.project2:''} ${row.projectNames?row.projectNames:''}`
+    }
   },
   {
     title: "项目组别",
