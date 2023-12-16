@@ -72,6 +72,11 @@ export const gameInfoColumns = [
     align: 'center',
   },
   {
+    dataIndex: 'padCode',
+    title: '设备号',
+    align: 'center',
+  },
+  {
     dataIndex: 'totalScore',
     title: '总环数',
     align: 'center',
