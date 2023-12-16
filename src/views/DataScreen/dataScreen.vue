@@ -8,7 +8,9 @@
                 data.configName.indexOf('手枪') != -1 ? shou:
                 data.configName.indexOf('步枪') != -1 ? bu:shou" alt="" />
             <div v-if="data.configName != '团队综合排名'">
-              {{ stageName }}-{{ projectName }}<span v-if="stageGroup">-{{ stageGroup }}</span>
+              <span v-if="stageName">{{ stageName }}</span>
+              <span v-if="projectName">-{{ projectName }}</span>
+              <span v-if="stageGroup">-{{ stageGroup }}</span>
             </div>
             <div v-else>
               {{ data.configName }}
@@ -91,7 +93,7 @@
 
       <div style="width: 100%;height: 100%;" v-if="logoTitle.indexOf('个人决赛') != -1">
         <!--    前8位-->
-        <div class='finalEight'>
+        <div :class="finalEight.length == 0 ? '':'finalEight'">
           <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
             <div style="width: 80px">{{ item.rank }}</div>
             <div style="width: 80px">{{ item.targetSite }}</div>
@@ -277,7 +279,7 @@ export default {
         this.finalEight = []
         this.list = []
         this.listsList = []
-        this.fiftyRounds = '0';
+        this.fiftyRounds = '0'
 
         const { result } = res
         this.projectName = result.projectName
