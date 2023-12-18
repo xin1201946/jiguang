@@ -1,70 +1,70 @@
 <template>
   <svg ref="svg" width="100%" height="100%" viewBox="0 0 630 630">
     <g class="target">
-      <circle r="85" cx="315" cy="315"></circle>
+      <circle r="91" cx="315" cy="315"></circle>
       <g>
-        <text fill="#333" text-anchor="middle" x="315" y="235" font-size="8">1</text>
-        <text fill="#333" text-anchor="middle" x="315" y="399" font-size="8">1</text>
-        <text fill="#333" text-anchor="middle" x="234" y="318" font-size="8">1</text>
-        <text fill="#333" text-anchor="middle" x="396" y="318" font-size="8">1</text>
+        <text fill="#333" text-anchor="middle" x="315" y="231" font-size="8">1</text>
+        <text fill="#333" text-anchor="middle" x="315" y="404" font-size="8">1</text>
+        <text fill="#333" text-anchor="middle" x="229" y="318" font-size="8">1</text>
+        <text fill="#333" text-anchor="middle" x="401" y="318" font-size="8">1</text>
       </g>
-      <circle r="76.5" cx="315" cy="315"></circle>
+      <circle r="81.8" cx="315" cy="315"></circle>
       <g>
-        <text fill="#333" text-anchor="middle" x="315" y="244" font-size="8">2</text>
-        <text fill="#333" text-anchor="middle" x="315" y="390.5" font-size="8">2</text>
-        <text fill="#333" text-anchor="middle" x="242.5" y="318" font-size="8">2</text>
-        <text fill="#333" text-anchor="middle" x="387" y="318" font-size="8">2</text>
+        <text fill="#333" text-anchor="middle" x="315" y="241" font-size="8">2</text>
+        <text fill="#333" text-anchor="middle" x="315" y="395" font-size="8">2</text>
+        <text fill="#333" text-anchor="middle" x="237" y="318" font-size="8">2</text>
+        <text fill="#333" text-anchor="middle" x="392" y="318" font-size="8">2</text>
       </g>
-      <circle r="68" cx="315" cy="315"></circle>
+      <circle r="72.6" cx="315" cy="315"></circle>
       <g>
-        <text fill="#333" text-anchor="middle" x="315" y="253" font-size="8">3</text>
-        <text fill="#333" text-anchor="middle" x="315" y="382" font-size="8">3</text>
-        <text fill="#333" text-anchor="middle" x="251" y="318" font-size="8">3</text>
-        <text fill="#333" text-anchor="middle" x="378" y="318" font-size="8">3</text>
+        <text fill="#333" text-anchor="middle" x="315" y="251" font-size="8">3</text>
+        <text fill="#333" text-anchor="middle" x="315" y="386" font-size="8">3</text>
+        <text fill="#333" text-anchor="middle" x="247" y="318" font-size="8">3</text>
+        <text fill="#333" text-anchor="middle" x="382" y="318" font-size="8">3</text>
       </g>
-      <circle r="59.5" cx="315" cy="315"></circle>
+      <circle r="63.4" cx="315" cy="315"></circle>
       <g>
-        <text text-anchor="middle" x="315" y="262" font-size="8">4</text>
-        <text text-anchor="middle" x="315" y="374" font-size="8">4</text>
-        <text text-anchor="middle" x="259.5" y="318" font-size="8">4</text>
-        <text text-anchor="middle" x="370" y="318" font-size="8">4</text>
+        <text text-anchor="middle" x="315" y="259" font-size="8">4</text>
+        <text text-anchor="middle" x="315" y="377" font-size="8">4</text>
+        <text text-anchor="middle" x="256" y="318" font-size="8">4</text>
+        <text text-anchor="middle" x="372" y="318" font-size="8">4</text>
       </g>
-      <circle r="51" cx="315" cy="315"></circle>
+      <circle r="54.2" cx="315" cy="315"></circle>
       <g>
-        <text text-anchor="middle" x="315" y="271" font-size="8">5</text>
-        <text text-anchor="middle" x="315" y="365" font-size="8">5</text>
-        <text text-anchor="middle" x="268" y="318" font-size="8">5</text>
-        <text text-anchor="middle" x="362" y="318" font-size="8">5</text>
+        <text text-anchor="middle" x="315" y="268" font-size="8">5</text>
+        <text text-anchor="middle" x="315" y="369" font-size="8">5</text>
+        <text text-anchor="middle" x="265" y="318" font-size="8">5</text>
+        <text text-anchor="middle" x="364" y="318" font-size="8">5</text>
       </g>
-      <circle r="42.5" cx="315" cy="315"></circle>
+      <circle r="46" cx="315" cy="315"></circle>
       <g>
-        <text text-anchor="middle" x="315" y="280" font-size="8">6</text>
-        <text text-anchor="middle" x="315" y="356" font-size="8">6</text>
-        <text text-anchor="middle" x="276.5" y="318" font-size="8">6</text>
-        <text text-anchor="middle" x="353" y="318" font-size="8">6</text>
+        <text text-anchor="middle" x="315" y="276" font-size="8">6</text>
+        <text text-anchor="middle" x="315" y="359" font-size="8">6</text>
+        <text text-anchor="middle" x="274" y="318" font-size="8">6</text>
+        <text text-anchor="middle" x="354" y="318" font-size="8">6</text>
       </g>
-      <circle r="34" cx="315" cy="315"></circle>
+      <circle r="36.8" cx="315" cy="315"></circle>
       <g>
         <text text-anchor="middle" x="315" y="288" font-size="8">7</text>
-        <text text-anchor="middle" x="315" y="347" font-size="8">7</text>
+        <text text-anchor="middle" x="315" y="351" font-size="8">7</text>
         <text text-anchor="middle" x="285" y="318" font-size="8">7</text>
-        <text text-anchor="middle" x="344" y="318" font-size="8">7</text>
+        <text text-anchor="middle" x="346" y="318" font-size="8">7</text>
       </g>
-      <circle r="25.5" cx="315" cy="315"></circle>
+      <circle r="27.6" cx="315" cy="315"></circle>
       <g>
         <text text-anchor="middle" x="315" y="297" font-size="8">8</text>
         <text text-anchor="middle" x="315" y="339" font-size="8">8</text>
         <text text-anchor="middle" x="293.5" y="318" font-size="8">8</text>
-        <text text-anchor="middle" x="336" y="318" font-size="8">8</text>
+        <text text-anchor="middle" x="337" y="318" font-size="8">8</text>
       </g>
-      <circle r="17" cx="315" cy="315"></circle>
+      <circle r="18.4" cx="315" cy="315"></circle>
       <g>
         <text text-anchor="middle" x="315" y="306" font-size="8">9</text>
         <text text-anchor="middle" x="315" y="331" font-size="8">9</text>
         <text text-anchor="middle" x="302" y="318" font-size="8">9</text>
         <text text-anchor="middle" x="328" y="318" font-size="8">9</text>
       </g>
-      <circle r="8.5" cx="315" cy="315"></circle>
+      <circle r="9.2" cx="315" cy="315"></circle>
       <g>
         <text text-anchor="middle" dominant-baseline="middle" x="315" y="315" font-size="20">·</text>
       </g>

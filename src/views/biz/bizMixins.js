@@ -7,19 +7,19 @@ import { ACCESS_TOKEN, TENANT_ID } from '@/store/mutation-types'
 const bizMixins = {
   computed: {
     //token header
-    tokenHeader(){
-      let head = {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)}
+    tokenHeader() {
+      let head = { 'X-Access-Token': Vue.ls.get(ACCESS_TOKEN) }
       let tenantid = Vue.ls.get(TENANT_ID)
-      if(tenantid){
+      if (tenantid) {
         head['tenant-id'] = tenantid
       }
-      return head;
+      return head
     },
-    importExcelUrl: function(){
-      return `${window._CONFIG['domianURL']}/${this.api}`;
+    importExcelUrl: function () {
+      return `${window._CONFIG['domianURL']}/${this.api}`
     }
   },
-  data(){
+  data() {
     return {
       pagination: {
         current: 1,
@@ -40,8 +40,8 @@ const bizMixins = {
     }
   },
   watch: {
-    $route:{
-      handler(){
+    $route: {
+      handler() {
         if (this.getList) {
           this.$nextTick(() => {
             this.getList()
@@ -54,7 +54,7 @@ const bizMixins = {
   },
   methods: {
     // 分页
-    handleTableChange (pagination) {
+    handleTableChange(pagination) {
       this.pagination = pagination
       this.getList()
     },
@@ -62,7 +62,7 @@ const bizMixins = {
     handleAdd(type) {
       if (type) {
         this.$refs.modal.init(type)
-      }else {
+      } else {
         this.$refs.modal.init()
       }
     },
@@ -84,7 +84,7 @@ const bizMixins = {
     handleEdit(record, type) {
       if (type) {
         this.$refs.modal.edit(record, type)
-      }else {
+      } else {
         this.$refs.modal.edit(record)
       }
     },
@@ -94,7 +94,7 @@ const bizMixins = {
       this.loadingModal = false
       this.title = '修改'
       this.type = 1
-      if (type){
+      if (type) {
         this.getType(type)
       }
       this.$nextTick(() => {
@@ -132,14 +132,14 @@ const bizMixins = {
       this.visible = true
       this.title = '添加'
       this.type = 0
-      if (type){
+      if (type) {
         this.getType(type)
       }
       this.$nextTick(() => {
         for (const key in this.formData) {
           if (Array.isArray(this.formData[key])) {
             this.formData[key] = []
-          }else {
+          } else {
             this.formData[key] = ""
           }
         }
@@ -148,10 +148,11 @@ const bizMixins = {
         }
       })
     },
-   // 导入
+    // 导入
     handleImportExcel(info) {
+      console.log(info)
       const { file } = info
-      if (this.loading !== undefined){
+      if (this.loading !== undefined) {
         this.loading = true
       }
 
@@ -159,9 +160,9 @@ const bizMixins = {
 
       }
       if (file.status === "done") {
-        const {response} = file
+        const { response } = file
         if (response.code === 200) {
-          if (this.loading !== undefined){
+          if (this.loading !== undefined) {
             this.loading = false
           }
           this.$message.success(response.message)
@@ -169,21 +170,21 @@ const bizMixins = {
           this.$nextTick(() => {
             this.getList()
           })
-        } else if(response.code === 201) {
+        } else if (response.code === 201) {
           let { message, result: { msg, fileUrl, fileName } } = response
           let href = window._CONFIG['domianURL'] + fileUrl
           this.$warning({
             title: message,
             content: (<div>
-                <span>{msg}</span><br/>
-                <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-              </div>
+              <span>{msg}</span><br />
+              <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+            </div>
             ),
             onOk: () => {
               this.pagination.current = 1
               this.$nextTick(() => {
                 this.getList()
-                if (this.loading !== undefined){
+                if (this.loading !== undefined) {
                   this.loading = false
                 }
               })
@@ -191,14 +192,15 @@ const bizMixins = {
           })
         } else {
           this.$message.error(response.message)
+          this.loading = false
         }
       }
     },
     downLoad(data, name) {
-      if (!data || data.size === 0){
+      if (!data || data.size === 0) {
         this.$message.error("文件下载失败")
-      }else{
-        const blob = new Blob([data], {type: 'application/vnd.ms-excel'})
+      } else {
+        const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
         // console.log(data)
         // const blob = new Blob([data], {type: 'application/pdf'})
         const url = window.URL.createObjectURL(blob)
@@ -217,12 +219,12 @@ const bizMixins = {
         this.$message.success(res.message)
         this.handleCancel()
         this.$emit("list")
-      }else {
+      } else {
         this.$message.error(res.message)
       }
       this.loadingModal = false
     },
-    deleteCallback (res) {
+    deleteCallback(res) {
       if (res.code === 200) {
         if (this.data.length === 1) {
           if (this.pagination.current !== 1) {
@@ -233,7 +235,7 @@ const bizMixins = {
           this.getList()
         })
         this.$message.success(res.message)
-      }else {
+      } else {
         this.$message.error(res.message)
       }
     }

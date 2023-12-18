@@ -106,12 +106,22 @@
             <div style="flex: 1;">{{ item.remarkPenalty }}</div>
           </div>
         </div>
-        <div class="targetImage">
+        <div class="targetImage" v-if="logoTitle.indexOf('手枪') != -1">
           <div class="flex" v-for="(item) in finalEight" :key="item.targetSite">
             <div class="box">
               <div class="name">{{ item.playerName }}</div>
-              <div :class="logoTitle.indexOf('手枪') != -1 ? 'buqiang' : 'shouqiang'">
+              <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
                 <EchatTarget :dots="item.playerScores" :state="logoTitle" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="targetImage1" v-if="logoTitle.indexOf('步枪') != -1">
+          <div class="flex1" v-for="(item) in finalEight" :key="item.targetSite">
+            <div class="box1">
+              <div class="name1">{{ item.playerName }}</div>
+              <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                <EchatTargetB :dots="item.playerScores" :state="logoTitle" />
               </div>
             </div>
           </div>
@@ -180,10 +190,11 @@ import Display from '@views/control/display/index.vue'
 import mixedClusterIndex from './modules/mixedClusterIndex.vue'
 // 靶图
 import EchatTarget from '../view/targetmap/modules/EchatTarget.vue'
+import EchatTargetB from '../view/targetmap/modules/EchatTargetB.vue'
 import RankingList from './components/rankingList.vue'
 export default {
   name: 'dataScreen',
-  components: { Display, mixedClusterIndex, EchatTarget, RankingList },
+  components: { Display, mixedClusterIndex, EchatTarget, RankingList, EchatTargetB },
   data() {
     return {
       shou: require('@/assets/logoS.png'),
@@ -217,6 +228,15 @@ export default {
       teamList: [],
       rankingList: [],
       fiftyRounds: '0',
+
+      dos: [
+        { x_coord: '82.5', y_coord: '81.9', shootCode: '1' },
+        { x_coord: '61.4', y_coord: '86.6', shootCode: '2' },
+        { x_coord: '78.7', y_coord: '102.9', shootCode: '3' },
+        { x_coord: '85.0', y_coord: '57.5', shootCode: '4' },
+        { x_coord: '94.9', y_coord: '78.1', shootCode: '5' },
+        { x_coord: '80', y_coord: '80', shootCode: '6' },
+      ],
     }
   },
   computed: {
@@ -585,8 +605,8 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 300px;
-      height: 300px;
+      width: 1000px;
+      height: 1000px;
 
       .name {
         position: absolute;
@@ -598,18 +618,60 @@ export default {
       }
 
       .shouqiang {
-        width: 300px;
-        height: 300px;
+        width: 1000px;
+        height: 1000px;
       }
 
       .buqiang {
-        width: 300px;
-        height: 300px;
+        width: 2000px;
+        height: 2000px;
       }
     }
   }
 }
+.targetImage1 {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 
+  .flex1 {
+    position: relative;
+    flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    height: 190px;
+    overflow: hidden;
+
+    .box1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2000px;
+      height: 2000px;
+
+      .name1 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .shouqiang1 {
+        width: 2000px;
+        height: 2000px;
+      }
+
+      .buqiang1 {
+        width: 1300px;
+        height: 1300px;
+      }
+    }
+  }
+}
 .container {
   position: relative;
   height: 100vh;
