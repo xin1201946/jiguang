@@ -32,6 +32,7 @@
 </template>
 
 <script >
+import { Time } from '@/utils'
 import BizModal from '@comp/modal/BizModal.vue'
 export default {
   name: 'RealTimeViewPrint',
@@ -59,7 +60,12 @@ export default {
         {
           dataIndex: 'beginTime',
           title: '时间',
-          align: 'center'
+          align: 'center',
+          customRender: text => {
+            // console.log(text)
+            return text.length === 19? text : text.substring(0, text.length - 6)
+            // return Time(new Date(text), "YYYY-MM-DD HH:mm:ss") || ""
+          }
         },
         // {
         //   dataIndex: 'xcoord',
@@ -118,7 +124,7 @@ export default {
           `<tr style="height: 50px; line-height: 50px">
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime}</td>
+            <td align="center">${item.beginTime.length === 19? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 6)}</td>
 <!--            <td align="center">${item.xcoord}</td>-->
 <!--            <td align="center">${item.ycoord}</td>-->
           </tr>`
