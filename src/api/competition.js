@@ -148,3 +148,5 @@ export const contest_processUpdateStageGroupTime = data => postAction("contest-p
 export const retarget = data => postAction("contest-process/retarget", data)
 // 查询空闲靶位
 export const selectTargetList = data => postAction("contest-process/selectTargetList", data)
+// 查询换靶记录
+export const getChangeListAPI = data => postAction("bizContestRetarget/page/list", data)
