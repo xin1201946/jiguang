@@ -24,6 +24,15 @@ export const slabQuery = [
   {
     type: "input",
     rules: [
+      'tabletPcNum',
+      { rules: [{ required: false, message: '请输入平板编号' }] },
+    ],
+    label: '平板编号',
+    placeholder: '请输入平板编号'
+  },
+  {
+    type: "input",
+    rules: [
       'tabletPcName',
       { rules: [{ required: false, message: '请输入平板名称' }] },
     ],

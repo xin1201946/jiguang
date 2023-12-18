@@ -56,6 +56,7 @@ export default {
       columns: slabTableColumns,
       data: [],
       query: {
+        tabletPcNum: undefined,
         tabletPcName: undefined,
         tabletPcStatus: undefined,
         tabletPcModel: undefined
