@@ -86,7 +86,6 @@ export const participantTableColumns = [
     align: 'center',
     dataIndex: 'playerSex',
     customRender: text => {
-
       return getLabel(sexData, text)
     }
   },
@@ -131,6 +130,9 @@ export const participantTableColumnsAll = [
     title: "性别",
     align: 'center',
     dataIndex: 'playerSex',
+    customRender: text => {
+      return getLabel(sexData, text)
+    }
 
   },
   {

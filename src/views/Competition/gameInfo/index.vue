@@ -64,11 +64,12 @@
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
 
                   <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
 
-                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="retweet" @click="handleRemark(record)">备注</a-button>
+                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="form" @click="handleRemark(record)">备注</a-button>
                 </a-space>
               </template>
             </a-table>
@@ -82,14 +83,22 @@
 
           </template>
         </a-table>
+        <!-- 抽签 -->
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
+        <!-- 编辑靶位 -->
         <gameInfoTargetModal></gameInfoTargetModal>
+        <!-- 分组 -->
         <GameInfoGroupModal ref="group" @success="getTableList"></GameInfoGroupModal>
+        <!-- 判罚 -->
         <GameInfoPenaltyModal ref="penalty" @confirm="setPenalty" />
+        <!-- 修改成绩 -->
         <GameInfoEditModal ref="edit" @confirm="editSuccessHandle" />
-
+        <!-- 备注 -->
         <GameInfoRemarkModal ref="remark" @ok="remarkSuccessHandle" />
+        <!-- 时间管理 -->
         <GameInfoDateModal ref="date"></GameInfoDateModal>
+        <!-- 更改靶位 -->
+        <GameRetweetModal ref="retweet" />
       </TreeCard>
     </div>
   </div>
@@ -107,6 +116,8 @@ import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vu
 import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemark.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
 import GameInfoDateModal from '@views/Competition/gameInfo/modal/gameInfoDateModal.vue'
+import GameRetweetModal from '@views/Competition/gameInfo/modal/gameInfoRetweet.vue'
+
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -142,6 +153,7 @@ export default {
     GameInfoEditModal,
     GameInfoRemarkModal,
     GameInfoDateModal,
+    GameRetweetModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -179,6 +191,12 @@ export default {
     }
   },
   methods: {
+    /**
+     * 更换靶位
+     */
+    handleRetweet(row) {
+      this.$refs.retweet.init(row)
+    },
     // 时间管理
     handleDate() {
       console.log(this.data)
@@ -525,7 +543,6 @@ export default {
         this.cproId = result[0].cproId
         this.getTableList()
       } else {
-
         this.cproStageId = null
         this.draw = false
         this.group = null
@@ -631,11 +648,11 @@ export default {
           window.URL.revokeObjectURL(url)
         })
       }
-      const list = this.dataSource.map(item => item.targetSite).filter(item => item)
+      const list = this.dataSource.map((item) => item.targetSite).filter((item) => item)
       if (list.length) {
         dc()
-      }else {
-        infoMessage("当前组别未进行抽签，是否确认导出。").then(res => {
+      } else {
+        infoMessage('当前组别未进行抽签，是否确认导出。').then((res) => {
           dc()
         })
       }
@@ -712,7 +729,6 @@ export default {
     .title {
       color: #333;
       display: flex;
-      width: 300px;
       justify-content: space-between;
       align-items: center;
     }

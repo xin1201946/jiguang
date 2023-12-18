@@ -1,7 +1,7 @@
 import { Modal } from 'ant-design-vue'
 
 // 获取label
-export const getLabel = (arr, value) =>  {
+export const getLabel = (arr, value) => {
   const a = arr.filter(item => String(item.value) === String(value))
   if (a.length) {
     return a[0].label
@@ -15,7 +15,7 @@ export const deleteMessage = (text) => {
   return new Promise((resolve, reject) => {
     Modal.confirm({
       title: '提示',
-      content:  (h) => <div style="color:red;">{text || '是否删除当前列表信息'}</div>,
+      content: (h) => <div style="color:red;">{text || '是否删除当前列表信息'}</div>,
       okType: 'danger',
       onOk() {
         resolve()
@@ -84,7 +84,7 @@ export const numToCapital = (num, type = 0) => {
           }
           // 结束递归
           return false
-        }else{
+        } else {
           if (capital === '零') {
             // 万和亿单位不删除
             if (!['万', '亿'].includes(arr[arr.length - 1])) {
@@ -135,7 +135,7 @@ export const radioStyle = {
  * @param {string[]} arr 原数组
  * @return {*[]}
  */
-export function sorderFun (arrOrder, arr) {
+export function sorderFun(arrOrder, arr) {
   const array = []
   for (const item of arrOrder) {
     for (let i = 0; i < arr.length; i++) {
@@ -154,11 +154,11 @@ export function sorderFun (arrOrder, arr) {
 //
 export const getItem = (arr, key, value, children) => {
   for (const item of arr) {
-    if (item[key] === value){
+    if (item[key] === value) {
       return item
     }
     if (children) {
-      if (Array.isArray(item[children]) && item[children].length){
+      if (Array.isArray(item[children]) && item[children].length) {
         const i = getItem(item[children], key, value, children)
         if (i) {
           return i
@@ -207,9 +207,9 @@ export const Time = (date, type = 'YYYY-MM-DD') => {
     // 1
     d: String($W),
     // 周一
-    dd: String(numToCapital($W)).padStart(2 , '周'),
+    dd: String(numToCapital($W)).padStart(2, '周'),
     // 星期一
-    ddd: String(numToCapital($W)).padStart(3 , '星期'),
+    ddd: String(numToCapital($W)).padStart(3, '星期'),
     // 24小时
     H: String($H),
     HH: String($H).padStart(2, '0'),
