@@ -640,8 +640,8 @@ export default {
           <tr>
             <td colspan="2">${item.i}</td>
             <td colspan="2">${item.targetSite}</td>
-            <td colspan="2">${item.playerName}</td>
-            <td colspan="2">${item.groupName}</td>
+            <td colspan="2" style="text-align: right">${item.playerName}</td>
+            <td colspan="2" style="text-align: right">${item.groupName}</td>
             ${arr.join("")}
             <td colspan="2">${item.stageTotal}</td>
             <td>${item.i <= 8 ? 'QF' : ''}</td>
@@ -652,7 +652,7 @@ export default {
 
       return `
       <style>
-        td{text-align: center}
+        td{text-align: left}
         th{border: 1px solid;}
         @media print {
           @page{
@@ -685,7 +685,7 @@ export default {
           <tbody>${tr.join('')}
           </tbody>
         </table>
-        <div style="position: fixed; bottom: 0;width: 100%">
+        <div style="width: 100%">
           <div style="width: 96%;border: 0px solid">
             <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
