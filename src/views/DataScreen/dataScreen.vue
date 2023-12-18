@@ -299,8 +299,6 @@ export default {
         this.finalEight = []
         this.list = []
         this.listsList = []
-        this.fiftyRounds = '0'
-
         const { result } = res
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
@@ -337,11 +335,12 @@ export default {
         if (old === 'old') {
           this.oldList = result.players
         }
+        this.fiftyRounds = '0'
         // 判断到没有到50发
         result.players.map((item) => {
           item.groupList.map((it, i) => {
             // console.log(it, i, '123', it.groupTotal, it.groupCount === 5 && it.groupTotal != '0')
-            if (it.groupCount === 5 && it.groupTotal != '0') {
+            if (it.groupCount === 5 && Number(it.groupTotal)) {
               this.fiftyRounds = it.groupTotal
               // 设置前8名
               this.finalEight = result.players
