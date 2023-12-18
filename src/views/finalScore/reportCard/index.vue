@@ -640,11 +640,11 @@ export default {
           <tr>
             <td colspan="2">${item.i}</td>
             <td colspan="2">${item.targetSite}</td>
-            <td colspan="2" style="text-align: right">${item.playerName}</td>
-            <td colspan="2" style="text-align: right">${item.groupName}</td>
+            <td colspan="2" style="text-align: left">${item.playerName}</td>
+            <td colspan="2" style="text-align: left">${item.groupName}</td>
             ${arr.join("")}
             <td colspan="2">${item.stageTotal}</td>
-            <td>${item.i <= 8 ? 'QF' : ''}</td>
+            <td >${item.i <= 8 ? 'QF' : ''}</td>
           </tr>
           ${rows.join("")}
         `)
@@ -652,7 +652,7 @@ export default {
 
       return `
       <style>
-        td{text-align: left}
+        td{text-align: right}
         th{border: 1px solid;}
         @media print {
           @page{
