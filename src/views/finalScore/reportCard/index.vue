@@ -591,10 +591,11 @@ export default {
         }
         return arr.join("")
       }
+      console.log(this.groupArray)
       const tr = this.data.map(item => {
         const arr = []
-        for (let i = 0; i < item.scoreList.length; i++) {
-          arr.push(`<td>${item.scoreList[i]}</td>`)
+        for (let i = 0; i < this.groupArray.length; i++) {
+          arr.push(`<td>${item.scoreList[i] || ""}</td>`)
         }
         const list = this.groupArray && this.groupArray.length ? this.groupArray : []
         const array = []
@@ -613,6 +614,8 @@ export default {
             }
           }
         }
+        // shoots
+
         // 最大多少行
         const trs = Math.max(...array.map(i=>i.arr.length))
         const rows = []
