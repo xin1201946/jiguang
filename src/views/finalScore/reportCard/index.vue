@@ -56,9 +56,9 @@
         </template>
         <template slot="operator">
           <a-space v-show="this.stageArr.length">
-<!--            :disabled="!data.length"-->
+            <!--            :disabled="!data.length"-->
             <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
-<!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
+            <!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
           </a-space>
         </template>
         <template slot="default">
@@ -702,13 +702,13 @@ export default {
     // 打印
     handlePrint () {
       const print = (fn) => {
-       /*  const pwin = window.open(); //打开一个新窗口
-        pwin.document.write(fn)
-        pwin.print(); //调用打印机
-        pwin.close() //这个点取消和打印就会关闭新打开的窗口
-        pwin.addEventListener('afterprint', () => {
-          pwin.close()
-        }); */
+        /*  const pwin = window.open(); //打开一个新窗口
+         pwin.document.write(fn)
+         pwin.print(); //调用打印机
+         pwin.close() //这个点取消和打印就会关闭新打开的窗口
+         pwin.addEventListener('afterprint', () => {
+           pwin.close()
+         }); */
         const iframe= document.createElement("iframe");
         document.body.appendChild(iframe);
         iframe.contentWindow.document.open();
