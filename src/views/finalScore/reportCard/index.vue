@@ -420,7 +420,7 @@ export default {
           <tbody> ${tr.join("")} </tbody>
 
         </table>
-        <div style="position: fixed; bottom: 0;width: 100%">
+        <div style=" bottom: 0;width: 100%">
           <div style="width: 96%;border: 0px solid">
             <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
@@ -595,7 +595,7 @@ export default {
       const tr = this.data.map(item => {
         const arr = []
         for (let i = 0; i < this.groupArray.length; i++) {
-          arr.push(`<td>${item.scoreList[i] || ""}</td>`)
+          arr.push(`<td style="font-size: 14px"><b>${item.scoreList[i] || ""}</b></td>`)
         }
         const list = this.groupArray && this.groupArray.length ? this.groupArray : []
         const array = []
@@ -623,13 +623,13 @@ export default {
           const j = []
           for (const k of array) {
             // console.log(k,  k.arr[i] )
-            j.push(`<td>${  k.arr[i] ? k.arr[i].score : "" }</td>`)
+            j.push(`<td style="font-size: 14px">${  k.arr[i] ? parseFloat(k.arr[i].score).toFixed(1) : "" }</td>`)
           }
           // console.log(j)
           rows.push(`
             <tr>
               <td colspan="2"></td>
-              <td colspan="2"></td>
+<!--              <td colspan="2"></td>-->
               <td colspan="2"></td>
               <td colspan="2"></td>
               ${j.join("")}
@@ -639,15 +639,16 @@ export default {
           `)
         }
         // console.log(rows)
+        //  <td colspan="2">${item.targetSite}</td>
         return (`
           <tr>
-            <td colspan="2">${item.i}</td>
-            <td colspan="2">${item.targetSite}</td>
+            <td colspan="2" style="text-align: center">${item.i}</td>
+
             <td colspan="2" style="text-align: left">${item.playerName}</td>
             <td colspan="2" style="text-align: left">${item.groupName}</td>
             ${arr.join("")}
-            <td colspan="2">${item.stageTotal}</td>
-            <td >${item.i <= 8 ? 'QF' : ''}</td>
+            <td colspan="2"><b>${item.stageTotal}</b></td>
+            <td ></td>
           </tr>
           ${rows.join("")}
         `)
@@ -676,7 +677,7 @@ export default {
           <thead>
             <tr>
               <th rowspan="2" colspan="2">排名</th>
-              <th rowspan="2" colspan="2">靶位</th>
+<!--              <th rowspan="2" colspan="2">靶位</th>-->
               <th rowspan="2" colspan="2">姓名</th>
               <th rowspan="2" colspan="2">代表队</th>
               <th colspan="${g}">组</th>
