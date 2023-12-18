@@ -144,3 +144,7 @@ export const contest_processGetSitePdf = param => downFile("contest-process/getS
 export const contest_processGetStageGroupTime = data => postAction("contest-process/getStageGroupTime", data)
 //更新组别比赛时间
 export const contest_processUpdateStageGroupTime = data => postAction("contest-process/updateStageGroupTime", data)
+// 更换靶位
+export const retarget = data => postAction("contest-process/retarget", data)
+// 查询空闲靶位
+export const selectTargetList = data => postAction("contest-process/selectTargetList", data)

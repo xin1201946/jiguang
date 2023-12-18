@@ -64,7 +64,7 @@
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
-                  <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
+                  <a-button v-if="['比赛中','成绩显示','已结束'].indexOf(status) == -1 ? true: false" type="primary" size="small" ghost icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
 
                   <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
@@ -98,7 +98,7 @@
         <!-- 时间管理 -->
         <GameInfoDateModal ref="date"></GameInfoDateModal>
         <!-- 更改靶位 -->
-        <GameRetweetModal ref="retweet" />
+        <GameRetweetModal ref="retweet" @confirm="retweetSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -137,6 +137,7 @@ import {
   contest_processGetSitePdf,
   remark,
   contest_processGetStageGroupTime,
+  retarget,
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -195,7 +196,29 @@ export default {
      * 更换靶位
      */
     handleRetweet(row) {
-      this.$refs.retweet.init(row)
+      this.$refs.retweet.init({ ...row, cproId: this.cproId, stageGroup: this.group, stageId: this.cproStageId })
+    },
+    retweetSuccessHandle(row) {
+      const data = {
+        contestId: row.contestId, //赛事id
+        cproId: row.cproId, //赛事项目id
+        stageId: row.stageId, //项目阶段id
+        playerId: row.playerId, //运动员id
+        targetSiteOld: row.targetSite,
+        targetSiteNew: row.targetSiteNew,
+        stageGroup: row.stageGroup,
+        remark: row.remark, //备注
+      }
+      retarget(data).then((res) => {
+        console.log(res)
+        if (res.success) {
+          this.$message.success('更换靶位成功！')
+          this.getTableList()
+          this.$refs.retweet.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     // 时间管理
     handleDate() {
