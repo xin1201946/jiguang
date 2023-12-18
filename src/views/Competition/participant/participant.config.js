@@ -147,9 +147,14 @@ export const participantTableColumnsAll = [
     title: "项目名称",
     dataIndex: 'projectNames',
     align: 'center',
-    width:'160px',
+    width: '160px',
     customRender: (text, row) => {
-      return `${row.project1 ? row.project1 : ''}  ${row.project2?row.project2:''} ${row.projectNames?row.projectNames:''}`
+      if (!row.projectNames) {
+        return `${row.project1 ? row.project1 : ''} ${row.project2 ? row.project2 : ''}`
+      } else {
+        return row.projectNames
+      }
+      // return `${row.project1 ? row.project1 : ''}  ${row.project2?row.project2:''} ${row.projectNames?row.projectNames:''}`
     }
   },
   {
@@ -202,9 +207,14 @@ export const participantModalUserTableColumns = [
     title: "项目名称",
     dataIndex: 'projectNames',
     align: 'center',
-    width:'160px',
+    width: '160px',
     customRender: (text, row) => {
-      return `${row.project1 ? row.project1 : ''} ${row.project2?row.project2:''} ${row.projectNames?row.projectNames:''}`
+      if (!row.projectNames) {
+        return `${row.project1 ? row.project1 : ''} ${row.project2 ? row.project2 : ''}`
+      } else {
+        return row.projectNames
+      }
+      // return `${row.project1 ? row.project1 : ''} ${row.project2 ? row.project2 : ''} ${row.projectNames ? row.projectNames : ''}`
     }
   },
   {
