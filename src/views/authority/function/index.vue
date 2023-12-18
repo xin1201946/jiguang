@@ -294,7 +294,7 @@ export default {
         }
       }
       const list = JSON.parse(JSON.stringify(this.formData.data))
-      for(let i = 0; i < list.length; i++) {
+     /*  for(let i = 0; i < list.length; i++) {
         if (item.configName.includes('步枪混团金牌赛排名')) {
           bool("步枪混团铜牌赛排名", i, list)
         }
@@ -307,7 +307,7 @@ export default {
         if (item.configName.includes('手枪混团铜牌赛排名')) {
           bool("手枪混团金牌赛排名", i, list)
         }
-      }
+      } */
       if (item.contestId || item.cproId || item.stageId){
         return true
       }
