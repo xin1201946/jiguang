@@ -29,7 +29,7 @@
                 <ProjectPhaseStageTable :disabled="disabled" ref="stage" :cproId="cproId" />
               </a-tab-pane>
               <a-tab-pane key="0" tab="设备">
-                <ProjectPhaseDeviceTable :disabled="disabled" ref="device" :cproId="cproId" />
+                <ProjectPhaseDeviceTable :disabled="disabled" ref="device" :cproId="cproId" :projectName="projectName" />
               </a-tab-pane>
               <a-tab-pane key="2" tab="参赛人员">
                 <projectPhaseParticipant :disabled="disabled" ref="participant" :projectName="projectName" :cproId="cproId" :mode="mode" />
