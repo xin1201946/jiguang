@@ -112,10 +112,10 @@ export default {
               代表队: item.groupName,
               姓名: [item.player1Name, item.player2Name],
               发序: item.shootCode ? item.shootCode : 0,
-              环数: [item.player1Score ? item.player1Score : 0, item.player2Score ? item.player2Score : 0],
+              环数: [item.player1Score ? item.player1Score.toFixed(1) : 0, item.player2Score ? item.player2Score.toFixed(1) : 0],
               // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
-              总环数: item.stageTotal,
-              总分: item.total,
+              总环数: item.stageTotal.toFixed(1),
+              总分: item.total.toFixed(1),
             }
             this.mixeTeamFinalsList.List[0].push(obj)
           })
@@ -137,6 +137,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .head {
   height: 10%;
   font-size: 24px;
@@ -169,6 +170,7 @@ export default {
   //   justify-content: space-between;
   // }
 }
+
 .mixeTeamFinals {
   display: flex;
   flex-wrap: wrap;
