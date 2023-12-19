@@ -234,7 +234,7 @@ export default {
           document.body.removeChild(iframe)
         });
         document.body.removeChild(iframe)
-      })
+      },50)
       // const pwin = window.open(); //打开一个新窗口
       // // pwin.document.write(prints); //写入打印内容
       // pwin.document.write(this.bodyContent())
