@@ -4,9 +4,8 @@
       <div class='top'>
         <div>
           <div class="left">
-            <img class="logo" :src="
-                data.configName.indexOf('手枪') != -1 ? shou:
-                data.configName.indexOf('步枪') != -1 ? bu:shou" alt="" />
+            <img class="logo" :src="data.configName.indexOf('手枪') != -1 ? shou :
+              data.configName.indexOf('步枪') != -1 ? bu : shou" alt="" />
             <div v-if="data.configName != '团队综合排名'">
               <span v-if="stageName">{{ stageName }}</span>
               <span v-if="projectName">-{{ projectName }}</span>
@@ -46,8 +45,9 @@
               <div style="width: 80px">{{ item.targetSite }}</div>
               <div style="width: 140px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in shootGroups" :key="k" style="width: 80px;">
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+                <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
               </div>
               <div style="width: 150px;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.remarkPenalty }}</div>
@@ -64,8 +64,9 @@
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
             <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-            <div v-for="k in shootGroups" :key="k" style="width: 80px;">
+            <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
               {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+              <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
             <div style="flex: 1;">{{ item.remarkPenalty }}</div>
@@ -80,8 +81,9 @@
               <div style="width: 80px">{{ item.targetSite }}</div>
               <div style="width: 140px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in shootGroups" :key="k" style="width: 80px;">
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+                <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
               </div>
               <div style="width: 150px;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.remarkPenalty }}</div>
@@ -93,8 +95,8 @@
 
       <div style="width: 100%;height: 100%;" v-if="logoTitle.indexOf('个人决赛') != -1">
         <!--    前8位-->
-        <div :class="finalEight.length == 0 ? '':'finalEight'">
-          <div v-for="(item, i) in finalEight" :key="i" :class="item.playerStatus == 1 ? 'finalEightRow taotai':'finalEightRow'">
+        <div :class="finalEight.length == 0 ? '' : 'finalEight'">
+          <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
             <div style="width: 80px">{{ item.rank }}</div>
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
@@ -103,7 +105,6 @@
               {{ item[k] }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
-            <div style="width: 80px;">{{ item.diff }}</div>
             <div style="flex: 1;">{{ item.remarkPenalty }}</div>
           </div>
         </div>
@@ -304,6 +305,9 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
         // 设置表头
         this.th = [
           {
@@ -349,7 +353,7 @@ export default {
                 .map((item, i) => {
                   return {
                     ...item,
-                    total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                    total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
                     notes: '',
                     bePromoted: 'Q',
                   }
@@ -360,7 +364,7 @@ export default {
                 .map((item) => {
                   return {
                     ...item,
-                    total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                    total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
                     notes: '',
                     bePromoted: '',
                   }
@@ -369,7 +373,7 @@ export default {
               this.listsList = result.players.map((item) => {
                 return {
                   ...item,
-                  total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                  total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
                   notes: '',
                   bePromoted: '',
                 }
@@ -392,6 +396,9 @@ export default {
         this.projectName = result.projectName
         this.stageGroup = result.stageGroup
         this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
         this.th = [
           {
             name: '排名',
@@ -419,12 +426,12 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' },{ name: '分差', width: '80px' }, { name: '备注' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
               ...item,
-              total: result.isGood === '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+              total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
               notes: '',
               bePromoted: '',
             }
@@ -587,12 +594,9 @@ export default {
 @height: 46px;
 
 .targetImage {
-  position: absolute;
-  left: 30px; bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 380px;
 
   .flex {
     position: relative;
@@ -621,8 +625,8 @@ export default {
       }
 
       .shouqiang {
-        width: 700px;
-        height: 700px;
+        width: 1000px;
+        height: 1000px;
       }
 
       .buqiang {
@@ -632,13 +636,12 @@ export default {
     }
   }
 }
+
 .targetImage1 {
-  position: absolute;
-  left: 30px; bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 380px;
+
   .flex1 {
     position: relative;
     flex: 0 0 25%;
@@ -666,17 +669,18 @@ export default {
       }
 
       .shouqiang1 {
-        width: 1000px;
-        height: 1000px;
+        width: 2000px;
+        height: 2000px;
       }
 
       .buqiang1 {
-        width: 650px;
-        height: 650px;
+        width: 1300px;
+        height: 1300px;
       }
     }
   }
 }
+
 .container {
   position: relative;
   height: 100vh;
@@ -707,6 +711,7 @@ export default {
 
     .left {
       display: flex;
+
       .logo {
         height: 80px;
         margin-top: -20px;
@@ -754,9 +759,7 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-.taotai{
-  color: rgb(112, 112, 112);
-}
+
 .finalEightRow {
   flex: 1;
   display: flex;
@@ -782,5 +785,15 @@ export default {
 .foots {
   height: calc(100% - 10% - 40px);
   overflow: hidden;
+}
+
+.spanDiv {
+  width: 45px;
+  height: 1px;
+  background: #fff;
+  text-align: center;
+  position: absolute;
+  bottom: 10%;
+  left: 22%;
 }
 </style>
