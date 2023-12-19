@@ -95,8 +95,8 @@
 
       <div style="width: 100%;height: 100%;" v-if="logoTitle.indexOf('个人决赛') != -1">
         <!--    前8位-->
-        <div :class="finalEight.length == 0 ? '' : 'finalEight'">
-          <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
+        <div :class="finalEight.length == 0 ? '':'finalEight'">
+          <div v-for="(item, i) in finalEight" :key="i" :class="item.playerStatus == 0 ? 'finalEightRow taotai':'finalEightRow'">
             <div style="width: 80px">{{ item.rank }}</div>
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
@@ -105,6 +105,7 @@
               {{ item[k] }}
             </div>
             <div style="width: 150px;">{{ item.total }}</div>
+            <div style="width: 80px;">{{ item.diff }}</div>
             <div style="flex: 1;">{{ item.remarkPenalty }}</div>
           </div>
         </div>
@@ -426,7 +427,7 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' })
+        this.th.push({ name: '总环数', width: '150px' },{ name: '分差', width: '80px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
@@ -594,9 +595,12 @@ export default {
 @height: 46px;
 
 .targetImage {
+  position: absolute;
+  left: 30px; bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  height: 380px;
 
   .flex {
     position: relative;
@@ -625,8 +629,8 @@ export default {
       }
 
       .shouqiang {
-        width: 1000px;
-        height: 1000px;
+        width: 700px;
+        height: 700px;
       }
 
       .buqiang {
@@ -638,10 +642,12 @@ export default {
 }
 
 .targetImage1 {
+  position: absolute;
+  left: 30px; bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-
+  height: 380px;
   .flex1 {
     position: relative;
     flex: 0 0 25%;
@@ -669,13 +675,13 @@ export default {
       }
 
       .shouqiang1 {
-        width: 2000px;
-        height: 2000px;
+        width: 1000px;
+        height: 1000px;
       }
 
       .buqiang1 {
-        width: 1300px;
-        height: 1300px;
+        width: 650px;
+        height: 650px;
       }
     }
   }
@@ -759,7 +765,9 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-
+.taotai{
+  color: rgb(112, 112, 112);
+}
 .finalEightRow {
   flex: 1;
   display: flex;
