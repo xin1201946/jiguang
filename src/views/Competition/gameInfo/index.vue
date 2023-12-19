@@ -63,7 +63,7 @@
               <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
-                  <a-button v-show="record.totalScore" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button v-if="['准备中','试射中','比赛中','成绩显示','已结束'].indexOf(status) !== -1" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
                   <a-button v-if="record.targetSite  ? true: false" type="primary" size="small" ghost icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                   <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
@@ -188,6 +188,7 @@ export default {
       status: '',
       stageName: '',
       isAdjustment: '',
+      projectName: '',
     }
   },
   methods: {
@@ -305,7 +306,8 @@ export default {
       // this.getList()
     },
     handleInfo(record) {
-      this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.data.contestName })
+      console.log(record)
+      this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     numToCapital,
     /**
@@ -563,7 +565,10 @@ export default {
         this.stageName = arr[0].stageName
         this.isAdjustment = arr[0].isAdjustment
         this.cproId = result[0].cproId
+        this.projectName = result[0].projectName
         this.getTableList()
+        console.log(arr)
+        console.log(result)
       } else {
         this.cproStageId = null
         this.draw = false

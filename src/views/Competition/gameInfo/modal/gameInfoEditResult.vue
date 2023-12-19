@@ -92,7 +92,6 @@ export default {
         y_coord: { required: true, message: '请输入命中坐标y', trigger: ['change', 'blur'] },
         begin_time: { required: true, message: '请选择开始时间', trigger: ['change', 'blur'] },
         current_mode: { required: true, message: '请选择当前模式', trigger: ['change', 'blur'] },
-        voice_status: { required: true, message: '请选择语音报靶模式', trigger: ['change', 'blur'] },
       },
     }
   },

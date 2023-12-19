@@ -108,7 +108,9 @@ export default {
             this.$refs.gameInfoEditResult.handleCancel()
             this.edit(this.formData)
             this.$emit('success')
-            this.formData.totalScore = (this.formData.totalScore * 1 + row.score * 1).toFixed(1)
+            this.formData.totalScore = (this.formData.totalScore * 1).toFixed(1)
+            row.data.score = (row.data.score * 1).toFixed(1)
+            this.formData.totalScore = (this.formData.totalScore * 1 + row.data.score * 1).toFixed(1)
           } else {
             this.$message.error(res.message)
           }

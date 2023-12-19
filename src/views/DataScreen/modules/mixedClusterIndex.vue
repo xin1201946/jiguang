@@ -6,27 +6,31 @@
         <div>
           <TableListVue type="混团赛金铜牌赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
         </div>
-        <div class="targetImage" v-if="state.indexOf('手枪') != -1">
-          <div class="flex" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
-            <div class="box">
-              <div class="name">{{ item.playerName }}</div>
-              <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                <EchatTarget :dots="item.playerScores" :state="state" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="targetImage1" v-if="state.indexOf('步枪') != -1">
-          <div class="flex1" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
-            <div class="box1">
-              <div class="name1">{{ item.playerName }}</div>
-              <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                <EchatTargetB :dots="item.playerScores" :state="state" />
-              </div>
-            </div>
-          </div>
-        </div>
       </a-carousel>
+      <div class="targetImage" v-if="state.indexOf('手枪') != -1">
+        <div style="display:flex;width: 100%;justify-content: space-around;" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
+          <div class="flex" v-for="(e, v) in item['姓名']" :key="e">
+            <div class="box">
+              <div class="name">{{ e }}</div>
+              <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
+                <EchatTarget :dots="item.list[v]" :state="state" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="targetImage1" v-if="state.indexOf('步枪') != -1">
+        <div style="display:flex;width: 100%;justify-content: space-around;" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
+          <div class="flex1" v-for="e in item['姓名']" :key="e">
+            <div class="box1">
+              <div class="name1">{{ e }}</div>
+              <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                <EchatTargetB :dots="item.list[v]" :state="state" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -107,15 +111,31 @@ export default {
         // this.stageGroup = data[0].projectGroup
         if (data && data.length != 0) {
           data.forEach((item, index) => {
+            if (data.detailScoreList1) {
+              data.detailScoreList1.forEach((item, index) => {
+                item['x_coord'] = item.xcoord
+                item['y_coord'] = item.ycoord
+              })
+            }
+            if (data.detailScoreList2) {
+              data.detailScoreList2.forEach((item, index) => {
+                item['x_coord'] = item.xcoord
+                item['y_coord'] = item.ycoord
+              })
+            }
             let obj = {
               排名: index + 1,
               代表队: item.groupName,
               姓名: [item.player1Name, item.player2Name],
               发序: item.shootCode ? item.shootCode : 0,
-              环数: [item.player1Score ? item.player1Score.toFixed(1) : 0, item.player2Score ? item.player2Score.toFixed(1) : 0],
+              环数: [
+                item.player1Score ? item.player1Score.toFixed(1) : 0,
+                item.player2Score ? item.player2Score.toFixed(1) : 0,
+              ],
               // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
               总环数: item.stageTotal.toFixed(1),
               总分: item.total.toFixed(1),
+              list: [item.detailScoreList1, item.detailScoreList2],
             }
             this.mixeTeamFinalsList.List[0].push(obj)
           })
@@ -137,7 +157,101 @@ export default {
   width: 100%;
   height: 100%;
 }
+.targetImage {
+  position: absolute;
+  left: 30px;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  height: 560px;
 
+  .flex {
+    position: relative;
+    flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    height: 280px;
+    overflow: hidden;
+
+    .box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1000px;
+      height: 1000px;
+
+      .name {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .shouqiang {
+        width: 1000px;
+        height: 1000px;
+      }
+
+      .buqiang {
+        width: 2000px;
+        height: 2000px;
+      }
+    }
+  }
+}
+.targetImage1 {
+  position: absolute;
+  left: 30px;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  height: 380px;
+  .flex1 {
+    position: relative;
+    flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    height: 190px;
+    overflow: hidden;
+
+    .box1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2000px;
+      height: 2000px;
+
+      .name1 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .shouqiang1 {
+        width: 1000px;
+        height: 1000px;
+      }
+
+      .buqiang1 {
+        width: 650px;
+        height: 650px;
+      }
+    }
+  }
+}
 .head {
   height: 10%;
   font-size: 24px;
