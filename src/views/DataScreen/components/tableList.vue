@@ -217,7 +217,7 @@ export default {
       this.List.forEach((item, index) => {
         this.data.push({
           ...item,
-          position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 115) : '585',
+          position: this.TableList.length === 0 ? (index == 0 ? 0 : index * 115) : '230',
         })
       })
       let idArr = this.TableList.map((item) => item['代表队'])
@@ -227,7 +227,7 @@ export default {
           if (idArr.indexOf(this.data[i]['代表队']) === -1) {
             this.TableList.push(this.data[i])
             setTimeout(() => {
-              this.data[i].position = i * 50
+              this.data[i].position = i * 115
             }, 100)
             this.TableList.forEach((e, index) => {
               if (newIdList.indexOf(e['代表队']) === -1) {
@@ -300,7 +300,7 @@ p {
   &-list {
     position: relative;
     width: 100%;
-    height: 800px;
+    height: 230px;
     overflow: hidden;
     .mixeTeam {
       align-items: center;

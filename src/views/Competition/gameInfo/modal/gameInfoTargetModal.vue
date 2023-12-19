@@ -1,18 +1,6 @@
 <template>
-  <BizModal
-    :title="title"
-    :visible="visible"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    :loading="loadingModal"
-  >
-    <a-form-model
-      :labelCol="{span: 6}"
-      :wrapperCol="{span: 14}"
-      :rules="rules"
-      ref="form"
-      :model="formData"
-    >
+  <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
+    <a-form-model :labelCol="{span: 6}" :wrapperCol="{span: 14}" :rules="rules" ref="form" :model="formData">
       <a-form-model-item label="选手编号">
         <a-input></a-input>
       </a-form-model-item>
@@ -40,7 +28,7 @@ import BizModal from '@comp/modal/BizModal.vue'
 export default {
   name: 'gameInfoTargetModal',
   components: {
-    BizModal
+    BizModal,
   },
   data() {
     return {
@@ -48,12 +36,10 @@ export default {
       visible: false,
       loadingModal: false,
       type: 0,
-      formData: {
-
-      },
+      formData: {},
       rules: {
         // RealTimeView
-      }
+      },
     }
   },
   methods: {
@@ -65,8 +51,8 @@ export default {
         for (const key in this.formData) {
           if (Array.isArray(this.formData[key])) {
             this.formData[key] = []
-          }else {
-            this.formData[key] = ""
+          } else {
+            this.formData[key] = ''
           }
         }
         if (this.$refs.form) {
@@ -88,16 +74,13 @@ export default {
         }
       })
     },
-    handleOk() {
-
-    },
+    handleOk() {},
     handleCancel() {
       this.visible = false
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped lang="less">
-
 </style>

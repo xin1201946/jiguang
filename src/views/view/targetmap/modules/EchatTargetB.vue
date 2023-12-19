@@ -66,7 +66,7 @@
       </g>
       <circle r="9.2" cx="315" cy="315"></circle>
       <g>
-        <text text-anchor="middle" dominant-baseline="middle" x="315" y="315" font-size="20">·</text>
+        <text text-anchor="middle" dominant-baseline="middle" x="315" y="316" font-size="20">·</text>
       </g>
     </g>
     <g class="dot" v-for="(item, i) in dots" :key="i">

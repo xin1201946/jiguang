@@ -66,7 +66,8 @@
       </g>
       <circle r="8.5" cx="315" cy="315"></circle>
       <g>
-        <text text-anchor="middle" dominant-baseline="middle" x="315" y="315" font-size="20">·</text>
+        <circle class="zhongxin" r="4" cx="315" cy="315" ></circle>
+        <!-- <text text-anchor="middle" dominant-baseline="middle" x="315" y="315" font-size="20">·</text> -->
       </g>
     </g>
     <g class="dot" v-for="(item, i) in dots" :key="i">
@@ -125,7 +126,7 @@ export default {
   circle:nth-of-type(2),
   circle:nth-of-type(3) {
     stroke: #333;
-    fill: #C1D9FE
+    fill: #c1d9fe;
   }
   circle:nth-of-type(4) {
     fill: #364471;
@@ -150,5 +151,9 @@ export default {
       fill: #fff;
     }
   }
+}
+.zhongxin{
+  stroke: #fff !important;
+  fill: #364471 !important;
 }
 </style>

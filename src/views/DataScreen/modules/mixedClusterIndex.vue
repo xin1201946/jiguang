@@ -6,6 +6,26 @@
         <div>
           <TableListVue type="混团赛金铜牌赛" :TitleList="mixeTeamFinalsList.title" :List="mixeTeamFinalsList.List[0]" />
         </div>
+        <div class="targetImage" v-if="state.indexOf('手枪') != -1">
+          <div class="flex" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
+            <div class="box">
+              <div class="name">{{ item.playerName }}</div>
+              <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
+                <EchatTarget :dots="item.playerScores" :state="state" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="targetImage1" v-if="state.indexOf('步枪') != -1">
+          <div class="flex1" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
+            <div class="box1">
+              <div class="name1">{{ item.playerName }}</div>
+              <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                <EchatTargetB :dots="item.playerScores" :state="state" />
+              </div>
+            </div>
+          </div>
+        </div>
       </a-carousel>
     </div>
   </div>
@@ -15,9 +35,11 @@
 import { getMixeTeamFinalsListAPI } from '@api/competition'
 // 混团赛滚动成绩tabelList
 import TableListVue from './../components/tableList.vue'
+import EchatTarget from '../../view/targetmap/modules/EchatTarget.vue'
+import EchatTargetB from '../../view/targetmap/modules/EchatTargetB.vue'
 export default {
   name: 'mixedClusterIndex', //混团金牌铜牌 手枪或步枪
-  components: { TableListVue },
+  components: { TableListVue, EchatTarget, EchatTargetB },
   data() {
     return {
       // 混团金铜牌赛

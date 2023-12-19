@@ -150,3 +150,5 @@ export const retarget = data => postAction("contest-process/retarget", data)
 export const selectTargetList = data => postAction("contest-process/selectTargetList", data)
 // 查询换靶记录
 export const getChangeListAPI = data => postAction("bizContestRetarget/page/list", data)
+// 添加发序成绩
+export const saveScore = data => postAction("contest-process/saveScore", data)
