@@ -3,13 +3,16 @@
  */
 window._CONFIG = {
   // 接口父路径
-  // VUE_APP_API_BASE_URL: 'http://192.168.8.162:8080/lasergun-training/',
+  VUE_APP_API_BASE_URL: 'http://192.168.8.162:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.8.121:8080/lasergun-training/',
-  VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
+  // VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
   // 单点登录地址
   VUE_APP_CAS_BASE_URL: '',
   // 文件预览路径
   VUE_APP_ONLINE_BASE_URL: '',
   logo: '激光射击训练系统',
-  printSponsorImg: 'sponsor.jpg'
+  // 成绩打印赞助商图片
+  printSponsorImg: 'printLogo.png',
+  // 'sponsor.jpg', 'sponsor.jpg', 'sponsor.jpg'
+  printSponsorBottomImgs: []
 }

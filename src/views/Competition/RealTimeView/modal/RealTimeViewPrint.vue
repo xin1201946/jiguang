@@ -147,6 +147,13 @@ export default {
                 </tr>
               </thead>
               ${list(item.list)}
+              <tfoot>
+                <tr>
+                  <td colspan="3">
+                    <div style="height: 3cm"></div>
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>`)
         }
@@ -159,8 +166,15 @@ export default {
 
       }
     </style> */
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
       return  (`
       <style>
+        h1,h2,h3,h4,p{
+          margin: 0;
+          padding: 0;
+        }
         @media print {
           .prints{
             position: absolute;
@@ -171,25 +185,37 @@ export default {
       </style>
       <div class="print" style="height: auto">
         <div >
-          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>
-          <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
+<!--          <div style="text-align: left"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>-->
+         <!-- <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
-              <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div><div style="width: 60%;text-align: center">${this.formData.playerName}</div>
+              <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div>
+              <div style="width: 60%;text-align: center">${this.formData.playerName}</div>
             </div>
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
-              <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
+              <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div>
+              <div style="width: 60%;text-align: center">${this.formData.groupName}</div>
             </div>
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid;border-bottom: 1px solid">
-              <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div><div style="width: 60%;text-align: center">${this.formData.projectName}</div>
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div>
+              <div style="width: 60%;text-align: center">${this.formData.projectName}</div>
             </div>
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
-              <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div>
+              <div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
             </div>
+          </div> -->
+          <div style="position: relative">
+            <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+            <h1 style="text-align: center">${this.formData.projectName}</h1>
+            <h2 style="text-align: center">${this.formData.groupName}</h2>
+            <p style="text-align: center">${this.formData.playerName}</p>
           </div>
         </div>
-
         <div>
           ${arr.join("</br>")}
+        </div>
+        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+          ${imgs.join("")}
         </div>
       </div>`)
     },

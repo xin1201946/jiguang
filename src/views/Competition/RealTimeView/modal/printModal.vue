@@ -102,18 +102,24 @@ export default {
             <td align="center">${item.playerName}</td>
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime}</td>
+            <td align="center">${item.beginTime.length <= 9 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 6) }</td>
             <td align="center">${item.xcoord}</td>
             <td align="center">${item.ycoord}</td>
           </tr>`
       })
-      console.log(arr)
 
-        /*  */
+      // console.log(arr)
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
       return (`
+        <style>
+          th{border: 1px solid}
+
+        </style>
         <div style="height: auto">
-          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>
-          <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
+<!--          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>-->
+          <!-- <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
               <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
             </div>
@@ -126,9 +132,15 @@ export default {
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
               <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
             </div>
+          </div> -->
+          <div>
+            <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+            <h1 style="text-align: center">${this.formData.projectName}</h1>
+            <h2 style="text-align: center">${this.formData.projectGroup}${this.formData.stageName}</h2>
+            <p style="text-align: center">${this.formData.groupName}</p>
           </div>
           <div style="margin-top: 20px">
-            <table align="center" cellSpacing="0" border="1" style="width: 100%;" >
+            <table align="center" cellSpacing="0" border="0" style="width: 100%;" >
               <thead>
                 <tr style="height: 50px; line-height: 50px" >
                   <th style="width: 20%">姓名</th>
@@ -142,13 +154,24 @@ export default {
               <tbody>
                 ${arr.join("")}
               </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">
+                    <div style="height: 3cm"></div>
+                  </td>
+                </tr>
+              </tfoot>
             </table>
+            <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+              ${imgs.join("")}
+            </div>
           </div>
         </div>
       `)
     },
+
     handlePrint() {
-      const pwin = window.open(); //打开一个新窗口
+      /* const pwin = window.open(); //打开一个新窗口
       // pwin.document.write(prints); //写入打印内容
       pwin.document.write(this.bodyContent())
       // pwin.document.write("打印")
@@ -156,7 +179,22 @@ export default {
       pwin.close() //这个点取消和打印就会关闭新打开的窗口
       pwin.addEventListener('afterprint', () => {
         pwin.close()
-      });
+      }); */
+      const iframe= document.createElement("iframe");
+      document.body.appendChild(iframe);
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write(this.bodyContent());
+      iframe.width = '100%'
+      iframe.height = '800px'
+      setTimeout(() => {
+        iframe.contentWindow.print()
+        iframe.contentWindow.document.close();
+        iframe.contentWindow.addEventListener('afterprint', () => {
+          iframe.contentWindow.document.close()
+          document.body.removeChild(iframe)
+        });
+        document.body.removeChild(iframe)
+      },50)
     }
   }
 }

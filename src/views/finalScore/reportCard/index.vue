@@ -368,7 +368,9 @@ export default {
         )
       })
 
-
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
       return `
       <style>
         td{text-align: center}
@@ -396,7 +398,9 @@ export default {
         }
       </style>
       <div>
-        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+
+        <div style="position: relative">
+          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
           <h1 style="text-align: center">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -419,18 +423,25 @@ export default {
             <tr>${th()}</tr>
           </thead>
           <tbody> ${tr.join("")} </tbody>
-
+          <tfoot>
+            <tr style="margin-top: 1cm">
+              <td colspan="${g + 7}" style="height: 3cm; margin-top: 20px"></td>
+            </tr>
+          </tfoot>
         </table>
         <div style=" bottom: 0;width: 100%">
           <div style="width: 100%;border: 0px solid">
             <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
-              <div>${this.rank.join("，")}</div>
+              <div style="color: #595656">${this.rank.join("，")}</div>
             </div>
             <!--<div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
               抗议截止时间:
               <div style='width: 20%'></div>
             </div>-->
+            <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+              ${imgs.join("")}
+            </div>
           </div>
         </div>
       </div>`
@@ -512,7 +523,11 @@ export default {
               <tbody>
                 ${jtr()}
               </tbody>
-
+              <tfoot>
+                <tr style="margin-top: 1cm">
+                  <td colspan="5" style="height: 3cm; margin-top: 20px"></td>
+                </tr>
+              </tfoot>
             </table>`: ''
       const ydiv = y.length ? `<h4>铜牌赛</h4>
             <table align="center" cellspacing="0" border="0" style="width: 100%;">
@@ -528,22 +543,21 @@ export default {
               <tbody>
                 ${ytr()}
               </tbody>
-
+              <tfoot>
+                <tr style="margin-top: 1cm">
+                  <td colspan="5" style="height: 3cm; margin-top: 20px"></td>
+                </tr>
+              </tfoot>
             </table>`: ''
-
-      // 混团备注
-      const beizhu = this.rank.length && (
-        `
-         <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
-          <div style="margin-bottom: 6px">备注</div>
-          <div>${this.rank.join("，")}</div>
-        </div style="margin-bottom: 6px">`
-      ) || ""
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
       return `
         <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
         <div>
           <div style="height: 90vh">
-            <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+            <div style="position: relative;">
+              <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
               <h1 style="text-align: center">${contestName}</h1>
               <h2 style="text-align: center">${label.label.split("-").reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
@@ -556,15 +570,9 @@ export default {
               ${ydiv}
             </div>
           </div>
-          <div style="position: fixed; bottom: 0;width: 100%">
-          <div style="width: 96%;border: 0px solid">
-            ${beizhu}
-<!--            <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">-->
-<!--              抗议截止时间:-->
-<!--              <div style='width: 20%'></div>-->
-<!--            </div>-->
+          <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join("")}
           </div>
-        </div>
         </div>
       `
     },
@@ -655,6 +663,11 @@ export default {
           ${rows.join("")}
         `)
       })
+
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
+
       return `
       <style>
         td{text-align: center}
@@ -667,14 +680,18 @@ export default {
         }
       </style>
       <div>
-        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
-          <h1 style="text-align: center">${contestName}</h1>
-          <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-          <h3 style="text-align: center">
-            ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
-            ${label.projectName}
-          </h3>
-          <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+
+        <div style="position: relative;">
+          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+          <div ">
+            <h1 style="text-align: center">${contestName}</h1>
+            <h2 style="text-align: center">${this.dataTitle}成绩</h2>
+            <h3 style="text-align: center">
+              ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
+              ${label.projectName}
+            </h3>
+            <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+          </div>
         </div>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
@@ -691,18 +708,28 @@ export default {
           </thead>
           <tbody>${tr.join('')}
           </tbody>
+
+          <tfoot>
+            <tr style="margin-top: 1cm">
+              <td colspan="${g + 7}" style="height: 3cm; margin-top: 20px"></td>
+            </tr>
+          </tfoot>
         </table>
-        <div style="width: 100%">
-          <div style="width: 96%;border: 0px solid">
-            <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
+        <div style="width: 100%; margin-bottom: 2cm">
+          <div style="width: 100%;border: 0px solid">
+            <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
-              <div>${this.rank.join("，")}</div>
+              <div style="color: #595656">${this.rank.join("，")}</div>
             </div>
            <!-- <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
               抗议截止时间:
               <div style='width: 20%'></div>
             </div>-->
           </div>
+        </div>
+<!--        position: fixed;-->
+        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+          ${imgs.join("")}
         </div>
       </div>`
     },

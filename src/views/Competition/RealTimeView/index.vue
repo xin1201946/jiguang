@@ -314,12 +314,12 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
+      this.data = []
       if (this.projectName.includes("团体")){
         this.columns = massingColumns
         getMixeTeamFinalsListAPI(data).then(res => {
-          console.log(res)
           if (res.code === 200) {
-            this.data = res.result.map(item => {
+            this.data = res.result.scoreList.map(item => {
               return {
                 ...item,
                 playerName: [item.player1Name, item.player2Name],
@@ -336,7 +336,6 @@ export default {
           if (res.code === 200) {
             const arr = res.result.pageList.records.map(item => item.gunTotalGroup)
             const a = res.result.shoots
-            console.log(a)
             if (a.length) {
               this.getColumns(a)
             }else {

@@ -423,7 +423,9 @@ export default {
 
         return rows.join("")
       }
-
+      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      ))
       return `
       <style>
         h1,h2,h3,h4,p{
@@ -436,7 +438,8 @@ export default {
         }
       </style>
       <div>
-        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+        <div style="position: relative">
+          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
           <h1 style="text-align: center">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -464,17 +467,20 @@ export default {
           <tfoot>
             <tr>
               <td colspan="${6 + g}">
-                <div style="height: 100px"></div>
+                <div style="height: 2.8cm"></div>
               </td>
             </tr>
           </tfoot>
         </table>
-        <div style="position: fixed;bottom: 0px;width: 100%;height: 100px;left: 0px">
+        <!--<div style="position: fixed;bottom: 0px;width: 100%;height: 100px;left: 0px">
           <div style="height: 90px; width: 96%;border: 1px solid">
             <div>
               备注:
             </div>
           </div>
+        </div>-->
+        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+          ${imgs.join("")}
         </div>
       </div>`
     },
