@@ -170,35 +170,53 @@ export default {
         }
       </style>
       <div class="print" style="height: auto">
-        <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
-          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
-            <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div><div style="width: 60%;text-align: center">${this.formData.playerName}</div>
-          </div>
-          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
-            <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
-          </div>
-          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid;border-bottom: 1px solid">
-            <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div><div style="width: 60%;text-align: center">${this.formData.projectName}</div>
-          </div>
-          <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
-            <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
+        <div >
+          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>
+          <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">选手名称:</div><div style="width: 60%;text-align: center">${this.formData.playerName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目名称:</div><div style="width: 60%;text-align: center">${this.formData.projectName}</div>
+            </div>
+            <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
+              <div style="width: 40%;text-align: center;border-right: 1px solid">项目组别:</div><div style="width: 60%;text-align: center">${this.formData.projectGroup}</div>
+            </div>
           </div>
         </div>
+
         <div>
           ${arr.join("</br>")}
         </div>
       </div>`)
     },
     handlePrint() {
-      // const prints = document.querySelector('.prints').innerHTML
-      const pwin = window.open(); //打开一个新窗口
-      // pwin.document.write(prints); //写入打印内容
-      pwin.document.write(this.bodyContent())
-      pwin.print(); //调用打印机
-      pwin.close() //这个点取消和打印就会关闭新打开的窗口
-      pwin.addEventListener('afterprint', () => {
-        pwin.close()
-      });
+      const iframe= document.createElement("iframe");
+      document.body.appendChild(iframe);
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write(this.bodyContent());
+      iframe.width = '100%'
+      iframe.height = '800px'
+      setTimeout(() => {
+        iframe.contentWindow.print()
+        iframe.contentWindow.document.close();
+        iframe.contentWindow.addEventListener('afterprint', () => {
+          iframe.contentWindow.document.close()
+          document.body.removeChild(iframe)
+        });
+        document.body.removeChild(iframe)
+      })
+      // const pwin = window.open(); //打开一个新窗口
+      // // pwin.document.write(prints); //写入打印内容
+      // pwin.document.write(this.bodyContent())
+      // pwin.print(); //调用打印机
+      // pwin.close() //这个点取消和打印就会关闭新打开的窗口
+      // pwin.addEventListener('afterprint', () => {
+      //   pwin.close()
+      // });
     }
   }
 }

@@ -317,6 +317,7 @@ export default {
       if (this.projectName.includes("团体")){
         this.columns = massingColumns
         getMixeTeamFinalsListAPI(data).then(res => {
+          console.log(res)
           if (res.code === 200) {
             this.data = res.result.map(item => {
               return {
@@ -375,6 +376,7 @@ export default {
       })
     },
     handleInfo(record) {
+      console.log(record)
       if (this.projectName.includes("团体")){
         bizTeamGoldScoreQueryById(record.teamGoldScoreId).then(res => {
           if (res.code === 200) {

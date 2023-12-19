@@ -10,5 +10,6 @@ window._CONFIG = {
   VUE_APP_CAS_BASE_URL: '',
   // 文件预览路径
   VUE_APP_ONLINE_BASE_URL: '',
-  logo: '激光射击训练系统'
+  logo: '激光射击训练系统',
+  printSponsorImg: 'sponsor.jpg'
 }

@@ -426,24 +426,26 @@ export default {
 
       return `
       <style>
-      h1,h2,h3,h4,p{
-        margin: 0;
-        padding: 0;
-      }
-        td{text-align: right}.tables>thead>tr>th{border: 1px solid;}
+        h1,h2,h3,h4,p{
+          margin: 0;
+          padding: 0;
+        }
+        td{text-align: center}.tables>thead>tr>th{border: 1px solid;}
         td:nth-of-type(2){
         text-align: left;
         }
       </style>
       <div>
-        <h1 style="text-align: center">${contestName}</h1>
-        <h2 style="text-align: center">
-          ${label.projectGroup}${label.projectName}
-        </h2>
-        <h3 style="text-align: center">${stageName}</h3>
+        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+          <h1 style="text-align: center">${contestName}</h1>
+          <h2 style="text-align: center">
+            ${label.projectGroup}${label.projectName}
+          </h2>
+          <h3 style="text-align: center">${stageName}</h3>
 
-        <h4 style="text-align: center">团体</h4>
-        <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+          <h4 style="text-align: center">团体</h4>
+          <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        </div>
         <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>
@@ -482,13 +484,15 @@ export default {
       document.body.appendChild(iframe);
       iframe.contentWindow.document.open();
       iframe.contentWindow.document.write(this.bodyContent());
-      iframe.contentWindow.print()
-      iframe.contentWindow.document.close();
-      iframe.contentWindow.addEventListener('afterprint', () => {
-        iframe.contentWindow.document.close()
+      setTimeout(() => {
+        iframe.contentWindow.print()
+        iframe.contentWindow.document.close();
+        iframe.contentWindow.addEventListener('afterprint', () => {
+          iframe.contentWindow.document.close()
+          document.body.removeChild(iframe)
+        });
         document.body.removeChild(iframe)
-      });
-      document.body.removeChild(iframe)
+      }, 50)
       /* const pwin = window.open(); //打开一个新窗口
       pwin.document.write(this.bodyContent())
       pwin.print(); //调用打印机

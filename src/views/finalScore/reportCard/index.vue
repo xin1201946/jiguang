@@ -371,7 +371,7 @@ export default {
 
       return `
       <style>
-        td{text-align: right}
+        td{text-align: center}
         th{border: 1px solid;}
         @media print {
           @page{
@@ -396,14 +396,15 @@ export default {
         }
       </style>
       <div>
-        <h1 style="text-align: center">${contestName}</h1>
-
-        <h2 style="text-align: center">
-          ${label.projectGroup}${label.projectName}
-        </h2>
-        <h3 style="text-align: center">资格赛</h3>
-        <p style="text-align: center">${contest.location}</p>
-        <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+          <h1 style="text-align: center">${contestName}</h1>
+          <h2 style="text-align: center">
+            ${label.projectGroup}${label.projectName}
+          </h2>
+          <h3 style="text-align: center">资格赛</h3>
+          <p style="text-align: center">${contest.location}</p>
+          <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        </div>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead >
             <tr>
@@ -421,15 +422,15 @@ export default {
 
         </table>
         <div style=" bottom: 0;width: 100%">
-          <div style="width: 96%;border: 0px solid">
-            <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
+          <div style="width: 100%;border: 0px solid">
+            <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
               <div>${this.rank.join("，")}</div>
-            </div style="margin-bottom: 6px">
-            <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
+            </div>
+            <!--<div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
               抗议截止时间:
               <div style='width: 20%'></div>
-            </div>
+            </div>-->
           </div>
         </div>
       </div>`
@@ -536,18 +537,19 @@ export default {
          <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
           <div style="margin-bottom: 6px">备注</div>
           <div>${this.rank.join("，")}</div>
-        </div style="margin-bottom: 6px">
-`
+        </div style="margin-bottom: 6px">`
       ) || ""
       return `
         <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
         <div>
           <div style="height: 90vh">
-            <h1 style="text-align: center">${contestName}</h1>
-            <h2 style="text-align: center">${label.label.split("-").reverse().join('')}</h2>
-            <h3 style="text-align: center">奖牌赛</h3>
-            <p style="text-align: center">${contest.location}</p>
-            <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+            <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+              <h1 style="text-align: center">${contestName}</h1>
+              <h2 style="text-align: center">${label.label.split("-").reverse().join('')}</h2>
+              <h3 style="text-align: center">奖牌赛</h3>
+              <p style="text-align: center">${contest.location}</p>
+              <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+            </div>
             <div>
               ${jdiv}
               <br/>
@@ -568,6 +570,7 @@ export default {
     },
     // 决赛 || 淘汰赛
     content(){
+
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0]
       const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
@@ -591,7 +594,6 @@ export default {
         }
         return arr.join("")
       }
-      console.log(this.groupArray)
       const tr = this.data.map(item => {
         const arr = []
         for (let i = 0; i < this.groupArray.length; i++) {
@@ -653,10 +655,9 @@ export default {
           ${rows.join("")}
         `)
       })
-
       return `
       <style>
-        td{text-align: right}
+        td{text-align: center}
         th{border: 1px solid;}
         @media print {
           @page{
@@ -666,13 +667,15 @@ export default {
         }
       </style>
       <div>
-        <h1 style="text-align: center">${contestName}</h1>
-        <h2 style="text-align: center">${this.dataTitle}成绩</h2>
-        <h3 style="text-align: center">
-          ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
-          ${label.projectName}
-        </h3>
-        <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        <div style="width: 100%;background: url('../${window._CONFIG.printSponsorImg}') no-repeat top left;background-size: 5cm 5cm">
+          <h1 style="text-align: center">${contestName}</h1>
+          <h2 style="text-align: center">${this.dataTitle}成绩</h2>
+          <h3 style="text-align: center">
+            ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
+            ${label.projectName}
+          </h3>
+          <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        </div>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>
@@ -694,11 +697,11 @@ export default {
             <div style="width: 96%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
               <div style="margin-bottom: 6px">备注</div>
               <div>${this.rank.join("，")}</div>
-            </div style="margin-bottom: 6px">
-            <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
+            </div>
+           <!-- <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
               抗议截止时间:
               <div style='width: 20%'></div>
-            </div>
+            </div>-->
           </div>
         </div>
       </div>`
@@ -717,13 +720,17 @@ export default {
         document.body.appendChild(iframe);
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(fn);
-        iframe.contentWindow.print()
-        iframe.contentWindow.document.close();
-        iframe.contentWindow.addEventListener('afterprint', () => {
-          iframe.contentWindow.document.close()
+        iframe.width = '100%'
+        iframe.height = '800px'
+        setTimeout(() => {
+          iframe.contentWindow.print()
+          iframe.contentWindow.document.close();
+          iframe.contentWindow.addEventListener('afterprint', () => {
+            iframe.contentWindow.document.close()
+            document.body.removeChild(iframe)
+          });
           document.body.removeChild(iframe)
-        });
-        document.body.removeChild(iframe)
+        }, 50)
       }
       if (this.dataTitle.includes('团体')) {
         print(this.groupContent())
