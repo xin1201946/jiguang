@@ -152,3 +152,7 @@ export const selectTargetList = data => postAction("contest-process/selectTarget
 export const getChangeListAPI = data => postAction("bizContestRetarget/page/list", data)
 // 添加发序成绩
 export const saveScore = data => postAction("contest-process/saveScore", data)
+// 淘汰
+export const eliminationFinal = data => postAction("contest-process/eliminationFinal", data)
+// 同分
+export const sameFinals = data => postAction("contest-process/sameFinals", data)

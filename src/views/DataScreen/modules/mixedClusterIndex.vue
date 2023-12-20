@@ -9,11 +9,13 @@
       </a-carousel>
       <div class="targetImage" v-if="state.indexOf('手枪') != -1">
         <div style="display:flex;width: 100%;justify-content: space-around;" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
-          <div class="flex" v-for="(e, v) in item['姓名']" :key="e">
-            <div class="box">
-              <div class="name">{{ e }}</div>
-              <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                <EchatTarget :dots="item.list[v]" :state="state" />
+          <div class="div">
+            <div class="flex" v-for="(e, v) in item['姓名']" :key="e">
+              <div class="box">
+                <div class="name">{{ e }}</div>
+                <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
+                  <EchatTarget :dots="item.list[v]" :state="state" />
+                </div>
               </div>
             </div>
           </div>
@@ -21,11 +23,13 @@
       </div>
       <div class="targetImage1" v-if="state.indexOf('步枪') != -1">
         <div style="display:flex;width: 100%;justify-content: space-around;" v-for="(item) in mixeTeamFinalsList.List[0]" :key="item.targetSite">
-          <div class="flex1" v-for="e in item['姓名']" :key="e">
-            <div class="box1">
-              <div class="name1">{{ e }}</div>
-              <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                <EchatTargetB :dots="item.list[v]" :state="state" />
+          <div class="div1">
+            <div class="flex1" v-for="e in item['姓名']" :key="e">
+              <div class="box1">
+                <div class="name1">{{ e }}</div>
+                <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                  <EchatTargetB :dots="item.list[v]" :state="state" />
+                </div>
               </div>
             </div>
           </div>
@@ -134,7 +138,7 @@ export default {
               ],
               // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
               总环数: item.stageTotal.toFixed(1),
-              总分: item.total.toFixed(1),
+              总分: item.total.toFixed(0),
               list: [item.detailScoreList2, item.detailScoreList1],
             }
             this.mixeTeamFinalsList.List[0].push(obj)
@@ -163,19 +167,34 @@ export default {
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   width: 100%;
-  height: 560px;
-
-  .flex {
+  height: 380px;
+  .div {
     position: relative;
     flex: 0 0 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25%;
-    height: 280px;
+  }
+
+  .name {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .flex {
+    // flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 25%;
+    width: 190px;
+    height: 190px;
     overflow: hidden;
+    border-radius: 50%;
 
     .box {
       display: flex;
@@ -184,18 +203,9 @@ export default {
       width: 1000px;
       height: 1000px;
 
-      .name {
-        position: absolute;
-        left: 0;
-        top: 0;
-        color: #fff;
-        font-size: 24px;
-        font-weight: bold;
-      }
-
       .shouqiang {
-        width: 1000px;
-        height: 1000px;
+        width: 700px;
+        height: 700px;
       }
 
       .buqiang {
@@ -205,24 +215,41 @@ export default {
     }
   }
 }
+
 .targetImage1 {
   position: absolute;
   left: 30px;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   width: 100%;
   height: 380px;
-  .flex1 {
+  .div1 {
     position: relative;
     flex: 0 0 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25%;
+  }
+
+  .name1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .flex1 {
+    // flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 25%;
+    width: 190px;
     height: 190px;
     overflow: hidden;
+    border-radius: 50%;
 
     .box1 {
       display: flex;
@@ -230,15 +257,6 @@ export default {
       justify-content: center;
       width: 2000px;
       height: 2000px;
-
-      .name1 {
-        position: absolute;
-        left: 0;
-        top: 0;
-        color: #fff;
-        font-size: 24px;
-        font-weight: bold;
-      }
 
       .shouqiang1 {
         width: 1000px;

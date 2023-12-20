@@ -31,8 +31,7 @@
     <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i'
-          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -96,7 +95,7 @@
       <div style="width: 100%;height: 100%;" v-if="logoTitle.indexOf('个人决赛') != -1">
         <!--    前8位-->
         <div :class="finalEight.length == 0 ? '':'finalEight'">
-          <div v-for="(item, i) in finalEight" :key="i" :class="item.playerStatus == 0 ? 'finalEightRow taotai':'finalEightRow'">
+          <div v-for="(item, i) in finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai': item.sameStatus == 1 ? 'tongfen finalEightRow': 'finalEightRow'">
             <div style="width: 80px">{{ item.rank }}</div>
             <div style="width: 80px">{{ item.targetSite }}</div>
             <div style="width: 140px">{{ item.playerName }}</div>
@@ -110,21 +109,25 @@
           </div>
         </div>
         <div class="targetImage" v-if="logoTitle.indexOf('手枪') != -1">
-          <div class="flex" v-for="(item) in finalEight" :key="item.targetSite">
-            <div class="box">
-              <div class="name">{{ item.playerName }}</div>
-              <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                <EchatTarget :dots="item.playerScores" :state="logoTitle" />
+          <div class="div" v-for="(item) in finalEight" :key="item.targetSite">
+            <div class="flex">
+              <div class="box">
+                <div class="name">{{ item.playerName }}</div>
+                <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
+                  <EchatTarget :dots="item.playerScores" :state="logoTitle" />
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="targetImage1" v-if="logoTitle.indexOf('步枪') != -1">
-          <div class="flex1" v-for="(item) in finalEight" :key="item.targetSite">
-            <div class="box1">
-              <div class="name1">{{ item.playerName }}</div>
-              <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                <EchatTargetB :dots="item.playerScores" :state="logoTitle" />
+          <div class="div1" v-for="(item) in finalEight" :key="item.targetSite">
+            <div class="name1">{{ item.playerName }}</div>
+            <div class="flex1">
+              <div class="box1">
+                <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                  <EchatTargetB :dots="item.playerScores" :state="logoTitle" />
+                </div>
               </div>
             </div>
           </div>
@@ -149,16 +152,14 @@
       </div>
     </div>
     <!-- 混团赛 -->
-    <div class="box_box"
-      v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+    <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
       <mixedClusterIndex></mixedClusterIndex>
     </div>
     <!-- 团队赛 -->
     <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
       <!--    表头-->
       <div class='th'>
-        <div v-for='(item, i) in th' :key='i'
-          :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
           {{ item.name }}
         </div>
       </div>
@@ -354,7 +355,12 @@ export default {
                 .map((item, i) => {
                   return {
                     ...item,
-                    total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
+                    total:
+                      result.isGood === '是'
+                        ? !item.totalScore
+                          ? item.totalScore
+                          : `${item.totalScore}-${item.good}x`
+                        : item.totalScore,
                     notes: '',
                     bePromoted: 'Q',
                   }
@@ -365,7 +371,12 @@ export default {
                 .map((item) => {
                   return {
                     ...item,
-                    total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
+                    total:
+                      result.isGood === '是'
+                        ? !item.totalScore
+                          ? item.totalScore
+                          : `${item.totalScore}-${item.good}x`
+                        : item.totalScore,
                     notes: '',
                     bePromoted: '',
                   }
@@ -374,7 +385,12 @@ export default {
               this.listsList = result.players.map((item) => {
                 return {
                   ...item,
-                  total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
+                  total:
+                    result.isGood === '是'
+                      ? !item.totalScore
+                        ? item.totalScore
+                        : `${item.totalScore}-${item.good}x`
+                      : item.totalScore,
                   notes: '',
                   bePromoted: '',
                 }
@@ -427,12 +443,17 @@ export default {
             })
           })
         }
-        this.th.push({ name: '总环数', width: '150px' },{ name: '分差', width: '80px' }, { name: '备注' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '分差', width: '80px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
               ...item,
-              total: result.isGood === '是' ? !item.totalScore ? item.totalScore : `${item.totalScore}-${item.good}x` : item.totalScore,
+              total:
+                result.isGood === '是'
+                  ? !item.totalScore
+                    ? item.totalScore
+                    : `${item.totalScore}-${item.good}x`
+                  : item.totalScore,
               notes: '',
               bePromoted: '',
             }
@@ -596,21 +617,38 @@ export default {
 
 .targetImage {
   position: absolute;
-  left: 30px; bottom: 0;
+  left: 30px;
+  bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   height: 380px;
-
-  .flex {
+  .div {
     position: relative;
     flex: 0 0 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25%;
+  }
+
+  .name {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .flex {
+    // flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 25%;
+    width: 190px;
     height: 190px;
     overflow: hidden;
+    border-radius: 50%;
 
     .box {
       display: flex;
@@ -618,15 +656,6 @@ export default {
       justify-content: center;
       width: 1000px;
       height: 1000px;
-
-      .name {
-        position: absolute;
-        left: 0;
-        top: 0;
-        color: #fff;
-        font-size: 24px;
-        font-weight: bold;
-      }
 
       .shouqiang {
         width: 700px;
@@ -643,20 +672,38 @@ export default {
 
 .targetImage1 {
   position: absolute;
-  left: 30px; bottom: 0;
+  left: 30px;
+  bottom: 0;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   height: 380px;
-  .flex1 {
+  .div1 {
     position: relative;
     flex: 0 0 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25%;
+  }
+
+  .name1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .flex1 {
+    // flex: 0 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 25%;
+    width: 190px;
     height: 190px;
     overflow: hidden;
+    border-radius: 50%;
 
     .box1 {
       display: flex;
@@ -664,15 +711,6 @@ export default {
       justify-content: center;
       width: 2000px;
       height: 2000px;
-
-      .name1 {
-        position: absolute;
-        left: 0;
-        top: 0;
-        color: #fff;
-        font-size: 24px;
-        font-weight: bold;
-      }
 
       .shouqiang1 {
         width: 1000px;
@@ -753,7 +791,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  &>div {
+  & > div {
     flex: 1;
     text-align: center;
   }
@@ -765,8 +803,11 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-.taotai{
+.taotai {
   color: rgb(112, 112, 112);
+}
+.tongfen {
+  color: #ff0000;
 }
 .finalEightRow {
   flex: 1;

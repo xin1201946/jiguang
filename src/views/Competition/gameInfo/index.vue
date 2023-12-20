@@ -40,8 +40,8 @@
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDate">时间管理</a-button>
+            <a-button v-if="stageName.includes('决赛')" type="primary" @click="handleSameScore">同分</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
-
           </a-space>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
@@ -59,16 +59,29 @@
               <a-button @click.stop="handleBisai(i)">开始</a-button>
               <a-button @click.stop="handleEnd(i)">结束</a-button>
             </a-space>
-            <a-table :rowClassName="(r, i) => r.remarkPenalty ? 'red':'' " bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
+            <a-table :rowSelection="rowSelection" :rowClassName="(r,i)=>rowClassName(r,i)" bordered rowKey="i" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
               <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
                   <a-button v-if="['准备中','试射中','比赛中','成绩显示','已结束'].indexOf(status) !== -1" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button v-if="record.targetSite  ? true: false" type="primary" size="small" ghost icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
-                  <a-button type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
-                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="flag" @click="handlePenalty(record)">判罚</a-button>
-                  <a-button v-if="!stageName.includes('牌赛')" type="danger" size="small" ghost icon="form" @click="handleRemark(record)">备注</a-button>
+                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
+                  <a-button v-if="stageName.includes('决赛') && record.sameStatus == 1" type="danger" size="small" ghost icon="stop" @click="handleEliminate(record)">淘汰</a-button>
+                  <a-dropdown>
+                    <a style="display:block;width: 80px" @click="e => e.preventDefault()"> 更多 <a-icon type="down" />
+                    </a>
+                    <a-menu slot="overlay">
+                      <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
+                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
+                      </a-menu-item>
+                      <a-menu-item v-if="!stageName.includes('牌赛')">
+                        <a-button type="link" size="small" icon="flag" @click="handlePenalty(record)">判罚</a-button>
+                      </a-menu-item>
+                      <a-menu-item v-if="!stageName.includes('牌赛')">
+                        <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
+                      </a-menu-item>
+                    </a-menu>
+                  </a-dropdown>
                 </a-space>
               </template>
             </a-table>
@@ -98,6 +111,8 @@
         <GameInfoDateModal ref="date"></GameInfoDateModal>
         <!-- 更改靶位 -->
         <GameRetweetModal ref="retweet" @confirm="retweetSuccessHandle" />
+        <!-- 同分 -->
+        <GameInfoSameScoreModal ref="sameScore" @ok="sameScoreSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -116,6 +131,7 @@ import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemar
 import TreeCard from '@comp/card/TreeCard.vue'
 import GameInfoDateModal from '@views/Competition/gameInfo/modal/gameInfoDateModal.vue'
 import GameRetweetModal from '@views/Competition/gameInfo/modal/gameInfoRetweet.vue'
+import GameInfoSameScoreModal from '@views/Competition/gameInfo/modal/gameInfoSameScore.vue'
 
 import {
   bizContestProjectList,
@@ -137,6 +153,8 @@ import {
   remark,
   contest_processGetStageGroupTime,
   retarget,
+  eliminationFinal,
+  sameFinals,
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -154,6 +172,7 @@ export default {
     GameInfoRemarkModal,
     GameInfoDateModal,
     GameRetweetModal,
+    GameInfoSameScoreModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -189,9 +208,78 @@ export default {
       stageName: '',
       isAdjustment: '',
       projectName: '',
+
+      selectedRowKeys: [],
+      selectionRows: [],
     }
   },
   methods: {
+    rowClassName(r, i) {
+      if (r.remarkPenalty) {
+        return 'red'
+      }
+      if (r.sameStatus == 1) {
+        return 'tongfen'
+      }
+      if (r.eliminationStatus == 1) {
+        return 'taotai'
+      }
+    },
+    /**
+     * 同分
+     */
+    handleSameScore() {
+      if (this.selectedRowKeys.length < 2) {
+        return this.$message.error('至少选中两名参赛选手!')
+      }
+      this.$refs.sameScore.init(this.selectionRows)
+    },
+    sameScoreSuccessHandle(data) {
+      sameFinals({
+        ...data,
+        stageId: this.cproStageId,
+      }).then((res) => {
+        console.log(res)
+        if (res.success) {
+          this.$message.success('同分操作成功！')
+          this.getTableList()
+          this.$refs.sameScore.handleCancel()
+          this.selectedRowKeys = []
+          this.selectionRows = []
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    /**
+     * 淘汰接口
+     */
+    handleEliminate(row) {
+      console.log(row)
+
+      let arr = this.dataSource.filter((item) => {
+        if (item.playerId != row.playerId && item.sameStatus == 1) {
+          return item.playerId
+        }
+      })
+      let playerIds = arr.map((item) => {
+        return item.playerId
+      })
+      infoMessage('此操作将淘汰该运动员！是否继续？').then(() => {
+        eliminationFinal({
+          playerIds,
+          playerId: row.playerId,
+          stageId: this.cproStageId,
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('操作成功！该运动员已被淘汰！')
+            this.getTableList()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      })
+    },
     /**
      * 更换靶位
      */
@@ -306,7 +394,6 @@ export default {
       // this.getList()
     },
     handleInfo(record) {
-      console.log(record)
       this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     numToCapital,
@@ -690,6 +777,37 @@ export default {
     this.data = JSON.parse(decodeURI(this.$route.query.row))
     this.getProjectList()
   },
+  computed: {
+    rowSelection() {
+      let { selectedRowKeys } = this
+      return {
+        getCheckboxProps: (record) => ({
+          props: {
+            disabled: record.eliminationStatus == 1, // Column configuration not to be checked
+          },
+        }),
+        onSelect: (record, selected) => {
+          selected
+            ? this.selectionRows.push(record)
+            : this.selectionRows.splice(
+                this.selectionRows.findIndex((x) => x.id === record.id),
+                1
+              )
+        },
+        onSelectAll: (selected, selectedRows, changeRows) => {
+          this.selectionRows = selected
+            ? this.selectionRows.concat(changeRows)
+            : this.selectionRows.filter((x) => !changeRows.find((i) => i.id === x.id))
+        },
+        selectedRowKeys: selectedRowKeys,
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.$nextTick(() => {
+            this.selectedRowKeys = selectedRowKeys
+          })
+        },
+      }
+    },
+  },
 }
 </script>
 
@@ -698,6 +816,13 @@ export default {
 /deep/.red {
   background: rgba(209, 35, 4, 0.3);
 }
+/deep/.tongfen {
+  background: rgba(252, 241, 87, 0.3);
+}
+/deep/.taotai {
+  background: rgba(124, 124, 124, 0.3);
+}
+
 .gameInfo {
   height: 100%;
   overflow: hidden;

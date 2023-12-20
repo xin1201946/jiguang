@@ -109,8 +109,11 @@ export default {
     init(row, type) {
       console.log(row)
       this.visible = true
-      this.type = type
-      this.formData = { ...row }
+      this.$nextTick(() => {
+        this.$refs.form.clearValidate()
+        this.formData = { ...row }
+        this.type = type
+      })
     },
   },
 }
