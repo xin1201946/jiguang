@@ -105,6 +105,7 @@ export default {
     },
     handleCancel() {
       this.visible = false
+      this.$refs.form.resetFields()
     },
     init(row, type) {
       console.log(row)
