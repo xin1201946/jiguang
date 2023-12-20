@@ -26,7 +26,7 @@ export const reportCardStageColumns = [
   {
     title: '靶位',
     align: 'center',
-    dataIndex: 'targetSite'
+    dataIndex: 'targetSiteStr'
   },
   /* {
     title: '选手编号',
