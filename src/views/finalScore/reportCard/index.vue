@@ -358,7 +358,7 @@ export default {
         return (
           `<tr>
             <td colspan="2">${item.i}</td>
-            <td colspan="2">${item.targetSite}</td>
+            <td colspan="2">${item.targetSiteStr}</td>
             <td colspan="2" style="text-align: left">${item.playerName}</td>
             <td colspan="2" style="text-align: left">${item.groupName}</td>
             ${arr.join("")}
@@ -792,6 +792,7 @@ export default {
         iframe.height = '800px'
         iframe.contentWindow.addEventListener("beforeprint", () => {
           function getNumberOfPages() {
+            // A4纸高度
             const totalHeight = 1123;
             const foot = iframe.contentDocument.querySelector(".foot")
             const body = iframe.contentDocument.body.scrollHeight
