@@ -111,31 +111,31 @@ export default {
         // this.stageGroup = data[0].projectGroup
         if (data && data.length != 0) {
           data.forEach((item, index) => {
-            if (data.detailScoreList1) {
-              data.detailScoreList1.forEach((item, index) => {
-                item['x_coord'] = item.xcoord
-                item['y_coord'] = item.ycoord
+            if (item.detailScoreList1) {
+              item.detailScoreList1.forEach((e, i) => {
+                e['x_coord'] = e.xcoord
+                e['y_coord'] = e.ycoord
               })
             }
-            if (data.detailScoreList2) {
-              data.detailScoreList2.forEach((item, index) => {
-                item['x_coord'] = item.xcoord
-                item['y_coord'] = item.ycoord
+            if (item.detailScoreList2) {
+              item.detailScoreList2.forEach((e, i) => {
+                e['x_coord'] = e.xcoord
+                e['y_coord'] = e.ycoord
               })
             }
             let obj = {
               排名: index + 1,
               代表队: item.groupName,
-              姓名: [item.player1Name, item.player2Name],
+              姓名: [item.player2Name, item.player1Name],
               发序: item.shootCode ? item.shootCode : 0,
               环数: [
-                item.player1Score ? item.player1Score.toFixed(1) : 0,
                 item.player2Score ? item.player2Score.toFixed(1) : 0,
+                item.player1Score ? item.player1Score.toFixed(1) : 0,
               ],
               // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
               总环数: item.stageTotal.toFixed(1),
               总分: item.total.toFixed(1),
-              list: [item.detailScoreList1, item.detailScoreList2],
+              list: [item.detailScoreList2, item.detailScoreList1],
             }
             this.mixeTeamFinalsList.List[0].push(obj)
           })

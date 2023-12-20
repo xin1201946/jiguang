@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      title: '判罚',
+      title: '更换靶位',
       visible: false,
       loadingModal: false,
       formData: {},

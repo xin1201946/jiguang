@@ -2,7 +2,7 @@
   <a-drawer
     :visible="visible"
     :title="title"
-    :maskClosable="true"
+    :maskClosable="false"
     :keyboard="false"
     @close="handleCancel"
     :width="widths || width"
