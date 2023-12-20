@@ -369,8 +369,38 @@ export default {
       })
 
       const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.8cm;margin: 0 6px"/>`
       ))
+      const img =imgs.length ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join("")}
+          </div>`: ''
+      const foot = () => {
+        if (window._CONFIG.printSponsorBottomImgs.length) {
+          return `<div class="foot" style="position: fixed;left: 0;width: 100%;bottom: 0;height: 5.5cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
+                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 14px">${this.rank.join("，")}</div>
+              </div>
+            </div>
+          </div>
+          ${img}
+        </div>`
+        }
+        return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0px;height: 2.7cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
+                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 14px">
+                  ${this.rank.join("，")}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`
+      }
       return `
       <style>
         td{text-align: center}
@@ -425,25 +455,11 @@ export default {
           <tbody> ${tr.join("")} </tbody>
           <tfoot>
             <tr style="margin-top: 1cm">
-              <td colspan="${g + 7}" style="height: 3cm; margin-top: 20px"></td>
+              <td colspan="${g + 7}" style="height: 5.6cm; margin-top: 20px"></td>
             </tr>
           </tfoot>
         </table>
-        <div style=" bottom: 0;width: 100%">
-          <div style="width: 100%;border: 0px solid">
-            <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
-              <div style="margin-bottom: 6px">备注</div>
-              <div style="color: #595656">${this.rank.join("，")}</div>
-            </div>
-            <!--<div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
-              抗议截止时间:
-              <div style='width: 20%'></div>
-            </div>-->
-            <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-              ${imgs.join("")}
-            </div>
-          </div>
-        </div>
+        ${foot()}
       </div>`
     },
     // 混团
@@ -466,14 +482,14 @@ export default {
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player1Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player2Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -493,14 +509,14 @@ export default {
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player1Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player2Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -570,7 +586,7 @@ export default {
               ${ydiv}
             </div>
           </div>
-          <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+          <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;padding-top: .2cm;width: 100%;display: flex;justify-content: space-between;margin-top: 1mm">
             ${imgs.join("")}
           </div>
         </div>
@@ -665,21 +681,57 @@ export default {
       })
 
       const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.8cm;margin: 0 6px"/>`
       ))
+      const img =imgs.length ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join("")}
+          </div>`: ''
 
+      const foot = () => {
+        if (window._CONFIG.printSponsorBottomImgs.length) {
+          return `<div class="foot" style="position: fixed;left: 0;width: 100%;bottom: 0;height: 5.5cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
+                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 14px">${this.rank.join("，")}</div>
+              </div>
+            </div>
+          </div>
+          ${img}
+        </div>`
+        }
+        return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0px;height: 2.7cm">
+          <div style="width: 100%;" class="footer">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
+                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 14px">
+                  ${this.rank.join("，")}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`
+      }
+
+      // console.log(foot())
       return `
       <style>
         td{text-align: center}
         th{border: 1px solid;}
+        body{margin: 0;padding: 0}
+        tfoot>tr>td{
+          height: 5.6cm;
+        }
         @media print {
+          size: A4;
           @page{
-            margin-top: .3cm;
-            margin-bottom: 0cm;
+            margin: 0;
           }
         }
       </style>
-      <div>
+        <div>
 
         <div style="position: relative;">
           <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
@@ -693,7 +745,7 @@ export default {
             <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
           </div>
         </div>
-        <table align="center" cellspacing="0" border="0" style="width: 100%;">
+        <table class="table" align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead>
             <tr>
               <th rowspan="2" colspan="2">排名</th>
@@ -711,51 +763,82 @@ export default {
 
           <tfoot>
             <tr style="margin-top: 1cm">
-              <td colspan="${g + 7}" style="height: 3cm; margin-top: 20px"></td>
+              <td colspan="${g + 7}" style=" margin-top: 20px">
+
+              </td>
             </tr>
           </tfoot>
         </table>
-        <div style="width: 100%; margin-bottom: 2cm">
-          <div style="width: 100%;border: 0px solid">
-            <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px">
-              <div style="margin-bottom: 6px">备注</div>
-              <div style="color: #595656">${this.rank.join("，")}</div>
-            </div>
-           <!-- <div style="height: 60px;display: flex;width: 100%;justify-content: flex-end;align-items: center;margin: 0">
-              抗议截止时间:
-              <div style='width: 20%'></div>
-            </div>-->
-          </div>
-        </div>
-<!--        position: fixed;-->
-        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-          ${imgs.join("")}
-        </div>
+        ${foot()}
       </div>`
     },
     // 打印
     handlePrint () {
+
       const print = (fn) => {
-        /*  const pwin = window.open(); //打开一个新窗口
-         pwin.document.write(fn)
-         pwin.print(); //调用打印机
-         pwin.close() //这个点取消和打印就会关闭新打开的窗口
-         pwin.addEventListener('afterprint', () => {
-           pwin.close()
-         }); */
+         // const pwin = window.open(); //打开一个新窗口
+         // pwin.document.write(fn)
+         // pwin.print(); //调用打印机
+         // pwin.close() //这个点取消和打印就会关闭新打开的窗口
+         // pwin.addEventListener('afterprint', () => {
+         //   pwin.close()
+         // });
+        const title = this.dataTitle
         const iframe= document.createElement("iframe");
         document.body.appendChild(iframe);
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(fn);
         iframe.width = '100%'
         iframe.height = '800px'
+        iframe.contentWindow.addEventListener("beforeprint", () => {
+          function getNumberOfPages() {
+            const totalHeight = 1123;
+            const foot = iframe.contentDocument.querySelector(".foot")
+            const body = iframe.contentDocument.body.scrollHeight
+            const pageHeight = body + foot.scrollHeight;
+            const pageCount = Math.ceil(pageHeight / totalHeight);
+            // 显示
+            if (pageCount === 1) {}
+            // 隐藏 追加
+            else {
+              const footer = iframe.contentDocument.querySelector(".footer")
+              const newfooter = iframe.contentDocument.createElement('div')
+              newfooter.innerHTML = footer.innerHTML
+              if (title.includes("决赛")){
+                // 判断低图是否有
+                if (window._CONFIG.printSponsorBottomImgs.length) {
+                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
+                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
+                }else{
+                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
+                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
+                }
+              }
+              // 资格赛
+              else{
+                if (window._CONFIG.printSponsorBottomImgs.length) {
+                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + (foot.scrollHeight / 2))) + "px"
+                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
+                }else{
+                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
+                  newfooter.style.marginBottom = (foot.scrollHeight ) + 'px'
+                }
+              }
+              console.log(newfooter)
+              footer.style.visibility = "hidden"
+              iframe.contentDocument.body.append(newfooter)
+            }
+          }
+          if (!title.includes('团体')) {
+            getNumberOfPages()
+          }
+        })
+        iframe.contentWindow.addEventListener('afterprint', () => {
+          document.body.removeChild(iframe)
+        });
         setTimeout(() => {
           iframe.contentWindow.print()
           iframe.contentWindow.document.close();
-          iframe.contentWindow.addEventListener('afterprint', () => {
-            iframe.contentWindow.document.close()
-            document.body.removeChild(iframe)
-          });
           document.body.removeChild(iframe)
         }, 50)
       }
