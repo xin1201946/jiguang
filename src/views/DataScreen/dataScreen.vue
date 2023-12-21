@@ -96,11 +96,11 @@
 
         <div style="width: 100%;height: 100%;" v-if="data.configName.indexOf('个人决赛') != -1">
           <!--    前8位-->
-          <div :class="finalEight.length == 0 ? '':'finalEight'">
+          <div :class="data.finalEight.length == 0 ? '':'finalEight'">
             <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai': item.sameStatus == 1 ? 'tongfen finalEightRow': 'finalEightRow'">
               <div style="width: 60px">{{ item.rank }}</div>
               <div style="width: 60px">{{ item.targetSite }}</div>
-              <div style="width: 140px">{{ item.playerName }}</div>
+              <div style="width: 120px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
               <div v-for="k in data.shootGroups" :key="k.id" style="width: 60px;">
                 {{ item[k] }}
@@ -442,7 +442,7 @@ export default {
           },
           {
             name: '姓名',
-            width: '140px',
+            width: '120px',
           },
           {
             name: '代表队',
@@ -653,7 +653,7 @@ export default {
 
   .name {
     position: absolute;
-    left: 0;
+    left: 5%;
     top: 0;
     color: #fff;
     font-size: 14px;
@@ -708,7 +708,7 @@ export default {
 
   .name1 {
     position: absolute;
-    left: 0;
+    left: 5%;
     top: 0;
     color: #fff;
     font-size: 14px;
