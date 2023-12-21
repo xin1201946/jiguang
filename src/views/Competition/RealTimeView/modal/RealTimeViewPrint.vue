@@ -124,9 +124,9 @@ export default {
           `<tr style="height: 50px; line-height: 50px">
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime.length === 19? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 6)}</td>
-<!--            <td align="center">${item.xcoord}</td>-->
-<!--            <td align="center">${item.ycoord}</td>-->
+            <td align="center">${item.beginTime.length <= 19? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 6)}</td>
+            <td align="center">${item.xcoord}</td>
+            <td align="center">${item.ycoord}</td>
           </tr>`
         ))
         return `<tbody>${l.join("")}</tbody>`
@@ -136,24 +136,24 @@ export default {
         if (item.list.length) {
           return (`<div style="margin-top: 20px">
             <h3>${item.title}</h3>
-            <table align="center" cellspacing="0" border="1" style="width: 100%;">
+            <table align="center" cellspacing="0" border="0" style="width: 100%;">
               <thead>
                 <tr style="height: 50px; line-height: 50px">
-                  <th style="width: 25%">发序</th>
-                  <th style="width: 25%">环数</th>
-                  <th style="width: 50%">时间</th>
-<!--                  <th style="width: 15%">X</th>-->
-<!--                  <th style="width: 15%">Y</th>-->
+                  <th >发序</th>
+                  <th >环数</th>
+                  <th >时间</th>
+                  <th >X</th>
+                  <th >Y</th>
                 </tr>
               </thead>
               ${list(item.list)}
-              <tfoot>
-                <tr>
-                  <td colspan="3">
-                    <div style="height: 3cm"></div>
-                  </td>
-                </tr>
-              </tfoot>
+<!--              <tfoot>-->
+<!--                <tr>-->
+<!--                  <td colspan="5">-->
+<!--                    <div style="height: 3cm"></div>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--              </tfoot>-->
             </table>
           </div>`)
         }
@@ -171,7 +171,7 @@ export default {
       ))
       return  (`
       <style>
-        h1,h2,h3,h4,p{
+        h1,h2,h3,h4,h5,p{
           margin: 0;
           padding: 0;
         }
@@ -205,21 +205,25 @@ export default {
             </div>
           </div> -->
           <div style="position: relative">
-            <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
-            <h1 style="text-align: center">${this.formData.projectName}</h1>
-            <h2 style="text-align: center">${this.formData.groupName}</h2>
-            <p style="text-align: center">${this.formData.playerName}</p>
+<!--            <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">-->
+            <h1>${this.formData.contestName || ''}</h1>
+            <h2>靶位</h2>
+            <h3>时间</h3>
+            <h4>${this.formData.projectGroup}${this.formData.projectName}</h4>
+            <p><b>${this.formData.playerName}</b></p>
           </div>
         </div>
         <div>
           ${arr.join("</br>")}
         </div>
-        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+        <!--<div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
           ${imgs.join("")}
-        </div>
+        </div>-->
       </div>`)
     },
     handlePrint() {
+      console.log(this.formData)
+      // console.log(123456)
       const iframe= document.createElement("iframe");
       document.body.appendChild(iframe);
       iframe.contentWindow.document.open();

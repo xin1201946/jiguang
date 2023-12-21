@@ -135,8 +135,9 @@ export default {
           </div> -->
           <div>
             <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
-            <h1 style="text-align: center">${this.formData.projectName}</h1>
-            <h2 style="text-align: center">${this.formData.projectGroup}${this.formData.stageName}</h2>
+            <h1 style="text-align: center">${this.formData.contestName}</h1>
+            <h2 style="text-align: center">${this.formData.projectName}</h2>
+            <h3 style="text-align: center">${this.formData.projectGroup}${this.formData.stageName}</h3>
             <p style="text-align: center">${this.formData.groupName}</p>
           </div>
           <div style="margin-top: 20px">

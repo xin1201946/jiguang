@@ -212,7 +212,7 @@ export default {
                 label: `${item.projectName} - ${item.projectGroup}`,
                 value: item.cproId
               }
-            }).filter(item => !item.projectName.includes("团体"))
+            })/* .filter(item => !item.projectName.includes("团体")) */
             this.tree = data[0].value
             this.list = data
           }else {
