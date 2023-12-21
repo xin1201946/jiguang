@@ -8,14 +8,14 @@
     </span>
     <!--  -->
     <a-dropdown>
-      <span class="action action-full ant-dropdown-link user-dropdown-menu">
+      <span class="action action-full ant-dropdown-link user-dropdown-menu" @click="handleFullscreen()">
         <span>数据大屏</span>
       </span>
-      <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
+      <!-- <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
         <a-menu-item v-for="item in dataScreenList" :key="item.configId" @click="handleFullscreen(item)" style="display: flex; align: center;">
           <span>{{item.configName}}</span>
         </a-menu-item>
-      </a-menu>
+      </a-menu> -->
     </a-dropdown>
     <!--  -->
     <!-- update-begin author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
@@ -176,40 +176,40 @@ export default {
       // const pin = window.open('/DataScreen?type=' + row.configName + '&spear=' + spear, '_blank')
       // 现在的
       const pin = window.open("/DataScreen", "_blank")
-      pin.name = JSON.stringify({
-        ...row,
-        spear
-      })
-      pin.document.body.style.margin = "0"
-      pin.document.body.style.padding = "0"
-      var isFullscreen =
-        document.fullScreenElement || //W3C
-        document.msFullscreenElement || //IE
-        document.mozFullScreenElement || //火狐
-        document.webkitFullscreenElement || //谷歌
-        false
-      if (!isFullscreen) {
-        let el = document.documentElement
-        if (el.requestFullscreen) {
-          el.requestFullscreen()
-        } else if (el.mozRequestFullScreen) {
-          el.mozRequestFullScreen()
-        } else if (el.webkitRequestFullscreen) {
-          el.webkitRequestFullscreen()
-        } else if (el.msRequestFullscreen) {
-          el.msRequestFullscreen()
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen()
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen()
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen()
-        }
-      }
+      // pin.name = JSON.stringify({
+      //   ...row,
+      //   spear
+      // })
+      // pin.document.body.style.margin = "0"
+      // pin.document.body.style.padding = "0"
+      // var isFullscreen =
+      //   document.fullScreenElement || //W3C
+      //   document.msFullscreenElement || //IE
+      //   document.mozFullScreenElement || //火狐
+      //   document.webkitFullscreenElement || //谷歌
+      //   false
+      // if (!isFullscreen) {
+      //   let el = document.documentElement
+      //   if (el.requestFullscreen) {
+      //     el.requestFullscreen()
+      //   } else if (el.mozRequestFullScreen) {
+      //     el.mozRequestFullScreen()
+      //   } else if (el.webkitRequestFullscreen) {
+      //     el.webkitRequestFullscreen()
+      //   } else if (el.msRequestFullscreen) {
+      //     el.msRequestFullscreen()
+      //   }
+      // } else {
+      //   if (document.exitFullscreen) {
+      //     document.exitFullscreen()
+      //   } else if (document.msExitFullscreen) {
+      //     document.msExitFullscreen()
+      //   } else if (document.mozCancelFullScreen) {
+      //     document.mozCancelFullScreen()
+      //   } else if (document.webkitCancelFullScreen) {
+      //     document.webkitCancelFullScreen()
+      //   }
+      // }
     },
     /* update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
     showClick() {

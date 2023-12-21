@@ -40,7 +40,8 @@
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDate">时间管理</a-button>
-            <a-button v-if="stageName.includes('决赛')" type="primary" @click="handleSameScore">同分</a-button>
+            <a-button type="primary" @click="handleSameScore">同分</a-button>
+            <a-button type="danger"  @click="handleEliminate()">淘汰</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
           </a-space>
         </template>
@@ -66,7 +67,6 @@
                   <a-button v-if="['准备中','试射中','比赛中','成绩显示','已结束'].indexOf(status) !== -1" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
                   <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
-                  <a-button v-if="stageName.includes('决赛') && record.sameStatus == 1" type="danger" size="small" ghost icon="stop" @click="handleEliminate(record)">淘汰</a-button>
                   <a-dropdown>
                     <a style="display:block;width: 80px" @click="e => e.preventDefault()"> 更多 <a-icon type="down" />
                     </a>
@@ -254,11 +254,9 @@ export default {
     /**
      * 淘汰接口
      */
-    handleEliminate(row) {
-      console.log(row)
-
+    handleEliminate() {
       let arr = this.dataSource.filter((item) => {
-        if (item.playerId != row.playerId && item.sameStatus == 1) {
+        if (item.sameStatus == 1) {
           return item.playerId
         }
       })
@@ -268,7 +266,6 @@ export default {
       infoMessage('此操作将淘汰该运动员！是否继续？').then(() => {
         eliminationFinal({
           playerIds,
-          playerId: row.playerId,
           stageId: this.cproStageId,
         }).then((res) => {
           if (res.success) {

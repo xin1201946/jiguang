@@ -1,148 +1,146 @@
 <template>
-  <div style="width: 100%; display: flex">
-    <dv-border-box-8 :dur="20" class="DataScreen container" v-for="data in projectList" :key="data.configName">
-      <!-- 头部 -->
-      <div class="head">
-        <div class='top'>
-          <div>
-            <div class="left">
-              <img class="logo" :src="data.configName.indexOf('手枪') != -1 ? shou :
+  <dv-border-box-8 :dur="20" class="DataScreen container">
+    <div class="head">
+      <div class='top'>
+        <div>
+          <div class="left">
+            <img class="logo" :src="data.configName.indexOf('手枪') != -1 ? shou :
               data.configName.indexOf('步枪') != -1 ? bu : shou" alt="" />
-              <div v-if="data.configName != '团队综合排名'">
-                <span v-if="data.stageName">{{ data.stageName }}</span>
-                <span v-if="data.projectName">-{{ data.projectName }}</span>
-                <span v-if="data.stageGroup">-{{ data.stageGroup }}</span>
-              </div>
-              <div v-else>
-                {{ data.configName }}
-              </div>
+            <div v-if="data.configName != '团队综合排名'">
+              <span v-if="stageName">{{ stageName }}</span>
+              <span v-if="projectName">-{{ projectName }}</span>
+              <span v-if="stageGroup">-{{ stageGroup }}</span>
+            </div>
+            <div v-else>
+              {{ data.configName }}
             </div>
           </div>
-          <div class='right'>
-            <div>
-              <div class="nameTitle">
-                <div>{{ data.contestName }}</div>
-                <div style="margin-left: 15px;">{{ data.addr }}</div>
-              </div>
-              <div class="times">{{ data.bisaiTime }}</div>
+        </div>
+        <div class='right'>
+          <div>
+            <div class="nameTitle">
+              <div>{{ contestName }}</div>
+              <div style="margin-left: 15px;">{{ addr }}</div>
             </div>
+            <div class="times">{{ bisaiTime }}</div>
           </div>
         </div>
       </div>
-      <!-- 个人赛 -->
-      <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
-        <!--    表头-->
-        <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
-            {{ item.name }}
-          </div>
+    </div>
+    <!-- 个人赛 -->
+    <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
+      <!--    表头-->
+      <div class='th'>
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          {{ item.name }}
         </div>
-        <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
-          <!--    整页的滚动-->
-          <div class="foots" ref="scorllBox">
-            <div class="footContent" ref="scorllArr">
-              <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
-                <div style="width: 60px">{{ item.rank }}</div>
-                <div style="width: 60px">{{ item.targetSite }}</div>
-                <div style="width: 140px">{{ item.playerName }}</div>
-                <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-for="k in data.shootGroups" :key="k" style="width: 60px;position: relative;">
-                  {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-                  <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
-                </div>
-                <div style="width: 80px;">{{ item.total }}</div>
-                <div style="flex: 1;">{{ item.remarkPenalty }}</div>
-                <div style="width: 60px">{{ item.bePromoted }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
-          <!--    前8位-->
-          <div class='finalEight'>
-            <div v-for="(item, i) in data.finalEight" :key="i" class="finalEightRow">
-              <div style="width: 60px">{{ item.rank }}</div>
-              <div style="width: 60px">{{ item.targetSite }}</div>
+      </div>
+      <div style="width: 100%;height: 100%;" v-if="fiftyRounds === '0' && logoTitle.indexOf('个人资格赛') != -1">
+        <!--    整页的滚动-->
+        <div class="foots" ref="scorllBox">
+          <div class="footContent" ref="scorllArr">
+            <div v-for="(item, i) in listsList" :key="i" class="finalEightRow">
+              <div style="width: 80px">{{ item.rank }}</div>
+              <div style="width: 80px">{{ item.targetSite }}</div>
               <div style="width: 140px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in data.shootGroups" :key="k" style="width: 60px;position: relative;">
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                 <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
               </div>
-              <div style="width: 80px;">{{ item.total }}</div>
+              <div style="width: 150px;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.remarkPenalty }}</div>
               <div style="width: 60px">{{ item.bePromoted }}</div>
             </div>
           </div>
-          <!-- 后半页滚动 -->
-          <div class="foot" ref="scorllBox">
-            <div class="footContent" ref="scorllArr">
-              <div v-for="(item, i) in data.list" :key="i" class="finalEightRow">
-                <div style="width: 60px">{{ item.rank }}</div>
-                <div style="width: 60px">{{ item.targetSite }}</div>
-                <div style="width: 140px">{{ item.playerName }}</div>
-                <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-for="k in data.shootGroups" :key="k" style="width: 60px;position: relative;">
-                  {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-                  <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
+        </div>
+      </div>
+      <div style="width: 100%;height: 100%;" v-if="fiftyRounds != '0' && logoTitle.indexOf('个人资格赛') != -1">
+        <!--    前8位-->
+        <div class='finalEight'>
+          <div v-for="(item, i) in finalEight" :key="i" class="finalEightRow">
+            <div style="width: 80px">{{ item.rank }}</div>
+            <div style="width: 80px">{{ item.targetSite }}</div>
+            <div style="width: 140px">{{ item.playerName }}</div>
+            <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
+            <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
+              {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+              <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
+            </div>
+            <div style="width: 150px;">{{ item.total }}</div>
+            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
+            <div style="width: 60px">{{ item.bePromoted }}</div>
+          </div>
+        </div>
+        <!-- 后半页滚动 -->
+        <div class="foot" ref="scorllBox">
+          <div class="footContent" ref="scorllArr">
+            <div v-for="(item, i) in list" :key="i" class="finalEightRow">
+              <div style="width: 80px">{{ item.rank }}</div>
+              <div style="width: 80px">{{ item.targetSite }}</div>
+              <div style="width: 140px">{{ item.playerName }}</div>
+              <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;position: relative;">
+                {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
+                <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span>
+              </div>
+              <div style="width: 150px;">{{ item.total }}</div>
+              <div style="flex: 1;">{{ item.remarkPenalty }}</div>
+              <div style="width: 60px">{{ item.bePromoted }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 100%;height: 100%;" v-if="logoTitle.indexOf('个人决赛') != -1">
+        <!--    前8位-->
+        <div :class="finalEight.length == 0 ? '':'finalEight'">
+          <div v-for="(item, i) in finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai': item.sameStatus == 1 ? 'tongfen finalEightRow': 'finalEightRow'">
+            <div style="width: 80px">{{ item.rank }}</div>
+            <div style="width: 80px">{{ item.targetSite }}</div>
+            <div style="width: 140px">{{ item.playerName }}</div>
+            <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
+            <div v-for="k in shootGroups" :key="k.id" style="width: 80px;">
+              {{ item[k] }}
+            </div>
+            <div style="width: 150px;">{{ item.total }}</div>
+            <div style="width: 80px;">{{ item.diff }}</div>
+            <div style="flex: 1;">{{ item.remarkPenalty }}</div>
+          </div>
+        </div>
+        <div class="targetImage" v-if="logoTitle.indexOf('手枪') != -1">
+          <div class="div" v-for="(item) in finalEight" :key="item.targetSite">
+            <div class="flex">
+              <div class="box">
+                <div class="name">{{ item.playerName }}</div>
+                <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
+                  <EchatTarget :dots="item.playerScores" :state="logoTitle" />
                 </div>
-                <div style="width: 80px;">{{ item.total }}</div>
-                <div style="flex: 1;">{{ item.remarkPenalty }}</div>
-                <div style="width: 60px">{{ item.bePromoted }}</div>
               </div>
             </div>
           </div>
         </div>
-
-        <div style="width: 100%;height: 100%;" v-if="data.configName.indexOf('个人决赛') != -1">
-          <!--    前8位-->
-          <div :class="finalEight.length == 0 ? '':'finalEight'">
-            <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai': item.sameStatus == 1 ? 'tongfen finalEightRow': 'finalEightRow'">
-              <div style="width: 60px">{{ item.rank }}</div>
-              <div style="width: 60px">{{ item.targetSite }}</div>
-              <div style="width: 140px">{{ item.playerName }}</div>
-              <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in data.shootGroups" :key="k.id" style="width: 60px;">
-                {{ item[k] }}
-              </div>
-              <div style="width: 80px;">{{ item.total }}</div>
-              <div style="width: 60px;">{{ item.diff }}</div>
-              <div style="flex: 1;">{{ item.remarkPenalty }}</div>
-            </div>
-          </div>
-          <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1">
-            <div class="div" v-for="(item) in data.finalEight" :key="item.targetSite">
-              <div class="flex">
-                <div class="box">
-                  <div class="name">{{ item.playerName }}</div>
-                  <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                    <EchatTarget :dots="item.playerScores" :state="data.configName" />
-                  </div>
+        <div class="targetImage1" v-if="logoTitle.indexOf('步枪') != -1">
+          <div class="div1" v-for="(item) in finalEight" :key="item.targetSite">
+            <div class="name1">{{ item.playerName }}</div>
+            <div class="flex1">
+              <div class="box1">
+                <div :class="logoTitle.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
+                  <EchatTargetB :dots="item.playerScores" :state="logoTitle" />
                 </div>
               </div>
             </div>
           </div>
-          <div class="targetImage1" v-if="data.configName.indexOf('步枪') != -1">
-            <div class="div1" v-for="(item) in data.finalEight" :key="item.targetSite">
-              <div class="name1">{{ item.playerName }}</div>
-              <div class="flex1">
-                <div class="box1">
-                  <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                    <EchatTargetB :dots="item.playerScores" :state="data.configName" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 后半页滚动 -->
-          <!-- <div class="foot" ref="scorllBox">
+        </div>
+        <!-- 后半页滚动 -->
+        <!-- <div class="foot" ref="scorllBox">
           <div class="footContent" ref="scorllArr">
             <div v-for="(item, i) in list" :key="i" class="finalEightRow">
-              <div style="width: 60px">{{ item.rank }}</div>
-              <div style="width: 60px">{{ item.targetSite }}</div>
+              <div style="width: 80px">{{ item.rank }}</div>
+              <div style="width: 80px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in shootGroups" :key="k" style="width: 60px;">
+              <div v-for="k in shootGroups" :key="k" style="width: 80px;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
               </div>
               <div style="width: 150px;">{{ item.total }}</div>
@@ -151,45 +149,43 @@
             </div>
           </div>
         </div> -->
+      </div>
+    </div>
+    <!-- 混团赛 -->
+    <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+      <mixedClusterIndex></mixedClusterIndex>
+    </div>
+    <!-- 团队赛 -->
+    <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
+      <!--    表头-->
+      <div class='th'>
+        <div v-for='(item, i) in th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          {{ item.name }}
         </div>
       </div>
-      <!-- 混团赛 -->
-      <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
-        <mixedClusterIndex :data="data"></mixedClusterIndex>
-      </div>
-      <!-- 团队赛 -->
-      <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
-        <!--    表头-->
-        <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
-            {{ item.name }}
-          </div>
-        </div>
-        <div style="width: 100%;height: 100%;">
-          <!--    整页的滚动-->
-          <div class="foots" ref="scorllBox">
-            <div class="footContent" ref="scorllArr">
-              <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
-                <div style="width: 60px">{{ item.rank }}</div>
-                <div style="width: 160px;text-align: left;">{{ item.groupName }}</div>
-                <div style="width: 140px">{{ item.playerName }}</div>
-                <div v-for="k in item.groupList" :key="k.id" style="width: 60px;">
-                  {{ k.groupTotal }}
-                </div>
-                <div style="width: 80px;">{{ item.stageTotal }}</div>
-                <div style="width: 80px;">{{ item.total }}</div>
+      <div style="width: 100%;height: 100%;">
+        <!--    整页的滚动-->
+        <div class="foots" ref="scorllBox">
+          <div class="footContent" ref="scorllArr">
+            <div v-for="(item, i) in listsList" :key="i" class="finalEightRow">
+              <div style="width: 80px">{{ item.rank }}</div>
+              <div style="width: 300px;text-align: left;">{{ item.groupName }}</div>
+              <div style="width: 140px">{{ item.playerName }}</div>
+              <div v-for="k in item.groupList" :key="k.id" style="width: 80px;">
+                {{ k.groupTotal }}
               </div>
+              <div style="width: 150px;">{{ item.stageTotal }}</div>
+              <div style="width: 150px;">{{ item.total }}</div>
             </div>
           </div>
         </div>
       </div>
-      <!-- 排名 -->
-      <div class="box_box" v-if="data.configName === '团队综合排名'">
-        <RankingList :data="data.rankingList" />
-      </div>
-    </dv-border-box-8>
-  </div>
-
+    </div>
+    <!-- 排名 -->
+    <div class="box_box" v-if="data.configName === '团队综合排名'">
+      <RankingList :data="rankingList" />
+    </div>
+  </dv-border-box-8>
 </template>
 
 <script>
@@ -209,7 +205,7 @@ export default {
       bu: require('@/assets/logoB.png'),
 
       title: '',
-      projectList: null,
+      data: JSON.parse(window.name),
       time: null,
 
       th: [],
@@ -247,28 +243,17 @@ export default {
       ],
     }
   },
-  created() {
-    this.projectList = JSON.parse(this.$route.query.arr)
-    console.log(this.projectList)
-    this.projectList.map((item) => {
-      item['fiftyRounds'] = 0
-      item['finalEight'] = []
-      item['list'] = []
-      item['listsList'] = []
-      item['projectName'] = ''
-      item['stageGroup'] = ''
-      item['stageName'] = ''
-      item['bisaiTime'] = ''
-      item['contestName'] = ''
-      item['addr'] = ''
-      item['th'] = []
-      item['shootGroups'] = 0
-      item['rankingList'] = []
-    })
+  computed: {
+    logoTitle() {
+      const data = JSON.parse(window.name)
+      const configName = data.configName
+      return configName
+      // if (configName.includes('个人资格赛')) {
+      //   return '个人成绩'
+      // }
+    },
   },
   mounted() {
-    document.body.style.overflow = 'hidden'
-
     this.getList()
     this.time = setInterval(() => {
       this.getData()
@@ -311,31 +296,29 @@ export default {
       }
     },
     // 个人资格赛
-    geren(data, index) {
-      console.log(data)
+    geren(old) {
       littleScreen({
-        type: data.configName,
+        type: this.data.configName,
       }).then((res) => {
-        data.finalEight = []
-        data.list = []
-        data.listsList = []
+        this.finalEight = []
+        this.list = []
+        this.listsList = []
         const { result } = res
-
-        data.projectName = result.projectName
-        data.stageGroup = result.stageGroup
-        data.stageName = result.stageName
-        data.bisaiTime = result.time
-        data.contestName = result.contestName
-        data.addr = result.addr
+        this.projectName = result.projectName
+        this.stageGroup = result.stageGroup
+        this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
         // 设置表头
-        data.th = [
+        this.th = [
           {
             name: '排名',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '靶位',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '姓名',
@@ -347,24 +330,27 @@ export default {
           },
         ]
         if (result.shootGroups) {
-          data.shootGroups = result.shootGroups
+          this.shootGroups = result.shootGroups
           for (let i = 0; i < result.shootGroups; i++) {
-            data.th.push({
+            this.th.push({
               name: `${i + 1}0`,
-              width: '60px',
+              width: '80px',
             })
           }
         }
-        data.th.push({ name: '总环数', width: '80px' }, { name: '备注' }, { name: '-', width: '60px' })
-        data.fiftyRounds = '0'
+        this.th.push({ name: '总环数', width: '150px' }, { name: '备注' }, { name: '-', width: '60px' })
+        if (old === 'old') {
+          this.oldList = result.players
+        }
+        this.fiftyRounds = '0'
         // 判断到没有到50发
         result.players.map((item) => {
           item.groupList.map((it, i) => {
             // console.log(it, i, '123', it.groupTotal, it.groupCount === 5 && it.groupTotal != '0')
             if (it.groupCount === 5 && Number(it.groupTotal)) {
-              data.fiftyRounds = it.groupTotal
+              this.fiftyRounds = it.groupTotal
               // 设置前8名
-              data.finalEight = result.players
+              this.finalEight = result.players
                 .filter((item) => item.rank <= 8)
                 .map((item, i) => {
                   return {
@@ -380,7 +366,7 @@ export default {
                   }
                 })
               // 除了前8名
-              data.list = result.players
+              this.list = result.players
                 .filter((item) => item.rank > 8)
                 .map((item) => {
                   return {
@@ -396,7 +382,7 @@ export default {
                   }
                 })
             } else {
-              data.listsList = result.players.map((item) => {
+              this.listsList = result.players.map((item) => {
                 return {
                   ...item,
                   total:
@@ -415,30 +401,29 @@ export default {
         this.$nextTick(() => {
           this.upload()
         })
-        this.$forceUpdate()
       })
     },
     // 个人决赛
-    gerenjuesaii(data) {
+    gerenjuesaii(old) {
       littleScreen({
-        type: data.configName,
+        type: this.data.configName,
       }).then((res) => {
-        data.finalEight = []
+        this.finalEight = []
         const { result } = res
-        data.projectName = result.projectName
-        data.stageGroup = result.stageGroup
-        data.stageName = result.stageName
-        data.bisaiTime = result.time
-        data.contestName = result.contestName
-        data.addr = result.addr
-        data.th = [
+        this.projectName = result.projectName
+        this.stageGroup = result.stageGroup
+        this.stageName = result.stageName
+        this.bisaiTime = result.time
+        this.contestName = result.contestName
+        this.addr = result.addr
+        this.th = [
           {
             name: '排名',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '靶位',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '姓名',
@@ -450,15 +435,15 @@ export default {
           },
         ]
         if (result.shoots) {
-          data.shootGroups = result.shoots
+          this.shootGroups = result.shoots
           result.shoots.forEach((item) => {
-            data.th.push({
+            this.th.push({
               name: item,
-              width: '60px',
+              width: '80px',
             })
           })
         }
-        data.th.push({ name: '总环数', width: '80px' }, { name: '分差', width: '60px' }, { name: '备注' })
+        this.th.push({ name: '总环数', width: '150px' }, { name: '分差', width: '80px' }, { name: '备注' })
         if (result.players && result.players.length != 0) {
           result.players.forEach((item, index) => {
             let obj = {
@@ -483,36 +468,35 @@ export default {
               })
             })
 
-            data.finalEight.push(obj)
+            this.finalEight.push(obj)
           })
         } else {
-          data.finalEight = []
+          this.finalEight = []
         }
-        this.$forceUpdate()
       })
     },
     // 团体赛
-    tuanti(data) {
+    tuanti() {
       getTeamScoresAPI({
-        screenName: data.configName,
+        screenName: this.data.configName,
       }).then((res) => {
-        data.listsList = []
+        this.listsList = []
         const { result } = res
-        data.projectName = result.projectName
-        data.contestName = result.contestName
-        data.addr = result.addr
-        data.bisaiTime = result.time
-        data.stageGroup = ''
-        data.stageName = '团体排名'
-        data.th = [
+        this.projectName = result.projectName
+        this.contestName = result.contestName
+        this.addr = result.addr
+        this.bisaiTime = result.time
+        this.stageGroup = ''
+        this.stageName = '团体排名'
+        this.th = [
           {
             name: '排名',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '代表队',
             align: 'left',
-            width: '160px',
+            width: '300px',
           },
           {
             name: '姓名',
@@ -521,13 +505,13 @@ export default {
         ]
         if (result.scoreList[0].groupCount) {
           for (let i = 0; i < result.scoreList[0].groupCount; i++) {
-            data.th.push({
+            this.th.push({
               name: `${i + 1}0`,
-              width: '60px',
+              width: '80px',
             })
           }
         }
-        data.th.push({ name: '个人成绩', width: '80px' }, { name: '总环数', width: '80px' })
+        this.th.push({ name: '个人成绩', width: '150px' }, { name: '总环数', width: '150px' })
         if (result && result.scoreList.length != 0) {
           result.scoreList.forEach((item, index) => {
             item.playerList.forEach((e, v) => {
@@ -543,87 +527,83 @@ export default {
               e.groupList.forEach((s, c) => {
                 obj[`${c + 1}0`] = s.groupTotal
               })
-              data.listsList.push(obj)
+              this.listsList.push(obj)
             })
           })
         } else {
-          data.listsList = []
+          this.listsList = []
         }
         this.$nextTick(() => {
           this.upload()
         })
-        this.$forceUpdate()
       })
     },
     // 团队综合排名
-    tuandui(data) {
+    tuandui() {
       getTeamTotalScores({
-        configName: data.configName,
+        configName: this.data.configName,
       }).then((res) => {
         console.log(res, '123')
-        data.projectName = res.result.projectName
-        data.contestName = res.result.contestName
-        data.addr = res.result.addr
-        data.bisaiTime = res.result.time
-        data.stageName = res.result.stageName
-        data.stageGroup = ''
-        data.rankingList = res.result.scoreList
+        this.projectName = res.result.projectName
+        this.contestName = res.result.contestName
+        this.addr = res.result.addr
+        this.bisaiTime = res.result.time
+        this.stageName = res.result.stageName
+        this.stageGroup = ''
+        this.rankingList = res.result.scoreList
       })
     },
     // 混团
-    huntuan(data) {
+    huntuan() {
       getMixeTeamFinalsListAPI({
-        screenName: data.configName,
-        stageGroup: data.configName.includes('金牌赛') ? 1 : 2,
+        screenName: this.data.configName,
+        stageGroup: this.data.configName.includes('金牌赛') ? 1 : 2,
       }).then((res) => {
         const { result } = res
-        data.projectName = result.projectName
-        data.stageGroup = result.stageGroup
-        data.stageName = result.stageName
-        data.contestName = result.contestName
-        data.addr = result.addr
-        data.bisaiTime = result.time
-        this.$forceUpdate()
+        this.projectName = result.projectName
+        this.stageGroup = result.stageGroup
+        this.stageName = result.stageName
+        this.contestName = result.contestName
+        this.addr = result.addr
+        this.bisaiTime = result.time
       })
     },
     getData() {
-      this.projectList.forEach((data, index) => {
-        if (data.configName.includes('个人资格赛')) {
-          this.geren(data, index)
-        }
-        if (data.configName.includes('个人决赛')) {
-          this.gerenjuesaii(data)
-        }
-        if (data.configName.includes('团体排名')) {
-          this.tuanti(data)
-        }
-        if (data.configName.includes('混团')) {
-          this.huntuan(data)
-        }
-        if (data.configName.includes('综合排名')) {
-          this.tuandui(data)
-        }
-      })
+      const data = JSON.parse(window.name)
+      if (data.configName.includes('个人资格赛')) {
+        this.geren()
+      }
+      if (data.configName.includes('个人决赛')) {
+        this.gerenjuesaii()
+      }
+      if (data.configName.includes('团体排名')) {
+        this.tuanti()
+      }
+      if (data.configName.includes('混团')) {
+        this.huntuan()
+      }
+      if (data.configName.includes('综合排名')) {
+        this.tuandui()
+      }
     },
     getList() {
-      this.projectList.forEach((data, index) => {
-        if (data.configName.includes('个人资格赛')) {
-          this.geren(data, index)
-        }
-        if (data.configName.includes('个人决赛')) {
-          console.log(data)
-          this.gerenjuesaii(data)
-        }
-        if (data.configName.includes('团体排名')) {
-          this.tuanti(data)
-        }
-        if (data.configName.includes('混团')) {
-          this.huntuan(data)
-        }
-        if (data.configName.includes('综合排名')) {
-          this.tuandui(data)
-        }
-      })
+      const data = JSON.parse(window.name)
+      if (data.configName.includes('个人资格赛')) {
+        this.geren('old')
+      }
+      if (data.configName.includes('个人决赛')) {
+        console.log(data)
+        this.gerenjuesaii('old')
+      }
+      if (data.configName.includes('团体排名')) {
+        this.tuanti()
+      }
+      if (data.configName.includes('混团')) {
+        this.huntuan()
+      }
+      if (data.configName.includes('综合排名')) {
+        this.tuandui()
+      }
     },
   },
   destroyed() {
@@ -637,7 +617,7 @@ export default {
 
 .targetImage {
   position: absolute;
-  left: 0;
+  left: 30px;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
@@ -656,7 +636,7 @@ export default {
     left: 0;
     top: 0;
     color: #fff;
-    font-size: 14px;
+    font-size: 24px;
     font-weight: bold;
   }
   .flex {
@@ -692,7 +672,7 @@ export default {
 
 .targetImage1 {
   position: absolute;
-  left: 0;
+  left: 30px;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
@@ -711,7 +691,7 @@ export default {
     left: 0;
     top: 0;
     color: #fff;
-    font-size: 14px;
+    font-size: 24px;
     font-weight: bold;
   }
   .flex1 {
@@ -746,7 +726,6 @@ export default {
 }
 
 .container {
-  flex: 1;
   position: relative;
   height: 100vh;
   overflow: hidden;
@@ -805,7 +784,7 @@ export default {
 .th {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 26px;
   font-weight: 800;
   height: 45px;
   line-height: 40px;
@@ -839,7 +818,7 @@ export default {
 
   div {
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     // font-weight: 600;
     white-space: nowrap;
     overflow: hidden;

@@ -9,12 +9,12 @@
       </a-carousel>
       <div class="targetImage" v-if="state.indexOf('手枪') != -1">
         <template v-for="(item) in mixeTeamFinalsList.List[0]">
-          <div class="div" v-for="(e, i) in item['姓名']" :key="e">
+          <div class="div" v-for="(e, v) in item['姓名']" :key="e">
             <div class="name">{{ e }}</div>
             <div class="flex">
               <div class="box">
                 <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                  <EchatTarget :dots="item.list.length ? item.list[i]:[]" :state="state" />
+                  <EchatTarget :dots="item.list[v]" :state="state" />
                 </div>
               </div>
             </div>
@@ -23,12 +23,12 @@
       </div>
       <div class="targetImage1" v-if="state.indexOf('步枪') != -1">
         <template v-for="(item) in mixeTeamFinalsList.List[0]">
-          <div class="div1" v-for="(e, i) in item['姓名']" :key="e">
+          <div class="div1" v-for="e in item['姓名']" :key="e">
             <div class="name1">{{ e }}</div>
             <div class="flex1">
               <div class="box1">
                 <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                  <EchatTargetB :dots="item.list.length ? item.list[i]:[]" :state="state" />
+                  <EchatTargetB :dots="item.list[v]" :state="state" />
                 </div>
               </div>
             </div>
@@ -48,11 +48,6 @@ import EchatTargetB from '../../view/targetmap/modules/EchatTargetB.vue'
 export default {
   name: 'mixedClusterIndex', //混团金牌铜牌 手枪或步枪
   components: { TableListVue, EchatTarget, EchatTargetB },
-  props: {
-    data: {
-      type: Object,
-    },
-  },
   data() {
     return {
       // 混团金铜牌赛
@@ -61,7 +56,7 @@ export default {
         title: [
           {
             name: '排名',
-            width: '60px',
+            width: '80px',
           },
           {
             name: '代表队',
@@ -72,19 +67,17 @@ export default {
           },
           {
             name: '发序',
-            width: '60px',
           },
           {
             name: '环数',
-            width: '100px',
+            width: '160px',
           },
           {
             name: '总环数',
-            width: '100px',
+            width: '160px',
           },
           {
             name: '总分',
-            width: '100px',
           },
         ],
         List: [[]],
@@ -99,7 +92,10 @@ export default {
     }
   },
   created() {
-    this.state = this.data.configName
+    const data = JSON.parse(window.name)
+    const configName = data.configName
+    this.state = configName
+    // console.log(data,'123');
     this.getData()
     this.timer = setInterval(() => {
       this.getData()
@@ -167,7 +163,7 @@ export default {
 }
 .targetImage {
   position: absolute;
-  left: 0;
+  left: 30px;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
@@ -183,7 +179,7 @@ export default {
 
   .name {
     position: absolute;
-    left: 10%;
+    left: 20%;
     top: 0;
     color: #fff;
     font-size: 24px;
@@ -222,7 +218,7 @@ export default {
 
 .targetImage1 {
   position: absolute;
-  left: 0;
+  left: 30px;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
@@ -238,7 +234,7 @@ export default {
 
   .name1 {
     position: absolute;
-    left: 10%;
+    left: 20%;
     top: 0;
     color: #fff;
     font-size: 24px;

@@ -328,8 +328,15 @@ export const constantRouterMap = [
     name: 'DataScreen',
     component: BlankLayout,
     meta: {title: '数据大屏'},
-    redirect: '/DataScreen/index',
+    redirect: '/DataScreen/select',
     children: [
+      {
+        path: '/DataScreen/select',
+        name: '/DataScreen/select',
+        // component: () => import('@/views/DataScreen/index'),
+        component: () => import('@/views/DataScreen/select.vue'),
+        meta: {title: '数据大屏'},
+      },
       {
         path: '/DataScreen/index',
         name: '/DataScreen/index',
