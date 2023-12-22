@@ -105,10 +105,8 @@
               <div v-for="k in data.shootGroups" :key="k.id" style="width: 60px;">
                 {{ item[k] }}
               </div>
-              <div style="width: 60px;" v-for="n in data.number" :key="n">
-                <template v-for="k in item.sameScoreList">
-                  {{ k.score }}
-                </template>
+              <div style="width: 60px;" v-for="(n, i) in data.number" :key="n">
+                {{ item.sameScoreList && item.sameScoreList[i] ? item.sameScoreList[i].score : '' }}
               </div>
               <div style="width: 80px;">{{ item.total }}</div>
               <div style="width: 60px;">{{ item.diff }}</div>
