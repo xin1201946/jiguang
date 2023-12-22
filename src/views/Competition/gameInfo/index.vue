@@ -74,10 +74,10 @@
                       <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
                         <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="!stageName.includes('牌赛')">
+                      <a-menu-item >
                         <a-button type="link" size="small" icon="flag" @click="handlePenalty(record)">判罚</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="!stageName.includes('牌赛')">
+                      <a-menu-item >
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
                     </a-menu>

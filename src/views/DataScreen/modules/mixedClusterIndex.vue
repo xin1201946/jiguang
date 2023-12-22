@@ -52,41 +52,16 @@ export default {
     data: {
       type: Object,
     },
+    number: {
+      type: [String, Number],
+    },
   },
   data() {
     return {
       // 混团金铜牌赛
       isMixeTeamFinals: false,
       mixeTeamFinalsList: {
-        title: [
-          {
-            name: '排名',
-            width: '60px',
-          },
-          {
-            name: '代表队',
-          },
-          {
-            name: '姓名',
-            width: '140px',
-          },
-          {
-            name: '发序',
-            width: '60px',
-          },
-          {
-            name: '环数',
-            width: '100px',
-          },
-          {
-            name: '总环数',
-            width: '100px',
-          },
-          {
-            name: '总分',
-            width: '100px',
-          },
-        ],
+        title: [],
         List: [[]],
         //
         timer: null,
@@ -113,6 +88,35 @@ export default {
         stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
       }).then((res) => {
         this.mixeTeamFinalsList.List = [[]]
+        this.mixeTeamFinalsList.title = [
+          {
+            name: '排名',
+            width: '60px',
+          },
+          {
+            name: '代表队',
+          },
+          {
+            name: '姓名',
+            width: this.number == 1 ? '' : '140px',
+          },
+          {
+            name: '发序',
+            width: this.number == 1 ? '' : '60px',
+          },
+          {
+            name: '环数',
+            width: this.number == 1 ? '' : '100px',
+          },
+          {
+            name: '总环数',
+            width: this.number == 1 ? '' : '100px',
+          },
+          {
+            name: '总分',
+            width: this.number == 1 ? '' : '100px',
+          },
+        ]
         let data = res.result.scoreList
         // this.projectName = data[0].projectName
         // this.stageName = data[0].stageName
@@ -208,8 +212,8 @@ export default {
       height: 1000px;
 
       .shouqiang {
-        width: 900px;
-        height: 900px;
+        width: 282px;
+        height: 282px;
       }
 
       .buqiang {

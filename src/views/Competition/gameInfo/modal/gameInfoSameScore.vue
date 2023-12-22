@@ -49,13 +49,14 @@ export default {
       this.$nextTick(() => {
         console.log(row)
         this.data = row
+        this.formData = {}
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
         }
       })
     },
     handleOk() {
-      this.formData['playerIds'] = this.data.map(item => item.playerId)
+      this.formData['playerIds'] = this.data.map((item) => item.playerId)
       this.$emit('ok', this.formData)
     },
     handleCancel() {

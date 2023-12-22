@@ -105,6 +105,11 @@
               <div v-for="k in data.shootGroups" :key="k.id" style="width: 60px;">
                 {{ item[k] }}
               </div>
+              <div style="width: 60px;" v-for="n in data.number" :key="n">
+                <template v-for="k in item.sameScoreList">
+                  {{ k.score }}
+                </template>
+              </div>
               <div style="width: 80px;">{{ item.total }}</div>
               <div style="width: 60px;">{{ item.diff }}</div>
               <div style="flex: 1;">{{ item.remarkPenalty }}</div>
@@ -155,7 +160,7 @@
       </div>
       <!-- 混团赛 -->
       <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
-        <mixedClusterIndex :data="data"></mixedClusterIndex>
+        <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
       </div>
       <!-- 团队赛 -->
       <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
@@ -238,18 +243,18 @@ export default {
       fiftyRounds: '0',
 
       dos: [
-        { x_coord: '82.5', y_coord: '81.9', shootCode: '1' },
-        { x_coord: '61.4', y_coord: '86.6', shootCode: '2' },
-        { x_coord: '78.7', y_coord: '102.9', shootCode: '3' },
-        { x_coord: '85.0', y_coord: '57.5', shootCode: '4' },
-        { x_coord: '94.9', y_coord: '78.1', shootCode: '5' },
-        { x_coord: '80', y_coord: '80', shootCode: '6' },
+        // { x_coord: '58.3', y_coord: '40.1', shootCode: '1' },
+        // { x_coord: '86', y_coord: '60.8', shootCode: '2' },
+        // { x_coord: '90.4', y_coord: '67.6', shootCode: '3' },
+        // { x_coord: '77.2', y_coord: '87.4', shootCode: '4' },
+        // { x_coord: '67.9', y_coord: '81.5', shootCode: '5' },
+        // { x_coord: '59.5', y_coord: '61.6', shootCode: '6' },
+        // { x_coord: '80', y_coord: '80', shootCode: '7' },
       ],
     }
   },
   created() {
     this.projectList = JSON.parse(this.$route.query.arr)
-    console.log(this.projectList)
     this.projectList.map((item) => {
       item['fiftyRounds'] = 0
       item['finalEight'] = []
@@ -264,6 +269,7 @@ export default {
       item['th'] = []
       item['shootGroups'] = 0
       item['rankingList'] = []
+      item['number'] = 0
     })
   },
   mounted() {
@@ -312,7 +318,6 @@ export default {
     },
     // 个人资格赛
     geren(data, index) {
-      console.log(data)
       littleScreen({
         type: data.configName,
       }).then((res) => {
@@ -360,7 +365,6 @@ export default {
         // 判断到没有到50发
         result.players.map((item) => {
           item.groupList.map((it, i) => {
-            // console.log(it, i, '123', it.groupTotal, it.groupCount === 5 && it.groupTotal != '0')
             if (it.groupCount === 5 && Number(it.groupTotal)) {
               data.fiftyRounds = it.groupTotal
               // 设置前8名
@@ -458,36 +462,48 @@ export default {
             })
           })
         }
-        data.th.push({ name: '总环数', width: '80px' }, { name: '分差', width: '60px' }, { name: '备注' })
-        if (result.players && result.players.length != 0) {
-          result.players.forEach((item, index) => {
-            let obj = {
-              ...item,
-              total:
-                result.isGood === '是'
-                  ? !item.totalScore
-                    ? item.totalScore
-                    : `${item.totalScore}-${item.good}x`
-                  : item.totalScore,
-              notes: '',
-              bePromoted: '',
+        if (result)
+          if (result.players && result.players.length != 0) {
+            let arr = result.players.filter((item) => item.sameStatus == 1)
+            data.number = 0
+            arr.forEach((item) => {
+              if (data.number < item.sameScoreList.length) {
+                data.number = item.sameScoreList.length
+              }
+            })
+            for (let i = 0; i < data.number; i++) {
+              data.th.push({ name: ' ', width: '60px' })
             }
-            result.shoots.forEach((k) => {
-              obj[k] = ''
-            })
-            item.groupList.forEach((e, v) => {
+            result.players.forEach((item, index) => {
+              let obj = {
+                ...item,
+                total:
+                  result.isGood === '是'
+                    ? !item.totalScore
+                      ? item.totalScore
+                      : `${item.totalScore}-${item.good}x`
+                    : item.totalScore,
+                notes: '',
+                bePromoted: '',
+              }
+              console.log(obj.sameScoreList)
               result.shoots.forEach((k) => {
-                if (k == e.groupCount) {
-                  obj[k] = e.groupTotal
-                }
+                obj[k] = ''
               })
-            })
+              item.groupList.forEach((e, v) => {
+                result.shoots.forEach((k) => {
+                  if (k == e.groupCount) {
+                    obj[k] = e.groupTotal
+                  }
+                })
+              })
 
-            data.finalEight.push(obj)
-          })
-        } else {
-          data.finalEight = []
-        }
+              data.finalEight.push(obj)
+            })
+          } else {
+            data.finalEight = []
+          }
+        data.th.push({ name: '总环数', width: '80px' }, { name: '分差', width: '60px' }, { name: '备注' })
         this.$forceUpdate()
       })
     },
@@ -560,7 +576,6 @@ export default {
       getTeamTotalScores({
         configName: data.configName,
       }).then((res) => {
-        console.log(res, '123')
         data.projectName = res.result.projectName
         data.contestName = res.result.contestName
         data.addr = res.result.addr
@@ -611,7 +626,6 @@ export default {
           this.geren(data, index)
         }
         if (data.configName.includes('个人决赛')) {
-          console.log(data)
           this.gerenjuesaii(data)
         }
         if (data.configName.includes('团体排名')) {
@@ -678,8 +692,8 @@ export default {
       height: 1000px;
 
       .shouqiang {
-        width: 700px;
-        height: 700px;
+        width: 220px;
+        height: 220px;
       }
 
       .buqiang {
