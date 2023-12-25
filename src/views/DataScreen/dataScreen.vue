@@ -284,6 +284,9 @@ export default {
       const box = this.$refs.scorllBox
       const arr = this.$refs.scorllArr
       const arr2 = document.createElement('div')
+      console.log(arr)
+      console.log(arr2)
+
       arr2.innerHTML = arr.innerHTML
       const thit = this
       function scrolls() {
@@ -411,6 +414,13 @@ export default {
                   bePromoted: '',
                 }
               })
+              data.listsList = [
+                ...data.listsList,
+                ...data.listsList,
+                ...data.listsList,
+                ...data.listsList,
+                ...data.listsList,
+              ]
             }
           })
         })

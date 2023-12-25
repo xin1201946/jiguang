@@ -5,20 +5,9 @@
       <a-space>
         <!-- <a-button type="primary" @click="handleBack">返回赛事列表</a-button> -->
         <a-page-header :title="title" @back="handleBack" />
-<!--        this.treeList-->
+        <!--        this.treeList-->
         <template v-if="this.treeList.length">
-          <a-upload
-            accept=".xlsx, xls"
-            name="file"
-            method="post"
-            :showUploadList="false"
-            :multiple="false"
-            :headers="tokenHeader"
-            :action="importExcelUrl"
-            :data="(file) => ({ file, contestId })"
-            @change="handleImportExcel"
-            :disabled="status !== '0'"
-          >
+          <a-upload accept=".xlsx, xls" name="file" method="post" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" :data="(file) => ({ file, contestId })" @change="handleImportExcel" :disabled="status !== '0'">
             <a-button :disabled="status !== '0'" type="primary" icon="import">导入参赛人员</a-button>
           </a-upload>
         </template>
@@ -34,7 +23,7 @@
         <TreeCard>
           <!--        左侧树-->
           <template slot="tree">
-            <ParticipantTree @change="handleTreeChange" @contest="handleContest" @treeList="handleTreeList"/>
+            <ParticipantTree @change="handleTreeChange" @contest="handleContest" @treeList="handleTreeList" />
           </template>
           <template slot="query">
             <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch" />
@@ -45,22 +34,16 @@
               <a-button v-if="t === '全部'" icon="edit" type="primary" @click="handleAdds">添加</a-button>
               <a-button :disabled="!selectedRowKeys.length" type="danger" icon="delete" @click="handleDeletes">删除</a-button>
               <a-button :disabled="!data.length" type="danger" icon="delete" @click="handleAllDeletes">全部删除</a-button>
+              <a-button type="primary" icon="download" @click="handleExport">导出</a-button>
+            </a-space>
+            <a-space v-else>
+              <a-button type="primary" icon="download" @click="handleExport">导出</a-button>
             </a-space>
             <div v-show="t.includes('团体')" style="color: #bbb">
               混合团体参赛人员通过资格赛自动生成
             </div>
           </template>
-          <a-table
-            :scroll="{x: 1400}"
-            :columns="columns"
-            :data-source="data"
-            :pagination="pagination"
-            rowKey="playerId"
-            @change="handleTableChange"
-            bordered
-            size="small"
-            :row-selection="rowSelection"
-          >
+          <a-table :scroll="{x: 1400}" :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId" @change="handleTableChange" bordered size="small" :row-selection="rowSelection">
             <template slot="operation" slot-scope="text, record">
               <a-space v-if="status === '0'">
                 <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
@@ -88,7 +71,7 @@ import ParticipantTree from '@views/Competition/participant/modal/ParticipantTre
 import {
   participantQuery,
   participantTableColumns,
-  participantTableColumnsAll
+  participantTableColumnsAll,
 } from '@views/Competition/participant/participant.config'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import BizMixins from '@views/biz/bizMixins'
@@ -101,7 +84,8 @@ import {
   bizContestProjectPlayerPageList,
   bizContestPlayerList,
   bizContestProjectPlayerDelete,
-  bizContestPlayerDeleteAll
+  bizContestPlayerDeleteAll,
+  downloadProjectItem,
 } from '@api/competition'
 export default {
   name: 'participant',
@@ -110,10 +94,10 @@ export default {
     ParticipantTree,
     QuerySearch,
     ParticipantModal,
-    ParticipantModalUser
+    ParticipantModalUser,
   },
   mixins: [BizMixins],
-  inject: ["closeCurrent"],
+  inject: ['closeCurrent'],
   data() {
     return {
       loading: false,
@@ -123,7 +107,7 @@ export default {
       query: {
         playerName: undefined,
         groupName: undefined,
-        projectGroup: undefined
+        projectGroup: undefined,
       },
       list: [],
       api: 'bizContestPlayer/importExcel',
@@ -134,7 +118,7 @@ export default {
       status: '',
       selectedRowKeys: [],
       projectName: '',
-      rows: []
+      rows: [],
     }
   },
   computed: {
@@ -145,9 +129,9 @@ export default {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selectedRowKeys = selectedRowKeys
           this.rows = selectedRows
-        }
+        },
       }
-    }
+    },
   },
   watch: {
     $route: {
@@ -160,16 +144,33 @@ export default {
         })
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     this.listInit()
     this.status = this.$route.query.status
   },
   methods: {
+    handleExport() {
+      downloadProjectItem({
+        contestId: this.contestId,
+      }).then((res) => {
+        console.log(res)
+        const blob = new Blob([res], { type: 'text/plain' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.style.display = 'none'
+        a.href = url
+        a.setAttribute('download', '参赛人员表.pdf')
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      })
+    },
     handleImport() {
-      infoMessage("当前赛事没有项目信息,请先创建项目信息,再导入参赛人员.")
+      infoMessage('当前赛事没有项目信息,请先创建项目信息,再导入参赛人员.')
     },
     // 获取赛事id
     handleContest(contestId, id) {
@@ -188,7 +189,7 @@ export default {
       this.$nextTick(() => {
         if (data.title) {
           this.columns = participantTableColumnsAll
-        }else {
+        } else {
           this.columns = participantTableColumns
         }
         this.getList()
@@ -215,9 +216,9 @@ export default {
         pageSize: this.pagination.pageSize,
         contestId: this.contestId,
         cproId: this.id,
-        isAll: this.t !== '全部' ? '0' : '1'
+        isAll: this.t !== '全部' ? '0' : '1',
       }
-      bizContestProjectPlayerPageList(data).then(res => {
+      bizContestProjectPlayerPageList(data).then((res) => {
         if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
@@ -238,74 +239,82 @@ export default {
         bizContestPlayerList({
           contestId: this.contestId,
           cproId: this.id,
-          isAll: '1'
-        }).then(res => {
+          isAll: '1',
+        }).then((res) => {
           if (res.result.length) {
-            const list = res.result.map(item => item.playerId)
-            this.$refs.user.inits(list, res.result, {
-              contestId: this.contestId,
-              cproId: this.id
-            },this.t)
-          }else {
-            this.$refs.user.inits([], [], {
-              contestId: this.contestId,
-              cproId: this.id
-            }, this.t)
+            const list = res.result.map((item) => item.playerId)
+            this.$refs.user.inits(
+              list,
+              res.result,
+              {
+                contestId: this.contestId,
+                cproId: this.id,
+              },
+              this.t
+            )
+          } else {
+            this.$refs.user.inits(
+              [],
+              [],
+              {
+                contestId: this.contestId,
+                cproId: this.id,
+              },
+              this.t
+            )
           }
         })
-      }else {
-        this.$message.error("请先选择左侧项目, 再点击编辑人员名单按钮")
+      } else {
+        this.$message.error('请先选择左侧项目, 再点击编辑人员名单按钮')
       }
     },
     // 删除
     // 全部删除
     handleAllDeletes() {
       const data = {}
-      if (this.t === '全部'){
+      if (this.t === '全部') {
         data.contestId = this.contestId
-      }else {
+      } else {
         data.contestId = this.contestId
         data.cproId = this.id
       }
-      deleteMessage("请确认是否删除全部赛事人员信息").then(() => {
-        bizContestPlayerDeleteAll(data).then(res => {
+      deleteMessage('请确认是否删除全部赛事人员信息').then(() => {
+        bizContestPlayerDeleteAll(data).then((res) => {
           if (res.code === 200) {
             this.pagination.current = 1
             this.getList()
-          }else {
+          } else {
             this.$message.error(res.message)
           }
         })
       })
     },
     // 批量删除
-    handleDeletes () {
-      deleteMessage("请确认是否删除当前选中的所有赛事人员信息").then(() => {
+    handleDeletes() {
+      deleteMessage('请确认是否删除当前选中的所有赛事人员信息').then(() => {
         const data = {
           id: this.selectedRowKeys.join(','),
         }
         if (this.t === '全部') {
           data.contestId = this.contestId
-        }else{
+        } else {
           data.cproId = this.id
         }
-        bizContestPlayerDelete(data).then(res => {
+        bizContestPlayerDelete(data).then((res) => {
           if (res.code === 200) {
             this.pagination.current = 1
             this.getList()
-          }else {
+          } else {
             this.$message.error(res.message)
           }
         })
-
       })
-
     },
     // 单个删除
     handleDelete(record) {
       if (this.t === '全部') {
         deleteMessage('请确认是否删除当前赛事人员信息').then(() => {
-          bizContestPlayerDelete(record.playerId).then(res => {
+          bizContestPlayerDelete(record.playerId).then((res) => {
             if (res.code === 200) {
               if (this.data.length === 1) {
                 if (this.pagination.current !== 1) {
@@ -321,10 +330,10 @@ export default {
             }
           })
         })
-      }else{
+      } else {
         console.log(record)
         deleteMessage('请确认是否删除当前项目人员信息').then(() => {
-          bizContestProjectPlayerDelete(record.id).then(res => {
+          bizContestProjectPlayerDelete(record.id).then((res) => {
             if (res.code === 200) {
               if (this.data.length === 1) {
                 if (this.pagination.current !== 1) {
@@ -341,16 +350,12 @@ export default {
           })
         })
       }
-
     },
     // 导入
-    handleImportExcels() {
-
-    },
+    handleImportExcels() {},
     // 下载
     handleDownload() {
-      bizContestPlayerGetImportTemplate()
-        .then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
+      bizContestPlayerGetImportTemplate().then((res) => this.downLoad(res, '参赛人员模板.xlsx'))
     },
     handleTreeList(list) {
       this.treeList = list
@@ -363,8 +368,8 @@ export default {
       console.log(this.treeList)
       this.$refs.modal.list = this.treeList
       this.handleEdit(record)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -402,10 +407,10 @@ export default {
 /deep/.ant-page-header {
   padding: 16px 24px 16px 10px !important;
 }
-/deep/.ant-spin-nested-loading{
+/deep/.ant-spin-nested-loading {
   height: 100%;
 }
-/deep/.ant-spin-container{
+/deep/.ant-spin-container {
   height: 100%;
 }
 /deep/.ant-page-header-back {

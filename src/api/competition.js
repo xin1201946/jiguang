@@ -134,11 +134,11 @@ export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/query
 //阶段最终成绩
 export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)
 // 团队最终成绩
-export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalScore/teamSports',data)
+export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalScore/teamSports', data)
 
 // 导出抽签pdf
 // downloadFile
-export const contest_processGetSitePdf = param => downFile("contest-process/getSitePdf",param)
+export const contest_processGetSitePdf = param => downFile("contest-process/getSitePdf", param)
 
 // 查询组别比赛时间
 export const contest_processGetStageGroupTime = data => postAction("contest-process/getStageGroupTime", data)
@@ -156,3 +156,6 @@ export const saveScore = data => postAction("contest-process/saveScore", data)
 export const eliminationFinal = data => postAction("contest-process/eliminationFinal", data)
 // 同分
 export const sameFinals = data => postAction("contest-process/sameFinals", data)
+
+// 导出参赛人员
+export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)

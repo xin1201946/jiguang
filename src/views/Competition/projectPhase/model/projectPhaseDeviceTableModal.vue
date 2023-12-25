@@ -2,28 +2,28 @@
   <BizModal :title="title" :visible="visible" :loading="loading" @ok="handleOk" @cancel="handleCancel" :width="900">
     <div class="modal">
       <a-form>
-        <a-form-item :labelCol="{span: 4}" :wrapperCol="{span: 18}" label="激光训练器类型">
-          <div style="display: flex">
-            <a-select showSearch allowClear placeholder="请选择激光训练器类型" v-model="deviceType">
-              <a-select-option v-for="item in deviceGunType" :key="item.value" :value="item.label">{{ item.label }}
-              </a-select-option>
-            </a-select>
-            <!--            <a-select
-              showSearch
-              allowClear
-              placeholder="请选择平板编号"
-              v-model="deviceType">
-              <a-select-option
-                v-for="item in tableList"
-                :key="item.tabletPcNum"
-                :value="item.tabletPcNum"
-              >{{ item.tabletPcNum }}
-              </a-select-option>
-            </a-select>-->
-            <a-button style="margin-left: 20px" type="primary" @click="handleClick">查询
-            </a-button>
-          </div>
-        </a-form-item>
+        <a-row>
+          <a-col :span="8">
+            <a-form-item :labelCol="{span: 10}" :wrapperCol="{span: 14}" label="激光训练器类型">
+              <a-select showSearch allowClear placeholder="请选择激光训练器类型" v-model="deviceType">
+                <a-select-option v-for="item in deviceGunType" :key="item.value" :value="item.label">{{ item.label }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :labelCol="{span: 10}" :wrapperCol="{span: 14}" label="平板编号">
+              <a-input placeholder="请选择平板编号" v-model="tabletPcNum">
+              </a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :labelCol="{span: 4}" :wrapperCol="{span: 16}" label="">
+              <a-button style="margin-left: 20px" type="primary" @click="handleClick">查询</a-button>
+              <a-button style="margin-left: 20px" @click="resetClick">重置</a-button>
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
       <div class="modal_body">
         <a-table :data-source="tableList" :columns="columns" :pagination="false" rowKey="tabletPcId" :row-selection="rowSelection" :customRow="customRow"></a-table>
@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       deviceGunType,
-      deviceType: '',
+      deviceType: undefined,
+      tabletPcNum: undefined,
       tableLists: [],
       title: '',
       visible: false,
@@ -120,6 +121,14 @@ export default {
         },
       }
     },
+    resetClick() {
+      this.deviceType = undefined
+      this.tabletPcNum = undefined
+      this.getPcTableList({
+        deviceGunType: '',
+        tabletPcNum: '',
+      })
+    },
     handleClick() {
       let value = ''
       for (const item of deviceGunType) {
@@ -127,9 +136,9 @@ export default {
           value = item.value
         }
       }
-
       this.getPcTableList({
         deviceGunType: value,
+        tabletPcNum: this.tabletPcNum,
       })
     },
     getPcTableList(data) {

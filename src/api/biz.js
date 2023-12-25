@@ -13,6 +13,7 @@ export const bizTabletPcUpdate = data => postAction("bizTabletPc/update", data)
 export const bizTabletPcDelete = id => deleteAction(`bizTabletPc/delete/${id}`)
 // 平板列表
 export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list", data)
+// export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list2", data)
 // 同步
 export const bizTabletPcSync = () => getAction("bizTabletPc/sync")
 

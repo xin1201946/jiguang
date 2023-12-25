@@ -9,7 +9,7 @@
       </div>
       <a-table bordered :pagination="pagination" :data-source="data" @change="handleTableChange" rowKey="cproDeviceId" size="small" :columns="columns" :scroll="{ y: 200, x: 1000}">
         <template slot="targetSite" slot-scope="text, record, index">
-<!--          <a-input v-if="projectName.includes('团体')" :disabled="disabled" @focus="handleBindFocus(record, index)" v-model="record.targetSite" @blur="handleBind(record)"></a-input>-->
+          <!--          <a-input v-if="projectName.includes('团体')" :disabled="disabled" @focus="handleBindFocus(record, index)" v-model="record.targetSite" @blur="handleBind(record)"></a-input>-->
           <a-input :disabled="disabled" oninput="value=value.replace(/[^\d]/g,'')" @focus="handleBindFocus(record, index)" v-model="record.targetSite" @blur="handleBind(record)"></a-input>
         </template>
         <template slot="operation" slot-scope="text, record, index">
@@ -104,7 +104,7 @@ export default {
     },
     projectName: {
       type: String,
-      required: true
+      required: true,
     },
   },
   data() {

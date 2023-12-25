@@ -11,16 +11,8 @@
     </a-row> -->
     <a-form>
       <a-form-item>
-        <a-radio-group
-          v-model="treeKes"
-          @change="handleSelect"
-        >
-          <a-radio
-            :style="radioStyle"
-            :value="item.key"
-            v-for="item in treeData"
-            :key="item.key"
-          >{{item.projectName ? `${item.projectName} - ${item.projectGroup}` : '全部'}}
+        <a-radio-group v-model="treeKes" @change="handleSelect">
+          <a-radio :style="radioStyle" :value="item.key" v-for="item in treeData" :key="item.key">{{item.projectName ? `${item.projectName} - ${item.projectGroup}` : '全部'}}
           </a-radio>
         </a-radio-group>
       </a-form-item>
@@ -49,7 +41,7 @@ export default {
       ],
       list: [],
       id: '',
-      treeKes: "-1"
+      treeKes: '-1',
     }
   },
   watch: {
@@ -62,18 +54,16 @@ export default {
         }
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     handleSelect(e) {
       // console.log(e.target.value)
-      const key = this.treeData.filter(item => item.key === e.target.value)
+      const key = this.treeData.filter((item) => item.key === e.target.value)
       console.log(key)
-      this.$emit("change", key[0])
+      this.$emit('change', key[0])
     },
     getList(v) {
       const data = {}
@@ -83,10 +73,10 @@ export default {
       if (v) {
         data.contestId = v.contestId
       }
-      bizContestProjectList(data).then(res => {
+      bizContestProjectList(data).then((res) => {
         if (res.result.length) {
           if (this.$route.query.id) {
-            this.treeData = res.result.map(item => {
+            this.treeData = res.result.map((item) => {
               return {
                 ...item,
                 title: item.projectName,
@@ -95,7 +85,7 @@ export default {
               }
             })
           } else {
-            v.children = res.result.map(item => {
+            v.children = res.result.map((item) => {
               return {
                 ...item,
                 title: item.projectName,
@@ -110,9 +100,9 @@ export default {
           key: '-1',
           isLeaf: true,
         })
-        this.$emit("treeList", res.result)
-        this.treeKes = "-1"
-        this.$emit("change", {
+        this.$emit('treeList', res.result)
+        this.treeKes = '-1'
+        this.$emit('change', {
           title: '全部',
           key: '-1',
           isLeaf: true,
@@ -120,7 +110,7 @@ export default {
       })
     },
     getProjectList() {
-      bizContestList({}).then(res => {
+      bizContestList({}).then((res) => {
         if (res.code === 200) {
           this.list = res.result
           // console.log(this.list, '123')
@@ -129,7 +119,7 @@ export default {
     },
     changeClick(event) {
       let a = {
-        contestId: event
+        contestId: event,
       }
       this.treeKes = []
       this.getList(a)
@@ -138,10 +128,8 @@ export default {
     loadData(node) {
       this.getList(node.dataRef)
     },
-    filterOption(input, option) {
-
-    }
-  }
+    filterOption(input, option) {},
+  },
 }
 </script>
 
