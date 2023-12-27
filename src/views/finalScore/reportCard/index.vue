@@ -1,32 +1,18 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-select
-        :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'"
-        style="width: 300px"
-        v-model="contestId"
-        @change="handleContest"
-      >
-        <a-select-option
-          v-for="(item, i) in treeList"
-          :key="i"
-          :value="item.contestId"
-        >{{item.contestName}}</a-select-option>
+      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId" @change="handleContest">
+        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{item.contestName}}</a-select-option>
       </a-select>
     </div>
     <div class="cards">
       <TreeCard>
         <template slot="tree">
           <a-radio-group v-if="list.length" v-model="tree" @change="handleTreeChange">
-            <a-radio
-              :style="style"
-              v-for="item in list"
-              :key="item.value"
-              :value="item.value"
-            > {{ item.label }}
+            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value"> {{ item.label }}
             </a-radio>
           </a-radio-group>
-          <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else/>
+          <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else />
         </template>
         <template slot="query">
           <a-form v-show="this.stageArr.length" layout="inline" :form="form">
@@ -34,11 +20,7 @@
               <a-col :span="6">
                 <a-form-item colon label="阶段名称">
                   <a-select v-model="query.cproStageId" @change="handleStageChange">
-                    <a-select-option
-                      v-for="value in stageArr"
-                      :value="value.value"
-                      :key="value.value"
-                    >{{ value.label }}
+                    <a-select-option v-for="value in stageArr" :value="value.value" :key="value.value">{{ value.label }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
@@ -63,15 +45,7 @@
         </template>
         <template slot="default">
 
-          <a-table
-            v-show="this.stageArr.length"
-            :columns="columns"
-            :data-source="data"
-            :pagination="false"
-            @change="handleTableChange"
-            rowKey="i"
-            bordered
-          ></a-table>
+          <a-table v-show="this.stageArr.length" :columns="columns" :data-source="data" :pagination="false" @change="handleTableChange" rowKey="i" bordered></a-table>
           <a-empty v-show="!this.stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
@@ -81,20 +55,15 @@
 
 <script>
 import TreeCard from '@comp/card/TreeCard.vue'
-import {
-  RealTimeViewTreeStyle
-} from '@views/Competition/RealTimeView/RealTimeView.config'
+import { RealTimeViewTreeStyle } from '@views/Competition/RealTimeView/RealTimeView.config'
 import {
   bizContestList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScoreFinalSportsList
+  bizPlayerFinalScoreFinalSportsList,
 } from '@api/competition'
 import { stageName } from '@views/Competition/projectPhase/projectPhase.config'
-import {
-  reportCardFinalColumns,
-  reportCardStageColumns
-} from '@views/finalScore/reportCard/reportCard.config'
+import { reportCardFinalColumns, reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
 import { Time } from '@/utils'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -110,7 +79,7 @@ export default {
         pageSize: 10,
         total: 0,
         showTotal: (total, range) => {
-          return range[0] + "-" + range[1] + " 共" + total + "条"
+          return range[0] + '-' + range[1] + ' 共' + total + '条'
         },
         showQuickJumper: true,
         showSizeChanger: true,
@@ -123,7 +92,7 @@ export default {
       list: [],
       data: [],
       query: {
-        cproStageId: ''
+        cproStageId: '',
       },
       group: 0,
       groupArray: [],
@@ -132,9 +101,9 @@ export default {
       dataTitle: '',
       columns: reportCardStageColumns,
       scroll: {
-        x: 1500
+        x: 1500,
       },
-      rank: []
+      rank: [],
     }
   },
   computed: {},
@@ -147,13 +116,13 @@ export default {
         })
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {},
   methods: {
     // 分页
-    handleTableChange (pagination) {
+    handleTableChange(pagination) {
       this.pagination = pagination
       this.getList()
     },
@@ -162,18 +131,18 @@ export default {
       this.getProjectList()
     },
     // 获取阶段
-    getStage () {
+    getStage() {
       bizContestProjectStageList({
         cproId: this.tree,
-        contestId: this.contestId
-      }).then(res => {
+        contestId: this.contestId,
+      }).then((res) => {
         if (res.code === 200) {
           if (res.result.length) {
-            const data = res.result.map(item => {
+            const data = res.result.map((item) => {
               return {
                 ...item,
                 label: item.stageName,
-                value: item.cproStageId
+                value: item.cproStageId,
               }
             })
             this.stageArr = data
@@ -188,30 +157,30 @@ export default {
             this.group = 0
             // this.getList()
           }
-        }else {
+        } else {
           this.$message.error(res.message)
         }
       })
     },
     // 获取项目
-    getProjectList () {
+    getProjectList() {
       bizContestProjectList({
-        contestId: this.contestId
-      }).then(res => {
+        contestId: this.contestId,
+      }).then((res) => {
         // console.log(res)
         if (res.code === 200) {
           // 查询下拉框
           if (res.result.length) {
-            const data = res.result.map(item => {
+            const data = res.result.map((item) => {
               return {
                 ...item,
                 label: `${item.projectName} - ${item.projectGroup}`,
-                value: item.cproId
+                value: item.cproId,
               }
             })
             this.tree = data[0].value
             this.list = data
-          }else {
+          } else {
             this.tree = ''
             this.list = []
           }
@@ -221,8 +190,8 @@ export default {
       })
     },
     // 获取比赛信息
-    getTreeList () {
-      bizContestList({}).then(res => {
+    getTreeList() {
+      bizContestList({}).then((res) => {
         this.treeList = res.result
         this.contestId = res.result[0].contestId
         this.pagination.current = 1
@@ -233,35 +202,34 @@ export default {
     // 获取比赛成绩表头
     getColumns(total) {
       let children = []
-      if (Array.isArray(total)){
+      if (Array.isArray(total)) {
         for (let i = 0; i < total.length; i++) {
           children.push({
             // title: numToCapital((i + 1) * 10),
             title: total[i],
             align: 'center',
-            dataIndex: `scoreList${i+1}`
+            dataIndex: `scoreList${i + 1}`,
           })
         }
-      }else {
+      } else {
         for (let i = 0; i < total; i++) {
           children.push({
             // title: numToCapital((i + 1) * 10),
             title: (i + 1) * 10,
             align: 'center',
-            dataIndex: `scoreList${i+1}`
+            dataIndex: `scoreList${i + 1}`,
           })
         }
       }
-      this.columns = reportCardStageColumns.map( item => {
+      this.columns = reportCardStageColumns.map((item) => {
         if (item.children) {
           return {
             ...item,
-            children: children
+            children: children,
           }
         }
         return item
       })
-
     },
     // 获取列表
     getList() {
@@ -272,21 +240,21 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
-      bizPlayerFinalScoreFinalSportsList(data).then(res => {
+      bizPlayerFinalScoreFinalSportsList(data).then((res) => {
         // includes("团体")
         if (res.code === 200) {
           this.rank = res.result.remark
-          if(res.result.title.includes('团体')){
+          if (res.result.title.includes('团体')) {
             this.columns = reportCardFinalColumns
             this.data = res.result.data.map((item, i) => {
               return {
                 ...item,
-                i: i + 1
+                i: i + 1,
               }
             })
-          }else{
+          } else {
             // 组
-            this.getColumns( (res.result.shoots && res.result.shoots.length) ?  res.result.shoots : this.group)
+            this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
             this.groupArray = res.result.shoots
             this.data = res.result.data.map((item, i) => {
               const obj = {}
@@ -296,17 +264,17 @@ export default {
               return {
                 ...item,
                 ...obj,
-                i: i + 1
+                i: i + 1,
               }
             })
           }
           this.dataTitle = res.result.title
-        }else {
+        } else {
         }
       })
     },
     // 左侧选中
-    handleTreeChange (v) {
+    handleTreeChange(v) {
       this.getStage()
     },
     // 查询
@@ -320,60 +288,63 @@ export default {
       this.getList()
     },
     // 资格
-    bodyContent(){
-      const contest = this.treeList.filter(item => item.contestId === this.contestId)[0]
-      const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0]
-      const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
+    bodyContent() {
+      const contest = this.treeList.filter((item) => item.contestId === this.contestId)[0]
+      const contestName = this.treeList.filter((item) => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter((item) => item.value === this.tree)[0]
+      const group = this.stageArr.filter((item) => this.dataTitle.includes(item.stageName))[0].groupCount
       // const stage = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0]
       // console.log(label)
-      const project = this.list.filter(item => item.value === this.tree)[0]
+      const project = this.list.filter((item) => item.value === this.tree)[0]
       // console.log(contest)
       let g = 0
-      if (this.groupArray && this.groupArray.length){
+      if (this.groupArray && this.groupArray.length) {
         g = this.groupArray.length
-      }else {
+      } else {
         g = group
       }
 
       const th = () => {
         const arr = []
-        if (this.groupArray && this.groupArray.length){
+        if (this.groupArray && this.groupArray.length) {
           for (const item of this.groupArray) {
             arr.push(`<th>${item}</th>`)
           }
-          return arr.join("")
+          return arr.join('')
         }
         for (let i = 0; i < group; i++) {
-          arr.push(`<th>${(i+1) * 10}</th>`)
+          arr.push(`<th>${(i + 1) * 10}</th>`)
         }
-        return arr.join("")
+        return arr.join('')
       }
-      const datas = [...this.data,/*  ...this.data, ...this.data, ...this.data, ...this.data */]
-      const tr = datas.map(item => {
+      const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
+      const tr = datas.map((item) => {
         const arr = []
         for (let i = 0; i < item.scoreList.length; i++) {
           arr.push(`<td>${item.scoreList[i]}</td>`)
         }
-        return (
-          `<tr>
+        return `<tr>
             <td colspan="2">${item.i}</td>
             <td colspan="2">${item.targetSiteStr}</td>
             <td colspan="2" style="text-align: left">${item.playerName}</td>
             <td colspan="2" style="text-align: left">${item.groupName}</td>
-            ${arr.join("")}
+            ${arr.join('')}
             <td colspan="2">${item.stageTotal}</td>
-            <td>${item.i<=8?"Q":""}</td>
+            <td>${item.i <= 8 ? 'Q' : ''}</td>
           </tr>`
-        )
       })
 
-      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.8cm;margin: 0 6px"/>`
-      ))
-      const img =imgs.length ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
-            ${imgs.join("")}
-          </div>`: ''
+      const imgs = window._CONFIG.printSponsorBottomImgs.map(
+        (item, index) =>
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
+            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          }px); height: 2.8cm;margin: 0 6px"/>`
+      )
+      const img = imgs.length
+        ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join('')}
+          </div>`
+        : ''
       const foot = () => {
         if (window._CONFIG.printSponsorBottomImgs.length) {
           return `<div class="foot" style="position: fixed;left: 0;width: 100%;bottom: 0;height: 5.5cm">
@@ -381,7 +352,7 @@ export default {
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
-                <div style="color: #595656;font-size: 14px">${this.rank.join("，")}</div>
+                <div style="color: #595656;font-size: 14px">${this.rank.join('，')}</div>
               </div>
             </div>
           </div>
@@ -394,7 +365,7 @@ export default {
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
                 <div style="color: #595656;font-size: 14px">
-                  ${this.rank.join("，")}
+                  ${this.rank.join('，')}
                 </div>
               </div>
             </div>
@@ -437,7 +408,10 @@ export default {
           </h2>
           <h3 style="text-align: center">资格赛</h3>
           <p style="text-align: center">${contest.location}</p>
-          <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+          <p style="text-align: center;margin-bottom: 1cm">${Time(
+            project.projectTimeStart,
+            'YYYY/MM/DD'
+          )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         </div>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
           <thead >
@@ -452,7 +426,7 @@ export default {
             </tr>
             <tr>${th()}</tr>
           </thead>
-          <tbody> ${tr.join("")} </tbody>
+          <tbody> ${tr.join('')} </tbody>
           <tfoot>
             <tr style="margin-top: 1cm">
               <td colspan="${g + 7}" style="height: 5.6cm; margin-top: 20px"></td>
@@ -464,21 +438,22 @@ export default {
     },
     // 混团
     groupContent() {
-      const contest = this.treeList.filter(item => item.contestId === this.contestId)[0]
-      const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0]
-      const j = this.data.filter(item => item.stageGroup === 1)
-      const y = this.data.filter(item => item.stageGroup === 2)
-      const project = this.list.filter(item => item.value === this.tree)[0]
+      const contest = this.treeList.filter((item) => item.contestId === this.contestId)[0]
+      const contestName = this.treeList.filter((item) => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter((item) => item.value === this.tree)[0]
+      const j = this.data.filter((item) => item.stageGroup === 1)
+      const y = this.data.filter((item) => item.stageGroup === 2)
+      const project = this.list.filter((item) => item.value === this.tree)[0]
       const jtr = () => {
-        return j.map((item,k) => {
-          return `
+        return j
+          .map((item, k) => {
+            return `
             <tr>
               <td>${item.i}</td>
               <td style="text-align: left">${item.groupName}</td>
               <td>${item.stageTotal}</td>
               <td>${item.total}</td>
-              <td>${k === 0? '金牌': k === 1? '银牌': '' }</td>
+              <td>${k === 0 ? '金牌' : k === 1 ? '银牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
@@ -495,17 +470,19 @@ export default {
               <td></td>
             </tr>
           `
-        }).join("")
+          })
+          .join('')
       }
       const ytr = () => {
-        return y.map((item, k) => {
-          return `
+        return y
+          .map((item, k) => {
+            return `
             <tr>
               <td>${item.i}</td>
               <td style="text-align: left">${item.groupName}</td>
               <td>${item.total}</td>
               <td>${item.stageTotal}</td>
-              <td>${k === 0? '铜牌': '' }</td>
+              <td>${k === 0 ? '铜牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
@@ -522,10 +499,12 @@ export default {
               <td></td>
             </tr>
           `
-        }).join("")
+          })
+          .join('')
       }
 
-      const jdiv = j.length ?  `<h4>金牌赛</h4>
+      const jdiv = j.length
+        ? `<h4>金牌赛</h4>
             <table align="center" cellspacing="0" border="0" style="width: 100%;">
               <thead>
                 <tr>
@@ -544,8 +523,10 @@ export default {
                   <td colspan="5" style="height: 3cm; margin-top: 20px"></td>
                 </tr>
               </tfoot>
-            </table>`: ''
-      const ydiv = y.length ? `<h4>铜牌赛</h4>
+            </table>`
+        : ''
+      const ydiv = y.length
+        ? `<h4>铜牌赛</h4>
             <table align="center" cellspacing="0" border="0" style="width: 100%;">
               <thead>
                 <tr>
@@ -564,21 +545,30 @@ export default {
                   <td colspan="5" style="height: 3cm; margin-top: 20px"></td>
                 </tr>
               </tfoot>
-            </table>`: ''
-      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
-      ))
+            </table>`
+        : ''
+      const imgs = window._CONFIG.printSponsorBottomImgs.map(
+        (item, index) =>
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
+            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          }px); height: 2.5cm;margin: 0 6px"/>`
+      )
       return `
         <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
         <div>
           <div style="height: 90vh">
             <div style="position: relative;">
-              <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+              <img src="../${
+                window._CONFIG.printSponsorImg
+              }" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
               <h1 style="text-align: center">${contestName}</h1>
-              <h2 style="text-align: center">${label.label.split("-").reverse().join('')}</h2>
+              <h2 style="text-align: center">${label.label.split('-').reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
               <p style="text-align: center">${contest.location}</p>
-              <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+              <p style="text-align: center;margin-bottom: 1cm">${Time(
+                project.projectTimeStart,
+                'YYYY/MM/DD'
+              )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
             </div>
             <div>
               ${jdiv}
@@ -587,55 +577,54 @@ export default {
             </div>
           </div>
           <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;padding-top: .2cm;width: 100%;display: flex;justify-content: space-between;margin-top: 1mm">
-            ${imgs.join("")}
+            ${imgs.join('')}
           </div>
         </div>
       `
     },
     // 决赛 || 淘汰赛
-    content(){
-
-      const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
-      const label = this.list.filter(item => item.value === this.tree)[0]
-      const group = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0].groupCount
-      const project = this.list.filter(item => item.value === this.tree)[0]
+    content() {
+      const contestName = this.treeList.filter((item) => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter((item) => item.value === this.tree)[0]
+      const group = this.stageArr.filter((item) => this.dataTitle.includes(item.stageName))[0].groupCount
+      const project = this.list.filter((item) => item.value === this.tree)[0]
       let g = 0
-      if (this.groupArray && this.groupArray.length){
+      if (this.groupArray && this.groupArray.length) {
         g = this.groupArray.length
-      }else {
+      } else {
         g = group
       }
       const th = () => {
         const arr = []
-        if (this.groupArray && this.groupArray.length){
+        if (this.groupArray && this.groupArray.length) {
           for (const item of this.groupArray) {
             arr.push(`<th>${item}</th>`)
           }
-          return arr.join("")
+          return arr.join('')
         }
         for (let i = 0; i < group; i++) {
-          arr.push(`<th>${(i+1) * 10}</th>`)
+          arr.push(`<th>${(i + 1) * 10}</th>`)
         }
-        return arr.join("")
+        return arr.join('')
       }
-      const tr = this.data.map(item => {
+      const tr = this.data.map((item) => {
         const arr = []
         for (let i = 0; i < this.groupArray.length; i++) {
-          arr.push(`<td style="font-size: 14px"><b>${item.scoreList[i] || ""}</b></td>`)
+          arr.push(`<td style="font-size: 14px"><b>${item.scoreList[i] || ''}</b></td>`)
         }
         const list = this.groupArray && this.groupArray.length ? this.groupArray : []
         const array = []
         if (list.length) {
-          for (let i = 0; i < list.length; i++){
-            if (i === 0){
+          for (let i = 0; i < list.length; i++) {
+            if (i === 0) {
               array.push({
                 value: list[i],
-                arr: item.detailScoreList.slice(0, list[i])
+                arr: item.detailScoreList.slice(0, list[i]),
               })
-            }else {
+            } else {
               array.push({
                 value: list[i],
-                arr: item.detailScoreList.slice(list[i-1], list[i])
+                arr: item.detailScoreList.slice(list[i - 1], list[i]),
               })
             }
           }
@@ -643,13 +632,13 @@ export default {
         // shoots
 
         // 最大多少行
-        const trs = Math.max(...array.map(i=>i.arr.length))
+        const trs = Math.max(...array.map((i) => i.arr.length))
         const rows = []
         for (let i = 0; i < trs; i++) {
           const j = []
           for (const k of array) {
             // console.log(k,  k.arr[i] )
-            j.push(`<td style="font-size: 14px">${  k.arr[i] ? parseFloat(k.arr[i].score).toFixed(1) : "" }</td>`)
+            j.push(`<td style="font-size: 14px">${k.arr[i] ? parseFloat(k.arr[i].score).toFixed(1) : ''}</td>`)
           }
           // console.log(j)
           rows.push(`
@@ -658,7 +647,7 @@ export default {
 <!--              <td colspan="2"></td>-->
               <td colspan="2"></td>
               <td colspan="2"></td>
-              ${j.join("")}
+              ${j.join('')}
               <td colspan="2"></td>
               <td></td>
             </tr>
@@ -666,26 +655,31 @@ export default {
         }
         // console.log(rows)
         //  <td colspan="2">${item.targetSite}</td>
-        return (`
+        return `
           <tr>
             <td colspan="2" style="text-align: center">${item.i}</td>
 
             <td colspan="2" style="text-align: left">${item.playerName}</td>
             <td colspan="2" style="text-align: left">${item.groupName}</td>
-            ${arr.join("")}
+            ${arr.join('')}
             <td colspan="2"><b>${item.stageTotal}</b></td>
             <td ></td>
           </tr>
-          ${rows.join("")}
-        `)
+          ${rows.join('')}
+        `
       })
 
-      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.8cm;margin: 0 6px"/>`
-      ))
-      const img =imgs.length ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
-            ${imgs.join("")}
-          </div>`: ''
+      const imgs = window._CONFIG.printSponsorBottomImgs.map(
+        (item, index) =>
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
+            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          }px); height: 2.8cm;margin: 0 6px"/>`
+      )
+      const img = imgs.length
+        ? `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join('')}
+          </div>`
+        : ''
 
       const foot = () => {
         if (window._CONFIG.printSponsorBottomImgs.length) {
@@ -694,7 +688,7 @@ export default {
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
-                <div style="color: #595656;font-size: 14px">${this.rank.join("，")}</div>
+                <div style="color: #595656;font-size: 14px">${this.rank.join('，')}</div>
               </div>
             </div>
           </div>
@@ -707,7 +701,7 @@ export default {
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
                 <div style="color: #595656;font-size: 14px">
-                  ${this.rank.join("，")}
+                  ${this.rank.join('，')}
                 </div>
               </div>
             </div>
@@ -742,7 +736,10 @@ export default {
               ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
               ${label.projectName}
             </h3>
-            <p style="text-align: center;margin: 1cm 0">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+            <p style="text-align: center;margin: 1cm 0">${Time(
+              project.projectTimeStart,
+              'YYYY/MM/DD'
+            )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
           </div>
         </div>
         <table class="table" align="center" cellspacing="0" border="0" style="width: 100%;">
@@ -773,60 +770,70 @@ export default {
       </div>`
     },
     // 打印
-    handlePrint () {
-
+    handlePrint() {
       const print = (fn) => {
-         // const pwin = window.open(); //打开一个新窗口
-         // pwin.document.write(fn)
-         // pwin.print(); //调用打印机
-         // pwin.close() //这个点取消和打印就会关闭新打开的窗口
-         // pwin.addEventListener('afterprint', () => {
-         //   pwin.close()
-         // });
+        // const pwin = window.open(); //打开一个新窗口
+        // pwin.document.write(fn)
+        // pwin.print(); //调用打印机
+        // pwin.close() //这个点取消和打印就会关闭新打开的窗口
+        // pwin.addEventListener('afterprint', () => {
+        //   pwin.close()
+        // });
         const title = this.dataTitle
-        const iframe= document.createElement("iframe");
-        document.body.appendChild(iframe);
-        iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write(fn);
+        const iframe = document.createElement('iframe')
+        document.body.appendChild(iframe)
+        iframe.contentWindow.document.open()
+        iframe.contentWindow.document.write(fn)
         iframe.width = '100%'
         iframe.height = '800px'
-        iframe.contentWindow.addEventListener("beforeprint", () => {
+        iframe.contentWindow.addEventListener('beforeprint', () => {
           function getNumberOfPages() {
             // A4纸高度
-            const totalHeight = 1123;
-            const foot = iframe.contentDocument.querySelector(".foot")
+            const totalHeight = 1123
+            const foot = iframe.contentDocument.querySelector('.foot')
             const body = iframe.contentDocument.body.scrollHeight
-            const pageHeight = body + foot.scrollHeight;
-            const pageCount = Math.ceil(pageHeight / totalHeight);
+            const pageHeight = body + foot.scrollHeight
+            const pageCount = Math.ceil(pageHeight / totalHeight)
             // 显示
-            if (pageCount === 1) {}
+            if (pageCount === 1) {
+            }
             // 隐藏 追加
             else {
-              const footer = iframe.contentDocument.querySelector(".footer")
+              const footer = iframe.contentDocument.querySelector('.footer')
               const newfooter = iframe.contentDocument.createElement('div')
               newfooter.innerHTML = footer.innerHTML
-              if (title.includes("决赛")){
+              if (title.includes('决赛')) {
                 // 判断低图是否有
                 if (window._CONFIG.printSponsorBottomImgs.length) {
-                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
-                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
-                }else{
-                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
-                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
+                  newfooter.style.marginTop =
+                    totalHeight * pageCount - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) + 'px'
+                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                } else {
+                  newfooter.style.marginTop =
+                    totalHeight * pageCount -
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) +
+                    'px'
+                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
                 }
               }
               // 资格赛
-              else{
+              else {
                 if (window._CONFIG.printSponsorBottomImgs.length) {
-                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + (foot.scrollHeight / 2))) + "px"
-                  newfooter.style.marginBottom = (foot.scrollHeight / 2) + 'px'
-                }else{
-                  newfooter.style.marginTop = ((totalHeight * pageCount) - (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight)) + "px"
-                  newfooter.style.marginBottom = (foot.scrollHeight ) + 'px'
+                  newfooter.style.marginTop =
+                    totalHeight * pageCount -
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight / 2) +
+                    'px'
+                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                } else {
+                  newfooter.style.marginTop =
+                    totalHeight * pageCount -
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) +
+                    'px'
+                  newfooter.style.marginBottom = foot.scrollHeight + 'px'
                 }
               }
               console.log(newfooter)
-              footer.style.visibility = "hidden"
+              footer.style.visibility = 'hidden'
               iframe.contentDocument.body.append(newfooter)
             }
           }
@@ -836,30 +843,30 @@ export default {
         })
         iframe.contentWindow.addEventListener('afterprint', () => {
           document.body.removeChild(iframe)
-        });
+        })
         setTimeout(() => {
           iframe.contentWindow.print()
-          iframe.contentWindow.document.close();
+          iframe.contentWindow.document.close()
           document.body.removeChild(iframe)
         }, 50)
       }
       if (this.dataTitle.includes('团体')) {
         print(this.groupContent())
-      }else{
-        if (this.dataTitle.includes("决赛") || this.dataTitle.includes("淘汰赛")) {
+      } else {
+        if (this.dataTitle.includes('决赛') || this.dataTitle.includes('淘汰赛')) {
           print(this.content())
-        }else{
+        } else {
           // 资格赛
           print(this.bodyContent())
         }
       }
     },
     // 导出
-    handleExport () {
-      const stage = stageName.filter(item => this.dataTitle.includes(item.value))[0]
-      const parser = new DOMParser();
-      let htmlDoc;
-      switch (stage.id){
+    handleExport() {
+      const stage = stageName.filter((item) => this.dataTitle.includes(item.value))[0]
+      const parser = new DOMParser()
+      let htmlDoc
+      switch (stage.id) {
         case 0:
           // htmlDoc = parser.parseFromString(this.bodyContent(), 'text/html');
           htmlDoc = this.bodyContent()
@@ -888,17 +895,17 @@ export default {
     },
     // 获取阶段名字
     handleStageChange(v) {
-      const a = this.stageArr.filter(item => item.value === v)[0]
+      const a = this.stageArr.filter((item) => item.value === v)[0]
       this.title = a.label
       this.group = a.groupCount
-    }
+    },
   },
 }
 </script>
 
 <style scoped lang="less">
 @btnHeight: 50px;
-.RealTimeView{
+.RealTimeView {
   height: 100%;
   overflow-y: hidden;
   .btns {
@@ -912,7 +919,7 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
     justify-content: space-between;
-    /deep/.ant-page-header-heading{
+    /deep/.ant-page-header-heading {
       display: flex;
       align-items: center;
     }

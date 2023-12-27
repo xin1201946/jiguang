@@ -45,6 +45,7 @@
     "vue-print-nb": "^1.7.5",
     "vue-print-nb-jeecg": "^1.0.11",
     "vue-router": "^3.0.1",
+    "vue-seamless-scroll": "^1.1.23",
     "vue-splitpane": "^1.0.4",
     "vue2-editor": "^2.10.3",
     "vuedraggable": "^2.20.0",

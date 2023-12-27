@@ -39,7 +39,7 @@
         </div>
         <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
           <!--    整页的滚动-->
-          <div class="foots" ref="scorllBox">
+          <vueSeamless :classOption="classOption" class="foots" :data="data.listsList" ref="scorllBox">
             <div class="footContent" ref="scorllArr">
               <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
@@ -55,7 +55,7 @@
                 <div style="width: 60px">{{ item.bePromoted }}</div>
               </div>
             </div>
-          </div>
+          </vueSeamless>
         </div>
         <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
           <!--    前8位-->
@@ -75,7 +75,7 @@
             </div>
           </div>
           <!-- 后半页滚动 -->
-          <div class="foot" ref="scorllBox">
+          <vueSeamless :classOption="classOption" :data="data.list" class="foot" ref="scorllBox">
             <div class="footContent" ref="scorllArr">
               <div v-for="(item, i) in data.list" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
@@ -91,7 +91,7 @@
                 <div style="width: 60px">{{ item.bePromoted }}</div>
               </div>
             </div>
-          </div>
+          </vueSeamless>
         </div>
 
         <div style="width: 100%;height: 100%;" v-if="data.configName.indexOf('个人决赛') != -1">
@@ -170,7 +170,7 @@
         </div>
         <div style="width: 100%;height: 100%;">
           <!--    整页的滚动-->
-          <div class="foots" ref="scorllBox">
+          <vueSeamless :classOption="classOption" :data="data.listsList" class="foots" ref="scorllBox">
             <div class="footContent" ref="scorllArr">
               <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
@@ -183,7 +183,7 @@
                 <div style="width: 80px;">{{ item.total }}</div>
               </div>
             </div>
-          </div>
+          </vueSeamless>
         </div>
       </div>
       <!-- 排名 -->
@@ -203,11 +203,16 @@ import mixedClusterIndex from './modules/mixedClusterIndex.vue'
 import EchatTarget from '../view/targetmap/modules/EchatTarget.vue'
 import EchatTargetB from '../view/targetmap/modules/EchatTargetB.vue'
 import RankingList from './components/rankingList.vue'
+import vueSeamless from 'vue-seamless-scroll'
 export default {
   name: 'dataScreen',
-  components: { Display, mixedClusterIndex, EchatTarget, RankingList, EchatTargetB },
+  components: { Display, mixedClusterIndex, EchatTarget, RankingList, EchatTargetB, vueSeamless },
   data() {
     return {
+      classOption: {
+        step: 0.3,
+        limitMoveNum: 16,
+      },
       shou: require('@/assets/logoS.png'),
       bu: require('@/assets/logoB.png'),
 
@@ -281,41 +286,39 @@ export default {
   methods: {
     // 向上滚动
     upload() {
-      const box = this.$refs.scorllBox
-      const arr = this.$refs.scorllArr
-      const arr2 = document.createElement('div')
-      console.log(arr)
-      console.log(arr2)
-
-      arr2.innerHTML = arr.innerHTML
-      const thit = this
-      function scrolls() {
-        box.scrollTop = thit.hei
-        if (box.scrollTop > arr.offsetHeight) {
-          thit.hei = 0
-        } else {
-          // 移动速度
-          thit.hei += 0.3
-        }
-        thit.animate = window.requestAnimationFrame(scrolls)
-      }
-      if (arr.offsetHeight > box.offsetHeight) {
-        if (box.children.length < 2) {
-          box.appendChild(arr2)
-        } else {
-          box.children[1].innerHTML = arr.innerHTML
-        }
-        if (this.animate === undefined) {
-          scrolls()
-        }
-      } else {
-        box.scrollTop = 0
-        if (box.children[1]) {
-          box.removeChild(box.children[1])
-        }
-        window.cancelAnimationFrame(this.animation)
-        this.animation = undefined
-      }
+      // const box = this.$refs.scorllBox
+      // const arr = this.$refs.scorllArr
+      // const arr2 = document.createElement('div')
+      // arr2.innerHTML = arr.innerHTML
+      // const thit = this
+      // function scrolls() {
+      //   console.log(box.scrollTop)
+      //   box.scrollTop = thit.hei
+      //   if (box.scrollTop > arr.offsetHeight) {
+      //     thit.hei = 0
+      //   } else {
+      //     // 移动速度
+      //     thit.hei += 0.3
+      //   }
+      //   thit.animate = window.requestAnimationFrame(scrolls)
+      // }
+      // if (arr.offsetHeight > box.offsetHeight) {
+      //   if (box.children.length < 2) {
+      //     box.appendChild(arr2)
+      //   } else {
+      //     box.children[1].innerHTML = arr.innerHTML
+      //   }
+      //   if (this.animate === undefined) {
+      //     scrolls()
+      //   }
+      // } else {
+      //   box.scrollTop = 0
+      //   if (box.children[1]) {
+      //     box.removeChild(box.children[1])
+      //   }
+      //   window.cancelAnimationFrame(this.animation)
+      //   this.animation = undefined
+      // }
     },
     // 个人资格赛
     geren(data, index) {
@@ -326,7 +329,6 @@ export default {
         data.list = []
         data.listsList = []
         const { result } = res
-
         data.projectName = result.projectName
         data.stageGroup = result.stageGroup
         data.stageName = result.stageName
@@ -367,6 +369,7 @@ export default {
         result.players.map((item) => {
           item.groupList.map((it, i) => {
             if (it.groupCount === 5 && Number(it.groupTotal)) {
+              this.classOption.limitMoveNum = 8
               data.fiftyRounds = it.groupTotal
               // 设置前8名
               data.finalEight = result.players
@@ -401,6 +404,7 @@ export default {
                   }
                 })
             } else {
+              this.classOption.limitMoveNum = 16
               data.listsList = result.players.map((item) => {
                 return {
                   ...item,
@@ -414,20 +418,16 @@ export default {
                   bePromoted: '',
                 }
               })
-              data.listsList = [
-                ...data.listsList,
-                ...data.listsList,
-                ...data.listsList,
-                ...data.listsList,
-                ...data.listsList,
-              ]
+              // data.listsList = [
+              //   ...data.listsList,
+              // ]
             }
           })
         })
         this.$nextTick(() => {
+          this.$forceUpdate()
           this.upload()
         })
-        this.$forceUpdate()
       })
     },
     // 个人决赛
@@ -520,6 +520,7 @@ export default {
       getTeamScoresAPI({
         screenName: data.configName,
       }).then((res) => {
+        this.classOption.limitMoveNum = 16
         data.listsList = []
         const { result } = res
         data.projectName = result.projectName

@@ -111,7 +111,7 @@ export default {
     return {
       pagination: {
         current: 1,
-        pageSize: 10,
+        pageSize: 999,
         total: 0,
         showTotal: (total, range) => {
           return range[0] + '-' + range[1] + ' 共' + total + '条'

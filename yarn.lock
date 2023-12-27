@@ -3681,6 +3681,11 @@
     "safe-buffer" "5.1.2"
     "vary" "~1.1.2"
 
+"comutils@^1.1.9":
+  "integrity" "sha512-JxXB67juILiwhdLwOsYyjUqwWEhHdObI0EClOPk+JDtEuTbac59s0pxGpfCBnNNQ5JommifmcMGneW/4Cg7YWw=="
+  "resolved" "https://registry.npmmirror.com/comutils/-/comutils-1.1.19.tgz"
+  "version" "1.1.19"
+
 "concat-map@0.0.1":
   "integrity" "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s="
   "resolved" "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
@@ -12236,6 +12241,13 @@
   "integrity" "sha512-SdKRBeoXUjaZ9R/8AyxsdTqkOfMcI5tWxPZOUX5Ie1BTL5rPSZ0O++pbiZCeYeythiZIdLEfkDiQPKIaWk5hDg=="
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.3.4.tgz"
   "version" "3.3.4"
+
+"vue-seamless-scroll@^1.1.23":
+  "integrity" "sha512-HBjUub8WwsKJzbFCrwKPDrZn4e+SSbkKgwWtjKtfLwesiFGwSsVxP44/Z6d3kpXy94qIFOiflJH6l0/9pj7SGA=="
+  "resolved" "https://registry.npmmirror.com/vue-seamless-scroll/-/vue-seamless-scroll-1.1.23.tgz"
+  "version" "1.1.23"
+  dependencies:
+    "comutils" "^1.1.9"
 
 "vue-splitpane@^1.0.4":
   "integrity" "sha512-6sneVSEeF1VsCD025HP93nRxwzYhv3rotCeYi2Ah1FmGxwtfqbCZEIzaHGberdGNCpMlEzGD/1OIE1kK5QukLA=="

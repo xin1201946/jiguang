@@ -162,7 +162,7 @@ export default {
         const a = document.createElement('a')
         a.style.display = 'none'
         a.href = url
-        a.setAttribute('download', '参赛人员表.pdf')
+        a.setAttribute('download', '报项核对单.docx')
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
