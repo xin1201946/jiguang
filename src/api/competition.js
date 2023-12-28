@@ -156,6 +156,8 @@ export const saveScore = data => postAction("contest-process/saveScore", data)
 export const eliminationFinal = data => postAction("contest-process/eliminationFinal", data)
 // 同分
 export const sameFinals = data => postAction("contest-process/sameFinals", data)
+// 切换分组
+export const changeGroup = data => postAction("contest-process/changeGroup", data)
 
 // 导出参赛人员
 export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)

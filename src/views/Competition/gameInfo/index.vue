@@ -43,6 +43,7 @@
             <a-button type="primary" @click="handleSameScore">同分</a-button>
             <a-button type="danger"  @click="handleEliminate()">淘汰</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
+            <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button>
           </a-space>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
@@ -113,6 +114,8 @@
         <GameRetweetModal ref="retweet" @confirm="retweetSuccessHandle" />
         <!-- 同分 -->
         <GameInfoSameScoreModal ref="sameScore" @ok="sameScoreSuccessHandle" />
+        <!-- 切换分组 -->
+        <GameInfoSwitchGrouping ref="switchGrouping" @ok="switchSuccessHandle" />
       </TreeCard>
     </div>
   </div>
@@ -132,6 +135,7 @@ import TreeCard from '@comp/card/TreeCard.vue'
 import GameInfoDateModal from '@views/Competition/gameInfo/modal/gameInfoDateModal.vue'
 import GameRetweetModal from '@views/Competition/gameInfo/modal/gameInfoRetweet.vue'
 import GameInfoSameScoreModal from '@views/Competition/gameInfo/modal/gameInfoSameScore.vue'
+import GameInfoSwitchGrouping from '@views/Competition/gameInfo/modal/gameInfoSwitchGrouping.vue'
 
 import {
   bizContestProjectList,
@@ -155,6 +159,7 @@ import {
   retarget,
   eliminationFinal,
   sameFinals,
+  changeGroup, //切换分组
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -173,6 +178,7 @@ export default {
     GameInfoDateModal,
     GameRetweetModal,
     GameInfoSameScoreModal,
+    GameInfoSwitchGrouping,
   },
   inject: ['closeCurrent'],
   data() {
@@ -244,6 +250,37 @@ export default {
           this.$message.success('同分操作成功！')
           this.getTableList()
           this.$refs.sameScore.handleCancel()
+          this.selectedRowKeys = []
+          this.selectionRows = []
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    // 切换分组
+    getGrouping(){
+      if (this.selectedRowKeys.length < 1) {
+        return this.$message.error('至少选中一名参赛选手!')
+      }
+      this.$refs.switchGrouping.init(this.selectionRows)
+    },
+    // switchGrouping   没有核对
+    switchSuccessHandle(data){
+      let arrData = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id,
+      }
+      console.log(data,'qaaa',arrData);
+      changeGroup({
+        ...data,
+        ...arrData,
+      }).then((res)=>{
+        console.log(res);
+        if (res.success) {
+          this.$message.success(res.message)
+          this.getTableList()
+          this.$refs.switchGrouping.handleCancel()
           this.selectedRowKeys = []
           this.selectionRows = []
         } else {
