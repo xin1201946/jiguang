@@ -98,6 +98,9 @@ export default {
             this.obj[item.rules[0]] = item.value
           }
         }
+        this.$nextTick(() => {
+          this.form.setFieldsValue(this.obj)
+        })
       } else {
         this.formData = []
         this.resets = []

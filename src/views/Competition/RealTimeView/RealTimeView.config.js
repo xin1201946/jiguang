@@ -216,13 +216,6 @@ export const RealTimeViewTableColumnsPrint = [
 
 export const RealTimeViewQueryPrint = [
   {
-    type: 'search',
-    label: '姓名',
-    rules: ['playerName'],
-    placeholder: '请输入姓名',
-    data: []
-  },
- /*  {
     type: 'select',
     label: '阶段名称',
     rules: ['cproStageId'],
@@ -230,7 +223,14 @@ export const RealTimeViewQueryPrint = [
     data: [],
     value: '',
     span: 5
-  }, */
+  },
+  {
+    type: 'search',
+    label: '姓名',
+    rules: ['playerName'],
+    placeholder: '请输入姓名',
+    data: []
+  },
   {
     type: 'input',
     label: '团体名称',

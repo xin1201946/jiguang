@@ -69,8 +69,14 @@ export const bizContestAudit = data => postAction("bizContest/audit", data)
  */
 
 export const bizPlayerFinalScorePageList = data => postAction('bizPlayerFinalScore/page/list', data)
+// 运动员列表
 export const bizPlayerFinalScoreSportsList = data => postAction('bizPlayerFinalScore/sportsList', data)
+// 混团
+export const bizPlayerFinalScoreSportsListGroup = data => postAction("bizPlayerFinalScore/sportsListGroup", data)
+// 成绩详情
 export const bizPlayerFinalScoreSportsScoresList = data => postAction('bizPlayerFinalScore/sportsScoresList', data)
+// 成绩详情混团
+export const bizPlayerFinalScoreSportsScoresListGroup = data => postAction("bizPlayerFinalScore/sportsScoresListGroup", data)
 export const bizPlayerFinalScoreQueryById = id => getAction(`bizPlayerFinalScore/queryById/${id}`)
 
 
@@ -161,3 +167,4 @@ export const changeGroup = data => postAction("contest-process/changeGroup", dat
 
 // 导出参赛人员
 export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)
+

@@ -84,8 +84,8 @@ import {
   bizContestPlayerList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScoreSportsList,
-  bizPlayerFinalScoreSportsScoresList
+  bizPlayerFinalScoreSportsList, bizPlayerFinalScoreSportsListGroup,
+  bizPlayerFinalScoreSportsScoresList, bizPlayerFinalScoreSportsScoresListGroup
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
@@ -104,12 +104,13 @@ export default {
       style: RealTimeViewTreeStyle,
       contestId: '',
       tree: '',
+      treeLabel: '',
       treeList: [],
       list: [],
       data: [],
       query: {
         playerName: undefined,
-        // cproStageId: undefined,
+        cproStageId: undefined,
         groupName: undefined
       },
       columns: RealTimeViewTableColumnsPrint,
@@ -134,13 +135,45 @@ export default {
   created() {},
   methods: {
     handlePrint(record) {
-      bizPlayerFinalScoreSportsScoresList({
-        contestId: record.contestId,
-        playerId: record.playerId,
-        cproId: this.tree
-      }).then(res => {
-        this.$refs.print.init(res.result)
-      })
+      if (this.treeLabel.includes('团体')) {
+        const data = {
+          contestId: record.contestId,
+          cproId: record.cproId,
+          playerName: record.playerName,
+          playerId: record.playerId,
+          groupName: record.groupName,
+          cproStageId: record.stageId
+        }
+        bizPlayerFinalScoreSportsScoresListGroup(data).then(res => {
+          if (res.code === 200) {
+            this.$refs.print.init({
+              ...res.result,
+              stageName: this.treeLabel,
+              stageId: this.query.cproStageId
+            })
+          }else {
+            this.$message.warning(res.message)
+          }
+        })
+      }else{
+        // console.log(this.query.cproStageId)
+        // console.log(record)
+        bizPlayerFinalScoreSportsScoresList({
+          contestId: record.contestId,
+          playerId: record.playerId,
+          cproId: this.tree
+        }).then(res => {
+          if (res.code === 200) {
+            this.$refs.print.init({
+              list: res.result,
+              stageName: this.treeLabel,
+              stageId: this.query.cproStageId
+            })
+          }else {
+            this.$message.warning(res.message)
+          }
+        })
+      }
     },
     // 修改赛事
     handleContest() {
@@ -150,6 +183,7 @@ export default {
     },
     // 获取姓名
     getUserName(data) {
+
       bizContestPlayerList({
         isAll: 1,
         contestId: this.contestId,
@@ -159,14 +193,18 @@ export default {
           label: item.playerName,
           value: item.playerName
         }))
-        if (data.length) {
-          data.unshift({ label: '全部', value: '' })
-        }
         const query = RealTimeViewQueryPrint.map(item => {
           if (item.type === 'search' && item.label === '姓名') {
             return {
               ...item,
               data: result
+            }
+          }
+          if (item.type === 'select' && item.label === '阶段名称') {
+            return {
+              ...item,
+              data: data,
+              value: data[0].value
             }
           }
           return item
@@ -183,6 +221,7 @@ export default {
         cproId: this.tree,
         contestId: this.contestId
       }).then(res => {
+        console.log(res)
         if (res.result.length) {
           const data = res.result.map(item => {
             return {
@@ -214,6 +253,7 @@ export default {
               }
             })/* .filter(item => !item.projectName.includes("团体")) */
             this.tree = data[0].value
+            this.treeLabel = data[0].projectName
             this.list = data
           }else {
             this.tree = ''
@@ -265,35 +305,62 @@ export default {
       })
     },
     getList() {
-      const data = {
-        ...this.query,
-        pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize,
-        contestId: this.contestId,
-        cproId: this.tree,
-      }
-      bizPlayerFinalScoreSportsList(data).then(res => {
-        if (res.code === 200) {
-          if (res.result.records.length) {
-            const arr = res.result.records.map(item => item.gunTotalGroup)
-            // this.getColumns(Math.max(...[...new Set(arr)]))
-          }
+      if (this.treeLabel.includes('团体')) {
+        const data = {
+          // "playerId": 0,
+          ...this.query,
+          pageNum: this.pagination.current,
+          pageSize: this.pagination.pageSize,
+          contestId: this.contestId,
+          cproId: this.tree,
+        }
+        bizPlayerFinalScoreSportsListGroup(data).then(res => {
+          this.pagination.current = res.result.current
+          this.pagination.total = res.result.total
           this.$nextTick(() => {
             if (res.result.records.length) {
               this.data = res.result.records
             }else {
               this.data = []
             }
-            this.pagination.current = res.result.current
-            this.pagination.total = res.result.total
           })
-        } else{
-          this.data = []
-          this.pagination.total = 0
+          console.log(res)
+        })
+      }else{
+        const data = {
+          ...this.query,
+          pageNum: this.pagination.current,
+          pageSize: this.pagination.pageSize,
+          contestId: this.contestId,
+          cproId: this.tree,
         }
-      })
+        bizPlayerFinalScoreSportsList(data).then(res => {
+          if (res.code === 200) {
+            if (res.result.records.length) {
+              const arr = res.result.records.map(item => item.gunTotalGroup)
+              // this.getColumns(Math.max(...[...new Set(arr)]))
+            }
+            this.$nextTick(() => {
+              if (res.result.records.length) {
+                this.data = res.result.records
+              }else {
+                this.data = []
+              }
+              this.pagination.current = res.result.current
+              this.pagination.total = res.result.total
+            })
+          } else{
+            this.data = []
+            this.pagination.total = 0
+          }
+        })
+      }
     },
     handleTreeChange (v) {
+      // console.log(this.tree)
+      this.treeLabel = this.list.filter(item => item.value === this.tree)[0].projectName
+
+      console.log(this.treeLabel)
       this.getStage()
     },
     handleBack() {
