@@ -71,7 +71,11 @@ export default {
       list: [],
       scoreList: [],
       html: '',
-      stageName: ''
+      stageName: '',
+      jt: {
+        "金牌赛": [],
+        "铜牌赛": []
+      }
     }
   },
   mounted() {
@@ -113,8 +117,20 @@ export default {
           this.formData = data
           console.log(data)
           // this.list =
-          this.list = [{list: data.detailScoreList, title: ""}]
+          this.$nextTick(() => {
+            if ('detailScoreList' in data) {
+              this.jt['金牌赛'] = data.detailScoreList.filter(item => item.stageGroup === 1)
+              this.jt['铜牌赛'] = data.detailScoreList.filter(item => item.stageGroup !== 1)
+              this.list = [{list: data.detailScoreList, title: ""}]
+            }else {
+              this.jt['金牌赛'] = []
+              this.jt['铜牌赛'] = []
+              this.list = [{list: [], title: ""}]
+            }
+          })
+
         }else {
+
           const arr = data.list
             .filter(item => item.cproStageId === data.stageId)
             .map(item => {
@@ -125,8 +141,7 @@ export default {
             }
           })
           this.scoreList = arr[0].scoreList
-          console.log(this.scoreList)
-          this.formData = data.list[0]
+          this.formData = data.list.filter(item => item.cproStageId === data.stageId)[0]
           this.list = arr
         }
       }
@@ -342,7 +357,74 @@ export default {
         }
         return tables.join("")
       }
-      // list()
+      const jtList = () => {
+        const jtds = []
+        const ttds = []
+        for (const item of this.jt["金牌赛"]) {
+          jtds.push(`<tr style="height: 50px; line-height: 50px">
+            <td align="center">${item.shootCode}</td>
+            <td align="center">${item.score}</td>
+            <td align="center">${item.beginTime.length <= 19? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
+            <td align="center">${item.xcoord}</td>
+            <td align="center">${item.ycoord}</td>
+          </tr>`)
+        }
+        for (const item of this.jt["铜牌赛"]) {
+          ttds.push(`<tr style="height: 50px; line-height: 50px">
+            <td align="center">${item.shootCode}</td>
+            <td align="center">${item.score}</td>
+            <td align="center">${item.beginTime.length <= 19? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
+            <td align="center">${item.xcoord}</td>
+            <td align="center">${item.ycoord}</td>
+          </tr>`)
+        }
+
+        const ttable = ttds.length && (`
+          <table align="center" cellspacing="0" border="0" style="width: 100%;">
+            <thead>
+              <tr><th>铜牌赛</th></tr>
+              <tr style="height: 50px; line-height: 50px">
+                <th>发序</th>
+                <th>环数</th>
+                <th>时间</th>
+                <th>X</th>
+                <th>Y</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ttds.join("")}
+            </tbody>
+          </table>
+        `) || ''
+
+        return (`
+          <div>
+            <p><b>靶位:${this.formData.targetSite}</b></p>
+            <p><b>时间:${this.formData.sgTimeStart}</b></p>
+            <p><b>${this.formData.detailScoreList[0].projectName}</b></p>
+            <p><b>${this.formData.playerName}</b></p>
+            <table align="center" cellspacing="0" border="0" style="width: 100%;">
+              <thead>
+                <tr><th>金牌赛</th></tr>
+                <tr style="height: 50px; line-height: 50px">
+                  <th>发序</th>
+                  <th>环数</th>
+                  <th>时间</th>
+                  <th>X</th>
+                  <th>Y</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${jtds.join("")}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            ${ttable}
+          </div>
+        `)
+      }
+
       return (`
         <style>
           @media print {
@@ -359,7 +441,7 @@ export default {
             grid-template-columns: 45% 45%;
           }
         </style>
-        <div class="print" style="height: auto">${list()}</div>
+        <div class="print" style="height: auto">${jtList()}</div>
       `)
       // return ""
     },
