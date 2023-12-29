@@ -75,6 +75,7 @@ export default {
   },
   created() {
     this.state = this.data.configName
+    console.log(this.state)
     this.getData()
     this.timer = setInterval(() => {
       this.getData()
@@ -85,7 +86,7 @@ export default {
     getData() {
       getMixeTeamFinalsListAPI({
         screenName: this.state,
-        stageGroup: this.state.indexOf('金牌赛') ? 1 : 2,
+        stageGroup: this.state.indexOf('金牌赛') != -1 ? 1 : 2,
       }).then((res) => {
         this.mixeTeamFinalsList.List = [[]]
         this.mixeTeamFinalsList.title = [

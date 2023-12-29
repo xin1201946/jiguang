@@ -7,7 +7,7 @@
         </template>
       </a-form-model-item>
       <a-form-model-item label="新分组">
-        <a-input v-model="formData.startNo"></a-input>
+        <a-input v-model="formData.stageGroup"></a-input>
       </a-form-model-item>
     </a-form-model>
   </BizModal>

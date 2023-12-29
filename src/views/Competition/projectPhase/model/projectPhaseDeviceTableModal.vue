@@ -4,7 +4,7 @@
       <a-form>
         <a-row>
           <a-col :span="8">
-            <a-form-item :labelCol="{span: 10}" :wrapperCol="{span: 14}" label="激光训练器类型">
+            <a-form-item :labelCol="{ span: 10 }" :wrapperCol="{ span: 14 }" label="激光训练器类型">
               <a-select showSearch allowClear placeholder="请选择激光训练器类型" v-model="deviceType">
                 <a-select-option v-for="item in deviceGunType" :key="item.value" :value="item.label">{{ item.label }}
                 </a-select-option>
@@ -12,13 +12,13 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item :labelCol="{span: 10}" :wrapperCol="{span: 14}" label="平板编号">
+            <a-form-item :labelCol="{ span: 10 }" :wrapperCol="{ span: 14 }" label="平板编号">
               <a-input placeholder="请选择平板编号" v-model="tabletPcNum">
               </a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item :labelCol="{span: 4}" :wrapperCol="{span: 16}" label="">
+            <a-form-item :labelCol="{ span: 4 }" :wrapperCol="{ span: 16 }" label="">
               <a-button style="margin-left: 20px" type="primary" @click="handleClick">查询</a-button>
               <a-button style="margin-left: 20px" @click="resetClick">重置</a-button>
             </a-form-item>
@@ -26,7 +26,8 @@
         </a-row>
       </a-form>
       <div class="modal_body">
-        <a-table :data-source="tableList" :columns="columns" :pagination="false" rowKey="tabletPcId" :row-selection="rowSelection" :customRow="customRow"></a-table>
+        <a-table :data-source="tableList" :columns="columns" :pagination="false" rowKey="tabletPcId"
+          :row-selection="rowSelection" :customRow="customRow"></a-table>
       </div>
     </div>
   </BizModal>
@@ -115,8 +116,14 @@ export default {
       return {
         on: {
           click: (event) => {
-            this.selectedRowKeys.push(record.tabletPcId)
-            this.selectedRows.push(record)
+            if (this.selectedRowKeys.indexOf(record.tabletPcId) == -1) {
+              this.selectedRowKeys.push(record.tabletPcId)
+              this.selectedRows.push(record)
+            } else {
+              console.log(this.selectedRowKeys.indexOf(record.tabletPcId))
+              this.selectedRowKeys.splice(this.selectedRowKeys.indexOf(record.tabletPcId), 1)
+              this.selectedRows.splice(this.selectedRowKeys.indexOf(record.tabletPcId), 1)
+            }
           },
         },
       }
@@ -249,6 +256,7 @@ export default {
   height: 100%;
   overflow-y: hidden;
 }
+
 .modal_body {
   height: calc(100% - 60px);
   overflow-y: auto;

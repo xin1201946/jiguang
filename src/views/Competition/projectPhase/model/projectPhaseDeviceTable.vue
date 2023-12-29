@@ -7,10 +7,12 @@
           </a-button>
         </a-space>
       </div>
-      <a-table bordered :pagination="pagination" :data-source="data" @change="handleTableChange" rowKey="cproDeviceId" size="small" :columns="columns" :scroll="{ y: 200, x: 1000}">
+      <a-table bordered :pagination="pagination" :data-source="data" @change="handleTableChange" rowKey="cproDeviceId"
+        size="small" :columns="columns" :scroll="{ y: 200, x: 1000 }">
         <template slot="targetSite" slot-scope="text, record, index">
           <!--          <a-input v-if="projectName.includes('团体')" :disabled="disabled" @focus="handleBindFocus(record, index)" v-model="record.targetSite" @blur="handleBind(record)"></a-input>-->
-          <a-input :disabled="disabled" oninput="value=value.replace(/[^\d]/g,'')" @focus="handleBindFocus(record, index)" v-model="record.targetSite" @blur="handleBind(record)"></a-input>
+          <a-input :disabled="disabled" oninput="value=value.replace(/[^\d]/g,'')" @focus="handleBindFocus(record, index)"
+            v-model="record.targetSite" @blur="handleBind(record)"></a-input>
         </template>
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -30,7 +32,8 @@
               :disabled="disabled"
               @click="handleBind(record)"
             >绑定靶位</a-button>-->
-            <a-button type="danger" :disabled="disabled" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
+            <a-button type="danger" :disabled="disabled" size="small" ghost icon="delete"
+              @click="handleDelete(record)">删除</a-button>
           </a-space>
         </template>
       </a-table>
@@ -197,7 +200,7 @@ export default {
     },
     getList() {
       const data = {
-        cproId: this.id,
+        cproId: this.cproId,
         pageSize: this.pagination.pageSize,
         pageNum: this.pagination.current,
       }

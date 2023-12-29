@@ -847,6 +847,10 @@ export default {
 
 <style scoped lang="less">
 @btnHeight: 50px;
+/deep/.treeCard .treeCard_tree{
+  overflow: scroll;
+  background-color: #FFF;
+}
 /deep/.red {
   background: rgba(209, 35, 4, 0.3);
 }
