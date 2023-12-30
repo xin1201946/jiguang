@@ -1,8 +1,10 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId" @change="handleContest">
-        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{item.contestName}}</a-select-option>
+      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId"
+        @change="handleContest">
+        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{ item.contestName
+        }}</a-select-option>
       </a-select>
     </div>
     <div class="cards">
@@ -45,7 +47,8 @@
         </template>
         <template slot="default">
 
-          <a-table v-show="this.stageArr.length" :columns="columns" :data-source="data" :pagination="false" @change="handleTableChange" rowKey="i" bordered></a-table>
+          <a-table v-show="this.stageArr.length" :columns="columns" :data-source="data" :pagination="false"
+            @change="handleTableChange" rowKey="i" bordered></a-table>
           <a-empty v-show="!this.stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
@@ -119,7 +122,7 @@ export default {
       immediate: true,
     },
   },
-  created() {},
+  created() { },
   methods: {
     // 分页
     handleTableChange(pagination) {
@@ -321,23 +324,22 @@ export default {
       const tr = datas.map((item) => {
         const arr = []
         for (let i = 0; i < item.scoreList.length; i++) {
-          arr.push(`<td>${item.scoreList[i]}</td>`)
+          arr.push(`<td style="font-size: 14px;">${item.scoreList[i]}</td>`)
         }
         return `<tr>
-            <td colspan="2">${item.i}</td>
-            <td colspan="2">${item.targetSiteStr}</td>
-            <td colspan="2" style="text-align: left">${item.playerName}</td>
-            <td colspan="2" style="text-align: left">${item.groupName}</td>
+            <td style="font-size: 14px;" colspan="2">${item.i}</td>
+            <td style="font-size: 14px;" colspan="2">${item.targetSiteStr}</td>
+            <td style="font-size: 14px;text-align: left" colspan="2" >${item.playerName}</td>
+            <td style="font-size: 14px;text-align: left" colspan="2" >${item.groupName}</td>
             ${arr.join('')}
-            <td colspan="2">${item.stageTotal}</td>
-            <td>${item.i <= 8 ? 'Q' : ''}</td>
+            <td style="font-size: 14px;" colspan="2">${item.stageTotal}</td>
+            <td style="font-size: 14px;">${item.i <= 8 ? 'Q' : ''}</td>
           </tr>`
       })
 
       const imgs = window._CONFIG.printSponsorBottomImgs.map(
         (item, index) =>
-          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
-            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${6 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.8cm;margin: 0 6px"/>`
       )
       const img = imgs.length
@@ -359,11 +361,11 @@ export default {
           ${img}
         </div>`
         }
-        return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0px;height: 2.7cm">
+        return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0;height: 2cm">
           <div class="footer" style="width: 100%;">
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
-                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="font-size: 14px">备注</div>
                 <div style="color: #595656;font-size: 14px">
                   ${this.rank.join('，')}
                 </div>
@@ -378,7 +380,7 @@ export default {
         th{border: 1px solid;}
         @media print {
           @page{
-            margin-top: .3cm;
+            margin-top: 2cm;
             margin-bottom: 0cm;
           }
         }
@@ -400,21 +402,21 @@ export default {
       </style>
       <div>
 
-        <div style="position: relative">
-          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
-          <h1 style="text-align: center">${contestName}</h1>
+        <div style="position: relative;overflow: hidden">
+          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;top: 50px;left: 0;right: 0;width: 20%" alt="">
+          <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
           </h2>
           <h3 style="text-align: center">资格赛</h3>
           <p style="text-align: center">${contest.location}</p>
           <p style="text-align: center;margin-bottom: 1cm">${Time(
-            project.projectTimeStart,
-            'YYYY/MM/DD'
-          )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        project.projectTimeStart,
+        'YYYY/MM/DD'
+      )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         </div>
         <table align="center" cellspacing="0" border="0" style="width: 100%;">
-          <thead >
+          <thead>
             <tr>
               <th rowspan="2" colspan="2">排名</th>
               <th rowspan="2" colspan="2">靶位</th>
@@ -429,7 +431,7 @@ export default {
           <tbody> ${tr.join('')} </tbody>
           <tfoot>
             <tr style="margin-top: 1cm">
-              <td colspan="${g + 7}" style="height: 5.6cm; margin-top: 20px"></td>
+              <td colspan="${g + 7}" style="height: 5cm; margin-top: 20px"></td>
             </tr>
           </tfoot>
         </table>
@@ -549,8 +551,7 @@ export default {
         : ''
       const imgs = window._CONFIG.printSponsorBottomImgs.map(
         (item, index) =>
-          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
-            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${6 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.5cm;margin: 0 6px"/>`
       )
       return `
@@ -558,17 +559,16 @@ export default {
         <div>
           <div style="height: 90vh">
             <div style="position: relative;">
-              <img src="../${
-                window._CONFIG.printSponsorImg
-              }" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+              <img src="../${window._CONFIG.printSponsorImg
+        }" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
               <h1 style="text-align: center">${contestName}</h1>
               <h2 style="text-align: center">${label.label.split('-').reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
               <p style="text-align: center">${contest.location}</p>
               <p style="text-align: center;margin-bottom: 1cm">${Time(
-                project.projectTimeStart,
-                'YYYY/MM/DD'
-              )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+          project.projectTimeStart,
+          'YYYY/MM/DD'
+        )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
             </div>
             <div>
               ${jdiv}
@@ -671,8 +671,7 @@ export default {
 
       const imgs = window._CONFIG.printSponsorBottomImgs.map(
         (item, index) =>
-          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
-            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${6 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.8cm;margin: 0 6px"/>`
       )
       const img = imgs.length
@@ -737,9 +736,9 @@ export default {
               ${label.projectName}
             </h3>
             <p style="text-align: center;margin: 1cm 0">${Time(
-              project.projectTimeStart,
-              'YYYY/MM/DD'
-            )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        project.projectTimeStart,
+        'YYYY/MM/DD'
+      )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
           </div>
         </div>
         <table class="table" align="center" cellspacing="0" border="0" style="width: 100%;">
@@ -813,7 +812,7 @@ export default {
                     totalHeight * pageCount -
                     (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) +
                     'px'
-                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                  // newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
                 }
               }
               // 资格赛
@@ -827,9 +826,9 @@ export default {
                 } else {
                   newfooter.style.marginTop =
                     totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) +
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 250) +
                     'px'
-                  newfooter.style.marginBottom = foot.scrollHeight + 'px'
+                  // newfooter.style.marginBottom = foot.scrollHeight + 'px'
                 }
               }
               console.log(newfooter)
@@ -905,9 +904,11 @@ export default {
 
 <style scoped lang="less">
 @btnHeight: 50px;
+
 .RealTimeView {
   height: 100%;
   overflow-y: hidden;
+
   .btns {
     height: @btnHeight;
     background: #fff;
@@ -919,6 +920,7 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
     justify-content: space-between;
+
     /deep/.ant-page-header-heading {
       display: flex;
       align-items: center;
