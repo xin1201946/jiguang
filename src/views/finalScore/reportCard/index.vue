@@ -452,21 +452,21 @@ export default {
             return `
             <tr>
               <td>${item.i}</td>
-              <td style="text-align: left">${item.groupName}</td>
-              <td>${item.stageTotal}</td>
-              <td>${item.total}</td>
-              <td>${k === 0 ? '金牌' : k === 1 ? '银牌' : ''}</td>
+              <td style="font-size: 14px;text-align: left">${item.groupName}</td>
+              <td style="font-size: 14px;">${item.total}</td>
+              <td style="font-size: 14px;">${item.stageTotal}</td>
+              <td style="font-size: 14px;">${k === 0 ? '金牌' : k === 1 ? '银牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player2Name}</td>
+              <td style="font-size: 14px;text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player1Name}</td>
+              <td style="font-size: 14px;text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -480,22 +480,22 @@ export default {
           .map((item, k) => {
             return `
             <tr>
-              <td>${item.i}</td>
-              <td style="text-align: left">${item.groupName}</td>
-              <td>${item.total}</td>
-              <td>${item.stageTotal}</td>
-              <td>${k === 0 ? '铜牌' : ''}</td>
+              <td style="font-size: 14px;">${item.i}</td>
+              <td style="font-size: 14px;text-align: left">${item.groupName}</td>
+              <td style="font-size: 14px;">${item.total}</td>
+              <td style="font-size: 14px;">${item.stageTotal}</td>
+              <td style="font-size: 14px;">${k === 0 ? '铜牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player2Name}</td>
+              <td style="font-size: 14px;text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="text-align: left">${item.player1Name}</td>
+              <td style="font-size: 14px;text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -555,13 +555,13 @@ export default {
           }px); height: 2.5cm;margin: 0 6px"/>`
       )
       return `
-        <style>td{text-align: center}th{border: 1px solid;}body{height: 100vh;margin: 0;padding: 0;}</style>
+        <style>td{text-align: center}th{border: 1px solid;}body{height: 80vh;margin: 0;padding: 0;}</style>
         <div>
           <div style="height: 90vh">
-            <div style="position: relative;">
+            <div style="position: relative;ovflow: hidden;">
               <img src="../${window._CONFIG.printSponsorImg
-        }" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
-              <h1 style="text-align: center">${contestName}</h1>
+        }" style="position: absolute;top: -50px;left: 0;right: 0;width: 20%" alt="">
+              <h1 style="text-align: center; font-size: 24px;margin-top: 100px;">${contestName}</h1>
               <h2 style="text-align: center">${label.label.split('-').reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
               <p style="text-align: center">${contest.location}</p>
@@ -643,13 +643,13 @@ export default {
           // console.log(j)
           rows.push(`
             <tr>
-              <td colspan="2"></td>
-<!--              <td colspan="2"></td>-->
-              <td colspan="2"></td>
-              <td colspan="2"></td>
+              <td style="font-size: 14px;" colspan="2"></td>
+<!--              <td style="font-size: 14px;" colspan="2"></td>-->
+              <td style="font-size: 14px;" colspan="2"></td>
+              <td style="font-size: 14px;" colspan="2"></td>
               ${j.join('')}
-              <td colspan="2"></td>
-              <td></td>
+              <td style="font-size: 14px;" colspan="2"></td>
+              <td style="font-size: 14px;"></td>
             </tr>
           `)
         }
@@ -721,15 +721,16 @@ export default {
           size: A4;
           @page{
             margin: 0;
+			margin-top: 2.3cm;
           }
         }
       </style>
         <div>
 
-        <div style="position: relative;">
-          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;left: 0;right: 0;width: 20%" alt="">
+        <div style="position: relative;overflow: hidden">
+          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;top: 50px;left: 0;right: 0;width: 20%" alt="">
           <div ">
-            <h1 style="text-align: center">${contestName}</h1>
+            <h1 style="text-align: center;font-size: 24;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">${this.dataTitle}成绩</h2>
             <h3 style="text-align: center">
               ${label.projectGroup.length > 3 ? label.projectGroup.substring(0, 2) : label.projectGroup}
@@ -793,6 +794,7 @@ export default {
             const body = iframe.contentDocument.body.scrollHeight
             const pageHeight = body + foot.scrollHeight
             const pageCount = Math.ceil(pageHeight / totalHeight)
+            console.log(title)
             // 显示
             if (pageCount === 1) {
             }
@@ -810,7 +812,7 @@ export default {
                 } else {
                   newfooter.style.marginTop =
                     totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight) +
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 250) +
                     'px'
                   // newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
                 }
@@ -826,7 +828,7 @@ export default {
                 } else {
                   newfooter.style.marginTop =
                     totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 250) +
+                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 300) +
                     'px'
                   // newfooter.style.marginBottom = foot.scrollHeight + 'px'
                 }
