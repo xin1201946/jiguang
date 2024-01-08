@@ -52,4 +52,12 @@ export const reportCardStageColumns = [
     align: 'center',
     dataIndex: 'stageTotal'
   },
+  {
+    title: ' ',
+    align: 'center',
+    dataIndex: 'goodTotal',
+    customRender: (text, record, index) => {
+      return record.goodTotal + 'x'
+    },
+  },
 ]

@@ -109,9 +109,9 @@ export default {
           disabledHours: () => {
             const startDate = new Date(this.formData.data[i].times[0]).getDate()
             const endDate = new Date(this.formData.data[i].times[1]).getDate()
-            console.log(this.range(24).slice(0, start.hour() + 1))
+            console.log(this.range(24).slice(0, start.hour()))
             if (startDate === endDate) {
-              return this.range(24).slice(0, start.hour() + 1)
+              return this.range(24).slice(0, start.hour())
             }
             return []
           },

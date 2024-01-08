@@ -183,7 +183,7 @@
             <div class="footContent" ref="scorllArr">
               <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
-                <div style="width: 160px;text-align: left;">{{ item.groupName }}</div>
+                <div style="width: 250px;text-align: left;">{{ item.groupName }}</div>
                 <div style="width: 140px">{{ item.playerName }}</div>
                 <div v-for="k in item.groupList" :key="k.id" style="width: 60px;">
                   {{ k.groupTotal }}
@@ -548,15 +548,15 @@ export default {
           {
             name: '代表队',
             align: 'left',
-            width: '160px',
+            width: '250px',
           },
           {
             name: '姓名',
             width: '140px',
           },
         ]
-        if (result.scoreList[0].groupCount) {
-          for (let i = 0; i < result.scoreList[0].groupCount; i++) {
+        if (result.shootGroups) {
+          for (let i = 0; i < result.shootGroups; i++) {
             data.th.push({
               name: `${i + 1}0`,
               width: '60px',
@@ -603,6 +603,7 @@ export default {
         data.stageName = res.result.stageName
         data.stageGroup = ''
         data.rankingList = res.result.scoreList
+        this.$forceUpdate()
       })
     },
     // 混团
@@ -755,8 +756,8 @@ export default {
     align-items: center;
     justify-content: center;
     // width: 25%;
-    width: 190px;
-    height: 190px;
+    width: 250px;
+    height: 250px;
     overflow: hidden;
     border-radius: 50%;
 
@@ -773,8 +774,8 @@ export default {
       }
 
       .buqiang1 {
-        width: 650px;
-        height: 650px;
+        width: 860px;
+        height: 860px;
       }
     }
   }

@@ -117,7 +117,7 @@ export default {
           th{border: 1px solid}
 
         </style>
-        <div style="height: auto">
+        <div style="height: auto;;">
 <!--          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>-->
           <!-- <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
@@ -141,7 +141,7 @@ export default {
             <p style="text-align: center">${this.formData.groupName}</p>
           </div>
           <div style="margin-top: 20px">
-            <table align="center" cellSpacing="0" border="0" style="width: 100%;" >
+            <table align="center" cellSpacing="0" border="0" style="width: 100%;font-family: 宋体;" >
               <thead>
                 <tr style="height: 50px; line-height: 50px" >
                   <th style="width: 20%">姓名</th>

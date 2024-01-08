@@ -10,18 +10,18 @@
         <div class="content">
           <div v-if="data[0]">
             <p style="color: #ef2928">①</p>
-            <p> {{data[0].groupName}}</p>
-            <p>{{data[0].total}}</p>
+            <p> {{ data[0].groupName }}</p>
+            <p>{{ data[0].total }}</p>
           </div>
           <div v-if="data[1]">
             <p style="color: #ffc21f">②</p>
-            <p>{{data[1].groupName}}</p>
-            <p>{{data[1].total}}</p>
+            <p>{{ data[1].groupName }}</p>
+            <p>{{ data[1].total }}</p>
           </div>
           <div v-if="data[2]">
             <p style="color: #7ec4ff">③</p>
-            <p>{{data[2].groupName}}</p>
-            <p>{{data[2].total}}</p>
+            <p>{{ data[2].groupName }}</p>
+            <p>{{ data[2].total }}</p>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
           <p>代表队</p>
           <p>总分</p>
         </div>
-        <div class="content">
+        <vueSeamless :classOption="classOption" :data="data" class="content scroll">
           <template v-for="(item, index) in data">
             <div :key="item.groupName" v-if="index > 2">
               <p>{{ index + 1 }}</p>
@@ -39,20 +39,20 @@
               <p>{{ item.total }}</p>
             </div>
           </template>
-        </div>
+        </vueSeamless>
       </div>
     </div>
     <div class="podium">
       <div class="two">
-        <p v-if="data[1]">{{this.data[1].groupName}}</p>
+        <p v-if="data[1]">{{ this.data[1].groupName }}</p>
         <span>2</span>
       </div>
       <div class="one">
-        <p v-if="data[0]">{{this.data[0].groupName}}</p>
+        <p v-if="data[0]">{{ this.data[0].groupName }}</p>
         <span>1</span>
       </div>
       <div class="three">
-        <p v-if="data[2]">{{this.data[2].groupName}}</p>
+        <p v-if="data[2]">{{ this.data[2].groupName }}</p>
         <span>3</span>
       </div>
     </div>
@@ -60,14 +60,21 @@
 </template>
 
 <script>
+import vueSeamless from 'vue-seamless-scroll'
 export default {
+  components: { vueSeamless },
   props: {
     data: {
       type: [Object, Array],
     },
   },
   data() {
-    return {}
+    return {
+      classOption: {
+        step: 0.3,
+        limitMoveNum: 16,
+      },
+    }
   },
   methods: {},
 }
@@ -77,14 +84,18 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 100%;
+
   .list {
     width: 49%;
+
     .box {
       width: 100%;
       margin-bottom: 50px;
+
       .title {
         display: flex;
         width: 100%;
+
         p {
           flex: 1;
           text-align: center;
@@ -92,10 +103,12 @@ export default {
           font-size: 26px;
         }
       }
+
       .content {
         div {
           display: flex;
           width: 100%;
+
           p {
             flex: 1;
             text-align: center;
@@ -109,12 +122,19 @@ export default {
       }
     }
   }
+
+  .scroll {
+    height: 55%;
+    overflow: hidden;
+  }
+
   .podium {
     position: relative;
     top: 20%;
     display: flex;
     width: 49%;
     height: 100%;
+
     .one {
       position: relative;
       width: 32%;
@@ -124,6 +144,7 @@ export default {
       font-size: 30px;
       font-weight: bolder;
       background: linear-gradient(to bottom, #ef2928, transparent);
+
       p {
         position: absolute;
         left: 50%;
@@ -135,6 +156,7 @@ export default {
         white-space: nowrap;
       }
     }
+
     .two {
       position: relative;
       width: 32%;
@@ -145,6 +167,7 @@ export default {
       font-weight: bolder;
       margin-top: 30px;
       background: linear-gradient(to bottom, #ffc21f, transparent);
+
       p {
         position: absolute;
         left: 50%;
@@ -156,6 +179,7 @@ export default {
         white-space: nowrap;
       }
     }
+
     .three {
       position: relative;
       width: 32%;
@@ -166,6 +190,7 @@ export default {
       font-weight: bolder;
       margin-top: 60px;
       background: linear-gradient(to bottom, #7ec4ff, transparent);
+
       p {
         position: absolute;
         left: 50%;

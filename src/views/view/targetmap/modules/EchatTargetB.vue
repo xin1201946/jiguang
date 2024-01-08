@@ -72,7 +72,7 @@
     <g class="dot" v-for="(item, i) in dots" :key="i">
       <circle :r="state.indexOf('手枪') != -1 ? '8.5':'4'" :fill="i == dots.length -1 ? '#D2D66D' : '#09BEEA'" :cx="item.x_coord * 3.938" :cy="(160 - item.y_coord) * 3.938">
       </circle>
-      <text text-anchor="middle" dominant-baseline="middle" :x="item.x_coord * 3.938" :y="(160-item.y_coord) * 3.938" font-size="8" fill="#000">{{item.shootCode}}</text>
+      <text text-anchor="middle" dominant-baseline="middle" :x="item.x_coord * 3.938" :y="(160-item.y_coord) * 3.938" font-size="6" fill="#000">{{item.shootCode}}</text>
     </g>
   </svg>
 </template>

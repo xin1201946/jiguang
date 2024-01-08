@@ -232,7 +232,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 494px;
+  height: 620px;
   .div1 {
     position: relative;
     flex: 0 0 50%;
@@ -255,8 +255,8 @@ export default {
     align-items: center;
     justify-content: center;
     // width: 25%;
-    width: 244px;
-    height: 244px;
+    width: 310px;
+    height: 310px;
     overflow: hidden;
     border-radius: 50%;
 
@@ -273,8 +273,8 @@ export default {
       }
 
       .buqiang1 {
-        width: 845px;
-        height: 845px;
+        width: 1050px;
+        height: 1050px;
       }
     }
   }

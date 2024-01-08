@@ -1,61 +1,38 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-select
-        :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'"
-        style="width: 300px"
-        v-model="contestId"
-        @change="handleContest"
-      >
-        <a-select-option
-          v-for="(item, i) in treeList"
-          :key="i"
-          :value="item.contestId"
-        >{{item.contestName}}</a-select-option>
+      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId"
+        @change="handleContest">
+        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{ item.contestName
+        }}</a-select-option>
       </a-select>
     </div>
     <div class="cards">
       <TreeCard>
         <template slot="tree">
           <a-radio-group v-if="list.length" v-model="tree" @change="handleTreeChange">
-            <a-radio
-              :style="style"
-              v-for="item in list"
-              :key="item.value"
-              :value="item.value"
-            > {{ item.label }}
+            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value"> {{ item.label }}
             </a-radio>
           </a-radio-group>
-          <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else/>
+          <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else />
         </template>
         <template slot="query">
-          <QuerySearch
-            ref="query"
-            @reset="handleSearch"
-            @submit="handleSearch"
-          ></QuerySearch>
+          <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch"></QuerySearch>
         </template>
         <template slot="operator">
           <RealTimeViewPrint ref="print"></RealTimeViewPrint>
           <PrintModal ref="modal"></PrintModal>
         </template>
         <template slot="default">
-          <a-table
-            :columns="columns"
-            :data-source="data"
-            rowKey="playerId"
-            :pagination="pagination"
-            @change="handleTableChange"
-            bordered
-            :scroll="{x: 1400}"
-          >
+          <a-table :columns="columns" :data-source="data" rowKey="playerId" :pagination="pagination"
+            @change="handleTableChange" bordered :scroll="{ x: 1400 }">
             <!--            <template slot="total" slot-scope="text, record, index">
                           <a @click="$refs.modals.init">{{ text }}</a>
                         </template>-->
             <template slot="operation" slot-scope="text, record, index">
               <a-space>
                 <!--                <a-icon type="profile" />-->
-<!--                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>-->
+                <!--                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>-->
                 <a-button type="primary" size="small" ghost icon="profile" @click="handlePrint(record)">成绩打印</a-button>
                 <!--                <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
@@ -132,7 +109,7 @@ export default {
       immediate: true
     }
   },
-  created() {},
+  created() { },
   methods: {
     handlePrint(record) {
       if (this.treeLabel.includes('团体')) {
@@ -142,7 +119,7 @@ export default {
           playerName: record.playerName,
           playerId: record.playerId,
           groupName: record.groupName,
-          cproStageId: record.stageId
+          cproStageId: this.query.cproStageId
         }
         bizPlayerFinalScoreSportsScoresListGroup(data).then(res => {
           if (res.code === 200) {
@@ -151,17 +128,16 @@ export default {
               stageName: this.treeLabel,
               stageId: this.query.cproStageId
             })
-          }else {
+          } else {
             this.$message.warning(res.message)
           }
         })
-      }else{
-        // console.log(this.query.cproStageId)
-        // console.log(record)
+      } else {
         bizPlayerFinalScoreSportsScoresList({
           contestId: record.contestId,
           playerId: record.playerId,
-          cproId: this.tree
+          cproId: this.tree,
+          cproStageId: this.query.cproStageId
         }).then(res => {
           if (res.code === 200) {
             this.$refs.print.init({
@@ -169,7 +145,7 @@ export default {
               stageName: this.treeLabel,
               stageId: this.query.cproStageId
             })
-          }else {
+          } else {
             this.$message.warning(res.message)
           }
         })
@@ -216,7 +192,7 @@ export default {
       })
     },
     // 获取阶段
-    getStage () {
+    getStage() {
       bizContestProjectStageList({
         cproId: this.tree,
         contestId: this.contestId
@@ -231,13 +207,13 @@ export default {
             }
           })
           this.getUserName(data)
-        }else {
+        } else {
           this.getUserName([])
         }
       })
     },
     // 获取项目
-    getProjectList () {
+    getProjectList() {
       bizContestProjectList({
         contestId: this.contestId
       }).then(res => {
@@ -255,7 +231,7 @@ export default {
             this.tree = data[0].value
             this.treeLabel = data[0].projectName
             this.list = data
-          }else {
+          } else {
             this.tree = ''
             this.list = []
           }
@@ -265,7 +241,7 @@ export default {
       })
     },
     // 获取比赛信息
-    getTreeList () {
+    getTreeList() {
       bizContestList({}).then(res => {
         this.treeList = res.result
         this.contestId = res.result[0].contestId
@@ -286,7 +262,7 @@ export default {
           // title: numToCapital((i + 1) * 10),
           title: (i + 1) * 10,
           align: 'center',
-          dataIndex: `scoreList${i+1}`
+          dataIndex: `scoreList${i + 1}`
         })
       }
       // children.push({
@@ -294,7 +270,7 @@ export default {
       //   align: 'center'
       // })
 
-      this.columns = RealTimeViewTableColumns.map( item => {
+      this.columns = RealTimeViewTableColumns.map(item => {
         if (item.children) {
           return {
             ...item,
@@ -320,13 +296,13 @@ export default {
           this.$nextTick(() => {
             if (res.result.records.length) {
               this.data = res.result.records
-            }else {
+            } else {
               this.data = []
             }
           })
           console.log(res)
         })
-      }else{
+      } else {
         const data = {
           ...this.query,
           pageNum: this.pagination.current,
@@ -343,20 +319,20 @@ export default {
             this.$nextTick(() => {
               if (res.result.records.length) {
                 this.data = res.result.records
-              }else {
+              } else {
                 this.data = []
               }
               this.pagination.current = res.result.current
               this.pagination.total = res.result.total
             })
-          } else{
+          } else {
             this.data = []
             this.pagination.total = 0
           }
         })
       }
     },
-    handleTreeChange (v) {
+    handleTreeChange(v) {
       // console.log(this.tree)
       this.treeLabel = this.list.filter(item => item.value === this.tree)[0].projectName
 
@@ -373,7 +349,8 @@ export default {
       bizPlayerFinalScoreSportsScoresList({
         contestId: record.contestId,
         playerId: record.playerId,
-        cproId: this.tree
+        cproId: this.tree,
+        cproStageId: record.stageId
       }).then(res => {
         // console.log(res)
         // const body = document.body
@@ -396,9 +373,11 @@ export default {
 
 <style scoped lang="less">
 @btnHeight: 50px;
-.RealTimeView{
+
+.RealTimeView {
   height: 100%;
   overflow-y: hidden;
+
   .btns {
     height: @btnHeight;
     background: #fff;
@@ -410,7 +389,8 @@ export default {
     box-sizing: border-box;
     padding: 0 20px;
     justify-content: space-between;
-    /deep/.ant-page-header-heading{
+
+    /deep/.ant-page-header-heading {
       display: flex;
       align-items: center;
     }
