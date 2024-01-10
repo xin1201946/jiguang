@@ -274,7 +274,7 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-        console.log(res)
+        // console.log(res)
       })
     },
     rulesDisabled(item) {
@@ -332,7 +332,7 @@ export default {
         contestId: this.formData.data[i].contestId,
         cproId: this.formData.data[i].cproId
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.formData.data[i].stageIds = res.result
       })
     },
@@ -402,7 +402,7 @@ export default {
         })
       }
       if (num === 2) {
-        console.log(num)
+        // console.log(num)
         const data = this.formData.data.filter(item => item.configName.includes("手枪")).map(item => {
           const obj = {
             ...item,

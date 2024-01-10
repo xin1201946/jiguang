@@ -164,6 +164,8 @@ export const eliminationFinal = data => postAction("contest-process/eliminationF
 export const sameFinals = data => postAction("contest-process/sameFinals", data)
 // 切换分组
 export const changeGroup = data => postAction("contest-process/changeGroup", data)
+// 变更分组
+export const changeGroupContest = data => postAction("contest-process/changeGroupContest", data)
 
 // 导出参赛人员
 export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)
