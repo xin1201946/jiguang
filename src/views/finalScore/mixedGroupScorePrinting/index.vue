@@ -18,8 +18,17 @@
         </template>
         <template slot="operator">
           <a-space>
-            <a-button :disabled="!list.length" type="primary" @click="getStageList">成绩打印</a-button>
+            <a-button :disabled="!list.length" @click="handleSubmit" type="primary" icon="search">查询</a-button>
+            <a-button :disabled="!list.length" type="primary" @click="handlePrint">成绩打印</a-button>
           </a-space>
+        </template>
+        <template slot="default">
+          <a-table v-show="dataSource.length" :columns="columns" :data-source="dataSource" rowKey="i" :pagination="false"
+            @change="handleTableChange" bordered :scroll="{ x: 1400 }">
+            <a-table :pagination="false" bordered slot="expandedRowRender" slot-scope="record"
+              :columns="record.innerColumns" :data-source="record.innerData" :scroll="{ x: 1400 }"></a-table>
+          </a-table>
+          <a-empty v-show="!dataSource.length" description="当前项目数据, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
     </div>
@@ -30,6 +39,10 @@
 import TreeCard from '@comp/card/TreeCard.vue'
 import { RealTimeViewTreeStyle } from '@views/Competition/RealTimeView/RealTimeView.config'
 import { bizContestList, bizContestProjectList, massingSportsList, } from '@api/competition'
+import {
+  groupCardColumns,
+  groupCardInnerColumns
+} from './groupScorePtint.config'
 import { Time } from '@/utils'
 export default {
   name: "mixedGroupScorePrinting", //混团成绩
@@ -38,6 +51,16 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        current: 1,
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+      },
       form: this.$form.createForm(this, {
         name: 'search'
       }),
@@ -55,6 +78,11 @@ export default {
       title: '',
       dataTitle: '',
       mixParameters: undefined, //左侧选择后需要的参数
+      columns: groupCardColumns,
+      scroll: {
+        x: 1500
+      },
+      dataSource: [],
     }
   },
   computed: {},
@@ -72,6 +100,11 @@ export default {
   },
   created() { },
   methods: {
+    // 分页
+    handleTableChange(pagination) {
+      this.pagination = pagination
+      this.getList()
+    },
     // 获取比赛信息
     getTreeList() {
       bizContestList({}).then((res) => {
@@ -90,7 +123,6 @@ export default {
       bizContestProjectList({
         contestId: this.contestId,
       }).then((res) => {
-        // console.log(res)
         if (res.code === 200) {
           // 查询下拉框
           if (res.result.length && res.result.filter(item => item.projectName.includes("团体")).length) {
@@ -104,6 +136,7 @@ export default {
             this.tree = data[0].value
             this.mixParameters = data[0].value
             this.list = data
+            this.getStageList()
           } else {
             this.tree = ''
             this.list = []
@@ -117,12 +150,10 @@ export default {
     },
     // 混团
     groupContent() {
-      console.log('混团123132132132')
       const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
       const label = this.list.filter(item => item.value === this.tree)[0]
       const project = this.list.filter(item => item.value === this.tree)[0]
       // // 父表格合并组数
-      console.log(this.groupArrayData)
       let g = 0
       if (this.groupArrayData[0].groupList.length) {
         g = this.groupArrayData[0].groupList.length
@@ -138,7 +169,6 @@ export default {
         const ths = []
         for (let i = 0; i < g; i++) {
           // if (this.groupArrayData[0].groupList.length) {
-          //   console.log(this.groupArrayData[0].groupList[i]);
           //   // ths.push(`<th>${this.groupArrayData[0].groupList[i]}</th>`)
           // } else {
           ths.push(`<th>${(i + 1) * 10}</th>`)
@@ -148,7 +178,6 @@ export default {
       }
       // // 子表格及父表格数据
       const tr = (i) => {
-        // console.log(i)
         const rows = this.groupArrayData.map((item, index) => {
           // if (i >= index + 1) {
           const printTds = []
@@ -162,10 +191,10 @@ export default {
           const tdsboy = []
           const tdsgril = []
           for (const boy of item.boyList) {
-            tdsboy.push(`<td>${boy.gunGroupTotal}</td>`)
+            tdsboy.push(`<td>${boy.gunGroupTotalStr}</td>`)
           }
           for (const gril of item.grilList) {
-            tdsgril.push(`<td>${gril.gunGroupTotal}</td>`)
+            tdsgril.push(`<td>${gril.gunGroupTotalStr}</td>`)
           }
           trs.push(`
             <tr >
@@ -180,7 +209,7 @@ export default {
               ${tdsboy.join("")}
               <td>${item.boyList[0].stageTotal}</td>
             </tr>`)
-            
+
           return (`
             <tr style="background: #ccc">
               <td style="${item.i + 1 == 10 ? 'border-top: 1px solid #000;background: #ccc' : 'background: #ccc'}" >${index + 1}</td>
@@ -195,12 +224,12 @@ export default {
 
         return rows.join("")
       }
-      const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
-        `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
-      ))
+      // const imgs = window._CONFIG.printSponsorBottomImgs.map((item, index) => (
+      //   `<img src="../${item}" style="width: calc(${(100 / window._CONFIG.printSponsorBottomImgs.length)}% - ${((6 * 2) * window._CONFIG.printSponsorBottomImgs.length)}px); height: 2.5cm;margin: 0 6px"/>`
+      // ))
       const pages = [`
       <div style="position: relative;overflow: hidden;">
-          <img src="../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="../../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
           <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -239,14 +268,15 @@ export default {
           </div>
         </div>-->
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-            <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+            <img src="../../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `]
       for (let i = 0; i < ((this.data.length - 6) / 6).toFixed(0); i++) {
+        // 
         pages.push(
           `
           <div style="position: relative;overflow: hidden;">
-          <img src="../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="../../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="2">
           <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -285,7 +315,7 @@ export default {
           </div>
         </div>-->
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-          <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="../../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `
         )
@@ -312,7 +342,6 @@ export default {
     handlePrint() {
       const print = (fn) => {
         const title = this.mixParameters
-        console.log(title, '12')
         const iframe = document.createElement('iframe')
         document.body.appendChild(iframe)
         iframe.contentWindow.document.open()
@@ -327,7 +356,6 @@ export default {
             const body = iframe.contentDocument.body.scrollHeight
             const pageHeight = body + foot.scrollHeight
             const pageCount = Math.ceil(pageHeight / totalHeight)
-            console.log(title)
             // 显示
             if (pageCount === 1) { }
             // 隐藏 追加
@@ -366,7 +394,6 @@ export default {
                   // newfooter.style.marginBottom = foot.scrollHeight + 'px'
                 }
               }
-              console.log(newfooter)
               footer.style.visibility = 'hidden'
               iframe.contentDocument.body.append(newfooter)
             }
@@ -389,6 +416,7 @@ export default {
     // 打印
     // 成绩打印调用接口
     getStageList() {
+      this.data = []
       // 类型
       var index = this.mixParameters.indexOf('枪') // 获取"枪"的索引位置  
       if (index !== -1) {
@@ -402,16 +430,104 @@ export default {
         type: resultType + '枪',
       }
       massingSportsList(arr).then((res) => {
-        console.log(res)
         if (res.code === 200) {
           this.groupArrayData = res.result
-          this.handlePrint()
-          console.log(this.groupArrayData, '1')
+          this.getColumns(this.groupArrayData[0].groupList)
+          const list = res.result.map(item => {
+            let total = 0
+            const obj = {}
+            for (let i = 0; i < item.groupList.length; i++) {
+              if (!isNaN(Number(item.groupList[i]))) {
+                total += Number(item.groupList[i])
+                obj[`teamScoreList${i + 1}`] = item.groupList[i]
+              }
+            }
+            const t = item.groupList.length
+            let children = []
+            if (Array.isArray(t)) {
+              for (let i = 0; i < t.length; i++) {
+                children.push({
+                  title: t[i],
+                  width: 100,
+                  align: 'center',
+                  dataIndex: `teamScoreList${i + 1}`
+                })
+              }
+            } else {
+              for (let i = 0; i < t; i++) {
+                children.push({
+                  title: (i + 1) * 10,
+                  width: 100,
+                  align: 'center',
+                  dataIndex: `teamScoreList${i + 1}`
+                })
+              }
+            }
+            const innerColumns = groupCardInnerColumns.map(i => {
+              if (i.children) {
+                return {
+                  ...i,
+                  children: children
+                }
+              }
+              return i
+            })
+            // 队员名字分数 拼组
+            var objboy = {}
+            var objgril = {}
+            for (let i = 0; i < item.boyList.length; i++) {
+              objboy.playerName = item.boyList[1].playerName
+              objboy.stageTotal = item.boyList[1].stageTotal
+              objboy[`teamScoreList${i + 1}`] = item.boyList[i].gunGroupTotalStr
+            }
+            for (let i = 0; i < item.grilList.length; i++) {
+              objgril.playerName = item.grilList[1].playerName
+              objgril.stageTotal = item.grilList[1].stageTotal
+              objgril[`teamScoreList${i + 1}`] = item.grilList[i].gunGroupTotalStr
+            }
+            return {
+              ...item,
+              ...obj,
+              total,
+              // 队员名字分数
+              innerColumns,
+              innerData: [
+                { ...objgril },
+                { ...objboy }
+              ]
+            }
+          })
+          this.dataSource = list
         } else {
           this.$message.error(res.message)
         }
       })
-      // this.handlePrint()
+    },
+    // 获取比赛成绩表头
+    getColumns(total) {
+      let children = []
+      for (let i = 0; i < total.length; i++) {
+        children.push({
+          // title: numToCapital((i + 1) * 10),
+          title: (i + 1) * 10,
+          align: 'center',
+          width: 100,
+          dataIndex: `teamScoreList${i + 1}`
+        })
+      }
+      this.columns = groupCardColumns.map(item => {
+        if (item.children) {
+          return {
+            ...item,
+            children: children
+          }
+        }
+        return item
+      })
+    },
+    // 查询
+    handleSubmit() {
+      this.getStageList()
     },
   },
 }
