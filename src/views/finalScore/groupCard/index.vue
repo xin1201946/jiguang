@@ -334,7 +334,7 @@
         console.log(this.data[0].finalList[0])
         const project = this.list.filter(item => item.value === this.tree)[0]
         // 父表格合并组数
-        // console.log(this.data)
+        console.log(this.data,'12321213213aa')
         let g = 0
         if (this.data[0].shoots.length) {
           g = this.data[0].shoots.length

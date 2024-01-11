@@ -54,7 +54,7 @@ export const JeecgListMixin = {
   created() {
       if(!this.disableMixinCreated){
         console.log(' -- mixin created -- ')
-        if(this.visible){
+        if(!this.visible){
           this.loadData();
         }
         //初始化字典配置 在自己页面定义

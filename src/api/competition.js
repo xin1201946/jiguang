@@ -170,3 +170,6 @@ export const changeGroupContest = data => postAction("contest-process/changeGrou
 // 导出参赛人员
 export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)
 
+// 混团成绩打印 资格赛 
+export const massingSportsList = data => postAction("bizPlayerFinalScore/massingSportsList", data)
+

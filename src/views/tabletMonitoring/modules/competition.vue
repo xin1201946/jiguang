@@ -117,11 +117,9 @@ export default {
     },
     init(res) {
       this.params = res
-      console.log(res,'11111');
       this.loadData(1)
     },
     loadData(arg) {
-      console.log(arg)
       if (arg === 1) {
         this.ipagination.current = 1
       }

@@ -75,7 +75,6 @@ export default {
       })
     },
     loadData(arg) {
-      console.log(arg)
       if (arg === 1) {
         this.ipagination.current = 1
       }
