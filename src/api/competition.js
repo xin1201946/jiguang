@@ -79,6 +79,8 @@ export const bizPlayerFinalScoreSportsScoresList = data => postAction('bizPlayer
 export const bizPlayerFinalScoreSportsScoresListGroup = data => postAction("bizPlayerFinalScore/sportsScoresListGroup", data)
 export const bizPlayerFinalScoreQueryById = id => getAction(`bizPlayerFinalScore/queryById/${id}`)
 
+export const selectStageStatusList = (data) => postAction("contest-process/selectStageStatusList", data)
+// contest-process/selectStageStatusList
 
 /**
  * 比赛安排
@@ -170,6 +172,6 @@ export const changeGroupContest = data => postAction("contest-process/changeGrou
 // 导出参赛人员
 export const downloadProjectItem = param => downFile("bizContestPlayer/downloadProjectItem", param)
 
-// 混团成绩打印 资格赛 
+// 混团成绩打印 资格赛
 export const massingSportsList = data => postAction("bizPlayerFinalScore/massingSportsList", data)
 

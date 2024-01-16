@@ -24,8 +24,15 @@
           <PrintModal ref="modal"></PrintModal>
         </template>
         <template slot="default">
-          <a-table :columns="columns" :data-source="data" rowKey="playerId" :pagination="pagination"
-            @change="handleTableChange" bordered>
+          <a-table
+            :columns="columns"
+            :data-source="data"
+            rowKey="playerId"
+            :pagination="pagination"
+            @change="handleTableChange"
+            bordered
+            :rowClassName="rowClassName"
+          >
             <!--            <template slot="total" slot-scope="text, record, index">
                           <a @click="$refs.modals.init">{{ text }}</a>
                         </template>-->
@@ -112,6 +119,17 @@ export default {
   },
   created() { },
   methods: {
+    rowClassName(record, index) {
+      if (record.remark) {
+        if (record.remark.toUpperCase() === "DNF"){
+          return "dnf"
+        }
+        if (record.remark.toUpperCase() === "DNS"){
+          return 'dns'
+        }
+      }
+      return "null"
+    },
     handlePrint(record) {
       if (this.treeLabel.includes('团体')) {
         const data = {
@@ -399,6 +417,20 @@ export default {
 
   .cards {
     height: calc(100% - @btnHeight - 10px);
+    /*/deep/.ant-table-tbody{
+      .null{
+      }
+      .dnf{
+        background: #79beec;
+      }
+      .dns{
+        background: #eeb478;
+        //background: #79beec;
+      }
+    }*/
   }
 }
+
+//DNS是弃权   DNF是未完成比赛
+//  橙色
 </style>

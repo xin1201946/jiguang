@@ -286,6 +286,7 @@ export default {
           } else {
             this.personallyFinalsList.List = [[]]
           }
+          console.log(this.personallyFinalsList, 123456)
         })
       } else if (['步枪团体排名', '手枪团体排名'].indexOf(this.state) != -1) {
         getTeamScoresAPI({ screenName: this.state }).then((res) => {

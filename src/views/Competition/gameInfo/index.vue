@@ -61,10 +61,10 @@
               <a-space style="margin-bottom: 20px;">
                 <span>总人数：{{ this.dataSource.length }}</span>
                 <span v-if="status">当前状态：{{ status }}</span>
-                <a-button @click.stop="handleZhunbei(i)">准备</a-button>
-                <a-button @click.stop="handleShishe(i)" v-if="isAdjustment == '1'">试射</a-button>
-                <a-button @click.stop="handleBisai(i)">开始</a-button>
-                <a-button @click.stop="handleEnd(i)">结束</a-button>
+                <a-button @click.stop="handleZhunbei()">准备</a-button>
+                <a-button @click.stop="handleShishe()" v-if="isAdjustment == '1'">试射</a-button>
+                <a-button @click.stop="handleBisai()">开始</a-button>
+                <a-button @click.stop="handleEnd()">结束</a-button>
               </a-space>
               <div class="table_box_total_right">
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
@@ -106,7 +106,9 @@
         <a-space style="margin-bottom: 20px;" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"
+        <a-table
+          bordered v-if="!groupActive"
+          rowKey="playerId" :columns="columns" :dataSource="dataSource"
           :pagination="false">
           <template slot="operation">
 
@@ -136,6 +138,7 @@
         <GameInfoChangeGroup ref="gameChangeGroupRef" @ok="changeGroupRefHandle" />
         <!-- 平板监控 -->
         <TabletMonitoring ref="TabletMonitoringRef" />
+        <GameInfoStartModal ref="start" @list="getTableList"></GameInfoStartModal>
       </TreeCard>
     </div>
   </div>
@@ -158,6 +161,7 @@ import GameInfoSameScoreModal from '@views/Competition/gameInfo/modal/gameInfoSa
 import GameInfoSwitchGrouping from '@views/Competition/gameInfo/modal/gameInfoSwitchGrouping.vue'
 import GameInfoChangeGroup from '@views/Competition/gameInfo/modal/gameInfoChangeGroup.vue'
 import TabletMonitoring from '../../tabletMonitoring/index'
+import GameInfoStartModal from '@views/Competition/gameInfo/modal/gameInfoStartModal.vue'
 
 import {
   bizContestProjectList,
@@ -182,7 +186,7 @@ import {
   eliminationFinal,
   sameFinals,
   changeGroup, //切换分组
-  changeGroupContest,//变更分组
+  changeGroupContest, selectStageStatusList//变更分组
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -204,6 +208,7 @@ export default {
     GameInfoSwitchGrouping,
     GameInfoChangeGroup,
     TabletMonitoring, //平板监控
+    GameInfoStartModal
   },
   inject: ['closeCurrent'],
   data() {
@@ -254,6 +259,14 @@ export default {
       }
       if (r.eliminationStatus == 1) {
         return 'taotai'
+      }
+      if (r.remark) {
+        if (r.remark.toUpperCase() === "DNF"){
+          return "dnf"
+        }
+        if (r.remark.toUpperCase() === "DNS"){
+          return 'dns'
+        }
       }
     },
     /**
@@ -781,17 +794,27 @@ export default {
       console.log('shishe')
     },
     handleBisai(row) {
-      // console.log('bisai')
-      startFire({
-        stageId: this.cproStageId, //项目阶段id
-        group: this.group,
-      }).then((res) => {
-        if (res.success) {
-          this.$message.success('操作成功！')
-        } else {
-          this.$message.error(res.message)
+      selectStageStatusList().then(r => {
+        if (r.result.length) {
+          this.$refs.start.init(r, {
+            stageId: this.cproStageId, //项目阶段id
+            group: this.group,
+          })
+          // console.log(this.$refs.start)
+        }else {
+          startFire({
+            stageId: this.cproStageId, //项目阶段id
+            group: this.group,
+          }).then((res) => {
+            if (res.success) {
+              this.$message.success('操作成功！')
+            } else {
+              this.$message.error(res.message)
+            }
+          })
         }
       })
+
     },
     handleEnd() {
       endFire({
@@ -931,6 +954,12 @@ export default {
   background: rgba(124, 124, 124, 0.3);
 }
 
+/deep/.dnf{
+  background: #79beec;
+}
+/deep/.dns{
+  background: #eeb478;
+}
 .gameInfo {
   height: 100%;
   overflow: hidden;

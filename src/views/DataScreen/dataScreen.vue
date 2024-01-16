@@ -75,7 +75,8 @@
                 <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
               </div>
               <div style="width: 80px;">{{ item.total }}</div>
-              <div style="width: 60px;">{{ item.remarkPenalty }}</div>
+<!--              <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
+              <div style="width: 60px;">{{ item.remark }}</div>
               <div style="width: 30px">{{ item.bePromoted }}</div>
             </div>
           </div>
@@ -93,7 +94,8 @@
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
                 <div style="width: 80px;">{{ item.total }}</div>
-                <div style="width: 60px;">{{ item.remarkPenalty }}</div>
+<!--                <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
+                <div style="width: 60px;">{{ item.remark }}</div>
                 <div style="width: 30px">{{ item.bePromoted }}</div>
               </div>
             </div>
@@ -117,7 +119,8 @@
               </div>
               <div style="flex: 1;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.diff }}</div>
-              <div style="flex: 1;">{{ item.remarkPenalty }}</div>
+<!--              <div style="flex: 1;">{{ item.remarkPenalty }}</div>-->
+              <div style="flex: 1;">{{ item.remark }}</div>
             </div>
           </div>
           <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1">
@@ -285,7 +288,6 @@ export default {
   },
   mounted() {
     document.body.style.overflow = 'hidden'
-
     this.getList()
     this.time = setInterval(() => {
       this.getData()
@@ -427,6 +429,7 @@ export default {
                     bePromoted: '',
                   }
                 })
+                console.log(data)
                 // data.listsList = [
                 //   ...data.listsList,
                 // ]
@@ -446,6 +449,7 @@ export default {
       littleScreen({
         type: data.configName,
       }).then((res) => {
+        console.log(res)
         data.finalEight = []
         const { result } = res
         data.projectName = result.projectName

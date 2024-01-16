@@ -206,7 +206,7 @@ export default {
                     <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
                     <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.projectGroup}${this.formData.projectName}</th></tr>
                     <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.dtlDto.title}</th></tr>
+                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.dtlDto.title || this.list[0].title}</th></tr>
                     <tr style="height: 50px; line-height: 50px">
                       <th>发序</th>
                       <th>环数</th>
