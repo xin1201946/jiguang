@@ -48,7 +48,7 @@
             :pagination="projectName.includes('团体') ? false : pagination"
             @change="handleTableChange"
             bordered
-            :scroll="projectName.includes('团体')? {x: 1300}:{x: 2000}"
+            :scroll="projectName.includes('团体')? {x: 1300}:{x: 1400}"
           >
             <template slot="playerName" slot-scope="text, record, index">
               <div v-html="text.join('<br/>')"></div>
@@ -129,9 +129,9 @@ export default {
         groupName: undefined
       },
       columns: RealTimeViewTableColumns,
-      scroll: {
-        x: 1500
-      },
+      // scroll: {
+      //   x: 1500
+      // },
 
       projectName: ''
     }
@@ -273,6 +273,7 @@ export default {
             // title: numToCapital((i + 1) * 10),
             title: total[i],
             align: 'center',
+            width:'100px',
             dataIndex: `scoreList${i+1}`
           })
         }
@@ -292,6 +293,7 @@ export default {
             // title: numToCapital((i + 1) * 10),
             title: (i + 1) * 10,
             align: 'center',
+            width:'100px',
             dataIndex: `scoreList${i+1}`
           })
         }

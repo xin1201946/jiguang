@@ -4,7 +4,7 @@
       <a-descriptions bordered :columns="4" title="个人信息">
         <a-descriptions-item label="姓名" :span="1">{{formData.playerName}}</a-descriptions-item>
         <a-descriptions-item label="性别" :span="1">{{formData.playerSex == '1' ? '男' : '女'}}</a-descriptions-item>
-        <a-descriptions-item label="团体名称" :span="1">{{formData.groupName}}</a-descriptions-item>
+        <a-descriptions-item label="代表队" :span="1">{{formData.groupName}}</a-descriptions-item>
         <a-descriptions-item label="靶位" :span="1">{{formData.targetSite}}</a-descriptions-item>
         <a-descriptions-item label="总环数" :span="2">{{formData.totalScore}}</a-descriptions-item>
         <!--        <a-descriptions-item label="组数" :span="1"></a-descriptions-item>-->

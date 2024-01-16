@@ -13,7 +13,7 @@
         <a-descriptions-item :span="2" label="选手名称">{{ formData.playerName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目名称">{{formData.projectName}}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目组别">{{formData.projectGroup}}</a-descriptions-item>
-        <a-descriptions-item :span="2" label="团体名称">{{ formData.groupName }}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="代表队">{{ formData.groupName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="阶段名称">{{ formData.stageName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="阶段组别">{{ formData.stageGroup }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="总成绩">{{

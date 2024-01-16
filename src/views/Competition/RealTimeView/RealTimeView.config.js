@@ -61,9 +61,9 @@ export const RealTimeViewQuery = [
   },
   {
     type: 'input',
-    label: '团体名称',
+    label: '代表队',
     rules: ['groupName'],
-    placeholder: '请输入团体名称',
+    placeholder: '请输入代表队',
     span: 5
   },
 ]
@@ -72,46 +72,44 @@ export const RealTimeViewTableColumns = [
     title: '姓名',
     align: 'center',
     dataIndex: 'playerName',
-    width: 100
   },
-  {
-    title: '项目',
-    align: 'center',
-    dataIndex: 'projectName',
-    width: 200
-  },
+  // {
+  //   title: '项目',
+  //   align: 'center',
+  //   dataIndex: 'projectName',
+  //   width: 200
+  // },
   {
     title: '阶段',
     align: 'center',
     dataIndex: 'stageName',
-    width: 150
   },
   {
-    title: '团体名称',
+    title: '代表队',
     align: 'center',
     dataIndex: 'groupName',
-    width: 150
+    width:240
   },
- /*  {
-    title: '阶段状态',
-    align: 'center',
-    dataIndex: 'stageStatus',
-    customRender: text => getLabel(stageStatus, text)
-  }, */
-  {
-    title: '阶段组别',
-    align: 'center',
-    dataIndex: 'stageGroup',
-    width: 100
-    // customRender: text => getLabel(stageStatus, text)
-  },
-  {
-    title: '项目组别',
-    align: 'center',
-    dataIndex: 'projectGroup',
-    width: 150
-    // customRender: text => getLabel(stageStatus, text)
-  },
+  /*  {
+     title: '阶段状态',
+     align: 'center',
+     dataIndex: 'stageStatus',
+     customRender: text => getLabel(stageStatus, text)
+   }, */
+  // {
+  //   title: '阶段组别',
+  //   align: 'center',
+  //   dataIndex: 'stageGroup',
+  //   width: 100
+  //   // customRender: text => getLabel(stageStatus, text)
+  // },
+  // {
+  //   title: '项目组别',
+  //   align: 'center',
+  //   dataIndex: 'projectGroup',
+  //   width: 150
+  //   // customRender: text => getLabel(stageStatus, text)
+  // },
   {
     title: '总成绩',
     align: 'center',
@@ -131,7 +129,6 @@ export const RealTimeViewTableColumns = [
   {
     title: "比赛成绩",
     children: [],
-    width: 600
   },
   {
     title: "操作",
@@ -151,10 +148,15 @@ export const RealTimeViewTableColumnsPrint = [
     align: 'center',
     dataIndex: 'playerName'
   },
+  // {
+  //   title: '项目',
+  //   align: 'center',
+  //   dataIndex: 'projectName'
+  // },
   {
-    title: '项目',
+    title: '靶位',
     align: 'center',
-    dataIndex: 'projectName'
+    dataIndex: 'targetSite'
   },
   // {
   //   title: '阶段',
@@ -162,7 +164,7 @@ export const RealTimeViewTableColumnsPrint = [
   //   dataIndex: 'stageName'
   // },
   {
-    title: '团体名称',
+    title: '代表队',
     align: 'center',
     dataIndex: 'groupName'
   },
@@ -178,12 +180,12 @@ export const RealTimeViewTableColumnsPrint = [
   //   dataIndex: 'stageGroup',
   //   // customRender: text => getLabel(stageStatus, text)
   // },
-  {
-    title: '项目组别',
-    align: 'center',
-    dataIndex: 'projectGroup',
-    // customRender: text => getLabel(stageStatus, text)
-  },
+  // {
+  //   title: '项目组别',
+  //   align: 'center',
+  //   dataIndex: 'projectGroup',
+  //   // customRender: text => getLabel(stageStatus, text)
+  // },
   /* {
     title: '总成绩',
     align: 'center',
@@ -222,7 +224,14 @@ export const RealTimeViewQueryPrint = [
     placeholder: '请选择阶段名称',
     data: [],
     value: '',
-    span: 5
+    span: 4
+  },
+  {
+    type: 'input',
+    label: '靶位',
+    rules: ['targetSite'],
+    placeholder: '请输入靶位',
+    span: 4
   },
   {
     type: 'search',
@@ -233,38 +242,38 @@ export const RealTimeViewQueryPrint = [
   },
   {
     type: 'input',
-    label: '团体名称',
+    label: '代表队',
     rules: ['groupName'],
-    placeholder: '请输入团体名称',
+    placeholder: '请输入代表队',
     span: 5
   },
 ]
 
 
 export function autoPaginate(el) {
-  var printContent = document.getElementById(el);
-  var children = printContent.childNodes;
-  var i = 0, len = children.length;
-  var pageCount = 1;
-  var wrapper;
+  var printContent = document.getElementById(el)
+  var children = printContent.childNodes
+  var i = 0, len = children.length
+  var pageCount = 1
+  var wrapper
 
   for (; i < len; i++) {
     if (isElement(children[i])) {
       // 如果元素相对于视窗的距离加上元素的自身高度大于
       // 视窗的高度，则新建一个wrapper并插入分页符。
       if (children[i].offsetTop + children[i].offsetHeight > pageCount * window.innerHeight) {
-        wrapper = document.createElement("div");
-        wrapper.className = "print-page";
-        printContent.insertBefore(wrapper, children[i]);
-        pageCount++;
+        wrapper = document.createElement("div")
+        wrapper.className = "print-page"
+        printContent.insertBefore(wrapper, children[i])
+        pageCount++
       }
-      wrapper.appendChild(children[i].cloneNode(true));
+      wrapper.appendChild(children[i].cloneNode(true))
     }
   }
 }
 
 function isElement(obj) {
-  return obj.nodeType === 1;
+  return obj.nodeType === 1
 }
 
 

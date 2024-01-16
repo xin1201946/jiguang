@@ -25,7 +25,7 @@
         </template>
         <template slot="default">
           <a-table :columns="columns" :data-source="data" rowKey="playerId" :pagination="pagination"
-            @change="handleTableChange" bordered :scroll="{ x: 1400 }">
+            @change="handleTableChange" bordered>
             <!--            <template slot="total" slot-scope="text, record, index">
                           <a @click="$refs.modals.init">{{ text }}</a>
                         </template>-->
@@ -88,7 +88,8 @@ export default {
       query: {
         playerName: undefined,
         cproStageId: undefined,
-        groupName: undefined
+        groupName: undefined,
+        targetSite: undefined,
       },
       columns: RealTimeViewTableColumnsPrint,
       scroll: {

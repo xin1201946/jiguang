@@ -8,7 +8,7 @@
   >
     <div class="modal">
       <a-descriptions bordered :column="4">
-        <a-descriptions-item :span="2" label="团体名称">{{formData.groupName}}</a-descriptions-item>
+        <a-descriptions-item :span="2" label="代表队">{{formData.groupName}}</a-descriptions-item>
         <a-descriptions-item :span="2" label="阶段名称">{{ formData.stageName }}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目名称">{{formData.projectName}}</a-descriptions-item>
         <a-descriptions-item :span="2" label="项目组别">{{formData.projectGroup}}</a-descriptions-item>
@@ -121,7 +121,7 @@ export default {
 <!--          <div style="text-align: center"><img style="width: 40%;margin-bottom: 20px" src="../${window._CONFIG.printSponsorImg}" alt=""></div>-->
           <!-- <div style="display: grid; grid-template-rows: repeat(2, 50px); grid-template-columns: repeat(2, 50%); border: 1px solid">
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-right: 1px solid; border-bottom: 1px solid">
-              <div style="width: 40%;text-align: center;border-right: 1px solid">团体名称:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
+              <div style="width: 40%;text-align: center;border-right: 1px solid">代表队:</div><div style="width: 60%;text-align: center">${this.formData.groupName}</div>
             </div>
             <div style="display: flex;width: 100%;justify-content: space-around;height: 50px;line-height: 50px;border-bottom: 1px solid">
               <div style="width: 40%;text-align: center;border-right: 1px solid">阶段名称:</div><div style="width: 60%;text-align: center">${this.formData.stageName}</div>

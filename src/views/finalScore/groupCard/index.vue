@@ -466,7 +466,7 @@
             <img src="../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `];
-        for (let i = 0; i < ((this.data.length - 6) / 6).toFixed(0); i++) {
+        for (let i = 0; i < Number(((this.data.length - 6) / 6).toFixed(1)); i++) {
           pages.push(
             `
           <div style="position: relative;overflow: hidden;">

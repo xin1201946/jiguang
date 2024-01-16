@@ -147,6 +147,7 @@ export default {
     // 左侧选中
     handleTreeChange(v) {
       this.mixParameters = v.target.value
+      this.getStageList();
     },
     // 混团
     groupContent() {

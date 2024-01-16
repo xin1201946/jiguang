@@ -6,12 +6,12 @@ export const reportCardFinalColumns = [
     dataIndex: "i"
   },
   {
-    title: '团队',
+    title: '代表队',
     align: 'center',
     dataIndex: 'groupName'
   },
   {
-    title: '团队总成绩',
+    title: '代表队总成绩',
     align: 'center',
     dataIndex: 'stageTotal'
   },
@@ -38,7 +38,7 @@ export const reportCardStageColumns = [
     dataIndex: 'playerName'
   },
   {
-    title: '团体',
+    title: '代表队',
     align: 'center',
     dataIndex: 'groupName'
   },

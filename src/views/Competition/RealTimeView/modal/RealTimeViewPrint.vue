@@ -4,7 +4,7 @@
       <div>
         <a-descriptions bordered :column="4">
           <a-descriptions-item :span="2" label="选手名称">{{ formData.playerName }}</a-descriptions-item>
-          <a-descriptions-item :span="2" label="团体名称">{{ formData.groupName }}</a-descriptions-item>
+          <a-descriptions-item :span="2" label="代表队">{{ formData.groupName }}</a-descriptions-item>
           <a-descriptions-item :span="2" label="项目名称">{{ formData.projectName ||
             formData.detailScoreList[0].projectName }}</a-descriptions-item>
           <a-descriptions-item :span="2" label="项目组别">{{ formData.projectGroup ||

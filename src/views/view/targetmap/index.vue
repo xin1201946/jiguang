@@ -154,9 +154,9 @@ export default {
         },
         {
           type: 'input',
-          label: '团体名称',
+          label: '代表队',
           rules: ['d'],
-          placeholder: '请输入团体名称'
+          placeholder: '请输入代表队'
         },
       ],
       treeList: [],

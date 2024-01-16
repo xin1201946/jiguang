@@ -5,7 +5,7 @@ export const groupCardColumns = [
     dataIndex: 'i'
   },
   {
-    title: '团队',
+    title: '代表队',
     align: 'center',
     dataIndex: 'groupName'
   },
