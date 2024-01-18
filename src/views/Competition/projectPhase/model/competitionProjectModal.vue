@@ -64,8 +64,8 @@
           :showTime="showTime"
           valueFormat="YYYY-MM-DD HH:mm:ss"
           :disabledDate="disabledDate"
-          :disabledTime="disabledTime"
         ></a-range-picker>
+        <!-- :disabledTime="disabledTime" -->
       </a-form-model-item>
 
     </a-form-model>

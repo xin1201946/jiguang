@@ -13,8 +13,7 @@
       <TreeCard ref="treeCard">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup">
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup" :title="item.projectName + ' - ' + item.projectGroup">
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -35,10 +34,8 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary"
-              @click="nextStageHandle">下一阶段</a-button>
-            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary"
-              @click="nextStageHandle">结束阶段</a-button>
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary" @click="nextStageHandle">结束阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
@@ -52,8 +49,7 @@
         <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
             <a-tabs v-model="group" @change="radioChangeHandle">
-              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group"
-                :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group" :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -70,16 +66,13 @@
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="i"
-              :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
+            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
               <template slot="operation" slot-scope="text, record">
                 <a-space>
                   <!--                  总环数为空不渲染成绩详情按钮-->
-                  <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary" size="small"
-                    ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop"
-                    @click="handleStop(record)">停止比赛</a-button>
+                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
                   <a-dropdown>
                     <a style="display:block;width: 80px" @click="e => e.preventDefault()"> 更多 <a-icon type="down" />
                     </a>
@@ -106,10 +99,7 @@
         <a-space style="margin-bottom: 20px;" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table
-          bordered v-if="!groupActive"
-          rowKey="playerId" :columns="columns" :dataSource="dataSource"
-          :pagination="false">
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource" :pagination="false">
           <template slot="operation">
 
           </template>
@@ -186,7 +176,8 @@ import {
   eliminationFinal,
   sameFinals,
   changeGroup, //切换分组
-  changeGroupContest, selectStageStatusList//变更分组
+  changeGroupContest,
+  selectStageStatusList, //变更分组
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -208,7 +199,7 @@ export default {
     GameInfoSwitchGrouping,
     GameInfoChangeGroup,
     TabletMonitoring, //平板监控
-    GameInfoStartModal
+    GameInfoStartModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -261,10 +252,10 @@ export default {
         return 'taotai'
       }
       if (r.remark) {
-        if (r.remark.toUpperCase() === "DNF"){
-          return "dnf"
+        if (r.remark.toUpperCase() === 'DNF') {
+          return 'dnf'
         }
-        if (r.remark.toUpperCase() === "DNS"){
+        if (r.remark.toUpperCase() === 'DNS') {
           return 'dns'
         }
       }
@@ -465,7 +456,12 @@ export default {
      * 打开变更组别 handleGrouping
      */
     handleGrouping(row) {
-      this.$refs.gameChangeGroupRef.init({ ...row, cproId: this.cproId, stageGroup: this.group, stageId: this.cproStageId })
+      this.$refs.gameChangeGroupRef.init({
+        ...row,
+        cproId: this.cproId,
+        stageGroup: this.group,
+        stageId: this.cproStageId,
+      })
     },
     /**
      * 变更组别
@@ -522,6 +518,7 @@ export default {
     pushPadHandle() {
       this.loading2 = true
       propePlayerSiteToPad({
+        playerIds: this.selectedRowKeys,
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
@@ -530,6 +527,8 @@ export default {
         .then((res) => {
           if (res.success) {
             this.$message.success('推送成功！')
+            this.selectedRowKeys = []
+            this.selectionRows = []
           } else {
             this.$message.error(res.message)
           }
@@ -765,7 +764,7 @@ export default {
         this.$refs.treeCard.loading = false
       }
     },
-    onExpand() { },
+    onExpand() {},
     handleZhunbei(row) {
       // console.log('zhunbei')
       ready({
@@ -782,11 +781,14 @@ export default {
     handleShishe(row) {
       // console.log('@!#@!!@#@!')
       fireAdjust({
+        playerIds: this.selectedRowKeys,
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
       }).then((res) => {
         if (res.success) {
           this.$message.success('操作成功！')
+          his.selectedRowKeys = []
+          this.selectionRows = []
         } else {
           this.$message.error(res.message)
         }
@@ -794,27 +796,29 @@ export default {
       console.log('shishe')
     },
     handleBisai(row) {
-      selectStageStatusList().then(r => {
+      selectStageStatusList().then((r) => {
         if (r.result.length) {
           this.$refs.start.init(r, {
             stageId: this.cproStageId, //项目阶段id
             group: this.group,
           })
           // console.log(this.$refs.start)
-        }else {
+        } else {
           startFire({
             stageId: this.cproStageId, //项目阶段id
             group: this.group,
+            playerIds: this.selectedRowKeys,
           }).then((res) => {
             if (res.success) {
               this.$message.success('操作成功！')
+              his.selectedRowKeys = []
+              this.selectionRows = []
             } else {
               this.$message.error(res.message)
             }
           })
         }
       })
-
     },
     handleEnd() {
       endFire({
@@ -882,7 +886,7 @@ export default {
         })
       }
     },
-    groupListHandle() { },
+    groupListHandle() {},
 
     // 平板监控
     handleTablet() {
@@ -894,7 +898,7 @@ export default {
         stageGroup: this.group,
       }
       this.$refs.TabletMonitoringRef.init(res)
-    }
+    },
   },
   mounted() {
     this.data = JSON.parse(decodeURI(this.$route.query.row))
@@ -913,9 +917,9 @@ export default {
           selected
             ? this.selectionRows.push(record)
             : this.selectionRows.splice(
-              this.selectionRows.findIndex((x) => x.id === record.id),
-              1
-            )
+                this.selectionRows.findIndex((x) => x.id === record.id),
+                1
+              )
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
           this.selectionRows = selected
@@ -939,7 +943,7 @@ export default {
 
 /deep/.treeCard .treeCard_tree {
   overflow: scroll;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 /deep/.red {
@@ -954,10 +958,10 @@ export default {
   background: rgba(124, 124, 124, 0.3);
 }
 
-/deep/.dnf{
+/deep/.dnf {
   background: #79beec;
 }
-/deep/.dns{
+/deep/.dns {
   background: #eeb478;
 }
 .gameInfo {
@@ -1013,7 +1017,8 @@ export default {
         display: flex;
       }
 
-      .ant-tree-treenode-selected {}
+      .ant-tree-treenode-selected {
+      }
 
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal {
         display: flex;
