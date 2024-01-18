@@ -76,6 +76,11 @@ export const slabTableColumns = [
     align: 'center'
   },
   {
+    title: '靶位',
+    dataIndex: 'targetSite',
+    align: 'center'
+  },
+  {
     title: '平板名称',
     dataIndex: 'tabletPcName',
     align: 'center'
