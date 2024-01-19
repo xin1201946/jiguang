@@ -61,6 +61,11 @@ export default {
           align: 'center',
         },
         {
+          title: '靶位',
+          dataIndex: 'targetSite',
+          align: 'center',
+        },
+        {
           title: '激光训练器编号',
           dataIndex: 'deviceNum0',
           align: 'center',
