@@ -1,27 +1,13 @@
 <template>
-  <BizModal
-    width="800"
-    :title="title"
-    :visible="visible"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    :loading="loadingModal"
-  >
-   <div class="modal">
-     <a-table
-       :columns="columns"
-       rowKey="id"
-       :dataSource="table"
-       :pagination="false"
-       bordered
-       size="small"
-     >
-       <template slot="operation" slot-scope="record">
-         <!--       <span @click="edit(record)">123456</span>-->
-         <a-button @click="edit(record)">结束阶段</a-button>
-       </template>
-     </a-table>
-   </div>
+  <BizModal width="800" :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
+    <div class="modal">
+      <a-table :columns="columns" rowKey="id" :dataSource="table" :pagination="false" bordered size="small">
+        <template slot="operation" slot-scope="record">
+          <!--       <span @click="edit(record)">123456</span>-->
+          <a-button @click="edit(record)">结束阶段</a-button>
+        </template>
+      </a-table>
+    </div>
   </BizModal>
 </template>
 
@@ -32,20 +18,26 @@ import { infoMessage, numToCapital } from '@/utils'
 export default {
   name: 'gameInfoStartModal',
   components: {
-    BizModal
+    BizModal,
   },
   data() {
     return {
-      title: "正在进行的阶段",
+      title: '正在进行的阶段',
       visible: false,
       loadingModal: false,
       option: {},
       table: [],
       columns: [
         {
-          title: "项目名称",
-          key: "cproName",
-          dataIndex: "cproName",
+          title: '赛事名称',
+          key: 'contestName',
+          align: 'center',
+          dataIndex: 'contestName',
+        },
+        {
+          title: '项目名称',
+          key: 'cproName',
+          dataIndex: 'cproName',
           customRender: (text, record, index) => {
             return `${record.cproName} - ${record.projectGroup}`
           },
@@ -57,29 +49,29 @@ export default {
           dataIndex: "projectGroup"
         }, */
         {
-          title: "阶段名称",
-          key: "stageName",
+          title: '阶段名称',
+          key: 'stageName',
           align: 'center',
-          dataIndex: "stageName"
+          dataIndex: 'stageName',
         },
         {
-          title: "阶段组别",
-          key: "stageGroup",
-          dataIndex: "stageGroup",
+          title: '阶段组别',
+          key: 'stageGroup',
+          dataIndex: 'stageGroup',
           align: 'center',
           customRender: (text, record, index) => {
             return `${numToCapital(record.stageGroup)}组`
           },
         },
         {
-          title: "操作",
+          title: '操作',
           align: 'center',
           scopedSlots: {
-            customRender: 'operation'
+            customRender: 'operation',
           },
           width: 100,
         },
-      ]
+      ],
     }
   },
   methods: {
@@ -89,30 +81,32 @@ export default {
         this.table = data.result
         this.option = option
         this.visible = true
-      }else {
+      } else {
         this.$message.warning(data.message)
       }
     },
     handleOk() {
-      startFire(this.option).then(res => {
+      startFire(this.option).then((res) => {
         if (res.success) {
           this.$message.success('操作成功！')
           this.visible = false
-          this.$emit("list")
+          this.$emit('list')
         } else {
           this.$message.error(res.message)
         }
       })
     },
     edit(record) {
-      infoMessage(`是否结束${record.cproName}-${record.projectGroup}  ${record.stageName}${numToCapital(record.stageGroup)}组`).then(() => {
+      infoMessage(
+        `是否结束${record.cproName}-${record.projectGroup}  ${record.stageName}${numToCapital(record.stageGroup)}组`
+      ).then(() => {
         endFire({
           stageId: record.stageId,
-          group: record.stageGroup
-        }).then(res => {
+          group: record.stageGroup,
+        }).then((res) => {
           if (res.success) {
             this.$message.success('结束成功！')
-            selectStageStatusList().then(r => {
+            selectStageStatusList().then((r) => {
               if (r.code === 200) {
                 this.table = r.result
               }
@@ -125,17 +119,16 @@ export default {
     },
     handleCancel() {
       this.visible = false
-    }
-  }
+    },
+  },
 }
 </script>
 
 
 <style scoped lang="less">
-.modal{
+.modal {
   height: 100%;
   overflow: hidden;
   overflow-y: auto;
-
 }
 </style>

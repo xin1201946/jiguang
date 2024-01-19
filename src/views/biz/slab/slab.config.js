@@ -78,6 +78,9 @@ export const slabTableColumns = [
   {
     title: '靶位',
     dataIndex: 'targetSite',
+    scopedSlots: {
+      customRender: 'targetSite'
+    },
     align: 'center'
   },
   {
@@ -96,7 +99,7 @@ export const slabTableColumns = [
     dataIndex: 'deviceGunType',
     align: 'center',
     customRender: (text, item) => {
-      return item.deviceGunType === '0'? '长款激光训练器' : item.deviceGunType === '1'? '短款激光训练器' : ''
+      return item.deviceGunType === '0' ? '长款激光训练器' : item.deviceGunType === '1' ? '短款激光训练器' : ''
     }
   },
   {

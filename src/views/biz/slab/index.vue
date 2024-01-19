@@ -1,11 +1,7 @@
 <template>
   <Card>
     <template slot="query">
-      <QuerySearch
-        ref="search"
-        @reset="handleSearch"
-        @submit="handleSearch"
-      ></QuerySearch>
+      <QuerySearch ref="search" @reset="handleSearch" @submit="handleSearch"></QuerySearch>
     </template>
     <template slot="operator">
       <a-space>
@@ -14,15 +10,10 @@
       </a-space>
     </template>
     <template slot="default">
-      <a-table
-        :columns="columns"
-        :data-source="data"
-        rowKey="tabletPcId"
-        :pagination="pagination"
-        @change="handleTableChange"
-        bordered
-        :scroll="{x: 1400}"
-      >
+      <a-table :columns="columns" :data-source="data" rowKey="tabletPcId" :pagination="pagination" @change="handleTableChange" bordered :scroll="{x: 1400}">
+        <template slot="targetSite" slot-scope="text, record, index">
+          <a-input @blur="setValueHandle(record)" v-model="record.targetSite"></a-input>
+        </template>
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
             <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record, 'device')">编辑</a-button>
@@ -30,7 +21,7 @@
           </a-space>
         </template>
       </a-table>
-      <SlabModal ref="modal" @list="handleList"/>
+      <SlabModal ref="modal" @list="handleList" />
     </template>
   </Card>
 </template>
@@ -39,7 +30,7 @@
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import Card from '@comp/card/card.vue'
 import { slabQuery, slabTableColumns, tabletPcModel } from '@views/biz/slab/slab.config'
-import { bizTabletPcPageList, bizTabletPcDelete, bizTabletPcSync } from '@api/biz'
+import { bizTabletPcPageList, bizTabletPcDelete, bizTabletPcSync, updateTarget } from '@api/biz'
 import SlabModal from '@views/biz/slab/model/SlabModal.vue'
 import bizMixins from '@views/biz/bizMixins'
 import { deleteMessage } from '@/utils'
@@ -48,7 +39,7 @@ export default {
   components: {
     Card,
     QuerySearch,
-    SlabModal
+    SlabModal,
   },
   mixins: [bizMixins],
   data() {
@@ -59,8 +50,8 @@ export default {
         tabletPcNum: undefined,
         tabletPcName: undefined,
         tabletPcStatus: undefined,
-        tabletPcModel: undefined
-      }
+        tabletPcModel: undefined,
+      },
     }
   },
   mounted() {
@@ -68,14 +59,25 @@ export default {
     this.getList()
   },
   methods: {
+    setValueHandle(row) {
+      updateTarget({
+        pcNo: row.tabletPcNum, //平板编号
+        targetSite: row.targetSite, //靶位号
+      }).then((res) => {
+        if (res.success) {
+          this.$message.success('编辑靶位成功！')
+          this.getList()
+        }
+      })
+    },
     // 列表查询
     getList() {
       const data = {
         ...this.query,
         pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
       }
-      bizTabletPcPageList(data).then(res => {
+      bizTabletPcPageList(data).then((res) => {
         if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
@@ -84,26 +86,25 @@ export default {
       })
     },
     handleSync() {
-      bizTabletPcSync().then(res => {
+      bizTabletPcSync().then((res) => {
         if (res.code === 200) {
           this.$message.success('平板同步成功')
           this.pagination.current = 1
           this.getList()
-        }else {
+        } else {
           this.$message.error(res.message)
         }
       })
     },
     handleDelete(record) {
-      deleteMessage("是否删除当前平板信息").then(() => {
+      deleteMessage('是否删除当前平板信息').then(() => {
         bizTabletPcDelete(record.tabletPcId).then(this.deleteCallback)
       })
-    }
+    },
   },
 }
 </script>
 
 
 <style scoped lang="less">
-
 </style>

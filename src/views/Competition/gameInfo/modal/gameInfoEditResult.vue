@@ -70,10 +70,16 @@ export default {
       title: '修改成绩',
       visible: false,
       loadingModal: false,
-      formData: {},
+      formData: {
+        x_coord: '0',
+        y_coord: '0',
+        current_mode: '1',
+        voice_status: '1',
+      },
       type: '',
       rules: {
         score: {
+          required: true,
           validator: (rule, value, callback) => {
             if (value < 0) {
               callback('分数不得小于0！')
@@ -86,12 +92,12 @@ export default {
         },
         group_num: { required: true, message: '请输入当前组数', trigger: ['change', 'blur'] },
         shoot_code: { required: true, message: '请输入命中序号', trigger: ['change', 'blur'] },
-        score: { required: true, message: '请输入命中环数', trigger: ['change', 'blur'] },
-        direction_point: { required: true, message: '请选择命中区位', trigger: ['change', 'blur'] },
-        x_coord: { required: true, message: '请输入命中坐标x', trigger: ['change', 'blur'] },
-        y_coord: { required: true, message: '请输入命中坐标y', trigger: ['change', 'blur'] },
-        begin_time: { required: true, message: '请选择开始时间', trigger: ['change', 'blur'] },
-        current_mode: { required: true, message: '请选择当前模式', trigger: ['change', 'blur'] },
+        // score: { required: true, message: '请输入命中环数', trigger: ['change', 'blur'] },
+        // direction_point: { required: true, message: '请选择命中区位', trigger: ['change', 'blur'] },
+        // x_coord: { required: true, message: '请输入命中坐标x', trigger: ['change', 'blur'] },
+        // y_coord: { required: true, message: '请输入命中坐标y', trigger: ['change', 'blur'] },
+        // begin_time: { required: true, message: '请选择开始时间', trigger: ['change', 'blur'] },
+        // current_mode: { required: true, message: '请选择当前模式', trigger: ['change', 'blur'] },
       },
     }
   },
@@ -112,7 +118,13 @@ export default {
       this.visible = true
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
-        this.formData = { ...row }
+        this.formData = {
+          ...row,
+          x_coord: '0',
+          y_coord: '0',
+          current_mode: '1',
+          voice_status: '1',
+        }
         this.type = type
       })
     },

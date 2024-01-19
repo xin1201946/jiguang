@@ -19,9 +19,9 @@ export const bizTabletPcSync = () => getAction("bizTabletPc/sync")
 
 
 // 报名表分页查询
-export const bizEntryFormPageList = data => postAction('/bizEntryForm/page/list',data)
+export const bizEntryFormPageList = data => postAction('/bizEntryForm/page/list', data)
 // 报名保存
-export const bizEntryFormSave = data => postAction('/bizEntryForm/save',data)
+export const bizEntryFormSave = data => postAction('/bizEntryForm/save', data)
 // 报名删除
 export const bizEntryFormDelete = id => deleteAction(`/bizEntryForm/delete/${id}`)
 // 报名修改
@@ -50,8 +50,11 @@ export const bizProjectList = (data = {}) => postAction("bizProject/list", data)
  */
 export const bizDevicePageList = data => postAction('bizDevice/page/list', data)
 export const bizDeviceSave = data => postAction('bizDevice/save', data)
-export const bizDeviceUpdate = data => postAction('bizDevice/update',data)
+export const bizDeviceUpdate = data => postAction('bizDevice/update', data)
 export const bizDeviceDelete = id => deleteAction(`bizDevice/delete/${id}`)
 export const bizDeviceList = data => postAction("bizDevice/list", data)
 //同步
 export const bizDeviceSync = data => getAction("bizDevice/sync")
+
+//编辑靶位
+export const updateTarget = data => postAction("bizTabletPc/updateTarget", data)

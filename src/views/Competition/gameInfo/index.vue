@@ -796,7 +796,11 @@ export default {
       console.log('shishe')
     },
     handleBisai(row) {
-      selectStageStatusList().then((r) => {
+      selectStageStatusList({
+        contestId: this.data.contestId,
+        cproId: this.cproId, //赛事项目id
+        stageGroup: this.group,
+      }).then((r) => {
         if (r.result.length) {
           this.$refs.start.init(r, {
             stageId: this.cproStageId, //项目阶段id
