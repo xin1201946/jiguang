@@ -55,7 +55,7 @@
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
                 <div style="width: 80px;">{{ item.total }}</div>
-                <div style="width: 60px;">{{ item.remarkPenalty }}</div>
+                <div style="width: 60px;">{{ item.remark }}</div>
                 <div style="width: 30px">{{ item.bePromoted }}</div>
               </div>
             </div>
@@ -115,7 +115,7 @@
                 {{ item[k] }}
               </div>
               <div style="flex: 1;" v-for="(n, i) in data.number" :key="n">
-                {{ item.sameScoreList && item.sameScoreList[i] ? item.sameScoreList[i].score : '' }}
+                {{ item.sameScoreList && item.sameScoreList[i] ? item.sameScoreList[i].scores : '' }}
               </div>
               <div style="flex: 1;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.diff }}</div>
