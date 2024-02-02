@@ -16,7 +16,7 @@
         <a-form-model-item label="选择比赛（左）">
           <a-select style="width: 100%" v-model="name1">
             <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configName">
-              {{item.configName}}
+              {{ item.configName }}
             </a-select-option>
           </a-select>
           <span v-if="data != 2" style="color: #FF0000">展示数量为一时默认全屏</span>
@@ -24,7 +24,7 @@
         <a-form-model-item label="选择比赛（右）" v-if="data == 2">
           <a-select style="width: 100%" v-model="name2">
             <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configName">
-              {{item.configName}}
+              {{ item.configName }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
@@ -59,8 +59,16 @@ export default {
       if (this.name1 == this.name2) {
         return this.$message.error('选择的两场比赛相同了!')
       }
-      let arr = this.dataScreenList.filter((item) => item.configName === this.name1 || item.configName === this.name2)
-
+      // let arr = this.dataScreenList.filter((item) => item.configName === this.name1 || item.configName === this.name2)
+      let arr = []
+      if (this.name1) {
+        arr[0] = this.dataScreenList.filter((item) => item.configName === this.name1)[0]
+      }
+      if (this.name2) {
+        arr[1] = this.dataScreenList.filter((item) => item.configName === this.name2)[0]
+      }
+      // console.log(arr, '123', arr[0])
+      // return
       this.$router.replace({
         path: '/DataScreen/index',
         query: {
@@ -93,6 +101,7 @@ export default {
   margin: 0 auto;
   text-align: center;
 }
+
 .title {
   text-align: center;
   font-size: 50px;

@@ -804,7 +804,7 @@ export default {
 }
 
 .head {
-  height: 10%;
+  height: 9%;
   font-size: 24px;
   font-weight: 800;
   padding: 30px 30px 10px 30px;
@@ -816,16 +816,16 @@ export default {
 
     .left {
       display: flex;
-      font-size: 20px;
+      font-size: 15px;
 
       .logo {
-        height: 80px;
+        height: 70px;
         margin-top: -20px;
       }
     }
 
     .right {
-      font-size: 20px;
+      font-size: 15px;
       text-align: right;
 
       .nameTitle {}
@@ -878,7 +878,7 @@ export default {
 
   div {
     text-align: center;
-    font-size: 18px;
+    font-size: 20px;
     // font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
