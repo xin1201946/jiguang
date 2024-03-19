@@ -59,6 +59,10 @@ export const bizContestProjectPlayerUpdatePlayer = data => postAction("bizContes
 export const bizContestPlayerSave = data => postAction('bizContestPlayer/save', data)
 
 export const bizContestProjectPlayerDelete = id => deleteAction(`bizContestProjectPlayer/delete/${id}`)
+// 阶段组别
+export const processSelectGroupList = data => postAction('contest-process/selectGroupList', data)
+// 查询空闲靶位
+export const processSelectTargetList = data => postAction('contest-process/selectTargetList', data)
 /**
  * 赛事审核
  */
