@@ -113,6 +113,7 @@ export default {
         projectGroup: [{ required: true, message: '请选择项目组别', trigger: 'blur' }],
       },
       list: [],
+      contestId: 0
     }
   },
   methods: {
@@ -121,7 +122,11 @@ export default {
         if (v) {
           this.loadingModal = true
           if (this.type === 1) {
-            bizContestPlayerUpdate(this.formData).then(this.callback)
+            let data = {
+              ...this.formData,
+              contestId: this.contestId
+            }
+            bizContestPlayerUpdate(data).then(this.callback)
           }
           if (this.type === 0) {
             const data = JSON.parse(JSON.stringify(this.formData))

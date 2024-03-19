@@ -46,11 +46,13 @@
           <a-table :scroll="{x: 1400}" :columns="columns" :data-source="data" :pagination="pagination" rowKey="playerId" @change="handleTableChange" bordered size="small" :row-selection="rowSelection">
             <template slot="operation" slot-scope="text, record">
               <a-space v-if="status === '0'">
-                <a-button :disabled="t !== '全部'" type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
+                <!-- :disabled="t !== '全部'" -->
+                <a-button  type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
                 <!--              <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
               <a-space v-else>
-                <a-button disabled type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
+                <!-- disabled -->
+                <a-button  type="primary" size="small" ghost icon="edit" @click="handleEdits(record, 'event')">编辑</a-button>
                 <!--              <a-button disabled type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
             </template>
@@ -367,6 +369,7 @@ export default {
     handleEdits(record) {
       console.log(this.treeList)
       this.$refs.modal.list = this.treeList
+      this.$refs.modal.contestId = this.contestId
       this.handleEdit(record)
     },
   },
