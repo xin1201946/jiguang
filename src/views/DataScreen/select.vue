@@ -1,6 +1,5 @@
 <template>
   <div :dur="20" class="DataScreen container">
-    <h1 class="title">河北省中学生射击锦标赛</h1>
     <div class="box">
       <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 14 }" ref="form" :model="formData">
         <a-form-model-item label="展示比赛数量">
@@ -29,13 +28,18 @@
           </a-select>
         </a-form-model-item>
       </a-form-model>
-      <a-button type="primary" style="text-align:center;" @click="handleFullscreen()">进入大屏</a-button>
+      <a-button type="primary" style="text-align:center;" @click="updataScreen">更新</a-button>
     </div>
   </div>
 </template>
 
 <script>
-import { getDataScreenList } from '@/api/competition'
+import {
+  getDataScreenList,
+  getDataScreenConfigApi,
+  getDataScreenConfigUpdataApi,
+  getDataScreenCurrentConfigApi,
+} from '@/api/competition'
 import { fullscreen } from '@/utils'
 export default {
   data() {
@@ -45,19 +49,38 @@ export default {
       formData: {},
       name1: '',
       name2: '',
+      screenId: 0,
     }
   },
   mounted() {
     document.body.style.overflow = 'hidden'
-    getDataScreenList({}).then((res) => {
-      this.dataScreenList = res.result
-      console.log(res)
-    })
   },
   methods: {
-    handleFullscreen() {
+    getList() {
+      getDataScreenList({}).then((res) => {
+        this.dataScreenList = res.result
+        // 回显当前选中的
+        getDataScreenConfigApi().then((data) => {
+          this.data = data.result[0].amount
+          this.screenId = data.result[0].screenId
+          if (this.data == 1) {
+            this.name1 = data.result[0].leftConfigName
+          } else if (this.data == 2) {
+            this.name1 = data.result[0].leftConfigName
+            this.name2 = data.result[0].rightConfigName
+          }
+        })
+      })
+    },
+    updataScreen() {
       if (this.name1 == this.name2) {
         return this.$message.error('选择的两场比赛相同了!')
+      }
+      if (!this.name1) {
+        return this.$message.error('选择比赛!')
+      }
+      if (this.data == 2 && !this.name2) {
+        return this.$message.error('选择比赛!')
       }
       // let arr = this.dataScreenList.filter((item) => item.configName === this.name1 || item.configName === this.name2)
       let arr = []
@@ -67,15 +90,20 @@ export default {
       if (this.name2) {
         arr[1] = this.dataScreenList.filter((item) => item.configName === this.name2)[0]
       }
-      // console.log(arr, '123', arr[0])
-      // return
-      this.$router.replace({
-        path: '/DataScreen/index',
-        query: {
-          arr: JSON.stringify(arr),
-        },
+      let data = {
+        amount: this.data * 1,
+        leftConfigId: arr[0].configId,
+        rightConfigId: arr[1].configId,
+        screenId: this.screenId,
+      }
+      if (arr.length == 1) {
+        data['leftConfigId'] = arr[0].configId
+      } else if (arr.length == 2) {
+        data['rightConfigId'] = arr[1].configId
+      }
+      getDataScreenConfigUpdataApi(data).then((res) => {
+        this.$message.success('更新成功！')
       })
-      fullscreen()
     },
   },
 }

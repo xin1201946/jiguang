@@ -35,8 +35,7 @@
       <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
         <!--    表头-->
         <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i'
-            :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
             {{ item.name }}
           </div>
         </div>
@@ -49,8 +48,7 @@
                 <div style="width: 60px">{{ item.targetSite }}</div>
                 <div style="width: 100px">{{ item.playerName }}</div>
                 <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                  v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
@@ -69,13 +67,12 @@
               <div style="width: 60px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+              <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                 <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
               </div>
               <div style="width: 80px;">{{ item.total }}</div>
-<!--              <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
+              <!--              <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
               <div style="width: 60px;">{{ item.remark }}</div>
               <div style="width: 30px">{{ item.bePromoted }}</div>
             </div>
@@ -88,13 +85,12 @@
                 <div style="width: 60px">{{ item.targetSite }}</div>
                 <div style="width: 100px">{{ item.playerName }}</div>
                 <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                  v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
                 <div style="width: 80px;">{{ item.total }}</div>
-<!--                <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
+                <!--                <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
                 <div style="width: 60px;">{{ item.remark }}</div>
                 <div style="width: 30px">{{ item.bePromoted }}</div>
               </div>
@@ -105,8 +101,7 @@
         <div style="width: 100%;height: 100%;" v-if="data.configName.indexOf('个人决赛') != -1">
           <!--    前8位-->
           <div :class="data.finalEight.length == 0 ? '' : 'finalEight'">
-            <div v-for="(item, i) in data.finalEight" :key="i"
-              :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
+            <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
               <div style="width: 60px">{{ item.rank }}</div>
               <div style="width: 60px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
@@ -119,7 +114,7 @@
               </div>
               <div style="flex: 1;">{{ item.total }}</div>
               <div style="flex: 1;">{{ item.diff }}</div>
-<!--              <div style="flex: 1;">{{ item.remarkPenalty }}</div>-->
+              <!--              <div style="flex: 1;">{{ item.remarkPenalty }}</div>-->
               <div style="flex: 1;">{{ item.remark }}</div>
             </div>
           </div>
@@ -167,16 +162,14 @@
         </div>
       </div>
       <!-- 混团赛 -->
-      <div class="box_box"
-        v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+      <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
         <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
       </div>
       <!-- 团队赛 -->
       <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
         <!--    表头-->
         <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i'
-            :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
             {{ item.name }}
           </div>
         </div>
@@ -207,7 +200,13 @@
 </template>
 
 <script>
-import { getMixeTeamFinalsListAPI, getTeamScoresAPI, getTeamTotalScores, littleScreen } from '@api/competition'
+import {
+  getMixeTeamFinalsListAPI,
+  getTeamScoresAPI,
+  getTeamTotalScores,
+  littleScreen,
+  getDataScreenCurrentConfigApi,
+} from '@api/competition'
 import Display from '@views/control/display/index.vue'
 import mixedClusterIndex from './modules/mixedClusterIndex.vue'
 // 靶图
@@ -256,39 +255,63 @@ export default {
       rankingList: [],
       fiftyRounds: '0',
 
-      dos: [
-        // { x_coord: '58.3', y_coord: '40.1', shootCode: '1' },
-        // { x_coord: '86', y_coord: '60.8', shootCode: '2' },
-        // { x_coord: '90.4', y_coord: '67.6', shootCode: '3' },
-        // { x_coord: '77.2', y_coord: '87.4', shootCode: '4' },
-        // { x_coord: '67.9', y_coord: '81.5', shootCode: '5' },
-        // { x_coord: '59.5', y_coord: '61.6', shootCode: '6' },
-        // { x_coord: '80', y_coord: '80', shootCode: '7' },
-      ],
+      dos: [],
+      timer: null,
+      currentProject: [],
     }
   },
   created() {
-    this.projectList = JSON.parse(this.$route.query.arr)
-    this.projectList.map((item) => {
-      item['fiftyRounds'] = 0
-      item['finalEight'] = []
-      item['list'] = []
-      item['listsList'] = []
-      item['projectName'] = ''
-      item['stageGroup'] = ''
-      item['stageName'] = ''
-      item['bisaiTime'] = ''
-      item['contestName'] = ''
-      item['addr'] = ''
-      item['th'] = []
-      item['shootGroups'] = 0
-      item['rankingList'] = []
-      item['number'] = 0
+    getDataScreenCurrentConfigApi().then((res) => {
+      this.currentProject = JSON.parse(JSON.stringify(res.result))
+      this.projectList = res.result
+      this.projectList.map((item) => {
+        item['fiftyRounds'] = 0
+        item['finalEight'] = []
+        item['list'] = []
+        item['listsList'] = []
+        item['projectName'] = ''
+        item['stageGroup'] = ''
+        item['stageName'] = ''
+        item['bisaiTime'] = ''
+        item['contestName'] = ''
+        item['addr'] = ''
+        item['th'] = []
+        item['shootGroups'] = 0
+        item['rankingList'] = []
+        item['number'] = 0
+      })
+      this.getList()
     })
+
+    this.timer = setInterval(() => {
+      getDataScreenCurrentConfigApi().then((res) => {
+        if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
+          this.currentProject = JSON.parse(JSON.stringify(res.result))
+
+          this.projectList = res.result
+          this.projectList.map((item) => {
+            item['fiftyRounds'] = 0
+            item['finalEight'] = []
+            item['list'] = []
+            item['listsList'] = []
+            item['projectName'] = ''
+            item['stageGroup'] = ''
+            item['stageName'] = ''
+            item['bisaiTime'] = ''
+            item['contestName'] = ''
+            item['addr'] = ''
+            item['th'] = []
+            item['shootGroups'] = 0
+            item['rankingList'] = []
+            item['number'] = 0
+          })
+          this.getList()
+        }
+      })
+    }, 3000)
   },
   mounted() {
     document.body.style.overflow = 'hidden'
-    this.getList()
     this.time = setInterval(() => {
       this.getData()
     }, 3000)
@@ -302,7 +325,6 @@ export default {
       // arr2.innerHTML = arr.innerHTML
       // const thit = this
       // function scrolls() {
-      //   console.log(box.scrollTop)
       //   box.scrollTop = thit.hei
       //   if (box.scrollTop > arr.offsetHeight) {
       //     thit.hei = 0
@@ -429,7 +451,6 @@ export default {
                     bePromoted: '',
                   }
                 })
-                console.log(data)
                 // data.listsList = [
                 //   ...data.listsList,
                 // ]
@@ -449,7 +470,6 @@ export default {
       littleScreen({
         type: data.configName,
       }).then((res) => {
-        console.log(res)
         data.finalEight = []
         const { result } = res
         data.projectName = result.projectName
@@ -474,7 +494,7 @@ export default {
           {
             name: '代表队',
             align: 'left',
-            width: '300px'
+            width: '300px',
           },
         ]
         if (result.shoots) {
@@ -495,7 +515,7 @@ export default {
               }
             })
             for (let i = 0; i < data.number; i++) {
-              data.th.push({ name: ' ', })
+              data.th.push({ name: ' ' })
             }
             result.players.forEach((item, index) => {
               let obj = {
@@ -509,7 +529,6 @@ export default {
                 notes: '',
                 bePromoted: '',
               }
-              console.log(obj.sameScoreList)
               result.shoots.forEach((k) => {
                 obj[k] = ''
               })
@@ -667,6 +686,7 @@ export default {
   },
   destroyed() {
     clearInterval(this.time)
+    clearInterval(this.timer)
   },
 }
 </script>
@@ -828,7 +848,8 @@ export default {
       font-size: 15px;
       text-align: right;
 
-      .nameTitle {}
+      .nameTitle {
+      }
 
       .times {
         letter-spacing: 6px;
@@ -854,7 +875,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  &>div {
+  & > div {
     flex: 1;
     text-align: center;
   }
@@ -866,7 +887,6 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-
 
 .finalEightRow {
   flex: 1;

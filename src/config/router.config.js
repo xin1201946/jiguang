@@ -328,7 +328,7 @@ export const constantRouterMap = [
     name: 'DataScreen',
     component: BlankLayout,
     meta: {title: '数据大屏'},
-    redirect: '/DataScreen/select',
+    redirect: '/DataScreen/index',
     children: [
       {
         path: '/DataScreen/select',

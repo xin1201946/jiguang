@@ -132,12 +132,17 @@ export const getTeamScoresAPI = data => postAction("largeScreen/getTeamScores", 
 export const getTeamTotalScores = data => postAction("largeScreen/getTeamTotalScores", data)
 //屏幕展示 ---- 混团资格赛排名
 export const getMassingScores = data => postAction("largeScreen/getMassingScores", data)
-
 //查询数据大屏接口 ---- 大屏列表
 export const getDataScreenList = data => postAction("bizConfig/list", data)
 // 混团金铜牌赛id查询
 export const bizTeamGoldScoreQueryById = id => getAction(`bizTeamGoldScore/queryById/${id}`)
 
+// 大屏配置
+export const getDataScreenConfigApi = data => postAction("bizScreen/list", data)
+// 大屏更新
+export const getDataScreenConfigUpdataApi = data => postAction("bizScreen/update", data)
+// 大屏当前配置
+export const getDataScreenCurrentConfigApi = data => postAction("bizScreen/queryScreen", data)
 
 //阶段最终成绩
 export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)

@@ -1,15 +1,10 @@
 <template>
   <Card>
     <div>
-      <a-tabs>
+      <a-tabs @change="tabsChangeHandle">
         <a-tab-pane key="1" tab="步枪">
 
-          <a-form-model
-            :labelCol="{span: 6}"
-            ref="form"
-            :model="formData"
-            :wrapperCol="{span: 18}"
-          >
+          <a-form-model :labelCol="{span: 6}" ref="form" :model="formData" :wrapperCol="{span: 18}">
             <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
               <template v-if="item.configName.includes('步枪')">
                 <a-col :span="3">
@@ -18,32 +13,21 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5">
-                  <a-form-model-item
-                    :prop="'data.' + index + '.contestId'"
-                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}"
-                    label="赛事名称">
+                  <a-form-model-item :prop="'data.' + index + '.contestId'" :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}" label="赛事名称">
                     <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
                       <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
                     </a-select>
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                  <a-form-model-item
-                    label="项目名称"
-                    :prop="'data.' + index + '.cproId'"
-                    :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="项目名称" :prop="'data.' + index + '.cproId'" :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}">
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
                       <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
                     </a-select>
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                  <a-form-model-item
-                    label="阶段名称"
-                    :prop="'data.' + index + '.stageId'"
-                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="阶段名称" :prop="'data.' + index + '.stageId'" :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}">
                     <a-select allowClear v-model="item.stageId">
                       <template v-if="item.configName.includes('个人资格赛')">
                         <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
@@ -76,12 +60,7 @@
         </a-tab-pane>
         <a-tab-pane key="2" tab="手枪">
 
-          <a-form-model
-            :labelCol="{span: 6}"
-            ref="form2"
-            :model="formData"
-            :wrapperCol="{span: 18}"
-          >
+          <a-form-model :labelCol="{span: 6}" ref="form2" :model="formData" :wrapperCol="{span: 18}">
             <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
               <template v-if="item.configName.includes('手枪')">
                 <a-col :span="3">
@@ -90,21 +69,14 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5">
-                  <a-form-model-item
-                    :prop="'data.' + index + '.contestId'"
-                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}"
-                    label="赛事名称">
+                  <a-form-model-item :prop="'data.' + index + '.contestId'" :rules="{message: '请选择赛事名称', required: rulesDisabled(item) || item.contestIdBool, trigger: 'blur'}" label="赛事名称">
                     <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
                       <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
                     </a-select>
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                  <a-form-model-item
-                    label="项目名称"
-                    :prop="'data.' + index + '.cproId'"
-                    :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="项目名称" :prop="'data.' + index + '.cproId'" :rules="{message: '请选择项目名称', required: rulesDisabled(item) || item.cproIdBool, trigger: 'blur'}">
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
                       <!--                configName-->
                       <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
@@ -112,11 +84,7 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                  <a-form-model-item
-                    label="阶段名称"
-                    :prop="'data.' + index + '.stageId'"
-                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="阶段名称" :prop="'data.' + index + '.stageId'" :rules="{message: '请选择阶段名称', required: rulesDisabled(item) || item.stageIdBool, trigger: 'blur'}">
                     <a-select allowClear v-model="item.stageId">
                       <template v-if="item.configName.includes('个人资格赛')">
                         <a-select-option v-for="i in item.stageIds.filter(a => item.configName.includes(a.stageName))" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
@@ -148,12 +116,7 @@
 
         </a-tab-pane>
         <a-tab-pane key="3" tab="团队">
-          <a-form-model
-            :labelCol="{span: 6}"
-            ref="form3"
-            :model="formData"
-            :wrapperCol="{span: 18}"
-          >
+          <a-form-model :labelCol="{span: 6}" ref="form3" :model="formData" :wrapperCol="{span: 18}">
             <a-row :gutter="24" v-for="(item,index) in formData.data" :key="index">
               <template v-if="item.configName.includes('团队')">
                 <a-col :span="3">
@@ -162,21 +125,14 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5">
-                  <a-form-model-item
-                    :prop="'data.' + index + '.contestId'"
-                    :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}"
-                    label="赛事名称">
+                  <a-form-model-item :prop="'data.' + index + '.contestId'" :rules="{message: '请选择赛事名称', required: rulesDisabled(item), trigger: 'blur'}" label="赛事名称">
                     <a-select allowClear v-model="item.contestId" @change="handleContest(index)">
                       <a-select-option v-for="i in contestId" :key="i.contestId" :value="i.contestId">{{i.contestName}}</a-select-option>
                     </a-select>
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名')">
-                  <a-form-model-item
-                    label="项目名称"
-                    :prop="'data.' + index + '.cproId'"
-                    :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="项目名称" :prop="'data.' + index + '.cproId'" :rules="{message: '请选择项目名称', required: rulesDisabled(item), trigger: 'blur'}">
                     <a-select allowClear v-model="item.cproId" @change="handleProject(index)">
                       <!--                configName-->
                       <a-select-option v-for="i in item.cproIds.filter(i => i.projectName.includes(item.configName.substring(0,2)))" :key="i.cproId" :value="i.cproId">{{i.projectName}} - {{i.projectGroup}}</a-select-option>
@@ -184,11 +140,7 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="5" v-if="!item.configName.includes('团队综合排名') && !item.configName.includes('混团资格赛')">
-                  <a-form-model-item
-                    label="阶段名称"
-                    :prop="'data.' + index + '.stageId'"
-                    :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}"
-                  >
+                  <a-form-model-item label="阶段名称" :prop="'data.' + index + '.stageId'" :rules="{message: '请选择阶段名称', required: rulesDisabled(item), trigger: 'blur'}">
                     <a-select allowClear v-model="item.stageId">
                       <a-select-option v-for="i in item.stageIds" :key="i.cproStageId" :value="i.cproStageId">{{i.stageName}}</a-select-option>
                     </a-select>
@@ -211,8 +163,10 @@
           </a-row>
 
         </a-tab-pane>
+        <a-tab-pane key="4" tab="大屏展示">
+        </a-tab-pane>
       </a-tabs>
-
+      <dataScreenConfig ref="dataScreenConfig" v-show="keyVal == 4"/>
     </div>
   </Card>
 </template>
@@ -221,10 +175,12 @@
 import Card from '@comp/card/card.vue'
 import { bizConfigList, bizConfigReset, bizConfigUpdateBatch } from '@api/authority'
 import { bizContestList, bizContestProjectList, bizContestProjectStageList } from '@api/competition'
+import dataScreenConfig from '../../DataScreen/select.vue'
 export default {
   name: 'function',
   components: {
-    Card
+    Card,
+    dataScreenConfig,
   },
   data() {
     return {
@@ -232,40 +188,48 @@ export default {
       contestId: [],
       formData: {
         data: [],
-      }
+      },
+      keyVal: ''
     }
   },
   mounted() {
-    bizContestList().then(res => {
+    bizContestList().then((res) => {
       this.contestId = res.result
       this.getList()
     })
   },
   methods: {
+    tabsChangeHandle(e) {
+      console.log(e)
+      this.keyVal = e
+      if (e == 4) {
+        this.$refs.dataScreenConfig.getList()
+      }
+    },
     getList() {
-      bizConfigList().then(res => {
+      bizConfigList().then((res) => {
         if (res.code === 200) {
-          this.formData.data = res.result.map(item => {
+          this.formData.data = res.result.map((item) => {
             return {
               contestIdBool: false,
               cproIdBool: false,
               stageIdBool: false,
               ...item,
               cproIds: [],
-              stageIds: []
+              stageIds: [],
             }
           })
           for (let i = 0; i < this.formData.data.length; i++) {
-            if (this.formData.data[i].contestId){
-              bizContestProjectList({contestId: this.formData.data[i].contestId}).then(res => {
+            if (this.formData.data[i].contestId) {
+              bizContestProjectList({ contestId: this.formData.data[i].contestId }).then((res) => {
                 // console.log(this.formData.data[i], 123)
                 this.formData.data[i].cproIds = res.result
               })
               if (this.formData.data[i].cproId) {
                 bizContestProjectStageList({
                   contestId: this.formData.data[i].contestId,
-                  cproId: this.formData.data[i].cproId
-                }).then(res => {
+                  cproId: this.formData.data[i].cproId,
+                }).then((res) => {
                   this.formData.data[i].stageIds = res.result
                 })
               }
@@ -279,13 +243,13 @@ export default {
     },
     rulesDisabled(item) {
       const bool = (str, i, list) => {
-        if (item.contestId || item.cproId || item.stageId){
+        if (item.contestId || item.cproId || item.stageId) {
           if (list[i].configName.includes(str)) {
             this.formData.data[i].contestIdBool = true
             this.formData.data[i].cproIdBool = true
             this.formData.data[i].stageIdBool = true
           }
-        }else {
+        } else {
           if (list[i].configName.includes(str)) {
             this.formData.data[i].contestIdBool = false
             this.formData.data[i].cproIdBool = false
@@ -294,7 +258,7 @@ export default {
         }
       }
       const list = JSON.parse(JSON.stringify(this.formData.data))
-     /*  for(let i = 0; i < list.length; i++) {
+      /*  for(let i = 0; i < list.length; i++) {
         if (item.configName.includes('步枪混团金牌赛排名')) {
           bool("步枪混团铜牌赛排名", i, list)
         }
@@ -308,7 +272,7 @@ export default {
           bool("手枪混团金牌赛排名", i, list)
         }
       } */
-      if (item.contestId || item.cproId || item.stageId){
+      if (item.contestId || item.cproId || item.stageId) {
         return true
       }
       return false
@@ -319,7 +283,7 @@ export default {
       this.formData.data[i].cproIds = []
       this.formData.data[i].cproId = ''
       this.formData.data[i].stageId = ''
-      bizContestProjectList({contestId: this.formData.data[i].contestId}).then(res => {
+      bizContestProjectList({ contestId: this.formData.data[i].contestId }).then((res) => {
         // console.log(res)
         this.formData.data[i].cproIds = res.result
       })
@@ -330,26 +294,26 @@ export default {
       this.formData.data[i].stageId = ''
       bizContestProjectStageList({
         contestId: this.formData.data[i].contestId,
-        cproId: this.formData.data[i].cproId
-      }).then(res => {
+        cproId: this.formData.data[i].cproId,
+      }).then((res) => {
         // console.log(res)
         this.formData.data[i].stageIds = res.result
       })
     },
     handleClick(num) {
       const list = JSON.parse(JSON.stringify(this.formData.data))
-      const arr = list.map(item => {
+      const arr = list.map((item) => {
         delete item.stageIds
         delete item.cproIds
         return item
       })
       if (num === 1) {
-        this.$refs.form.validate(v => {
+        this.$refs.form.validate((v) => {
           if (v) {
-            bizConfigUpdateBatch(arr).then(res => {
+            bizConfigUpdateBatch(arr).then((res) => {
               if (res.code === 200) {
                 this.$message.success(res.message)
-              }else {
+              } else {
                 this.$message.error(res.message)
               }
             })
@@ -357,12 +321,12 @@ export default {
         })
       }
       if (num === 2) {
-        this.$refs.form2.validate(v => {
+        this.$refs.form2.validate((v) => {
           if (v) {
-            bizConfigUpdateBatch(arr).then(res => {
+            bizConfigUpdateBatch(arr).then((res) => {
               if (res.code === 200) {
                 this.$message.success(res.message)
-              }else {
+              } else {
                 this.$message.error(res.message)
               }
             })
@@ -370,80 +334,84 @@ export default {
         })
       }
       if (num === 3) {
-        this.$refs.form3.validate(v => {
+        this.$refs.form3.validate((v) => {
           if (v) {
-            bizConfigUpdateBatch(arr).then(res => {
+            bizConfigUpdateBatch(arr).then((res) => {
               if (res.code === 200) {
                 this.$message.success(res.message)
-              }else {
+              } else {
                 this.$message.error(res.message)
               }
             })
           }
         })
       }
-
     },
     handleReset(num) {
       if (num === 1) {
-        const data = this.formData.data.filter(item => item.configName.includes("步枪")).map(item => {
-          return {
-            ...item,
-            contestId: null,
-            cproId: null,
-            stageId: null
-          }
-        })
+        const data = this.formData.data
+          .filter((item) => item.configName.includes('步枪'))
+          .map((item) => {
+            return {
+              ...item,
+              contestId: null,
+              cproId: null,
+              stageId: null,
+            }
+          })
         const str = data[0].configType
-        const dataAll = this.formData.data.filter(item => !item.configName.includes("步枪"))
+        const dataAll = this.formData.data.filter((item) => !item.configName.includes('步枪'))
         this.formData.data = [...dataAll, ...data]
         bizConfigReset({
-          configType: str
+          configType: str,
         })
       }
       if (num === 2) {
         // console.log(num)
-        const data = this.formData.data.filter(item => item.configName.includes("手枪")).map(item => {
-          const obj = {
-            ...item,
-            contestId: "",
-            cproId: "",
-            stageId: ""
-          }
-          return obj
-        })
+        const data = this.formData.data
+          .filter((item) => item.configName.includes('手枪'))
+          .map((item) => {
+            const obj = {
+              ...item,
+              contestId: '',
+              cproId: '',
+              stageId: '',
+            }
+            return obj
+          })
         const str = data[0].configType
-        const dataAll = this.formData.data.filter(item => !item.configName.includes("手枪"))
+        const dataAll = this.formData.data.filter((item) => !item.configName.includes('手枪'))
         this.formData.data = [...dataAll, ...data]
         bizConfigReset({
-          configType: str
+          configType: str,
         })
       }
       if (num === 3) {
         const list = JSON.parse(JSON.stringify(this.formData.data))
-        const data = list.filter(item => item.configName.includes("团队")).map(item => {
-          const obj = {
-            ...item,
-            contestId: "",
-            cproId: "",
-            stageId: ""
-          }
-          return obj
-        })
+        const data = list
+          .filter((item) => item.configName.includes('团队'))
+          .map((item) => {
+            const obj = {
+              ...item,
+              contestId: '',
+              cproId: '',
+              stageId: '',
+            }
+            return obj
+          })
         const str = data[0].configType
 
-        const dataAll = this.formData.data.filter(item => !item.configName.includes("团队"))
+        const dataAll = this.formData.data.filter((item) => !item.configName.includes('团队'))
 
         this.formData.data = [...dataAll, ...data]
         bizConfigReset({
-          configType: str
+          configType: str,
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped lang="scss">
-
 </style>
