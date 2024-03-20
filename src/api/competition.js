@@ -184,3 +184,8 @@ export const downloadProjectItem = param => downFile("bizContestPlayer/downloadP
 // 混团成绩打印 资格赛
 export const massingSportsList = data => postAction("bizPlayerFinalScore/massingSportsList", data)
 
+
+// 比赛安排  成统裁判员列表
+export const bizUnifiedUserList = data => postAction("bizUnified/userList", data)
+// 分配裁判员
+export const bizUnifiedSaveUnified = data => postAction("bizUnified/saveUnified", data)
