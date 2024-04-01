@@ -5,16 +5,19 @@
     </template>
     <template slot="operator">
       <a-space>
-        <a-button type="primary" @click="handleAdd" icon="plus">创建赛事</a-button>
+        <a-button type="primary" @click="handleAdd" icon="plus" v-show="roleVisible">创建赛事</a-button>
       </a-space>
     </template>
-    <a-table :scroll="{x: 1400}" :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination" @change="handleTableChange" bordered>
+    <a-table :scroll="{ x: 1400 }" :columns="columns" rowKey="contestId" :dataSource="data" :pagination="pagination"
+      @change="handleTableChange" bordered>
       <template slot="operation" slot-scope="text, record">
         <a-space>
-          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check" @click="handleSubmit(record)">提交</a-button>
+          <a-button v-if="record.contestStatus === '0'" type="primary" size="small" ghost icon="check"
+            @click="handleSubmit(record)">提交</a-button>
           <a-button type="primary" size="small" ghost icon="edit" @click="handleEditPhase(record)">设置比赛信息</a-button>
           <a-button type="primary" size="small" ghost icon="link" @click="handleParticipant(record)">参赛人员管理</a-button>
-          <a-button v-if="record.contestStatus !== '0' && record.contestStatus !== '1'" type="primary" size="small" ghost icon="check" @click="toLink(record)">赛事安排</a-button>
+          <a-button v-if="record.contestStatus !== '0' && record.contestStatus !== '1'" type="primary" size="small"
+            ghost icon="check" @click="toLink(record)">赛事安排</a-button>
           <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>
         </a-space>
       </template>
@@ -23,17 +26,20 @@
   </Card>
 </template>
 
-<script >
+<script>
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import {
   competitionListQuery,
   competitionListTableColumns,
+  competitionListTableColumns2,
 } from '@views/Competition/competitionList/competitionList.config'
 import BizMixins from '@views/biz/bizMixins'
 import CompetitionListModal from '@views/Competition/competitionList/modal/competitionListModal.vue'
 import { deleteMessage, infoMessage } from '@/utils'
 import { bizContestDelete, bizContestPageList, bizContestAudit } from '@api/competition'
+import { USER_INFO } from "@/store/mutation-types"
+import Vue from 'vue'
 export default {
   name: 'competitionList',
   components: {
@@ -49,9 +55,18 @@ export default {
       query: {
         selectWord: undefined,
       },
+      roleCode: undefined,  //角色
+      roleVisible: true,
     }
   },
-
+  created() {
+    this.roleCode = Vue.ls.get(USER_INFO).roleCode
+    if (this.roleCode === 'chengtong') {
+      this.roleVisible = false
+    } else {
+      this.roleVisible = true
+    }
+  },
   mounted() {
     this.$refs.query.init(competitionListQuery)
     this.getList()
@@ -63,6 +78,14 @@ export default {
       },
       immediate: true,
       deep: true,
+    },
+    roleVisible(v) {
+      console.log(v, '12312')
+      if (v === false) {
+        this.columns = competitionListTableColumns2
+      } else {
+        this.columns = competitionListTableColumns
+      }
     },
   },
   methods: {

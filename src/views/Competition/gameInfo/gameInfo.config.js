@@ -81,14 +81,14 @@ export const gameInfoColumns = [
     title: '总环数',
     align: 'center',
   },
-  {
-    title: '操作',
-    align: 'center',
-    dataIndex: 'operation',
-    scopedSlots: {
-      customRender: 'operation'
-    },
-    width: 220,
-    fixed: 'right',
-  }
+  // {
+  //   title: '操作',
+  //   align: 'center',
+  //   dataIndex: 'operation',
+  //   scopedSlots: {
+  //     customRender: 'operation'
+  //   },
+  //   width: 220,
+  //   fixed: 'right',
+  // }
 ]

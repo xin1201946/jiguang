@@ -13,7 +13,8 @@
       <TreeCard ref="treeCard">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup" :title="item.projectName + ' - ' + item.projectGroup">
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
+              :title="item.projectName + ' - ' + item.projectGroup">
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -34,8 +35,10 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
-            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary" @click="nextStageHandle">结束阶段</a-button>
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary"
+              @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary"
+              @click="nextStageHandle">结束阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
@@ -43,13 +46,15 @@
             <a-button type="primary" @click="handleSameScore">同分</a-button>
             <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
+            <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
             <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
           </a-space>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
             <a-tabs v-model="group" @change="radioChangeHandle">
-              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group" :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group"
+                :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -66,13 +71,39 @@
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading">
+            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
+              rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
+              :scroll="{ x: 1500 }">
+              <!-- :custom-row="customRow"> -->
+
+              <!-- 可编辑行 -->
+              <!-- <template slot="qaz1" slot-scope="text, record">
+                <a-input v-if="record.editable" v-model="record.orderNum" @blur="handleBlur(record)" />
+                <span v-else>---*</span>
+              </template> -->
+              <template v-for="col in customRenderList" v-slot:[col]="text, record, index">
+                <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
+                  <a-input placeholder="请输入" v-if="record.editable" :value="text"
+                    @change="e => handleChange(e.target.value, record.serialNumber, col)"
+                    @blur="handleBlur(record.serialNumber)" />
+                  <template v-else>
+                    <!-- 单击 -->
+                    <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
+                    <a @click="editAchievement(record.serialNumber)">{{ text }}---*</a>
+                    <!-- 双击 -->
+                    <!-- <a @dblclick="editAchievement(record.serialNumber)">{{ text }}---*</a> -->
+                  </template>
+                </div>
+              </template>
+              <!-- 操作 -->
               <template slot="operation" slot-scope="text, record">
                 <a-space>
-                  <!--                  总环数为空不渲染成绩详情按钮-->
-                  <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <!-- 总环数为空不渲染成绩详情按钮-->
+                  <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
+                    size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
+                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop"
+                    @click="handleStop(record)">停止比赛</a-button>
                   <a-dropdown>
                     <a style="display:block;width: 80px" @click="e => e.preventDefault()"> 更多 <a-icon type="down" />
                     </a>
@@ -87,7 +118,9 @@
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
                       <a-menu-item>
-                        <a-button type="link" size="small" icon="swap" v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'" @click="handleGrouping(record)">变更组别</a-button>
+                        <a-button type="link" size="small" icon="swap"
+                          v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'"
+                          @click="handleGrouping(record)">变更组别</a-button>
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -99,7 +132,8 @@
         <a-space style="margin-bottom: 20px;" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource" :pagination="false">
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"
+          :pagination="false">
           <template slot="operation">
 
           </template>
@@ -129,6 +163,10 @@
         <!-- 平板监控 -->
         <TabletMonitoring ref="TabletMonitoringRef" />
         <GameInfoStartModal ref="start" @list="getTableList"></GameInfoStartModal>
+        <!-- 行内成绩详情 -->
+        <GameInfoAchievementModal ref="Achievement" @success="getTableList"></GameInfoAchievementModal>
+        <!-- 成统裁判员 -->
+        <GameinfoChengTongJudge ref="gameinfoChengTongJudgeRef" @success="successOk"></GameinfoChengTongJudge>
       </TreeCard>
     </div>
   </div>
@@ -141,6 +179,7 @@ import { gameInfoColumns } from '@views/Competition/gameInfo/gameInfo.config'
 import gameInfoTargetModal from '@views/Competition/gameInfo/modal/gameInfoTargetModal.vue'
 import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawModal.vue'
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
+import GameInfoAchievementModal from '@views/Competition/gameInfo/modal/gameInfoAchievementModal.vue'
 import GameInfoPenaltyModal from '@views/Competition/gameInfo/modal/gameInfoPenalty.vue'
 import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vue'
 import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemark.vue'
@@ -152,6 +191,7 @@ import GameInfoSwitchGrouping from '@views/Competition/gameInfo/modal/gameInfoSw
 import GameInfoChangeGroup from '@views/Competition/gameInfo/modal/gameInfoChangeGroup.vue'
 import TabletMonitoring from '../../tabletMonitoring/index'
 import GameInfoStartModal from '@views/Competition/gameInfo/modal/gameInfoStartModal.vue'
+import GameinfoChengTongJudge from '@views/Competition/gameInfo/modal/gameinfoChengTongJudge.vue'
 
 import {
   bizContestProjectList,
@@ -200,6 +240,8 @@ export default {
     GameInfoChangeGroup,
     TabletMonitoring, //平板监控
     GameInfoStartModal,
+    GameInfoAchievementModal,
+    GameinfoChengTongJudge,
   },
   inject: ['closeCurrent'],
   data() {
@@ -209,7 +251,57 @@ export default {
       treeList: [],
       cproStageId: null,
       cproId: null,
-      columns: gameInfoColumns,
+      // columns: gameInfoColumns,
+      columns: [
+        {
+          dataIndex: 'serialNumber',
+          title: '选手编号',
+          align: 'center',
+        },
+        {
+          dataIndex: 'playerName',
+          title: '姓名',
+          align: 'center',
+        },
+        // {
+        //   dataIndex: 'playerSex',
+        //   customRender: (text, record, index) => {
+        //     return record.playerSex == '1' ? '男' : '女'
+        //   },
+        //   title: '性别',
+        //   align: 'center',
+        // },
+        // {
+        //   dataIndex: 'idCardNum',
+        //   title: '身份证号',
+        //   align: 'center',
+        // },
+        {
+          dataIndex: 'groupName',
+          title: '代表队',
+          align: 'center',
+        },
+        {
+          dataIndex: 'isGroup',
+          title: '是否团体排名',
+          align: 'center',
+        },
+        {
+          dataIndex: 'targetSite',
+          title: '靶位',
+          align: 'center',
+        },
+        {
+          dataIndex: 'padCode',
+          title: '设备号',
+          align: 'center',
+        },
+        {
+          dataIndex: 'totalScore',
+          title: '总环数',
+          align: 'center',
+        }
+      ],
       group: null,
       groupList: [],
       groupActive: false,
@@ -238,9 +330,91 @@ export default {
 
       selectedRowKeys: [],
       selectionRows: [],
+
+      // 可编辑参数
+      editingKey: '',
+      // 每一列的插槽名 - 表格行内编辑用
+      customRenderList: ['qaz1', 'qaz2', 'qaz3'],
+      // 对于某些自动赋值的input框设为 只读
+      readonlyArr: [''],
+      menuVisible: false,
     }
   },
   methods: {
+    handleActionsColumnContextMenu(record, event, col) {
+      console.log(col, record.col)
+      event.preventDefault() // 阻止默认的右键菜单  
+      // 在这里添加你的自定义右键菜单逻辑  
+      console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
+      this.$refs.Achievement.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
+    },
+    // 可编辑
+    handleChange(value, serialNumber, column) {
+      const newData = [...this.dataSource]
+      const target = newData.find(item => serialNumber === item.serialNumber)
+      if (target) {
+        target[column] = value
+        this.dataSource = newData
+      }
+    },
+    editAchievement(serialNumber) {
+      const newData = this.dataSource
+      const target = newData.find(item => serialNumber === item.serialNumber)
+      this.editingKey = serialNumber
+      if (target) {
+        target.editable = true
+        this.dataSource = newData
+        this.$forceUpdate()
+      }
+    },
+    handleBlur(serialNumber) {
+      // console.log('Input 失去焦点', serialNumber);  
+      const newData = [...this.dataSource]
+      const newCacheData = [...this.dataSource]
+      const target = newData.find(item => serialNumber === item.serialNumber)
+      const targetCache = newCacheData.find(item => serialNumber === item.serialNumber)
+      if (target && targetCache) {
+        delete target.editable
+        this.dataSource = newData
+        Object.assign(targetCache, target)
+        this.dataSource = newCacheData
+        this.$forceUpdate()
+      }
+      this.editingKey = ''
+    },
+    saveAchievement(serialNumber) {
+      const newData = [...this.dataSource]
+      const newCacheData = [...this.dataSource]
+      const target = newData.find(item => serialNumber === item.serialNumber)
+      const targetCache = newCacheData.find(item => serialNumber === item.serialNumber)
+      if (target && targetCache) {
+        delete target.editable
+        this.dataSource = newData
+        Object.assign(targetCache, target)
+        this.dataSource = newCacheData
+        this.$forceUpdate()
+      }
+      this.editingKey = ''
+    },
+    cancelAchievement(serialNumber) {
+      const newData = [...this.dataSource]
+      const target = newData.find(item => serialNumber === item.serialNumber)
+      this.editingKey = ''
+      if (target) {
+        Object.assign(target, this.dataSource.find(item => serialNumber === item.serialNumber))
+        delete target.editable
+        this.dataSource = newData
+        this.$forceUpdate()
+      }
+    },
+    // 点击详情弹窗
+    handleCustomMenuAction(record) {
+      console.log(record, '12345645456qqqq')
+      // this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
+      // this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
+    },
+    /*** 可编辑结尾****/
+
     rowClassName(r, i) {
       if (r.remarkPenalty) {
         return 'red'
@@ -274,7 +448,6 @@ export default {
         ...data,
         stageId: this.cproStageId,
       }).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success('同分操作成功！')
           this.getTableList()
@@ -300,12 +473,10 @@ export default {
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id,
       }
-      console.log(data, 'qaaa', arrData)
       changeGroup({
         ...data,
         ...arrData,
       }).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success(res.message)
           this.getTableList()
@@ -361,7 +532,6 @@ export default {
         remark: row.remark, //备注
       }
       retarget(data).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success('更换靶位成功！')
           this.getTableList()
@@ -373,7 +543,6 @@ export default {
     },
     // 时间管理
     handleDate() {
-      console.log(this.data)
       const obj = {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
@@ -417,7 +586,6 @@ export default {
         playerId: e.playerId, //运动员id
         remark: e.remark, //备注
       }).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success('操作成功！')
           this.getTableList()
@@ -442,7 +610,6 @@ export default {
         score: e.score, //环数
         remarkPenalty: e.remarkPenalty, //备注
       }).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success('改判成功！')
           this.getTableList()
@@ -467,7 +634,6 @@ export default {
      * 变更组别
      */
     changeGroupRefHandle(i) {
-      console.log(i)
       changeGroupContest({
         contestId: i.contestId,
         cproId: i.cproId,
@@ -476,7 +642,6 @@ export default {
         stageGroup: i.stageGroupNew,
         targetSite: i.targetSiteNew,
       }).then((res) => {
-        console.log(res)
         if (res.success) {
           this.$message.success('变更组别成功！')
           this.getTableList()
@@ -552,7 +717,6 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-        // console.log(res)
       })
     },
     /**
@@ -593,7 +757,6 @@ export default {
           } else {
             this.$message.error(res.message)
           }
-          // console.log(res)
         })
         .finally(() => {
           this.loading = false
@@ -604,16 +767,92 @@ export default {
      * 选择组别
      */
     radioChangeHandle(e) {
+      let strArr = []
       this.group = e
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
           this.status = item.status
+          strArr = item.scoreGroup
           this.dataSource = item.bizContestPlayerList.map((item, i) => ({
             ...item,
             i,
           }))
+
         }
       })
+      // gameInfoColumns
+      this.columns = [
+        {
+          dataIndex: 'serialNumber',
+          title: '选手编号',
+          align: 'center',
+        },
+        {
+          dataIndex: 'playerName',
+          title: '姓名',
+          align: 'center',
+        },
+        // {
+        //   dataIndex: 'playerSex',
+        //   customRender: (text, record, index) => {
+        //     return record.playerSex == '1' ? '男' : '女'
+        //   },
+        //   title: '性别',
+        //   align: 'center',
+        // },
+        // {
+        //   dataIndex: 'idCardNum',
+        //   title: '身份证号',
+        //   align: 'center',
+        // },
+        {
+          dataIndex: 'groupName',
+          title: '代表队',
+          align: 'center',
+        },
+        {
+          dataIndex: 'isGroup',
+          title: '是否团体排名',
+          align: 'center',
+        },
+        {
+          dataIndex: 'targetSite',
+          title: '靶位',
+          align: 'center',
+        },
+        {
+          dataIndex: 'padCode',
+          title: '设备号',
+          align: 'center',
+        },
+        {
+          dataIndex: 'totalScore',
+          title: '总环数',
+          align: 'center',
+        }
+      ]
+      let arrColumns = []
+      for (let i = 1; i <= strArr.length; i++) {
+        arrColumns.push({
+          dataIndex: `qaz${i}`,
+          title: `${i}0组`,
+          align: 'center',
+          scopedSlots: {
+            customRender: `qaz${i}`
+          },
+        })
+      }
+      this.columns.push(...arrColumns, {
+        title: '操作',
+        align: 'center',
+        dataIndex: 'operation',
+        scopedSlots: {
+          customRender: 'operation'
+        },
+        width: 300,
+        fixed: 'right',
+      })
+      // }
     },
     /**
      * 头部返回
@@ -754,8 +993,6 @@ export default {
         this.cproId = result[0].cproId
         this.projectName = result[0].projectName
         this.getTableList()
-        console.log(arr)
-        console.log(result)
       } else {
         this.cproStageId = null
         this.draw = false
@@ -764,9 +1001,8 @@ export default {
         this.$refs.treeCard.loading = false
       }
     },
-    onExpand() {},
+    onExpand() { },
     handleZhunbei(row) {
-      // console.log('zhunbei')
       ready({
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
@@ -779,7 +1015,6 @@ export default {
       })
     },
     handleShishe(row) {
-      // console.log('@!#@!!@#@!')
       fireAdjust({
         playerIds: this.selectedRowKeys,
         stageId: this.cproStageId, //项目阶段id
@@ -793,7 +1028,6 @@ export default {
           this.$message.error(res.message)
         }
       })
-      console.log('shishe')
     },
     handleBisai(row) {
       selectStageStatusList({
@@ -806,7 +1040,6 @@ export default {
             stageId: this.cproStageId, //项目阶段id
             group: this.group,
           })
-          // console.log(this.$refs.start)
         } else {
           startFire({
             stageId: this.cproStageId, //项目阶段id
@@ -849,7 +1082,6 @@ export default {
         startNo: e.startNo, //靶位开始编号
         endNo: e.endNo, //靶位结束编号
       }).then((res) => {
-        // console.log(res)
         if (res.success) {
           this.$message.success('抽签成功！')
           this.getTableList()
@@ -866,7 +1098,6 @@ export default {
         stageId: this.cproStageId, //项目阶段id,
         group: this.group, // 组
       }
-      // console.log(data)
       const dc = () => {
         contest_processGetSitePdf(data).then((res) => {
           const blob = new Blob([res], { type: 'text/plain' })
@@ -890,7 +1121,7 @@ export default {
         })
       }
     },
-    groupListHandle() {},
+    groupListHandle() { },
 
     // 平板监控
     handleTablet() {
@@ -902,6 +1133,25 @@ export default {
         stageGroup: this.group,
       }
       this.$refs.TabletMonitoringRef.init(res)
+    },
+    // 分配成统裁判员
+    handleChengTong() {
+      if (this.selectedRowKeys.length) {
+        // console.log(this.selectedRowKeys,'qaaaww111');
+        const arr = {
+          contestId: this.data.contestId, //赛事id
+          cproId: this.cproId, //赛事项目id
+          stageId: this.cproStageId, //项目阶段id
+          playerIds:this.selectedRowKeys.join(',')
+        }
+        this.$refs.gameinfoChengTongJudgeRef.edit(arr)
+      } else {
+        this.$message.warning('请选择要分配裁判的运动员！')
+      }
+    },
+    successOk(){
+      this.selectedRowKeys = []
+      this.getTableList()
     },
   },
   mounted() {
@@ -921,9 +1171,9 @@ export default {
           selected
             ? this.selectionRows.push(record)
             : this.selectionRows.splice(
-                this.selectionRows.findIndex((x) => x.id === record.id),
-                1
-              )
+              this.selectionRows.findIndex((x) => x.id === record.id),
+              1
+            )
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
           this.selectionRows = selected
@@ -965,9 +1215,11 @@ export default {
 /deep/.dnf {
   background: #79beec;
 }
+
 /deep/.dns {
   background: #eeb478;
 }
+
 .gameInfo {
   height: 100%;
   overflow: hidden;
@@ -1021,8 +1273,7 @@ export default {
         display: flex;
       }
 
-      .ant-tree-treenode-selected {
-      }
+      .ant-tree-treenode-selected {}
 
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal {
         display: flex;
@@ -1083,5 +1334,45 @@ export default {
   &_buttom {
     height: 300px;
   }
+}
+
+.editable-row-operations {
+  display: flex;
+  width: 90px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.editable-row-operations a {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+.custom-context-menu {
+  position: absolute;
+  z-index: 1000;
+  /* 确保菜单显示在其他内容之上 */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  // display: none; /* 默认情况下不显示菜单 */  
+}
+
+// .custom-context-menu.visible {  
+//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */  
+// }  
+.custom-context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-context-menu li {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.custom-context-menu li:hover {
+  background-color: #f5f5f5;
 }
 </style>
