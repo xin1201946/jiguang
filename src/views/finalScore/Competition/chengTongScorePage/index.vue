@@ -52,14 +52,14 @@
       <div class="tableClass">
         <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId"
           :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading" :scroll="{ x: 1500 }">
-          <template v-for="col in customRenderList" v-slot:[col]="text, record, index">
+          <template v-for="col in strArr" v-slot:[col]="text, record, index">
             <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
               <!-- <a-input placeholder="请输入" v-if="record.editable" :value="text"
                 @change="e => handleChange(e.target.value, record.serialNumber, col)"
                 @blur="handleBlur(record.serialNumber)" /> -->
               <template>
                 <!-- 单击 -->
-                <a @click="editAchievement(record.serialNumber)">{{ text }}---*</a>
+                <a>{{ text }}</a>
               </template>
             </div>
           </template>
@@ -72,18 +72,22 @@
         </a-table>
       </div>
     </Card>
+    <!-- 行内成绩详情 -->
+    <GameInfoAchievementModal ref="Achievement" @success="getTableList"></GameInfoAchievementModal>
   </div>
 </template>
 
 <script>
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@/components/query/QuerySearch.vue'
+import GameInfoAchievementModal from '@views/Competition/gameInfo/modal/gameInfoAchievementModal.vue'
 import { bizContestPageList, bizContestProjectList, bizContestProjectStageList, getStagePlayerGroup } from '@api/competition'
 export default {
   name: 'chengTongScorePage',   // 成统页面
   components: {
     Card,
     QuerySearch,
+    GameInfoAchievementModal,
   },
   data() {
     return {
@@ -163,7 +167,7 @@ export default {
       // 可编辑参数
       editingKey: '',
       // 每一列的插槽名 - 表格行内编辑用
-      customRenderList: ['qaz1', 'qaz2', 'qaz3'],
+      strArr: [],
       // 对于某些自动赋值的input框设为 只读
       readonlyArr: [''],
       menuVisible: false,
@@ -345,10 +349,22 @@ export default {
         if (item.group == this.group) {
           this.status = item.status
           strArr = item.scoreGroup
-          this.dataSource = item.bizContestPlayerList.map((item, i) => ({
+          this.strArr = item.scoreGroup
+          let Source = item.bizContestPlayerList.map((item, i) => ({
             ...item,
             i,
           }))
+          const newSource = Source.map((item) => {
+            const newItem = { ...item }
+            for (let index = 0; index < strArr.length && index < item.groupScoreList.length; index++) {
+              newItem[strArr[index]] = item.groupScoreList[index].gunGroupTotal
+              newItem['strArr'] = strArr
+            }
+            return newItem // 返回新对象
+          })
+          this.dataSource = [...newSource]
+          console.log()
+          console.log(this.dataSource,'qweqweqwewqq123123232');
         }
       })
       this.columns = [
@@ -402,13 +418,13 @@ export default {
         }
       ]
       let arrColumns = []
-      for (let i = 1; i <= strArr.length; i++) {
+      for (let i = 0; i < strArr.length; i++) {
         arrColumns.push({
-          dataIndex: `qaz${i}`,
-          title: `${i}0组`,
+          dataIndex: strArr[i],
+          title: `${strArr[i]}`,
           align: 'center',
           scopedSlots: {
-            customRender: `qaz${i}`
+            customRender: strArr[i]
           },
         })
       }
@@ -432,6 +448,13 @@ export default {
     handleReset() {
       this.formData.targetSite = undefined
       this.getTableList()
+    },
+    handleActionsColumnContextMenu(record, event, col) {
+      console.log(col, record.col)
+      event.preventDefault() // 阻止默认的右键菜单  
+      // 在这里添加你的自定义右键菜单逻辑  
+      console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
+      this.$refs.Achievement.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     // 打印的资格赛
     bodyContent() {
@@ -882,7 +905,7 @@ export default {
     },
     // 打印
     handlePrint(e) {
-      console.log(e,'wertqq1');
+      console.log(e, 'wertqq1')
       // const prints = (fn) => {
       //   const iframe = document.createElement("iframe")
       //   document.body.appendChild(iframe)

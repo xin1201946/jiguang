@@ -81,7 +81,7 @@
                 <a-input v-if="record.editable" v-model="record.orderNum" @blur="handleBlur(record)" />
                 <span v-else>---*</span>
               </template> -->
-              <template v-for="col in customRenderList" v-slot:[col]="text, record, index">
+              <template v-for="col in strArr" v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
                   <a-input placeholder="请输入" v-if="record.editable" :value="text"
                     @change="e => handleChange(e.target.value, record.serialNumber, col)"
@@ -89,7 +89,7 @@
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
-                    <a @click="editAchievement(record.serialNumber)">{{ text }}---*</a>
+                    <a @click="editAchievement(record.serialNumber)">{{ text }}</a>
                     <!-- 双击 -->
                     <!-- <a @dblclick="editAchievement(record.serialNumber)">{{ text }}---*</a> -->
                   </template>
@@ -334,7 +334,7 @@ export default {
       // 可编辑参数
       editingKey: '',
       // 每一列的插槽名 - 表格行内编辑用
-      customRenderList: ['qaz1', 'qaz2', 'qaz3'],
+      strArr: [],
       // 对于某些自动赋值的input框设为 只读
       readonlyArr: [''],
       menuVisible: false,
@@ -773,10 +773,21 @@ export default {
         if (item.group == this.group) {
           this.status = item.status
           strArr = item.scoreGroup
-          this.dataSource = item.bizContestPlayerList.map((item, i) => ({
+          this.strArr = item.scoreGroup
+          let Source = item.bizContestPlayerList.map((item, i) => ({
             ...item,
             i,
           }))
+          const newSource = Source.map((item) => {
+            const newItem = { ...item }
+            for (let index = 0; index < strArr.length && index < item.groupScoreList.length; index++) {
+              newItem[strArr[index]] = item.groupScoreList[index].gunGroupTotal
+              newItem['strArr'] = strArr
+            }
+            return newItem // 返回新对象
+          })
+          this.dataSource = [...newSource]
+          console.log(this.dataSource,'qweqweqwewqq123123232');
 
         }
       })
@@ -832,13 +843,13 @@ export default {
         }
       ]
       let arrColumns = []
-      for (let i = 1; i <= strArr.length; i++) {
+      for (let i = 0; i < strArr.length; i++) {
         arrColumns.push({
-          dataIndex: `qaz${i}`,
-          title: `${i}0组`,
+          dataIndex: strArr[i],
+          title: `${strArr[i]}`,
           align: 'center',
           scopedSlots: {
-            customRender: `qaz${i}`
+            customRender: strArr[i]
           },
         })
       }
