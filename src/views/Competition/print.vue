@@ -216,7 +216,6 @@ export default {
         cproId: this.tree,
         contestId: this.contestId
       }).then(res => {
-        console.log(res)
         if (res.result.length) {
           const data = res.result.map(item => {
             return {
@@ -236,7 +235,6 @@ export default {
       bizContestProjectList({
         contestId: this.contestId
       }).then(res => {
-        // console.log(res)
         if (res.code === 200) {
           // 查询下拉框
           if (res.result.length) {
@@ -319,7 +317,6 @@ export default {
               this.data = []
             }
           })
-          console.log(res)
         })
       } else {
         const data = {
@@ -352,10 +349,7 @@ export default {
       }
     },
     handleTreeChange(v) {
-      // console.log(this.tree)
       this.treeLabel = this.list.filter(item => item.value === this.tree)[0].projectName
-
-      console.log(this.treeLabel)
       this.getStage()
     },
     handleBack() {
@@ -364,14 +358,12 @@ export default {
       })
     },
     handleInfo(record) {
-      // console.log()
       bizPlayerFinalScoreSportsScoresList({
         contestId: record.contestId,
         playerId: record.playerId,
         cproId: this.tree,
         cproStageId: record.stageId
       }).then(res => {
-        // console.log(res)
         // const body = document.body
         // const main = document.createElement('div')
         // const old = body.innerHTML

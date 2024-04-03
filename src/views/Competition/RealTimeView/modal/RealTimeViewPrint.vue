@@ -60,7 +60,6 @@ export default {
           title: '时间',
           align: 'center',
           customRender: text => {
-            // console.log(text)
             return text.length <= 19 ? text : text.substring(0, text.length - 7)
             // return Time(new Date(text), "YYYY-MM-DD HH:mm:ss") || ""
           }
@@ -94,7 +93,6 @@ export default {
       this.list = arr
     },
     init(data) {
-      console.log(data)
       this.title = '成绩打印'
       this.type = 0
       this.visible = true
@@ -107,7 +105,6 @@ export default {
             list: item.dtlDto.scoreList
           }
         }).filter(item => item.stageName === data.stageName)
-        // console.log(arr)
         this.list = arr
       } else {
         this.formData = {}
@@ -117,7 +114,6 @@ export default {
           // this.list =
           this.$nextTick(() => {
             if ('detailScoreList' in data) {
-              console.log(data.detailScoreList)
               this.jt['金牌赛'] = data.detailScoreList.filter(item => item.stageGroup === 1)
               this.jt['铜牌赛'] = data.detailScoreList.filter(item => item.stageGroup !== 1)
               this.list = [{ list: data.detailScoreList, title: "" }]
@@ -194,7 +190,6 @@ export default {
             tds.push(l.slice(i, i + 20))
           }
         }
-        console.log(tds)
         const tables = []
         for (let i = 0; i < tds.length; i++) {
           if (i === 0) {
@@ -270,7 +265,6 @@ export default {
     // 打印的决赛
     bodyContent2() {
       const list = (arr) => {
-        console.log(this.formData)
         const l = arr.map((item, index) => {
           if (index + 1 <= 10 && (index + 1) % 5 === 0) {
             return (`
@@ -329,7 +323,6 @@ export default {
             tds.push(l.slice(i, i + 20))
           }
         }
-        console.log(tds)
         const tables = []
         for (let i = 0; i < tds.length; i++) {
           if (i === 0) {
@@ -404,7 +397,6 @@ export default {
     },
     groupContent() {
       const list = () => {
-        // console.log()
         const scoreList = JSON.parse(JSON.stringify(this.formData.detailScoreList))
         const l = scoreList.map((item, index) => {
           if ((index + 1) % 10 === 0 && index !== 0) {
@@ -497,7 +489,6 @@ export default {
       const jtList = () => {
         const jtds = []
         const ttds = []
-        console.log(this.jt)
         if (this.jt["金牌赛"].length != 0) {
           for (const item of this.jt["金牌赛"]) {
             jtds.push(`<tr style="height: 50px; line-height: 50px">
@@ -614,7 +605,6 @@ export default {
           document.body.removeChild(iframe)
         }, 50)
       }
-      console.log(this.stageName)
       if (this.stageName.includes('团体')) {
         prints(this.groupContent)
       } else {

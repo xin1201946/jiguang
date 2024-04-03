@@ -50,6 +50,12 @@
       </template>
       <!-- 表格 -->
       <div class="tableClass">
+        <div class="gameInfoTables_group" v-if="groupList.length">
+            <a-tabs v-model="group" @change="radioChangeHandle">
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group"
+                :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
+            </a-tabs>
+          </div>
         <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId"
           :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading" :scroll="{ x: 1500 }">
           <template v-for="col in strArr" v-slot:[col]="text, record, index">
@@ -74,6 +80,7 @@
     </Card>
     <!-- 行内成绩详情 -->
     <GameInfoAchievementModal ref="Achievement" @success="getTableList"></GameInfoAchievementModal>
+    <RealTimeViewPrint ref="print"></RealTimeViewPrint>
   </div>
 </template>
 
@@ -81,13 +88,16 @@
 import Card from '@comp/card/card.vue'
 import QuerySearch from '@/components/query/QuerySearch.vue'
 import GameInfoAchievementModal from '@views/Competition/gameInfo/modal/gameInfoAchievementModal.vue'
-import { bizContestPageList, bizContestProjectList, bizContestProjectStageList, getStagePlayerGroup } from '@api/competition'
+import RealTimeViewPrint from '@views/Competition/RealTimeView/modal/RealTimeViewPrint.vue'
+import { bizContestPageList, bizContestProjectList, bizContestProjectStageList, getStagePlayerGroup, bizPlayerFinalScoreSportsScoresList } from '@api/competition'
+import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 export default {
   name: 'chengTongScorePage',   // 成统页面
   components: {
     Card,
     QuerySearch,
     GameInfoAchievementModal,
+    RealTimeViewPrint,
   },
   data() {
     return {
@@ -171,6 +181,9 @@ export default {
       // 对于某些自动赋值的input框设为 只读
       readonlyArr: [''],
       menuVisible: false,
+      sNamevisible: true,
+      groupList:[],
+      group:null,
     }
   },
   computed: {
@@ -291,8 +304,15 @@ export default {
     handleChangePro2(re) {
       this.cproStageId = re
       this.$forceUpdate()
+      const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      if (arrs[0].stageName.includes("金/铜牌赛")) {
+        this.sNamevisible = false
+      } else {
+        this.sNamevisible = true
+      }
       // this.$set(this.cproStageId, re)
       this.getTableList()
+
     },
     /**
      * 获取table数据
@@ -363,8 +383,6 @@ export default {
             return newItem // 返回新对象
           })
           this.dataSource = [...newSource]
-          console.log()
-          console.log(this.dataSource,'qweqweqwewqq123123232');
         }
       })
       this.columns = [
@@ -428,18 +446,23 @@ export default {
           },
         })
       }
-      // }
-      this.columns.push(...arrColumns, {
-        title: '操作',
-        align: 'center',
-        dataIndex: 'operation',
-        scopedSlots: {
-          customRender: 'operation'
-        },
-        width: 180,
-        fixed: 'right',
-      })
+      // }\
+      if (this.sNamevisible === true) {
+        this.columns.push(...arrColumns, {
+          title: '操作',
+          align: 'center',
+          dataIndex: 'operation',
+          scopedSlots: {
+            customRender: 'operation'
+          },
+          width: 180,
+          fixed: 'right',
+        })
+      } else {
+        this.columns.push(...arrColumns)
+      }
     },
+    numToCapital,
     // 查询
     handleSubmit() {
       this.getTableList()
@@ -450,489 +473,34 @@ export default {
       this.getTableList()
     },
     handleActionsColumnContextMenu(record, event, col) {
-      console.log(col, record.col)
       event.preventDefault() // 阻止默认的右键菜单  
-      // 在这里添加你的自定义右键菜单逻辑  
-      console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
+      // 在这里添加你的自定义右键菜单逻辑 
       this.$refs.Achievement.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     // 打印的资格赛
-    bodyContent() {
-      const list = (arr) => {
-        const l = arr.map((item, index) => {
-          if ((index + 1) % 10 === 0 && index !== 0) {
-            return (`
-              <tr style="height: 45px; line-height: 45px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
-                <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
-              </tr>,
-              <tr>
-                <td align="center" style="font-weight: 1000;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[((index + 1) / 10) - 1] || 0}</td>
-              </tr>,
-            `)
-          }
-          return (
-            `<tr style="height: 45px; line-height: 45px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
-          </tr>,`
-          )
-        }).filter(item => item.length !== 0).join('').split(',').map(item => item.replace("/\/n/g").trim()).filter(item => item.length !== 0)
-        l.push(`
-          <tr style="text-align: right">
-            <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
-          </tr>,
-        `)
-        const tds = []
-        tds.push([])
-        for (let i = 0; i < 14; i++) {
-          tds[0].push(l[i])
-        }
-        if (l.length > 14) {
-          l.splice(0, 14)
-          for (let i = 0; i < l.length; i += 20) {
-            tds.push(l.slice(i, i + 20))
-          }
-        }
-        console.log(tds)
-        const tables = []
-        for (let i = 0; i < tds.length; i++) {
-          if (i === 0) {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">靶位:${this.formData.targetSiteStr}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.projectGroup}${this.formData.projectName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.dtlDto.title || this.list[0].title}</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          } else {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          }
-        }
-        return tables.join("")
-      }
-      const arr = this.list.map((item, i) => {
-        if (item.list.length) {
-          return (`<div>${list(item.list)}</div>`)
-        }
-        return ''
-      })
-      return (`
-      <style>
-        @media print {
-          @page {
-            margin: 0;
-            margin-top: 2cm;
-          }
-        }
-        thead>tr{
-          height: 50px;
-          line-height: 50px;
-        }
-        .print>div{
-          display: grid;
-          grid-template-columns: 45% 45%;
-        }
-      </style>
-      <div class="print" style="height: auto;">
-         ${arr.join("</br>")}
-      </div>`)
-    },
-    // 打印的决赛
-    bodyContent2() {
-      const list = (arr) => {
-        console.log(this.formData)
-        const l = arr.map((item, index) => {
-          if (index + 1 <= 10 && (index + 1) % 5 === 0) {
-            return (`
-              <tr style="height: 45px; line-height: 45px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
-                <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
-              </tr>,
-              <tr>
-                <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[((index + 1) / 5) - 1] || 0}</td>
-              </tr>,
-            `)
-          }
-          if (index + 1 > 10 && (index + 1) % 2 === 0) {
-            return (`
-              <tr style="height: 45px; line-height: 45px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
-                <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
-              </tr>,
-              <tr>
-                <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1 - 10) / 2 + 1]}</td>
-              </tr>,
-            `)
-          }
-          return (
-            `<tr style="height: 45px; line-height: 45px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
-          </tr>,`
-          )
-        }).filter(item => item.length !== 0).join('').split(',').map(item => item.replace("/\/n/g").trim()).filter(item => item.length !== 0)
-        l.push(`
-          <tr style="text-align: right">
-            <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
-          </tr>,
-        `)
-        const tds = []
-        tds.push([])
-        for (let i = 0; i < 14; i++) {
-          tds[0].push(l[i])
-        }
-        if (l.length > 14) {
-          l.splice(0, 14)
-          for (let i = 0; i < l.length; i += 20) {
-            tds.push(l.slice(i, i + 20))
-          }
-        }
-        console.log(tds)
-        const tables = []
-        for (let i = 0; i < tds.length; i++) {
-          if (i === 0) {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px;">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">靶位:${this.formData.targetSiteStr}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.projectGroup}${this.formData.projectName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.dtlDto.title}</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          } else {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px;">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          }
-        }
-        return tables.join("")
-      }
-      const arr = this.list.map((item, i) => {
-        if (item.list.length) {
-          return (`<div>${list(item.list)}</div>`)
-        }
-        return ''
-      })
-      return (`
-      <style>
-        @media print {
-          @page {
-            margin: 0;
-            margin-top: 2cm;
-          }
-        }
-        thead>tr{
-          height: 50px;
-          line-height: 50px;
-        }
-        .print>div{
-          display: grid;
-          grid-template-columns: 45% 45%;
-        }
-      </style>
-      <div class="print" style="height: auto">
-         ${arr.join("</br>")}
-      </div>`)
-    },
-    groupContent() {
-      const list = () => {
-        // console.log()
-        const scoreList = JSON.parse(JSON.stringify(this.formData.detailScoreList))
-        const l = scoreList.map((item, index) => {
-          if ((index + 1) % 10 === 0 && index !== 0) {
-            return (`
-              <tr style="height: 50px; line-height: 50px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
-                <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
-              </tr>,
-              <tr>
-                <td align="center">总计</td>
-                <td align="center">${this.formData.scoreList[((index + 1) / 10) - 1] || 0}</td>
-              </tr>,
-            `)
-          }
-          return (
-            `<tr style="height: 50px; line-height: 50px">
-              <td align="center">${item.shootCode}</td>
-              <td align="center">${item.score}</td>
-              <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-              <td align="center">${item.xcoord}</td>
-              <td align="center">${item.ycoord}</td>
-            </tr>,`
-          )
-        })
-          .filter(item => item.length !== 0)
-          .join('')
-          .split(',')
-          .map(item => item.replace("/\/n/g").trim())
-          .filter(item => item.length !== 0)
-        const tds = []
-        tds.push([])
-        for (let i = 0; i < 14; i++) {
-          tds[0].push(l[i])
-        }
-        if (l.length > 14) {
-          l.splice(0, 14)
-          for (let i = 0; i < l.length; i += 19) {
-            tds.push(l.slice(i, i + 19))
-          }
-        }
-        const tables = []
-        for (let i = 0; i < tds.length; i++) {
-          if (i === 0) {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px;">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">靶位:${this.formData.targetSite}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.detailScoreList[0].projectName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.detailScoreList[0].stageName}</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          } else {
-            tables.push(`
-              <div style="box-sizing: border-box;padding: 10px">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.detailScoreList[0].stageName}</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join("")}</tbody>
-                </table>
-              </div>
-            `)
-          }
-        }
-        return tables.join("")
-      }
-      const jtList = () => {
-        const jtds = []
-        const ttds = []
-        console.log(this.jt)
-        if (this.jt["金牌赛"].length != 0) {
-          for (const item of this.jt["金牌赛"]) {
-            jtds.push(`<tr style="height: 50px; line-height: 50px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
-          </tr>`)
-          }
-        }
-        if (this.jt["铜牌赛"].length != 0) {
-          for (const item of this.jt["铜牌赛"]) {
-            ttds.push(`<tr style="height: 50px; line-height: 50px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
-            <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
-          </tr>`)
-          }
-        }
-        // if (ttds.length) {
-        //   ttds.push(`<tr style="height: 50px; line-height: 50px;font-weight: 900">
-        //     <td align="center">总环数</td>
-        //     <td align="center">0</td>
-        //   </tr>`)
-        // } else {
-        //   jtds.push(`<tr style="height: 50px; line-height: 50px;font-weight: 900">
-        //     <td align="center">总环数</td>
-        //     <td align="center">0</td>
-        //   </tr>`)
-        // }
-
-        const table = ttds.length ? (`
-          <thead>
-            <tr style="font-size: 24px"><th>铜牌赛</th></tr>
-            <tr style="height: 50px; line-height: 50px">
-              <th>发序</th>
-              <th>环数</th>
-              <th>时间</th>
-              <th>X</th>
-              <th>Y</th>
-            </tr>
-          </thead>
-          <tbody style="font-family: 宋体;">
-            ${ttds.join("")}
-          </tbody>
-        `) :
-          `
-        <thead>
-          <tr style="font-size: 24px"><th>金牌赛</th></tr>
-          <tr style="height: 50px; line-height: 50px">
-            <th>发序</th>
-            <th>环数</th>
-            <th>时间</th>
-            <th>X</th>
-            <th>Y</th>
-          </tr>
-        </thead>
-        <tbody style="font-family: 宋体;">
-          ${jtds.join("")}
-        </tbody>
-        `
-        return (`
-          <div>
-            <p style="font-size: 24px"><b>靶位:${this.formData.targetSite}</b></p>
-            <p style="font-size: 24px"><b>时间:${this.formData.sgTimeStart}</b></p>
-            <p style="font-size: 24px"><b>${this.formData.detailScoreList[0].projectName}</b></p>
-            <p style="font-size: 24px"><b>${this.formData.playerName}</b></p>
-            <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
-              ${table}
-            </table>
-          </div>
-        `)
-      }
-
-      return (`
-        <style>
-          @media print {
-            @page {
-              margin: 0;
-            }
-          }
-          thead>tr{
-            height: 50px;
-            line-height: 50px;
-          }
-          .print{
-            display: grid;
-            grid-template-columns: 45% 45%;
-          }
-        </style>
-        <div class="print" style="height: auto">${jtList()}</div>
-      `)
-      // return ""
-    },
     // 打印
     handlePrint(e) {
-      console.log(e, 'wertqq1')
-      // const prints = (fn) => {
-      //   const iframe = document.createElement("iframe")
-      //   document.body.appendChild(iframe)
-      //   iframe.contentWindow.document.open()
-      //   // iframe.contentWindow.document.write(this.bodyContent());
-      //   iframe.contentWindow.document.write(fn())
-      //   iframe.width = '100%'
-      //   iframe.height = '800px'
-      //   setTimeout(() => {
-      //     iframe.contentWindow.print()
-      //     iframe.contentWindow.document.close()
-      //     iframe.contentWindow.addEventListener('afterprint', () => {
-      //       iframe.contentWindow.document.close()
-      //       document.body.removeChild(iframe)
-      //     })
-      //     document.body.removeChild(iframe)
-      //   }, 50)
-      // }
-      // console.log(this.stageName)
-      // if (this.stageName.includes('团体')) {
-      //   prints(this.groupContent)
+      bizPlayerFinalScoreSportsScoresList({
+        contestId: this.contestId,
+        playerId: e.playerId,
+        cproId: this.cproId,
+        cproStageId: this.cproStageId
+      }).then(res => {
+        if (res.code === 200) {
+          this.$refs.print.init({
+            list: res.result,
+            stageName: e.project1,   //"10米激光手枪30发" 填写这个词
+            stageId: this.cproStageId
+          })
+        } else {
+          this.$message.warning(res.message)
+        }
+      })
+      // const arrs = this.matchList.filter((item) => item.cproStageId === this.cproStageId)
+      // if (arrs[0].stageName === '资格赛') {
+      //   prints(this.bodyContent)
       // } else {
-      //   if (this.name == '资格赛') {
-      //     prints(this.bodyContent)
-      //   } else {
-      //     prints(this.bodyContent2)
-      //   }
+      //   prints(this.bodyContent2)
       // }
     },
   }
@@ -949,5 +517,9 @@ export default {
 
 .tableClass {
   margin-top: 10px;
+}
+
+/deep/.ant-table-tbody .ant-table-row td {
+  padding: 5px 0;
 }
 </style>

@@ -7,7 +7,8 @@
         <a-descriptions-item label="性别" :span="1">{{ formData.playerSex == '1' ? '男' : '女' }}</a-descriptions-item>
         <a-descriptions-item label="代表队" :span="1">{{ formData.groupName }}</a-descriptions-item>
         <a-descriptions-item label="靶位" :span="1">{{ formData.targetSite }}</a-descriptions-item>
-        <a-descriptions-item label="总环数" :span="2">{{ formData.totalScore }}</a-descriptions-item>
+        <a-descriptions-item label="当前组总环数" :span="2">{{ formData.numberOfRings }}</a-descriptions-item>
+        <!-- <a-descriptions-item label="总环数" :span="2">{{ formData.totalScore }}</a-descriptions-item> -->
         <!--        <a-descriptions-item label="组数" :span="1"></a-descriptions-item>-->
       </a-descriptions>
       <div style="display: flex;align-items:center;justify-content: space-between">
@@ -45,7 +46,7 @@
 <script>
 import gameInfoEditResult from '@views/Competition/gameInfo/modal/gameInfoEditResult.vue'
 import { gameInfoModalColumns } from '@views/Competition/gameInfo/gameInfo.config'
-import { getScoresByFinalScoreId, delPlayerShootScore, updateScore, saveScore } from '@api/competition'
+import { getScoresByFinalScoreId, delPlayerShootScore, updateScore, saveScore,processGetPlayerScore } from '@api/competition'
 import BizModal from '@comp/modal/BizModal.vue'
 import { infoMessage } from '@/utils'
 export default {
@@ -184,33 +185,18 @@ export default {
       this.type = 1
       this.loadingModal = false
       this.formData = record
-      getScoresByFinalScoreId({
-        stageId: record.stageId, //阶段id
-        playerId: record.playerId, //运动员id
-      }).then((res) => {
-        this.spanArr = []
-        this.pos = 0
-        let data = res.result
-        // 循环
-        // for (var i = 0; i < data.length; i++) {
-        //   // 循环的第一行默认角标给个0，合并数给个1，因为rowspan和colspan需要默认是1，如果是0的话就不显示这个单元格了
-        //   if (i === 0) {
-        //     data[0]['colSpan'] = 1
-        //     this.pos = 0
-        //   } else {
-        //     //这里已经循环到第二行了才会走这里
-        //     // 判断当前行的某一个字段和上一行的某一个字段是否相同？
-        //     // if (data[i].groupCount === data[i - 1].groupCount) {
-        //     //   //如果相同代表要合并，就给上一个元素合并数+1。
-        //     //   data[this.pos]['colSpan'] += 1 //这里pos是0。所以是给spanArr内第一条数据的合并数加了1，变成了2，代表从第一行开始合并1格，记住，1是默认有一格，没加1代表合并一格
-        //     //   data[i]['colSpan'] = 0
-        //     // } else {
-        //     //   data[i]['colSpan'] = 1
-        //     //   this.pos = i //pos的角标也改为当前的循环。方便下一次循环的时候如果两个字段相同，合并数直接从下一个角标算起
-        //     // }
-        //   }
-        // }
-        this.dataSource = data
+      // console.log(record,'---**-212');
+      // return
+      const dataA ={
+        finalScoreId:record.finalScoreId,
+        groupCount:record.col
+      }
+      processGetPlayerScore(dataA).then((res)=>{
+        if(res.success){
+          this.dataSource = res.result
+        }else{
+          this.$message.error(res.message)
+        }
       })
     },
     handleCancel() {

@@ -189,3 +189,7 @@ export const massingSportsList = data => postAction("bizPlayerFinalScore/massing
 export const bizUnifiedUserList = data => postAction("bizUnified/userList", data)
 // 分配裁判员
 export const bizUnifiedSaveUnified = data => postAction("bizUnified/saveUnified", data)
+// 查询运动员每组详细成绩
+export const processGetPlayerScore = data => postAction("contest-process/getPlayerScore", data)
+// 修改组别成绩
+export const processEditGroupScore= data => postAction("contest-process/editGroupScore", data)

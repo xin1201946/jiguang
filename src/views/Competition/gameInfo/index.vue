@@ -85,7 +85,7 @@
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
                   <a-input placeholder="请输入" v-if="record.editable" :value="text"
                     @change="e => handleChange(e.target.value, record.serialNumber, col)"
-                    @blur="handleBlur(record.serialNumber)" />
+                    @blur="handleBlur(record, col, text)" />
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
@@ -218,6 +218,7 @@ import {
   changeGroup, //切换分组
   changeGroupContest,
   selectStageStatusList, //变更分组
+  processEditGroupScore,
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 
@@ -342,11 +343,11 @@ export default {
   },
   methods: {
     handleActionsColumnContextMenu(record, event, col) {
-      console.log(col, record.col)
+      // console.log(col, record.col)
       event.preventDefault() // 阻止默认的右键菜单  
       // 在这里添加你的自定义右键菜单逻辑  
-      console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
-      this.$refs.Achievement.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
+      // console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
+      this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
     },
     // 可编辑
     handleChange(value, serialNumber, column) {
@@ -367,34 +368,29 @@ export default {
         this.$forceUpdate()
       }
     },
-    handleBlur(serialNumber) {
-      // console.log('Input 失去焦点', serialNumber);  
-      const newData = [...this.dataSource]
-      const newCacheData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
-      const targetCache = newCacheData.find(item => serialNumber === item.serialNumber)
-      if (target && targetCache) {
-        delete target.editable
-        this.dataSource = newData
-        Object.assign(targetCache, target)
-        this.dataSource = newCacheData
-        this.$forceUpdate()
+    handleBlur(record, cal, text) {
+      // console.log('Input 失去焦点', record, cal, text)
+      const dataBlur = {
+        type: 1,
+        finalScoreId: record.finalScoreId,
+        scoreGroup: cal,
+        score: text
       }
-      this.editingKey = ''
-    },
-    saveAchievement(serialNumber) {
-      const newData = [...this.dataSource]
-      const newCacheData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
-      const targetCache = newCacheData.find(item => serialNumber === item.serialNumber)
-      if (target && targetCache) {
-        delete target.editable
-        this.dataSource = newData
-        Object.assign(targetCache, target)
-        this.dataSource = newCacheData
-        this.$forceUpdate()
-      }
-      this.editingKey = ''
+      processEditGroupScore(dataBlur).then((res) => {
+        if (res.success) {
+          const newData = [...this.dataSource]
+          const target = newData.find(item => record.serialNumber === item.serialNumber)
+          if (target) {
+            delete target.editable
+            this.dataSource = newData
+            this.$forceUpdate()
+          }
+          this.$message.success('修改组别成绩成功！')
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     cancelAchievement(serialNumber) {
       const newData = [...this.dataSource]
@@ -406,12 +402,6 @@ export default {
         this.dataSource = newData
         this.$forceUpdate()
       }
-    },
-    // 点击详情弹窗
-    handleCustomMenuAction(record) {
-      console.log(record, '12345645456qqqq')
-      // this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
-      // this.$refs.group.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     /*** 可编辑结尾****/
 
@@ -787,7 +777,7 @@ export default {
             return newItem // 返回新对象
           })
           this.dataSource = [...newSource]
-          console.log(this.dataSource,'qweqweqwewqq123123232');
+          // console.log(this.dataSource, 'qweqweqwewqq123123232')
 
         }
       })
@@ -1153,14 +1143,14 @@ export default {
           contestId: this.data.contestId, //赛事id
           cproId: this.cproId, //赛事项目id
           stageId: this.cproStageId, //项目阶段id
-          playerIds:this.selectedRowKeys.join(',')
+          playerIds: this.selectedRowKeys.join(',')
         }
         this.$refs.gameinfoChengTongJudgeRef.edit(arr)
       } else {
         this.$message.warning('请选择要分配裁判的运动员！')
       }
     },
-    successOk(){
+    successOk() {
       this.selectedRowKeys = []
       this.getTableList()
     },
