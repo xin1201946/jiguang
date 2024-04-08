@@ -7,10 +7,23 @@
       <a-space>
         <a-button type="primary" @click="handleAdd('device')" icon="plus">添加</a-button>
         <a-button type="primary" @click="handleSync">同步</a-button>
+<!--        <a-button
+          type='primary'
+          :disabled='rowSelection.selectedRowKeys.length === 0'
+          @click='handleModel'
+        >模式</a-button>-->
       </a-space>
     </template>
     <template slot="default">
-      <a-table :columns="columns" :data-source="data" rowKey="tabletPcId" :pagination="pagination" @change="handleTableChange" bordered :scroll="{x: 1400}">
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        rowKey="tabletPcId"
+        :pagination="pagination"
+        @change="handleTableChange"
+        bordered
+        :scroll="{x: 1400}"
+      >
         <template slot="targetSite" slot-scope="text, record, index">
           <a-input @blur="setValueHandle(record)" v-model="record.targetSite"></a-input>
         </template>
@@ -22,6 +35,7 @@
         </template>
       </a-table>
       <SlabModal ref="modal" @list="handleList" />
+
     </template>
   </Card>
 </template>
@@ -30,7 +44,13 @@
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import Card from '@comp/card/card.vue'
 import { slabQuery, slabTableColumns, tabletPcModel } from '@views/biz/slab/slab.config'
-import { bizTabletPcPageList, bizTabletPcDelete, bizTabletPcSync, updateTarget } from '@api/biz'
+import {
+  bizTabletPcPageList,
+  bizTabletPcDelete,
+  bizTabletPcSync,
+  updateTarget,
+  bizDeviceControlModelControl
+} from '@api/biz'
 import SlabModal from '@views/biz/slab/model/SlabModal.vue'
 import bizMixins from '@views/biz/bizMixins'
 import { deleteMessage } from '@/utils'
@@ -52,6 +72,14 @@ export default {
         tabletPcStatus: undefined,
         tabletPcModel: undefined,
       },
+      rowSelection: {
+        type: "checkbox",
+        selectedRowKeys: [],
+        fixed: true,
+        onChange: (v, v1) => {
+          this.rowSelection.selectedRowKeys = v
+        }
+      }
     }
   },
   mounted() {
@@ -84,6 +112,22 @@ export default {
           this.pagination.total = res.result.total
         }
       })
+    },
+    handleModel() {
+      this.visible = true
+      this.model = ""
+      /*bizDeviceControlModelControl({
+        tabletPcNumStrs: this.rowSelection.selectedRowKeys.join(','),
+        model: "试射"
+      }).then(res => {
+        if (res.code === 200) {
+          this.rowSelection.selectedRowKeys = []
+          this.$message.success(res.message || '模式控制成功')
+          this.getList()
+        }else {
+          this.$message.error(res.message)
+        }
+      })*/
     },
     handleSync() {
       bizTabletPcSync().then((res) => {

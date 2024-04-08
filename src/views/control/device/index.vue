@@ -13,6 +13,9 @@
         <a-button type="primary" icon="edit" @click="handleProject()">项目控制</a-button>
         <a-button type="primary" icon="edit" @click="handleDisPlay()">显示控制</a-button>
         <a-button type="primary" icon="edit" @click="handleDevice()">设备控制</a-button>
+        <a-button type="primary" icon="edit" @click='handleSlabCut()'>模式切换</a-button>
+        <a-button type="primary" icon="edit" @click='handleProjectCut()'>项目切换</a-button>
+        <a-button type="primary" icon="edit" @click='handleUserDelivery()'>用户下发</a-button>
       </a-space>
     </template>
     <a-table
@@ -40,6 +43,7 @@
     <DeviceModalDisplay ref="display" @list="handleLists"></DeviceModalDisplay>
     <DeviceModalDevice ref="device" @list="handleLists"></DeviceModalDevice>
     <DeviceModalProject ref="project" @list="handleLists"></DeviceModalProject>
+    <DeviceModalCut ref='cut' @list="handleLists"></DeviceModalCut>
   </Card>
 </template>
 
@@ -55,6 +59,7 @@ import { bizTabletPcPageList } from '@api/biz'
 import DeviceModalDisplay from '@views/control/device/Modal/DeviceModalDisplay.vue'
 import DeviceModalDevice from '@views/control/device/Modal/DeviceModalDevice.vue'
 import DeviceModalProject from '@views/control/device/Modal/DeviceModalProject.vue'
+import DeviceModalCut from '@views/control/device/Modal/DeviceModalCut.vue'
 export default {
   name: 'device',
   components: {
@@ -63,7 +68,8 @@ export default {
     DeviceModal,
     DeviceModalDisplay,
     DeviceModalDevice,
-    DeviceModalProject
+    DeviceModalProject,
+    DeviceModalCut
   },
   mixins: [BizMixins],
   data() {
@@ -166,6 +172,33 @@ export default {
         }
       }
 
+    },
+    // 模式切换
+    handleSlabCut() {
+      if (this.selectedRowKeys.length === 0) {
+        this.$message.error("请选择表格信息再点击模式切换按钮")
+      }
+      else {
+        this.$refs.cut.slabInit(this.selectedRows)
+      }
+    },
+    // 项目切换
+    handleProjectCut () {
+      if (this.selectedRowKeys.length === 0) {
+        this.$message.error("请选择表格信息再点击项目切换按钮")
+      }
+      else {
+        this.$refs.cut.projectInit(this.selectedRows)
+      }
+    },
+    // 用户下发
+    handleUserDelivery () {
+      if (this.selectedRowKeys.length === 0) {
+        this.$message.error("请选择表格信息再点击用户下发按钮")
+      }
+      else {
+        this.$refs.cut.userInit(this.selectedRows)
+      }
     },
     handleDevice(record) {
       const arr = []

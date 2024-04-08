@@ -16,7 +16,14 @@ export const bizTabletPcDelete = id => deleteAction(`bizTabletPc/delete/${id}`)
 export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list2", data)
 // 同步
 export const bizTabletPcSync = () => getAction("bizTabletPc/sync")
-
+// 模式控制
+export const bizDeviceControlModelControl = (data = {}) => postAction("bizDeviceControl/modelControl", data)
+// 项目控制
+// bizDeviceControl/projectControl
+export const bizDeviceControlProjectControl = (data = {}) => postAction("bizDeviceControl/projectControl", data)
+// 用户下发
+// bizDeviceControl/userControl
+export const bizDeviceControlUserControl = (data = {}) => postAction("bizDeviceControl/userControl", data)
 
 // 报名表分页查询
 export const bizEntryFormPageList = data => postAction('/bizEntryForm/page/list', data)
