@@ -25,8 +25,9 @@
           <div class="contScores">
             <div class="contBox" v-for="(item, index) in targetGoupList" :key="index">
               <div class="cont_box_top">
-                <span class="cont_box_top_span">{{ nameTitle }}</span>
-                <span class="cont_span">{{ item.playerName }}</span>
+                <!-- <span class="cont_box_top_span">{{ nameTitle }}</span>   比赛标题 -->
+                <span class="cont_span cont_box_top_span">{{ item.playerName }}</span>
+                <span class="cont_box_top_span cont_span">靶位：{{ item.target }}</span>
                 <span class="cont_box_top_span cont_span">总环数：{{ item.totalScore }}</span>
                 <!-- <a>总详情</a> -->
               </div>
@@ -53,11 +54,11 @@
                 </div>
                 <div class="cont_right_cont">
                   <a-table :columns="columns" :data-source="item.playerScores" :loading="loading" :pagination="false"
-                    :scroll="{ x: 200, y: 200 }"></a-table>
-                  <div class="cont_bot_div">
+                    :scroll="{ x: 200, y: 240 }"></a-table>
+                  <!-- <div class="cont_bot_div">
                     <span class="cont_bot_div_span">组数：4</span>
                     <span class="cont_bot_div_span" style="border-left: solid 2px #fff;">总组数：6</span>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

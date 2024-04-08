@@ -1,5 +1,5 @@
 <template>
-  <BizModal width="800" :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
+  <BizModal :width="800" :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
     <div class="modal">
       <a-table :columns="columns" rowKey="id" :dataSource="table" :pagination="false" bordered size="small">
         <template slot="operation" slot-scope="record">

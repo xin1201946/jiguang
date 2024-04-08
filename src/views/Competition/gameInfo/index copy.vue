@@ -1,5 +1,8 @@
 <template>
   <div class="gameInfo">
+    <div class="btns">
+      <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
+    </div>
     <div class="cards">
       <div class="example" v-if="loading2">
         <div>
@@ -7,57 +10,24 @@
           <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
         </div>
       </div>
-      <Card>
-        <template slot="query">
-          <a-form :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }">
-            <a-row :gutter="24">
-              <a-col :span="6">
-                <a-form-item label="赛事名称">
-                  <a-select allowClear v-model="formData.contestId" @change="handleChangePro">
-                    <a-select-option v-for="item in dataContList" :key="item.contestId" :value="item.contestId">{{
-        item.contestName }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-item label="项目名称">
-                  <a-select allowClear v-model="formData.cproId" @change="handleChangePro1" style="width: 100%;"
-                    showSearch optionFilterProp="children">
-                    <a-select-option v-for="item in projectList" :key="item.cproId"
-                      :value="item.cproId">{{ item.projectName }}-{{ item.projectGroup }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="3">
-                <a-form-item label="阶段">
-                  <a-select allowClear v-model="formData.cproStageId" @change="handleChangePro2" style="width: 100%">
-                    <a-select-option v-for="item in matchList" :key="item.cproStageId" :value="item.cproStageId">{{
-        item.stageName }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-item label="靶位">
-                  <a-input placeholder="请输入靶位号" v-model="formData.targetSite" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="5">
-                <a-form-item :labelCol="{ span: 0 }">
-                  <a-space>
-                    <a-button html-type="submit" type="primary" icon="search" @click="handleSubmit">查询</a-button>
-                    <a-button @click="handleReset" icon="reload">重置</a-button>
-                  </a-space>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
+      <TreeCard ref="treeCard">
+        <template slot="tree">
+          <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
+              :title="item.projectName + ' - ' + item.projectGroup">
+              <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
+                <template slot="title">
+                  <div class="title">
+                    <span>{{ i.stageName }}</span>
+                  </div>
+                </template>
+              </a-tree-node>
+            </a-tree-node>
+          </a-directory-tree>
         </template>
-        <!-- <template slot="query">
+        <template slot="query">
           <QuerySearch ref="query"></QuerySearch>
-        </template> -->
+        </template>
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
@@ -168,7 +138,10 @@
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
         <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"
-          :pagination="false" :loading="loading">
+          :pagination="false">
+          <template slot="operation">
+
+          </template>
         </a-table>
         <!-- 抽签 -->
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
@@ -201,7 +174,7 @@
         <GameinfoChengTongJudge ref="gameinfoChengTongJudgeRef" @success="successOk"></GameinfoChengTongJudge>
         <!-- 靶图靶点 -->
         <TargetMapTargetPoint ref="TargetMapTargetPointRef" @success="successOk"></TargetMapTargetPoint>
-      </Card>
+      </TreeCard>
     </div>
   </div>
 </template>
@@ -229,7 +202,6 @@ import GameinfoChengTongJudge from '@views/Competition/gameInfo/modal/gameinfoCh
 import TargetMapTargetPoint from '@/views/targetImage/targetMapTargetPoint'
 
 import {
-  bizContestPageList,
   bizContestProjectList,
   bizContestProjectStageList,
   getStagePlayerGroup,
@@ -319,16 +291,6 @@ export default {
           title: '姓名',
           align: 'center',
         },
-        {
-          dataIndex: 'targetSite',
-          title: '靶位',
-          align: 'center',
-        },
-        {
-          dataIndex: 'padCode',
-          title: '设备号',
-          align: 'center',
-        },
         // {
         //   dataIndex: 'playerSex',
         //   customRender: (text, record, index) => {
@@ -343,24 +305,6 @@ export default {
         //   align: 'center',
         // },
         {
-          dataIndex: 'power0',
-          title: '枪电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'power1',
-          title: '靶电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'pcStatus',
-          title: '连接状态',
-          align: 'center',
-          customRender: (text, record, index) => {
-            return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
-          },
-        },
-        {
           dataIndex: 'groupName',
           title: '代表队',
           align: 'center',
@@ -368,6 +312,16 @@ export default {
         {
           dataIndex: 'isGroup',
           title: '是否团体排名',
+          align: 'center',
+        },
+        {
+          dataIndex: 'targetSite',
+          title: '靶位',
+          align: 'center',
+        },
+        {
+          dataIndex: 'padCode',
+          title: '设备号',
           align: 'center',
         },
         {
@@ -415,18 +369,7 @@ export default {
       // 对于某些自动赋值的input框设为 只读
       readonlyArr: [''],
       menuVisible: false,
-      dataContList: [],
-      projectList: [],
-      formData: {},
-      matchList: [],
-      contestId: '',
     }
-  },
-  created() {
-    this.getContestPageList()
-    let asssrr = JSON.parse(decodeURIComponent(this.$route.query.row))
-    this.contestId = asssrr.contestId
-    this.formData.contestId = asssrr.contestId
   },
   methods: {
     handleActionsColumnContextMenu(record, event, col) {
@@ -860,7 +803,6 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
-        targetSite: this.formData.targetSite //靶位
       })
         .then((res) => {
           if (res.success) {
@@ -893,7 +835,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          // this.$refs.treeCard.loading = false
+          this.$refs.treeCard.loading = false
         })
     },
     /**
@@ -936,34 +878,6 @@ export default {
           title: '姓名',
           align: 'center',
         },
-        {
-          dataIndex: 'targetSite',
-          title: '靶位',
-          align: 'center',
-        },
-        {
-          dataIndex: 'padCode',
-          title: '设备号',
-          align: 'center',
-        },
-        {
-          dataIndex: 'power0',
-          title: '枪电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'power1',
-          title: '靶电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'pcStatus',
-          title: '连接状态',
-          align: 'center',
-          customRender: (text, record, index) => {
-            return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
-          },
-        },
         // {
         //   dataIndex: 'playerSex',
         //   customRender: (text, record, index) => {
@@ -985,6 +899,16 @@ export default {
         {
           dataIndex: 'isGroup',
           title: '是否团体排名',
+          align: 'center',
+        },
+        {
+          dataIndex: 'targetSite',
+          title: '靶位',
+          align: 'center',
+        },
+        {
+          dataIndex: 'padCode',
+          title: '设备号',
           align: 'center',
         },
         {
@@ -1014,7 +938,7 @@ export default {
         scopedSlots: {
           customRender: 'operation'
         },
-        width: 220,
+        width: 300,
         fixed: 'right',
       })
       // }
@@ -1092,166 +1016,81 @@ export default {
         onCancel() {},
       }) */
     },
-
-
-    // 赛事列表 bizContestPageList
-    getContestPageList() {
-      const data = {
-        pageNum: 1,
-        pageSize: 99999,
-      }
-      bizContestPageList(data).then((res) => {
-        if (res.code === 200) {
-          this.dataContList = res.result.records
-          // this.contestId = this.dataContList[0].contestId
-          // this.formData.contestId = this.dataContList[0].contestId
-          this.getProjectList()
-        }
-      })
-    },
-    //赛事事件
-    handleChangePro(t) {
-      this.contestId = t
-      this.formData.contestId = t
-      this.formData.cproId = undefined
-      this.formData.cproStageId = undefined
-      this.getProjectList()
-    },
     /**
      * 获取数据
      */
     getProjectList() {
       bizContestProjectList({
-        contestId: this.contestId,
-        // contestId: 4,
+        contestId: this.data.contestId,
       }).then((res) => {
-        if (res.success) {
-          this.projectList = res.result
-          // this.cproId = this.projectList[0].cproId
-          // this.formData.cproId = this.projectList[0].cproId
-          // this.getListMatch()
-        }
+        const arr = res.result.map(async (item) => {
+          const stage = await bizContestProjectStageList({
+            contestId: item.contestId,
+            cproId: item.cproId,
+          })
+          return {
+            ...item,
+            children: stage.result.length ? stage.result : [],
+          }
+        })
+        this.getTree(arr)
       })
     },
-    // 选择后事件
-    handleChangePro1(Event) {
-      this.cproId = Event
-      this.formData.cproId = Event
-      this.getListMatch()
-      this.formData.cproStageId = null
+    getTree(arr) {
+      Promise.all(arr).then((res) => {
+        this.treeList = res
+      })
     },
-    // 阶段
-    getListMatch() {
-      const a = {
-        // contestId: "4",
-        contestId: this.contestId,
-        cproId: this.cproId,
+    /**
+     * 左侧功能
+     */
+    onSelect(keys, event) {
+      this.$refs.treeCard.loading = true
+      // isLeaf 为true时是最底层
+      // keys 阶段id
+      if (event.node.isLeaf) {
+        this.cproStageId = keys[0]
+        this.draw = false
+        this.group = null
+        this.groupActive = false
+        function findParent(data, target, result) {
+          data.forEach((item) => {
+            item.children.forEach((e) => {
+              if (e.cproStageId === target) {
+                result.push(item)
+              }
+            })
+          })
+        }
+        let result = []
+        findParent(this.treeList, this.cproStageId, result)
+
+        function searchItem(data, target, list) {
+          data.forEach((item) => {
+            if (item.cproStageId == target) {
+              list.push(item)
+            }
+            if (item.children) {
+              searchItem(item.children, target, list)
+            }
+          })
+        }
+        let arr = []
+        searchItem(this.treeList, this.cproStageId, arr)
+        this.stageName = arr[0].stageName
+        this.isAdjustment = arr[0].isAdjustment
+        this.cproId = result[0].cproId
+        this.projectName = result[0].projectName
+        this.getTableList()
+      } else {
+        this.cproStageId = null
+        this.draw = false
+        this.group = null
+        this.groupActive = false
+        this.$refs.treeCard.loading = false
       }
-      bizContestProjectStageList(a).then((res) => {
-        if (res.success) {
-          this.matchList = res.result
-        }
-      })
     },
-    // 阶段事件
-    handleChangePro2(re) {
-      this.cproStageId = re
-      this.$forceUpdate()
-      // const arrs = this.matchList.filter((item) => item.cproStageId === re)
-      // if (arrs[0].stageName.includes("金/铜牌赛")) {
-      //   this.sNamevisible = false
-      // } else {
-      //   this.sNamevisible = true
-      // }
-      // // this.$set(this.cproStageId, re)
-      this.getTableList()
-
-    },
-    // 查询
-    handleSubmit() {
-      this.getTableList()
-    },
-    // 重置
-    handleReset() {
-      this.formData.targetSite = undefined
-      this.getTableList()
-    },
-
-    // /**
-    //  * 获取数据
-    //  */
-    // getProjectList() {
-    //   bizContestProjectList({
-    //     contestId: this.data.contestId,
-    //   }).then((res) => {
-    //     const arr = res.result.map(async (item) => {
-    //       const stage = await bizContestProjectStageList({
-    //         contestId: item.contestId,
-    //         cproId: item.cproId,
-    //       })
-    //       return {
-    //         ...item,
-    //         children: stage.result.length ? stage.result : [],
-    //       }
-    //     })
-    //     this.getTree(arr)
-    //   })
-    // },
-    // getTree(arr) {
-    //   Promise.all(arr).then((res) => {
-    //     this.treeList = res
-    //   })
-    // },
-    // /**
-    //  * 左侧功能
-    //  */
-    // onSelect(keys, event) {
-    //   this.$refs.treeCard.loading = true
-    //   // isLeaf 为true时是最底层
-    //   // keys 阶段id
-    //   if (event.node.isLeaf) {
-    //     this.cproStageId = keys[0]
-    //     this.draw = false
-    //     this.group = null
-    //     this.groupActive = false
-    //     function findParent(data, target, result) {
-    //       data.forEach((item) => {
-    //         item.children.forEach((e) => {
-    //           if (e.cproStageId === target) {
-    //             result.push(item)
-    //           }
-    //         })
-    //       })
-    //     }
-    //     let result = []
-    //     findParent(this.treeList, this.cproStageId, result)
-
-    //     function searchItem(data, target, list) {
-    //       data.forEach((item) => {
-    //         if (item.cproStageId == target) {
-    //           list.push(item)
-    //         }
-    //         if (item.children) {
-    //           searchItem(item.children, target, list)
-    //         }
-    //       })
-    //     }
-    //     let arr = []
-    //     searchItem(this.treeList, this.cproStageId, arr)
-    //     this.stageName = arr[0].stageName
-    //     this.isAdjustment = arr[0].isAdjustment
-    //     this.cproId = result[0].cproId
-    //     this.projectName = result[0].projectName
-    //     this.getTableList()
-    //   } else {
-    //     this.cproStageId = null
-    //     this.draw = false
-    //     this.group = null
-    //     this.groupActive = false
-    //     this.$refs.treeCard.loading = false
-    //   }
-    // },
-    // onExpand() { },
+    onExpand() { },
     handleZhunbei(row) {
       ready({
         stageId: this.cproStageId, //项目阶段id
@@ -1496,7 +1335,7 @@ export default {
 
   .cards {
     position: relative;
-    height: calc(100% - 10px);
+    height: calc(100% - @btnHeight - 10px);
 
     .example {
       position: absolute;
