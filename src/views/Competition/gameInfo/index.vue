@@ -105,21 +105,40 @@
             <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
               rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
               :scroll="{ x: 1500 }">
-              <!-- 状态 -->
-              <template slot="pcStatusSlot" slot-scope="record,text">
-                <div v-if="record.pcStatus == '1'">
-                  1234
+
+              <template slot="power0Slot" slot-scope="text,record">
+                <div style="display: flex;justify-content: space-around;">
+                  <img v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                  <img v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接">
+                  <img v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
+                  <img v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击">
+                  <img src="../../../assets/电量.svg" alt="电量">
+                  <span>{{ text }}</span>
+                  <img src="../../../assets/电量.svg" alt="电量">
+                  <span>{{ record.power1 }}</span>
                 </div>
-                <div v-if="record.pcStatus == '0'">
-                  456
-                </div>
-                <!-- <img v-if="text == '0'" src="../../../assets/未连接.svg" alt="未连接">
-                <img v-if="text == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
               </template>
-              <!-- <template slot="pcStatusSlot" slot-scope="record,text">
-                <img src="../../../assets/未连接.svg" alt="">
-                  <img src="../../../assets/已连接.svg" alt="">
-                <span>{{ text === 0 ? '未连接' : text === 1 ? '已连接' : '' }}</span>
+
+
+              <!-- 枪电量 -->
+              <!-- <template slot="power0Slot" slot-scope="text,record">
+                <img src="../../../assets/电量.svg" alt="电量">
+                <span>{{ text }}</span>
+              </template> -->
+              <!-- 靶电量 -->
+              <!-- <template slot="power1Slot" slot-scope="text,record">
+                <img src="../../../assets/电量.svg" alt="电量">
+                <span>{{ text }}</span>
+              </template> -->
+              <!-- 模式 -->
+              <!-- <template slot="modelSlot" slot-scope="text,record">
+                <img v-if="text == '0'" src="../../../assets/试射.svg" alt="试射">
+                <img v-if="text == '1'" src="../../../assets/射击.svg" alt="射击">
+              </template> -->
+              <!-- 状态 -->
+              <!-- <template slot="pcStatusSlot" slot-scope="text,record">
+                <img v-if="text == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                <img v-if="text == '1'" src="../../../assets/已连接.svg" alt="已连接">
               </template> -->
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text,record">
@@ -360,33 +379,50 @@ export default {
         // },
         {
           dataIndex: 'power0',
-          title: '枪电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'power1',
-          title: '靶电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'model',
-          title: '模式',
-          align: 'center',
-          customRender: (text, record, index) => {
-            return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
-          },
-        },
-        {
-          dataIndex: 'pcStatus',
-          title: '连接状态',
+          title: '设备连接状态（枪、靶）',
           align: 'center',
           scopedSlots: {
-            customRender: 'pcStatusSlot'
+            customRender: 'power0Slot'
           },
-          // customRender: (text, record, index) => {
-          //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
-          // },
         },
+        // {
+        //   dataIndex: 'power0',
+        //   title: '枪电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power0Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'power1',
+        //   title: '靶电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power1Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'model',
+        //   title: '模式',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'modelSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+        //   // },
+        // },
+        // {
+        //   dataIndex: 'pcStatus',
+        //   title: '连接状态',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'pcStatusSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+        //   // },
+        // },
         {
           dataIndex: 'groupName',
           title: '代表队',
@@ -975,33 +1011,51 @@ export default {
         },
         {
           dataIndex: 'power0',
-          title: '枪电量',
+          title: '设备连接状态（枪、靶）',
           align: 'center',
-        },
-        {
-          dataIndex: 'power1',
-          title: '靶电量',
-          align: 'center',
-        },
-        {
-          dataIndex: 'model',
-          title: '模式',
-          align: 'center',
-          customRender: (text, record, index) => {
-            return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
-          },
-        },
-        {
-          dataIndex: 'pcStatus',
-          title: '连接状态',
-          align: 'center',
+          width: 200,
           scopedSlots: {
-            customRender: 'pcStatusSlot'
+            customRender: 'power0Slot'
           },
-          // customRender: (text, record, index) => {
-          //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
-          // },
         },
+        // {
+        //   dataIndex: 'power0',
+        //   title: '枪电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power0Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'power1',
+        //   title: '靶电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power1Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'model',
+        //   title: '模式',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'modelSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+        //   // },
+        // },
+        // {
+        //   dataIndex: 'pcStatus',
+        //   title: '连接状态',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'pcStatusSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+        //   // },
+        // },
         // {
         //   dataIndex: 'playerSex',
         //   customRender: (text, record, index) => {
