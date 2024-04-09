@@ -107,16 +107,16 @@
               :scroll="{ x: 1500 }">
 
               <template slot="power0Slot" slot-scope="text,record">
-                <div style="display: flex;justify-content: space-around;">
-                  <span>0</span>
-                  <!-- <img v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接"> -->
-                  <img v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接">
-                  <img v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
-                  <img v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击">
-                  <img src="../../../assets/电量.svg" alt="电量">
-                  <span>{{ text }}</span>
-                  <img src="../../../assets/电量.svg" alt="电量">
-                  <span>{{ record.power1 }}</span>
+                <div style="display: flex;justify-content: space-around;align-items: center">
+                  <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                  <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接">
+                  <img  width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
+                  <img  width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击">
+<!--                  <img src="../../../assets/电量.svg" alt="电量">-->
+                  <Electricitylevel :power="record.power1"  width='32' height='32'></Electricitylevel>
+<!--                  <span>{{ text }}</span>-->
+<!--                  <img src="../../../assets/电量.svg" alt="电量">-->
+<!--                  <span>{{ record.power1 }}</span>-->
                 </div>
               </template>
 
@@ -263,7 +263,7 @@ import TabletMonitoring from '../../tabletMonitoring/index'
 import GameInfoStartModal from '@views/Competition/gameInfo/modal/gameInfoStartModal.vue'
 import GameinfoChengTongJudge from '@views/Competition/gameInfo/modal/gameinfoChengTongJudge.vue'
 import TargetMapTargetPoint from '@/views/targetImage/targetMapTargetPoint'
-
+import Electricitylevel from '@views/Competition/gameInfo/electricitylevel.vue'
 import {
   bizContestPageList,
   bizContestProjectList,
@@ -297,19 +297,19 @@ function extractValue(str) {
   const regex = /_([^_]*?)x/
   const match = str.match(regex)
   if (match) {
-    return match[1] // 返回第一个捕获组的内容  
+    return match[1] // 返回第一个捕获组的内容
   } else {
-    return null // 如果没有匹配，返回null或其他适当的值  
+    return null // 如果没有匹配，返回null或其他适当的值
   }
 }
 function extractValueBeforeUnderscore(str) {
   const match = str.match(/^(.*?)_(.*)$/)
   if (match) {
-    // 如果存在_，则返回_之前的部分  
+    // 如果存在_，则返回_之前的部分
     return match[1]
   } else {
-    // 如果不存在_，则返回原字符串或根据需要返回其他值  
-    return str // 或者返回null，表示没有提取到值  
+    // 如果不存在_，则返回原字符串或根据需要返回其他值
+    return str // 或者返回null，表示没有提取到值
   }
 }
 export default {
@@ -334,6 +334,7 @@ export default {
     GameInfoAchievementModal,
     GameinfoChengTongJudge,
     TargetMapTargetPoint,
+    Electricitylevel
   },
   inject: ['closeCurrent'],
   data() {
@@ -495,8 +496,8 @@ export default {
   methods: {
     handleActionsColumnContextMenu(record, event, col) {
       // console.log(col, record.col)
-      event.preventDefault() // 阻止默认的右键菜单  
-      // 在这里添加你的自定义右键菜单逻辑  
+      event.preventDefault() // 阻止默认的右键菜单
+      // 在这里添加你的自定义右键菜单逻辑
       // console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
       this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
     },
@@ -1253,9 +1254,7 @@ export default {
     handleChangePro2(re) {
       this.cproStageId = re
       this.$forceUpdate()
-      const arrs = this.matchList.filter((item) => item.cproStageId === re)
-      this.isAdjustment = arrs[0].isAdjustment
-      this.stageName = arrs[0].stageName
+      // const arrs = this.matchList.filter((item) => item.cproStageId === re)
       // if (arrs[0].stageName.includes("金/铜牌赛")) {
       //   this.sNamevisible = false
       // } else {
@@ -1711,12 +1710,12 @@ export default {
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 10px;
-  // display: none; /* 默认情况下不显示菜单 */  
+  // display: none; /* 默认情况下不显示菜单 */
 }
 
-// .custom-context-menu.visible {  
-//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */  
-// }  
+// .custom-context-menu.visible {
+//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */
+// }
 .custom-context-menu ul {
   list-style: none;
   padding: 0;
@@ -1730,18 +1729,5 @@ export default {
 
 .custom-context-menu li:hover {
   background-color: #f5f5f5;
-}
-
-.spanGreen {
-  width: 20px;
-  height: 20px;
-  background: #1aef1a;
-  border-radius: 50%;
-}
-.spanGRed {
-  width: 20px;
-  height: 20px;
-  background: red;
-  border-radius: 50%;
 }
 </style>
