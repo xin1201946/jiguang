@@ -108,7 +108,8 @@
 
               <template slot="power0Slot" slot-scope="text,record">
                 <div style="display: flex;justify-content: space-around;">
-                  <img v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                  <span>0</span>
+                  <!-- <img v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接"> -->
                   <img v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接">
                   <img v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
                   <img v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击">
@@ -1252,7 +1253,9 @@ export default {
     handleChangePro2(re) {
       this.cproStageId = re
       this.$forceUpdate()
-      // const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      this.isAdjustment = arrs[0].isAdjustment
+      this.stageName = arrs[0].stageName
       // if (arrs[0].stageName.includes("金/铜牌赛")) {
       //   this.sNamevisible = false
       // } else {
@@ -1727,5 +1730,18 @@ export default {
 
 .custom-context-menu li:hover {
   background-color: #f5f5f5;
+}
+
+.spanGreen {
+  width: 20px;
+  height: 20px;
+  background: #1aef1a;
+  border-radius: 50%;
+}
+.spanGRed {
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
 }
 </style>
