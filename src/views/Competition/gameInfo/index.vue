@@ -108,15 +108,18 @@
 
               <template slot="power0Slot" slot-scope="text,record">
                 <div style="display: flex;justify-content: space-around;align-items: center">
-                  <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
-                  <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接">
-                  <img  width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
-                  <img  width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击">
-<!--                  <img src="../../../assets/电量.svg" alt="电量">-->
-                  <Electricitylevel :power="record.power1"  width='32' height='32'></Electricitylevel>
-<!--                  <span>{{ text }}</span>-->
-<!--                  <img src="../../../assets/电量.svg" alt="电量">-->
-<!--                  <span>{{ record.power1 }}</span>-->
+                  <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
+                  <span :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
+                  <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                  <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
+                  <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射">
+                  <!-- <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/bottom-left.png" alt="试射"> -->
+                  <img width='15' height='15' v-if="record.model == '1'" src="../../../assets/zhengfangxing.png"
+                    alt="射击">
+                  <!-- <img width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
+                  <img width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击"> -->
+                  <Electricitylevel :power="text" width='32' height='32'></Electricitylevel>
+                  <Electricitylevel :power="record.power1" width='32' height='32'></Electricitylevel>
                 </div>
               </template>
 
@@ -1209,6 +1212,8 @@ export default {
       this.formData.contestId = t
       this.formData.cproId = undefined
       this.formData.cproStageId = undefined
+      this.dataSource = []
+      this.groupList = []
       this.getProjectList()
     },
     /**
@@ -1254,7 +1259,9 @@ export default {
     handleChangePro2(re) {
       this.cproStageId = re
       this.$forceUpdate()
-      // const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      this.isAdjustment = arrs[0].isAdjustment
+      this.stageName = arrs[0].stageName
       // if (arrs[0].stageName.includes("金/铜牌赛")) {
       //   this.sNamevisible = false
       // } else {
@@ -1729,5 +1736,21 @@ export default {
 
 .custom-context-menu li:hover {
   background-color: #f5f5f5;
+}
+
+.spanGreen {
+  width: 15px;
+  height: 15px;
+  // background: #1aef1a;
+  // background: #098111;
+  background: #06b712;
+  border-radius: 50%;
+}
+
+.spanGRed {
+  width: 15px;
+  height: 15px;
+  background: red;
+  border-radius: 50%;
 }
 </style>

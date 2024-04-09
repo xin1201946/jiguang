@@ -13,14 +13,14 @@
       </a-descriptions>
       <div style="display: flex;align-items:center;justify-content: space-between">
         <h3>每次射击信息</h3>
-        <!-- <a-button type="primary" @click="handleEdit({}, 'add')">添加成绩</a-button> -->
+        <a-button type="primary" @click="handleEdit({}, 'add')">添加成绩</a-button>
       </div>
       <div>
         <a-table rowKey="playerScoreId" size="middle" :columns="columns" :dataSource="dataSource" :pagination="false"
           bordered>
           <template slot="scoreSlots" slot-scope="text,record">
             <a-input style="width: 60px;" placeholder="请输入" v-if="record.editable" :value="text"
-              @change="e => handleChange(e.target.value, record.playerScoreId, col)"
+              @change="e => handleChange(e.target.value, record.playerScoreId)"
               @blur="handleBlur(record.playerScoreId)" />
             <template v-else>
               <!-- 单击 -->
@@ -98,11 +98,11 @@ export default {
   },
   methods: {
     // 可编辑
-    handleChange(value, playerScoreId, column) {
+    handleChange(value, playerScoreId) {
       const newData = [...this.dataSource]
       const target = newData.find(item => playerScoreId === item.playerScoreId)
       if (target) {
-        target[column] = value
+        target.score = value
         this.dataSource = newData
       }
     },
@@ -114,23 +114,43 @@ export default {
         // target.editable = true
         this.$set(target, 'editable', true)
         this.dataSource = newData
-        console.log(this.dataSource, 'qqqq')
       }
 
     },
     handleBlur(playerScoreId) {
       // console.log('Input 失去焦点', playerScoreId);  
       const newData = [...this.dataSource]
-      const newCacheData = [...this.dataSource]
       const target = newData.find(item => playerScoreId === item.playerScoreId)
-      const targetCache = newCacheData.find(item => playerScoreId === item.playerScoreId)
-      if (target && targetCache) {
+      if (target){
         delete this.$set(target, 'editable')
         this.dataSource = newData
-        Object.assign(targetCache, target)
-        this.dataSource = newCacheData
         this.$forceUpdate()
       }
+      // return
+      updateScore({
+          playerScoreId:playerScoreId,
+          score: target.score,
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('修改成功！')
+            // this.$refs.gameInfoEditResult.handleCancel()
+            this.edit(this.formData)
+            this.$emit('success')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      // const newData = [...this.dataSource]
+      // const newCacheData = [...this.dataSource]
+      // const target = newData.find(item => playerScoreId === item.playerScoreId)
+      // const targetCache = newCacheData.find(item => playerScoreId === item.playerScoreId)
+      // if (target && targetCache) {
+      //   delete this.$set(target, 'editable')
+      //   this.dataSource = newData
+      //   Object.assign(targetCache, target)
+      //   this.dataSource = newCacheData
+      //   this.$forceUpdate()
+      // }
       // this.editingKey = ''
     },
     editResultHandle(row) {
