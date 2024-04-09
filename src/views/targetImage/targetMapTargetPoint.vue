@@ -140,6 +140,7 @@ export default {
     eidt(record) {
       this.visible = true
       this.stageId = record.stageId
+      this.state = record.projectName
       this.loadingModal = false
       this.$nextTick(() => {
         setTimeout(() => [
@@ -210,16 +211,12 @@ export default {
             }
           })
           this.targetGoupList = dataARR
-          if (this.targetGoupList) {
-            let a = this.targetGoupList[0].playerScores
-            this.nameTitle = `${a[0].projectName}-${a[0].projectGroup}-${a[0].stageName}`
-            this.state = a[0].projectName
-            console.log(this.state)
-          }
           this.loading = false
         } else {
           this.$message.error(res.message)
         }
+      }).finally(() => {
+        this.loading = false
       })
     },
     // 关闭

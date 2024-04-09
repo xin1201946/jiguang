@@ -24,8 +24,8 @@
                 <a-form-item label="项目名称">
                   <a-select allowClear v-model="formData.cproId" @change="handleChangePro1" style="width: 100%;"
                     showSearch optionFilterProp="children">
-                    <a-select-option v-for="item in projectList" :key="item.cproId"
-                      :value="item.cproId">{{ item.projectName }}-{{ item.projectGroup }}
+                    <a-select-option v-for="item in projectList" :key="item.cproId" :value="item.cproId">{{
+        item.projectName }}-{{ item.projectGroup }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
@@ -105,6 +105,22 @@
             <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
               rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
               :scroll="{ x: 1500 }">
+              <!-- 状态 -->
+              <template slot="pcStatusSlot" slot-scope="record,text">
+                <div v-if="record.pcStatus == '1'">
+                  1234
+                </div>
+                <div v-if="record.pcStatus == '0'">
+                  456
+                </div>
+                <!-- <img v-if="text == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                <img v-if="text == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
+              </template>
+              <!-- <template slot="pcStatusSlot" slot-scope="record,text">
+                <img src="../../../assets/未连接.svg" alt="">
+                  <img src="../../../assets/已连接.svg" alt="">
+                <span>{{ text === 0 ? '未连接' : text === 1 ? '已连接' : '' }}</span>
+              </template> -->
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text,record">
                 <a-input placeholder="请输入" v-if="record.editableTotal" :value="text"
@@ -116,7 +132,7 @@
                 </template>
               </template>
               <!-- 10 20 30组别编辑 -->
-              <template v-for="col in strArr" v-slot:[col]="text, record, index">
+              <template v-for=" col  in  strArr " v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
                   <a-input placeholder="请输入" v-if="record.editable" :value="text"
                     @change="e => handleChange(e.target.value, record.serialNumber, col)"
@@ -353,12 +369,23 @@ export default {
           align: 'center',
         },
         {
+          dataIndex: 'model',
+          title: '模式',
+          align: 'center',
+          customRender: (text, record, index) => {
+            return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+          },
+        },
+        {
           dataIndex: 'pcStatus',
           title: '连接状态',
           align: 'center',
-          customRender: (text, record, index) => {
-            return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+          scopedSlots: {
+            customRender: 'pcStatusSlot'
           },
+          // customRender: (text, record, index) => {
+          //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+          // },
         },
         {
           dataIndex: 'groupName',
@@ -957,12 +984,23 @@ export default {
           align: 'center',
         },
         {
+          dataIndex: 'model',
+          title: '模式',
+          align: 'center',
+          customRender: (text, record, index) => {
+            return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+          },
+        },
+        {
           dataIndex: 'pcStatus',
           title: '连接状态',
           align: 'center',
-          customRender: (text, record, index) => {
-            return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+          scopedSlots: {
+            customRender: 'pcStatusSlot'
           },
+          // customRender: (text, record, index) => {
+          //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+          // },
         },
         // {
         //   dataIndex: 'playerSex',
@@ -1137,6 +1175,9 @@ export default {
     handleChangePro1(Event) {
       this.cproId = Event
       this.formData.cproId = Event
+      let lists = this.projectList.filter(item => item.cproId === Event)
+      console.log(lists, '--***')
+      this.projectName = lists[0].projectName
       this.getListMatch()
       this.formData.cproStageId = null
     },
@@ -1403,6 +1444,7 @@ export default {
     handleTargetLocation() {
       const arr = {
         stageId: this.cproStageId, //项目阶段id
+        projectName: this.projectName, //项目名称
       }
       this.$refs.TargetMapTargetPointRef.eidt(arr)
     },
