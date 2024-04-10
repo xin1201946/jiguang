@@ -9,10 +9,13 @@
         <path
           d="M 918.37382,440.68067 V 359.23778 C 918.37382,314.44665 881.72411,277.8 836.93605,277.8 H 144.7001 c -44.791134,0 -81.437775,36.64665 -81.437775,81.43778 l -10e-7,325.75623 c 0,44.79113 36.646642,81.44289 81.437776,81.44289 h 692.23595 c 44.78806,0 81.43777,-36.65074 81.43777,-81.44289 v -81.43778 c 22.39608,0 40.7194,-18.3223 40.7194,-40.7194 v -81.43675 c 0,-22.39609 -18.32332,-40.71941 -40.7194,-40.71941 z m -40.71837,40.71941 v 81.43675 122.15718 c 0,22.39505 -18.32332,40.71837 -40.7194,40.71837 H 144.7001 c -22.39608,0 -40.7194,-18.32332 -40.7194,-40.71837 l 0,-325.75623 c 0,-22.39608 18.32332,-40.7194 40.7194,-40.7194 h 692.23595 c 22.39607,0 40.71939,18.32332 40.71939,40.7194 z"
           fill="#272636" p-id="4296" id="path2" sodipodi:nodetypes="csssssssscsscccssssssssc"></path>
+        <rect id="rect324" style="fill:#c1c1c1;stroke-width:0" width="733.20087" height="369.91806" x="122.7531"
+          y="336.74161" />
         <rect id="rect323" style="fill:#272636;stroke-width:0" width="733.20087" height="369.91806" x="122.7531"
           y="336.74161" />
         <!--      文字-->
-        <text class='text' x="40%" y="65%" text-anchor="middle" fill="#c1c1c1" font-size="400">{{ power }}</text>
+        <text class='text' x="40%" y="65%" text-anchor="middle" fill="#fff" font-size="400">{{ power }}</text>
+        <!-- <text class='text' x="40%" y="65%" text-anchor="middle" fill="#8fff00" font-size="400">{{ power }}</text> -->
         <!-- <text class='text' x="40%" y="65%" text-anchor="middle" fill="#fff" font-size="400">{{ power }}</text> -->
       </svg>
     </div>
@@ -29,7 +32,7 @@
         <rect id="rect323" style="fill:#ed4630;stroke-width:0" width="733.20087" height="369.91806" x="122.7531"
           y="336.74161" />
         <!--      文字-->
-        <text class='text' x="40%" y="65%" text-anchor="middle" fill="red" font-size="400">{{ power }}</text>
+        <text class='text' x="40%" y="65%" text-anchor="middle" fill="#000" font-size="400">{{ power }}</text>
       </svg>
     </div>
   </div>
@@ -73,7 +76,7 @@ export default {
       const batteryBackground = this.$el.querySelector('#rect323')
       const maxwidth = 800 // 矩形背景的最大 
       const percentwidth = (Number(this.power) / 100) * maxwidth // 根据电量计算
-      console.log(percentwidth);
+      // console.log(percentwidth);
       // 更新矩形背景的高度  
       batteryBackground.setAttribute('width', percentwidth)
     }

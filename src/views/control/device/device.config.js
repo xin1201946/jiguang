@@ -189,6 +189,6 @@ export const deviceTableColumns = [
       customRender: 'operation'
     },
     fixed: 'right',
-    width: 400
+    width: 200
   }
 ]

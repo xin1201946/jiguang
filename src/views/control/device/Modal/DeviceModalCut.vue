@@ -48,7 +48,7 @@
               oninput="value=value.replace(/[^\d]/g,'')"
             />
           </a-form-model-item>
-          <a-form-model-item label="弹药数量" prop="shootNum">
+          <a-form-model-item label="每组数量" prop="shootNum">
             <a-input
               v-model="form.shootNum"
               oninput="value=value.replace(/[^\d]/g,'')"

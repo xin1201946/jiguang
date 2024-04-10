@@ -1,23 +1,47 @@
 <template>
   <div class="gameInfo">
-    <div class="btns">
-      <a-page-header @back="handleBack" :title="data.contestName"></a-page-header>
-      <div class="btns_right">
-        <!-- v-if="groupActive" -->
-        <div class="btns_right_left" v-if="groupActive">
-          <a-tooltip>
-            <template slot="title">
-              {{ projectName }} - {{ projectGroup }}- {{ stageName }}
-            </template>
-            {{ projectName }} - {{ projectGroup }}- {{ stageName }}
-          </a-tooltip>
+    <div class="cards">
+      <div class="example" v-if="loading2">
+        <div>
+          <a-spin />
+          <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
         </div>
-        <div style="margin-left: 10px">
+      </div>
+      <Card>
+        <template slot="query">
           <a-form :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }">
             <a-row :gutter="24">
-              <a-col :span="12">
+              <a-col :span="6">
+                <a-form-item label="赛事名称">
+                  <a-select allowClear v-model="formData.contestId" @change="handleChangePro">
+                    <a-select-option v-for="item in dataContList" :key="item.contestId" :value="item.contestId">{{
+        item.contestName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="5">
+                <a-form-item label="项目名称">
+                  <a-select allowClear v-model="formData.cproId" @change="handleChangePro1" style="width: 100%;"
+                    showSearch optionFilterProp="children">
+                    <a-select-option v-for="item in projectList" :key="item.cproId" :value="item.cproId">{{
+        item.projectName }}-{{ item.projectGroup }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="3">
+                <a-form-item label="阶段">
+                  <a-select allowClear v-model="formData.cproStageId" @change="handleChangePro2" style="width: 100%">
+                    <a-select-option v-for="item in matchList" :key="item.cproStageId" :value="item.cproStageId">{{
+        item.stageName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="5">
                 <a-form-item label="靶位">
-                  <a-input placeholder="请输入靶位号" v-model="targetSite" />
+                  <a-input placeholder="请输入靶位号" v-model="formData.targetSite" />
                 </a-form-item>
               </a-col>
               <a-col :span="5">
@@ -30,34 +54,10 @@
               </a-col>
             </a-row>
           </a-form>
-        </div>
-      </div>
-    </div>
-    <div class="cards">
-      <div class="example" v-if="loading2">
-        <div>
-          <a-spin />
-          <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
-        </div>
-      </div>
-      <AppstoreTreeCard ref="treeCard"  @success="successOk">
-        <template slot="tree">
-          <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup">
-              <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
-                <template slot="title">
-                  <div class="title">
-                    <span>{{ i.stageName }}</span>
-                  </div>
-                </template>
-              </a-tree-node>
-            </a-tree-node>
-          </a-directory-tree>
         </template>
-        <template slot="query">
+        <!-- <template slot="query">
           <QuerySearch ref="query"></QuerySearch>
-        </template>
+        </template> -->
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
@@ -105,11 +105,11 @@
             <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
               rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
               :scroll="{ x: 1500 }">
+
               <template slot="power0Slot" slot-scope="text,record">
                 <div style="display: flex;justify-content: space-around;align-items: center">
                   <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
-                  <span
-                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
+                  <span :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
                   <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
                   <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
                   <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射">
@@ -122,6 +122,28 @@
                   <Electricitylevel :power="record.power1" width='32' height='32'></Electricitylevel>
                 </div>
               </template>
+
+
+              <!-- 枪电量 -->
+              <!-- <template slot="power0Slot" slot-scope="text,record">
+                <img src="../../../assets/电量.svg" alt="电量">
+                <span>{{ text }}</span>
+              </template> -->
+              <!-- 靶电量 -->
+              <!-- <template slot="power1Slot" slot-scope="text,record">
+                <img src="../../../assets/电量.svg" alt="电量">
+                <span>{{ text }}</span>
+              </template> -->
+              <!-- 模式 -->
+              <!-- <template slot="modelSlot" slot-scope="text,record">
+                <img v-if="text == '0'" src="../../../assets/试射.svg" alt="试射">
+                <img v-if="text == '1'" src="../../../assets/射击.svg" alt="射击">
+              </template> -->
+              <!-- 状态 -->
+              <!-- <template slot="pcStatusSlot" slot-scope="text,record">
+                <img v-if="text == '0'" src="../../../assets/未连接.svg" alt="未连接">
+                <img v-if="text == '1'" src="../../../assets/已连接.svg" alt="已连接">
+              </template> -->
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text,record">
                 <a-input placeholder="请输入" v-if="record.editableTotal" :value="text"
@@ -133,7 +155,7 @@
                 </template>
               </template>
               <!-- 10 20 30组别编辑 -->
-              <template v-for="col in strArr" v-slot:[col]="text, record, index">
+              <template v-for=" col  in  strArr " v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
                   <a-input placeholder="请输入" v-if="record.editable" :value="text"
                     @change="e => handleChange(e.target.value, record.serialNumber, col)"
@@ -218,7 +240,7 @@
         <GameinfoChengTongJudge ref="gameinfoChengTongJudgeRef" @success="successOk"></GameinfoChengTongJudge>
         <!-- 靶图靶点 -->
         <TargetMapTargetPoint ref="TargetMapTargetPointRef" @success="successOk"></TargetMapTargetPoint>
-      </AppstoreTreeCard>
+      </Card>
     </div>
   </div>
 </template>
@@ -235,7 +257,6 @@ import GameInfoPenaltyModal from '@views/Competition/gameInfo/modal/gameInfoPena
 import GameInfoEditModal from '@views/Competition/gameInfo/modal/gameInfoEdit.vue'
 import GameInfoRemarkModal from '@views/Competition/gameInfo/modal/gameInfoRemark.vue'
 import TreeCard from '@comp/card/TreeCard.vue'
-import AppstoreTreeCard from '@comp/card/appstoreTreeCard.vue'
 import GameInfoDateModal from '@views/Competition/gameInfo/modal/gameInfoDateModal.vue'
 import GameRetweetModal from '@views/Competition/gameInfo/modal/gameInfoRetweet.vue'
 import GameInfoSameScoreModal from '@views/Competition/gameInfo/modal/gameInfoSameScore.vue'
@@ -247,6 +268,7 @@ import GameinfoChengTongJudge from '@views/Competition/gameInfo/modal/gameinfoCh
 import TargetMapTargetPoint from '@/views/targetImage/targetMapTargetPoint'
 import Electricitylevel from '@views/Competition/gameInfo/electricitylevel.vue'
 import {
+  bizContestPageList,
   bizContestProjectList,
   bizContestProjectStageList,
   getStagePlayerGroup,
@@ -278,19 +300,19 @@ function extractValue(str) {
   const regex = /_([^_]*?)x/
   const match = str.match(regex)
   if (match) {
-    return match[1] // 返回第一个捕获组的内容  
+    return match[1] // 返回第一个捕获组的内容
   } else {
-    return null // 如果没有匹配，返回null或其他适当的值  
+    return null // 如果没有匹配，返回null或其他适当的值
   }
 }
 function extractValueBeforeUnderscore(str) {
   const match = str.match(/^(.*?)_(.*)$/)
   if (match) {
-    // 如果存在_，则返回_之前的部分  
+    // 如果存在_，则返回_之前的部分
     return match[1]
   } else {
-    // 如果不存在_，则返回原字符串或根据需要返回其他值  
-    return str // 或者返回null，表示没有提取到值  
+    // 如果不存在_，则返回原字符串或根据需要返回其他值
+    return str // 或者返回null，表示没有提取到值
   }
 }
 export default {
@@ -298,7 +320,6 @@ export default {
   components: {
     TreeCard,
     Card,
-    AppstoreTreeCard,
     QuerySearch,
     gameInfoTargetModal,
     gameInfoDrawModal,
@@ -316,7 +337,7 @@ export default {
     GameInfoAchievementModal,
     GameinfoChengTongJudge,
     TargetMapTargetPoint,
-    Electricitylevel,
+    Electricitylevel
   },
   inject: ['closeCurrent'],
   data() {
@@ -348,14 +369,6 @@ export default {
           title: '设备号',
           align: 'center',
         },
-        {
-          dataIndex: 'power0',
-          title: '设备连接状态（枪、靶）',
-          align: 'center',
-          scopedSlots: {
-            customRender: 'power0Slot'
-          },
-        },
         // {
         //   dataIndex: 'playerSex',
         //   customRender: (text, record, index) => {
@@ -368,6 +381,52 @@ export default {
         //   dataIndex: 'idCardNum',
         //   title: '身份证号',
         //   align: 'center',
+        // },
+        {
+          dataIndex: 'power0',
+          title: '设备连接状态（枪、靶）',
+          align: 'center',
+          scopedSlots: {
+            customRender: 'power0Slot'
+          },
+        },
+        // {
+        //   dataIndex: 'power0',
+        //   title: '枪电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power0Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'power1',
+        //   title: '靶电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power1Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'model',
+        //   title: '模式',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'modelSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+        //   // },
+        // },
+        // {
+        //   dataIndex: 'pcStatus',
+        //   title: '连接状态',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'pcStatusSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+        //   // },
         // },
         {
           dataIndex: 'groupName',
@@ -424,15 +483,24 @@ export default {
       // 对于某些自动赋值的input框设为 只读
       readonlyArr: [''],
       menuVisible: false,
-      targetSite: '',
-      projectGroup:'',
+      dataContList: [],
+      projectList: [],
+      formData: {},
+      matchList: [],
+      contestId: '',
     }
+  },
+  created() {
+    this.getContestPageList()
+    let asssrr = JSON.parse(decodeURIComponent(this.$route.query.row))
+    this.contestId = asssrr.contestId
+    this.formData.contestId = asssrr.contestId
   },
   methods: {
     handleActionsColumnContextMenu(record, event, col) {
       // console.log(col, record.col)
-      event.preventDefault() // 阻止默认的右键菜单  
-      // 在这里添加你的自定义右键菜单逻辑  
+      event.preventDefault() // 阻止默认的右键菜单
+      // 在这里添加你的自定义右键菜单逻辑
       // console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
       this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
     },
@@ -860,7 +928,7 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
-        targetSite:this.targetSite,
+        targetSite: this.formData.targetSite //靶位
       })
         .then((res) => {
           if (res.success) {
@@ -893,7 +961,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$refs.treeCard.loading = false
+          // this.$refs.treeCard.loading = false
         })
     },
     /**
@@ -955,6 +1023,44 @@ export default {
             customRender: 'power0Slot'
           },
         },
+        // {
+        //   dataIndex: 'power0',
+        //   title: '枪电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power0Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'power1',
+        //   title: '靶电量',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'power1Slot'
+        //   },
+        // },
+        // {
+        //   dataIndex: 'model',
+        //   title: '模式',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'modelSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.model === '0' ? '试射' : record.model === '1' ? '比赛' : ''
+        //   // },
+        // },
+        // {
+        //   dataIndex: 'pcStatus',
+        //   title: '连接状态',
+        //   align: 'center',
+        //   scopedSlots: {
+        //     customRender: 'pcStatusSlot'
+        //   },
+        //   // customRender: (text, record, index) => {
+        //   //   return record.pcStatus === '0' ? '未连接' : record.pcStatus === '1' ? '已连接' : ''
+        //   // },
+        // },
         // {
         //   dataIndex: 'playerSex',
         //   customRender: (text, record, index) => {
@@ -1083,91 +1189,173 @@ export default {
         onCancel() {},
       }) */
     },
+
+
+    // 赛事列表 bizContestPageList
+    getContestPageList() {
+      const data = {
+        pageNum: 1,
+        pageSize: 99999,
+      }
+      bizContestPageList(data).then((res) => {
+        if (res.code === 200) {
+          this.dataContList = res.result.records
+          // this.contestId = this.dataContList[0].contestId
+          // this.formData.contestId = this.dataContList[0].contestId
+          this.getProjectList()
+        }
+      })
+    },
+    //赛事事件
+    handleChangePro(t) {
+      this.contestId = t
+      this.formData.contestId = t
+      this.formData.cproId = undefined
+      this.formData.cproStageId = undefined
+      this.dataSource = []
+      this.groupList = []
+      this.getProjectList()
+    },
     /**
      * 获取数据
      */
     getProjectList() {
       bizContestProjectList({
-        contestId: this.data.contestId,
+        contestId: this.contestId,
+        // contestId: 4,
       }).then((res) => {
-        const arr = res.result.map(async (item) => {
-          const stage = await bizContestProjectStageList({
-            contestId: item.contestId,
-            cproId: item.cproId,
-          })
-          return {
-            ...item,
-            children: stage.result.length ? stage.result : [],
-          }
-        })
-        this.getTree(arr)
+        if (res.success) {
+          this.projectList = res.result
+          // this.cproId = this.projectList[0].cproId
+          // this.formData.cproId = this.projectList[0].cproId
+          // this.getListMatch()
+        }
       })
     },
-    getTree(arr) {
-      Promise.all(arr).then((res) => {
-        this.treeList = res
-      })
+    // 选择后事件
+    handleChangePro1(Event) {
+      this.cproId = Event
+      this.formData.cproId = Event
+      let lists = this.projectList.filter(item => item.cproId === Event)
+      console.log(lists, '--***')
+      this.projectName = lists[0].projectName
+      this.getListMatch()
+      this.formData.cproStageId = null
     },
-    /**
-     * 左侧功能
-     */
-    onSelect(keys, event) {
-      this.$refs.treeCard.loading = true
-      // isLeaf 为true时是最底层
-      // keys 阶段id
-      if (event.node.isLeaf) {
-        this.cproStageId = keys[0]
-        this.draw = false
-        this.group = null
-        this.groupActive = false
-        function findParent(data, target, result) {
-          data.forEach((item) => {
-            item.children.forEach((e) => {
-              if (e.cproStageId === target) {
-                result.push(item)
-              }
-            })
-          })
-        }
-        let result = []
-        findParent(this.treeList, this.cproStageId, result)
-
-        function searchItem(data, target, list) {
-          data.forEach((item) => {
-            if (item.cproStageId == target) {
-              list.push(item)
-            }
-            if (item.children) {
-              searchItem(item.children, target, list)
-            }
-          })
-        }
-        let arr = []
-        searchItem(this.treeList, this.cproStageId, arr)
-        this.stageName = arr[0].stageName
-        this.isAdjustment = arr[0].isAdjustment
-        this.cproId = result[0].cproId
-        this.projectName = result[0].projectName
-        this.projectGroup = result[0].projectGroup
-        this.getTableList()
-      } else {
-        this.cproStageId = null
-        this.draw = false
-        this.group = null
-        this.groupActive = false
-        this.$refs.treeCard.loading = false
+    // 阶段
+    getListMatch() {
+      const a = {
+        // contestId: "4",
+        contestId: this.contestId,
+        cproId: this.cproId,
       }
+      bizContestProjectStageList(a).then((res) => {
+        if (res.success) {
+          this.matchList = res.result
+        }
+      })
     },
-    onExpand() { },
+    // 阶段事件
+    handleChangePro2(re) {
+      this.cproStageId = re
+      this.$forceUpdate()
+      const arrs = this.matchList.filter((item) => item.cproStageId === re)
+      this.isAdjustment = arrs[0].isAdjustment
+      this.stageName = arrs[0].stageName
+      // if (arrs[0].stageName.includes("金/铜牌赛")) {
+      //   this.sNamevisible = false
+      // } else {
+      //   this.sNamevisible = true
+      // }
+      // // this.$set(this.cproStageId, re)
+      this.getTableList()
+
+    },
     // 查询
     handleSubmit() {
       this.getTableList()
     },
     // 重置
     handleReset() {
-      this.targetSite = undefined
+      this.formData.targetSite = undefined
       this.getTableList()
     },
+
+    // /**
+    //  * 获取数据
+    //  */
+    // getProjectList() {
+    //   bizContestProjectList({
+    //     contestId: this.data.contestId,
+    //   }).then((res) => {
+    //     const arr = res.result.map(async (item) => {
+    //       const stage = await bizContestProjectStageList({
+    //         contestId: item.contestId,
+    //         cproId: item.cproId,
+    //       })
+    //       return {
+    //         ...item,
+    //         children: stage.result.length ? stage.result : [],
+    //       }
+    //     })
+    //     this.getTree(arr)
+    //   })
+    // },
+    // getTree(arr) {
+    //   Promise.all(arr).then((res) => {
+    //     this.treeList = res
+    //   })
+    // },
+    // /**
+    //  * 左侧功能
+    //  */
+    // onSelect(keys, event) {
+    //   this.$refs.treeCard.loading = true
+    //   // isLeaf 为true时是最底层
+    //   // keys 阶段id
+    //   if (event.node.isLeaf) {
+    //     this.cproStageId = keys[0]
+    //     this.draw = false
+    //     this.group = null
+    //     this.groupActive = false
+    //     function findParent(data, target, result) {
+    //       data.forEach((item) => {
+    //         item.children.forEach((e) => {
+    //           if (e.cproStageId === target) {
+    //             result.push(item)
+    //           }
+    //         })
+    //       })
+    //     }
+    //     let result = []
+    //     findParent(this.treeList, this.cproStageId, result)
+
+    //     function searchItem(data, target, list) {
+    //       data.forEach((item) => {
+    //         if (item.cproStageId == target) {
+    //           list.push(item)
+    //         }
+    //         if (item.children) {
+    //           searchItem(item.children, target, list)
+    //         }
+    //       })
+    //     }
+    //     let arr = []
+    //     searchItem(this.treeList, this.cproStageId, arr)
+    //     this.stageName = arr[0].stageName
+    //     this.isAdjustment = arr[0].isAdjustment
+    //     this.cproId = result[0].cproId
+    //     this.projectName = result[0].projectName
+    //     this.getTableList()
+    //   } else {
+    //     this.cproStageId = null
+    //     this.draw = false
+    //     this.group = null
+    //     this.groupActive = false
+    //     this.$refs.treeCard.loading = false
+    //   }
+    // },
+    // onExpand() { },
     handleZhunbei(row) {
       ready({
         stageId: this.cproStageId, //项目阶段id
@@ -1413,7 +1601,7 @@ export default {
 
   .cards {
     position: relative;
-    height: calc(100% - @btnHeight - 10px);
+    height: calc(100% - 10px);
 
     .example {
       position: absolute;
@@ -1529,12 +1717,12 @@ export default {
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 10px;
-  // display: none; /* 默认情况下不显示菜单 */  
+  // display: none; /* 默认情况下不显示菜单 */
 }
 
-// .custom-context-menu.visible {  
-//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */  
-// }  
+// .custom-context-menu.visible {
+//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */
+// }
 .custom-context-menu ul {
   list-style: none;
   padding: 0;
@@ -1564,27 +1752,5 @@ export default {
   height: 15px;
   background: red;
   border-radius: 50%;
-}
-
-.btns_right {
-  display: flex;
-  flex: 1;
-  align-items: center;
-
-  .btns_right_left {
-    flex: 0.5;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  /deep/.ant-form-item {
-    margin-bottom: 0;
-  }
-
 }
 </style>

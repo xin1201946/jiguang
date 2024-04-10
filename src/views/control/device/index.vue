@@ -31,9 +31,9 @@
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
           <a-space>
-            <a-button type="primary" size="small" ghost icon="edit" @click="handleProject(record)">项目控制</a-button>
+            <!-- <a-button type="primary" size="small" ghost icon="edit" @click="handleProject(record)">项目控制</a-button>
             <a-button type="primary" size="small" ghost icon="edit" @click="handleDisPlay(record)">显示控制</a-button>
-            <a-button type="primary" size="small" ghost icon="edit" @click="handleDevice(record)">设备控制</a-button>
+            <a-button type="primary" size="small" ghost icon="edit" @click="handleDevice(record)">设备控制</a-button> -->
             <a-button type="primary" size="small" ghost icon="copy" @click="handleInfo(record)">详情</a-button>
           </a-space>
         </a-space>
