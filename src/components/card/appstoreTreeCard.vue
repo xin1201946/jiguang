@@ -48,7 +48,7 @@ export default {
     //折叠点击
     handleClick() {
       this.visible = !this.visible
-      this.$emit('success')
+      this.$emit('success',this.visible)
     },
   }
 }
@@ -90,6 +90,10 @@ export default {
     height: 100%;
     overflow-y: hidden;
     display: none;
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+    // -o-text-overflow: ellipsis;
   }
 
   &_card {

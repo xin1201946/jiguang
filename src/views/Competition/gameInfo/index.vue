@@ -40,7 +40,8 @@
           <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
         </div>
       </div>
-      <AppstoreTreeCard ref="treeCard"  @success="successOk">
+      <!--  -->
+      <AppstoreTreeCard ref="treeCard" @success="successOkTree">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
             <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
@@ -147,13 +148,15 @@
                   </template>
                 </div>
               </template>
-              <!-- 操作 -->
+              <!-- 操作 -->  
               <template slot="operation" slot-scope="text, record">
-                <a-space>
+                <a-space>  
                   <!-- 总环数为空不渲染成绩详情按钮-->
                   <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
                     size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
+                  <a-button v-if="projectName.includes('团体')" type="primary" size="small" ghost icon="profile"
+                    @click="handleInfo(record)">成绩详情</a-button>
                   <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop"
                     @click="handleStop(record)">停止比赛</a-button>
                   <a-dropdown>
@@ -425,7 +428,7 @@ export default {
       readonlyArr: [''],
       menuVisible: false,
       targetSite: '',
-      projectGroup:'',
+      projectGroup: '',
     }
   },
   methods: {
@@ -860,7 +863,7 @@ export default {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
         stageId: this.cproStageId, //项目阶段id
-        targetSite:this.targetSite,
+        targetSite: this.targetSite,
       })
         .then((res) => {
           if (res.success) {
@@ -1326,6 +1329,12 @@ export default {
     successOk() {
       this.selectedRowKeys = []
       this.getTableList()
+    },
+    successOkTree() {
+      if (this.data.contestId !== null && this.cproId !== null && this.cproStageId !== null) {
+        this.selectedRowKeys = []
+        this.getTableList()
+      }
     },
   },
   mounted() {
