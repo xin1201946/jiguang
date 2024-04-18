@@ -5,6 +5,7 @@
 
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
+<!--          <a-button @click="handleAdd(1)" type="primary">添加部门</a-button>-->
           <a-button @click="handleAdd(1)" type="primary">添加部门</a-button>
           <a-button @click="handleAdd(2)" type="primary">添加下级</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>
@@ -91,28 +92,40 @@
               <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCode" label="机构编码">
                 <a-input disabled placeholder="请输入机构编码" v-model="model.orgCode" />
               </a-form-model-item>
-              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCategory" label="机构类型">
-                <template v-if="orgCategoryDisabled">
-                  <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCategory" label="单位类型">
+                <template v-if='model.id === "6d35e179cd814e3299bd588ea7daed3f" || model.parentId === "6d35e179cd814e3299bd588ea7daed3f"'>
+                  <a-radio-group v-model="model.orgCategory" placeholder="请选择单位类型">
                     <a-radio value="1">
-                      公司
+                      学校
+                    </a-radio>
+                    <a-radio value="2">
+                      俱乐部
                     </a-radio>
                   </a-radio-group>
                 </template>
                 <template v-else>
-                  <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
-                    <a-radio value="2">
-                      部门
-                    </a-radio>
-                    <a-radio value="3">
-                      岗位
-                    </a-radio>
-                  </a-radio-group>
+                  <template v-if="orgCategoryDisabled">
+                    <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+                      <a-radio value="1">
+                        公司
+                      </a-radio>
+                    </a-radio-group>
+                  </template>
+                  <template v-else>
+                    <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+                      <a-radio value="2">
+                        部门
+                      </a-radio>
+                      <a-radio value="3">
+                        岗位
+                      </a-radio>
+                    </a-radio-group>
+                  </template>
                 </template>
               </a-form-model-item>
-              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门负责人">
+<!--              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门负责人">
                 <j-select-multi-user v-model="model.directorUserIds" valueKey="id"></j-select-multi-user>
-              </a-form-model-item>
+              </a-form-model-item>-->
               <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
                 <a-input-number v-model="model.departOrder" />
               </a-form-model-item>
@@ -137,8 +150,38 @@
             </a-empty>
           </a-card>
         </a-tab-pane>
-        <a-tab-pane tab="部门权限" key="2" forceRender>
+<!--        <a-tab-pane tab="部门权限" key="2" forceRender>
           <depart-auth-modal ref="departAuth"/>
+        </a-tab-pane>-->
+        <a-tab-pane key='3' forceRender tab='会员管理'>
+          <a-card :bordered="false" v-if="selectedKeys.length>0">
+            <a-form-model ref="vipform" :model="vipData" :rules="validatorRules">
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机构名称">
+                <a-input readOnly placeholder="请输入机构/部门名称" v-model="model.departName" />
+              </a-form-model-item>
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期日期">
+<!--                <a-input readOnly placeholder="请输入机构/部门名称" v-model="model.departName" />-->
+                <a-date-picker  :disabledDate='disabledDates' v-model="vipData.date" format='YYYY-MM-DD' valueFormat='YYYY-MM-DD'/>
+              </a-form-model-item>
+            </a-form-model>
+            <div class="anty-form-btn">
+<!--              <a-button @click="emptyCurrForm" type="default" htmlType="button" icon="sync">重置</a-button>-->
+<!--              上级菜单无法查询-->
+              <a-button
+                v-if='this.departTree.findIndex(item => item.id === model.id) === -1'
+
+                @click="submitVipForm"
+                type="primary"
+                htmlType="button"
+                icon="form"
+              >保存</a-button>
+            </div>
+          </a-card>
+          <a-card v-else >
+            <a-empty>
+              <span slot="description"> 请先选择一个部门! </span>
+            </a-empty>
+          </a-card>
         </a-tab-pane>
       </a-tabs>
 
@@ -148,11 +191,12 @@
 </template>
 <script>
   import DepartModal from './modules/DepartModal'
-  import {queryDepartTreeList, searchByKeywords, deleteByDepartId} from '@/api/api'
+  import { queryDepartTreeList, searchByKeywords, deleteByDepartId, sysDepartDepartRenew } from '@/api/api'
   import {httpAction, deleteAction} from '@/api/manage'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import DepartAuthModal from './modules/DepartAuthModal'
   import Vue from 'vue'
+  import dayjs from 'dayjs'
   // 表头
   const columns = [
     {
@@ -214,6 +258,10 @@
         rightClickSelectedOrgCode: '',
         hiding: true,
         model: {},
+        vipData: {
+          date: "",
+          departId: ""
+        },
         dropTrigger: '',
         depart: {},
         columns: columns,
@@ -240,7 +288,10 @@
           departName: [{required: true, message: '请输入机构/部门名称!'}],
           orgCode: [{required: true, message: '请输入机构编码!'}],
           orgCategory:[{required: true, message: '请输入机构类型!'}],
-          mobile: Vue.prototype.rules.mobile2
+          mobile: Vue.prototype.rules.mobile2,
+          date: [{
+            required: true, message: '请选择到期日期!'
+          }]
         },
         url: {
           delete: '/sys/sysDepart/delete',
@@ -256,9 +307,15 @@
     computed: {
       importExcelUrl: function () {
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
-      }
+      },
+
     },
     methods: {
+      disabledDates(currentDate) {
+        // console.log(currentDate)
+        // return currentDate && currentDate < moment().endOf('day');
+        return currentDate && currentDate < dayjs(this.vipData.date).endOf('day');
+      },
       loadData() {
         this.refresh();
       },
@@ -278,6 +335,7 @@
               that.getAllKeys(temp);
               // console.log(temp.id)
             }
+            console.log(that.departTree, "tree")
             this.loading = false
           }
         })
@@ -359,6 +417,7 @@
                 let temp = res.result[i]
                 that.departTree.push(temp)
               }
+              console.log(that.departTree, 456789)
             } else {
               that.$message.warning(res.message)
             }
@@ -395,8 +454,17 @@
         console.log('onSelect-record', record)
         this.currSelected = Object.assign({}, record)
         this.model = this.currSelected
+        console.log(this.currSelected)
         this.selectedKeys = [record.key]
         this.model.parentId = record.parentId
+        // record.memberEndTime
+        this.vipData = {
+          departId: record.id,
+          date: record.memberEndTime
+        }
+        /*sysDepartDepartRenew(this.vipData).then((res) => {
+          console.log(res, 123465789)
+        })*/
         this.setValuesToForm(record)
         this.$refs.departAuth.show(record.id);
         this.oldDirectorUserIds = record.directorUserIds
@@ -433,6 +501,22 @@
       },
       receiptTriggerTypeChange(value) {
         this.currSelected.receiptTriggerType = value
+      },
+      submitVipForm () {
+        // console.log(this.departTree)
+        this.$refs.vipform.validate(valid => {
+          if (valid) {
+            sysDepartDepartRenew(this.vipData).then((res) => {
+              if (res.success) {
+                this.$message.success('保存成功!')
+                this.loadTree()
+              } else {
+                this.$message.error(res.message)
+              }
+            })
+          }
+        })
+        // sysDepartDepartRenew()
       },
       submitCurrForm() {
         this.$refs.form.validate(valid => {

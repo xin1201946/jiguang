@@ -34,26 +34,38 @@
         <a-form-model-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="机构类型">
-         <template v-if="seen">
-            <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+          label="单位类型">
+          <template v-if='departSeen'>
+            <a-radio-group v-model="model.orgCategory" placeholder="请选择单位类型">
               <a-radio value="1">
-                公司
+                学校
+              </a-radio>
+              <a-radio value="2">
+                俱乐部
               </a-radio>
             </a-radio-group>
           </template>
           <template v-else>
-            <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
-              <a-radio value="2">
-                部门
-              </a-radio>
-              <a-radio value="3">
-                岗位
-              </a-radio>
-            </a-radio-group>
-       </template>
+            <template v-if="seen">
+              <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+                <a-radio value="1">
+                  公司
+                </a-radio>
+              </a-radio-group>
+            </template>
+            <template v-else>
+              <a-radio-group v-model="model.orgCategory" placeholder="请选择机构类型">
+                <a-radio value="2">
+                  部门
+                </a-radio>
+                <a-radio value="3">
+                  岗位
+                </a-radio>
+              </a-radio-group>
+            </template>
+          </template>
         </a-form-model-item>
-        <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门负责人">
+        <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门负责人" style='display: none'>
           <j-select-multi-user v-model="model.directorUserIds" valueKey="id"></j-select-multi-user>
         </a-form-model-item>
         <a-form-model-item
@@ -133,12 +145,13 @@
           departName:[{ required: true, message: '请输入机构/部门名称!' }],
           orgCode:[{ required: true, message: '请输入机构编码!' }],
           mobile: [{validator:this.validateMobile}],
-          orgCategory:[{required: true, message: '请输入机构类型!'}]
+          orgCategory:[{required: true, message: '请输入单位类型!'}]
         },
         url: {
           add: "/sys/sysDepart/add",
         },
         dictDisabled:true,
+        departSeen: false,
       }
     },
     created () {
@@ -158,9 +171,13 @@
         })
       },
       add (depart) {
+        this.departSeen = false
         if(depart){
           this.seen = false;
           this.dictDisabled = false;
+          if (depart === "6d35e179cd814e3299bd588ea7daed3f") {
+            this.departSeen = true
+          }
         }else{
           this.seen = true;
           this.dictDisabled = true;
@@ -168,6 +185,7 @@
         this.edit(depart);
       },
       edit (record) {
+        console.log(record)
           this.visible = true;
           this.model = Object.assign({}, this.defaultModel, record)
           this.loadTreeData();

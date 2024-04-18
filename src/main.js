@@ -52,6 +52,7 @@ import '@/components/JVxeCells/install'
 import getDpi from '@/utils/getDpi'
 //表单验证
 import { rules } from '@/utils/rules'
+import axios from 'axios'
 Vue.prototype.rules = rules
 Vue.prototype.$getDpi = getDpi
 Vue.config.productionTip = false
@@ -71,6 +72,16 @@ SSO.init(() => {
   main()
 })
 function main() {
+
+  document.addEventListener("keydown", e => {
+    if (e.keyCode == 123) {
+      axios.get('http://localhost:5173/f12')
+    }
+    if (e.keyCode == 122) {
+      axios.get('http://localhost:5173/f11')
+    }
+  })
+
   new Vue({
     router,
     store,

@@ -8,9 +8,10 @@ Router.prototype.push = function push(location) {
 }
 
 Vue.use(Router)
-
+console.log(process.env.NODE_ENV)
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: process.env.NODE_ENV === "electron" ? 'hash' : 'history',
   base: process.env.BASE_URL,
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap

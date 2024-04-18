@@ -43,6 +43,8 @@ const queryIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
 const queryParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
 const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
+// /sys/sysDepart/departRenew
+export const sysDepartDepartRenew = (params)=>postAction("/sys/sysDepart/departRenew",params)
 
 //二级部门管理
 const queryDepartPermission = (params)=>getAction("/sys/permission/queryDepartPermission",params);
