@@ -88,7 +88,7 @@
     },
     created() {
       if (this.$route.path != indexKey) {
-        // this.addIndexToFirst()
+        this.addIndexToFirst()
       }
       // 复制一个route对象出来，不能影响原route
       let currentRoute = Object.assign({}, this.$route)
@@ -155,7 +155,7 @@
       // update-begin-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
       device() {
         if (this.multipage && this.linkList.indexOf(indexKey) === -1) {
-          // this.addIndexToFirst()
+          this.addIndexToFirst()
         }
       },
       // update-end-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
