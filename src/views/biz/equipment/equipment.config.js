@@ -87,7 +87,7 @@ export const equipmentColumns = [
     title: '设备电量',
     dataIndex: 'deviceVoltage',
     align: 'center',
-    customRender: (text) => `${text}%`,
+    customRender: (text) => text !== null ? `${text}%` : '',
   },
   {
     title: '设备类型',
@@ -118,6 +118,11 @@ export const equipmentColumns = [
       const type = getLabel(deviceStatus, text)
       return type
     },
+  },
+  {
+    title: '单位名称',
+    dataIndex: 'departName',
+    align: 'center'
   },
   {
     title: '操作',

@@ -60,6 +60,7 @@ export const bizDeviceSave = data => postAction('bizDevice/save', data)
 export const bizDeviceUpdate = data => postAction('bizDevice/update', data)
 export const bizDeviceDelete = id => deleteAction(`bizDevice/delete/${id}`)
 export const bizDeviceList = data => postAction("bizDevice/list", data)
+export const bizDevicegetImportTemplate = () => download("bizDevice/getImportTemplate")
 //同步
 export const bizDeviceSync = data => getAction("bizDevice/sync")
 
