@@ -46,6 +46,12 @@ const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params
 // /sys/sysDepart/departRenew
 export const sysDepartDepartRenew = (params)=>postAction("/sys/sysDepart/departRenew",params)
 
+// 俱乐部学员充值
+// sys/user/userRenew
+export const sysUserUserRenew = (params)=>postAction("/sys/user/userRenew",params)
+// 大屏初始化配置
+// bizConfig/insertBatch
+export const bizConfigInsertBatch = (params)=>postAction("/bizConfig/insertBatch",params)
 //二级部门管理
 const queryDepartPermission = (params)=>getAction("/sys/permission/queryDepartPermission",params);
 const saveDepartPermission = (params)=>postAction("/sys/permission/saveDepartPermission",params);

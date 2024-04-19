@@ -1,6 +1,11 @@
 <template>
   <Card>
     <div>
+      <a-row :gutter="24" v-if='formData.data.length === 0'>
+        <a-col :span="24">
+          <a-button type='primary' @click='handleInsert'>初始化配置</a-button>
+        </a-col>
+      </a-row>
       <a-tabs @change="tabsChangeHandle">
         <a-tab-pane key="1" tab="步枪">
 
@@ -176,6 +181,7 @@ import Card from '@comp/card/card.vue'
 import { bizConfigList, bizConfigReset, bizConfigUpdateBatch } from '@api/authority'
 import { bizContestList, bizContestProjectList, bizContestProjectStageList } from '@api/competition'
 import dataScreenConfig from '../../DataScreen/select.vue'
+import { bizConfigInsertBatch } from '@api/api'
 export default {
   name: 'function',
   components: {
@@ -193,12 +199,26 @@ export default {
     }
   },
   mounted() {
-    bizContestList().then((res) => {
-      this.contestId = res.result
-      this.getList()
-    })
+    this.gitBizList()
+    // bizConfigInsertBatch
   },
   methods: {
+    handleInsert() {
+      bizConfigInsertBatch().then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          this.$message.success(res.message || '更新成功')
+          this.gitBizList()
+        }
+
+      })
+    },
+    gitBizList () {
+      bizContestList().then((res) => {
+        this.contestId = res.result
+        this.getList()
+      })
+    },
     tabsChangeHandle(e) {
       console.log(e)
       this.keyVal = e
