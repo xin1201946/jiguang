@@ -2,262 +2,47 @@
   <div class="box">
     <Card>
       <template slot="query">
-        <a-form :form="form" layout="inline">
+        <a-form :form="form" layout="inline" @submit="handleSubmit">
           <a-row :gutter="24">
-            <a-col :span="8">
-              <a-form-item label="起止日期">
-                <a-date-picker v-model="form.projectTime" :disabled-date="disabledDate" valueFormat="YYYY-MM-DD"
-                  @change="handlePickers"></a-date-picker>
+            <a-col :span="6">
+              <a-form-item label="靶位">
+                <a-input placeholder="请输入靶位号" v-model="form.targetSite" />
               </a-form-item>
             </a-col>
             <a-form-item>
               <a-space>
-                <a-button type="primary" icon="search" @click="handleSubmit">查询</a-button>
+                <a-button html-type="submit" type="primary" icon="search" @click="handleSubmit">查询</a-button>
                 <a-button @click="handleReset" icon="reload">重置</a-button>
               </a-space>
             </a-form-item>
           </a-row>
         </a-form>
       </template>
-      <div>
-        <!--表格 -->
-        <div class="tableClass">
-          <!-- :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" -->
-          <a-table bordered rowKey="playerId" :pagination="pagination" :columns="columns" :dataSource="dataSource"
-            :loading="loading" :scroll="{ x: 1500, y: 270 }">
-            <template slot="directionPointSlots" slot-scope="text,record">
-              <!-- 命中区位1上；2下，3左，4右，5右上，6右下 ，7左上，8左下 -->
-              <span>{{ text === 1 ? '上' : text === 2 ? '下' : text === 3 ? '左' : text === 4 ? '右' : text === 5 ? '右上' :
-          text === 6 ? '右下' : text === 7 ? '左上' : text === 8 ? '左下' : '' }}</span>
-            </template>
-            <!-- 操作 -->
-            <!-- <template slot="operation" slot-scope="text, record">
-            <a-space>
-              <a-button type="primary" size="small" ghost icon="profile" @click="handleDetails(record)">详情</a-button>
-            </a-space>
-          </template> -->
-          </a-table>
-        </div>
-        <!-- 图表 -->
-        <div class="box">
-          <div id="main" class="box_E"></div>
-        </div>
-      </div>
     </Card>
-    <PersonalModal ref="personalModalRef"></PersonalModal>
   </div>
 </template>
 
 <script>
 import Card from '@comp/card/card.vue'
-import bizMixins from '@views/biz/bizMixins'
-import { bizTrainScoreQueryScoreList } from '@/api/biz'
-import PersonalModal from './modal/personalModal.vue'
-import * as echarts from 'echarts'
-import moment from 'moment'
 export default {
   name: 'personalAchievements',  //个人成绩
   components: {
     Card,
-    PersonalModal,
   },
-  mixins: [bizMixins],
   data() {
     return {
       form: {},
-      loading: false,
-      columns: [
-        {
-          dataIndex: 'userAccount',
-          title: '用户账号',
-          align: 'center',
-        },
-        {
-          dataIndex: 'tablePc',
-          title: '平板编号',
-          align: 'center',
-        },
-        {
-          dataIndex: 'groupCount',
-          title: '组数',
-          align: 'center',
-        },
-        {
-          dataIndex: 'shootCode',
-          title: '序号',
-          align: 'center',
-        },
-        {
-          dataIndex: 'score',
-          title: '环数',
-          align: 'center',
-        },
-        {
-          dataIndex: 'dataTime',
-          title: '射击时间',
-          align: 'center',
-        },
-        {
-          dataIndex: 'directionPoint',
-          title: '区位',
-          align: 'center',
-          scopedSlots: {
-            customRender: 'directionPointSlots',
-          },
-          // 命中区位1上；2下，3左，4右，5右上，6右下 ，7左上，8左下
-        },
-        {
-          dataIndex: 'tabletPcModel',
-          title: '模式',
-          align: 'center',
-          customRender: (text, record, index) => {
-            return record.tabletPcModel == '1' ? '比赛中' : record.tabletPcModel == '-1' ? '等待中' : '试射'
-          },
-          // -1等待中0试射 1比赛中
-        },
-        // {
-        //   title: '操作',
-        //   dataIndex: 'deviceId',
-        //   align: 'center',
-        //   scopedSlots: {
-        //     customRender: 'operation'
-        //   },
-        //   fixed: 'right',
-        //   width: 200
-        // }
-      ],
-      dataSource: [],
-      selectedRowKeys: [],
-      selectionRows: [],
-      names: undefined,
     }
   },
-  computed: {
-    rowSelection() {
-      let { selectedRowKeys } = this
-      return {
-        getCheckboxProps: (record) => ({
-          props: {
-            disabled: record.eliminationStatus == 1, // Column configuration not to be checked
-          },
-        }),
-        onSelect: (record, selected) => {
-          selected
-            ? this.selectionRows.push(record)
-            : this.selectionRows.splice(
-              this.selectionRows.findIndex((x) => x.id === record.id),
-              1
-            )
-        },
-        onSelectAll: (selected, selectedRows, changeRows) => {
-          this.selectionRows = selected
-            ? this.selectionRows.concat(changeRows)
-            : this.selectionRows.filter((x) => !changeRows.find((i) => i.id === x.id))
-        },
-        selectedRowKeys: selectedRowKeys,
-        onChange: (selectedRowKeys, selectedRows) => {
-          this.$nextTick(() => {
-            this.selectedRowKeys = selectedRowKeys
-          })
-        },
-      }
-    },
-  },
-  mounted() {
-    // this.getList()
-    this.form.projectTime = moment().format('YYYY-MM-DD')
-  },
   methods: {
-    disabledDate(current) {
-      return current && current > moment().endOf('day')
-    },
-    getList() {
-      this.loading = true
-      bizTrainScoreQueryScoreList({ datetime: this.form.projectTime }).then((res) => {
-        if (res.success) {
-          this.dataSource = res.result.records
-          this.names = this.dataSource[0].userAccount
-          let arr = []
-          let arrData = []
-          this.dataSource.map((item) => {
-            arr.push(item.shootCode)
-            arrData.push(item.score)
-          })
-          this.$nextTick(() => {
-            this.handleEcharts(arr, arrData)
-          })
-          // this.loading = false
-        } else {
-          this.$message.error(res.message)
-        }
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    handleEcharts(arr, arrData) {
-      var chartDom = document.getElementById('main')
-      var myChart = echarts.init(chartDom)
-      var option
-      option = {
-        tooltip: {
-          trigger: 'axis',
-          formatter: function (params) {
-            var relVal = params[0].name
-            // console.log(params)
-            for (var i = 0; i < params.length; i++) {
-              relVal += '<br/>' + params[i].marker + params[i].seriesName + ' : ' + params[i].value + '环'
-            }
-            return relVal
-          }
-        },
-        xAxis: {
-          type: 'category',
-          data: arr
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: arrData,
-            type: 'line',
-            smooth: true,
-            name: this.names,
-          }
-        ]
-      }
-      option && myChart.setOption(option)
-    },
-    // 选择日期
-    handlePickers(date) {
-      console.log(date,)
-      this.form.projectTime = date
-      this.$forceUpdate()
-    },
-    // 查询
     handleSubmit() {
-      this.getList()
+
     },
     handleReset() {
-      this.getList()
-    },
+      
+     },
   }
 }
 </script>
 
-<style lang="less" scoped>
-.tableClass {
-  height: 300px;
-  margin-bottom: 50px;
-}
-
-.box {
-  width: 100%;
-  height: 100%;
-
-  .box_E {
-    width: 100%;
-    height: 36vh;
-  }
-}
-</style>>
+<style lang="less" scoped></style>>
