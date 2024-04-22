@@ -197,3 +197,7 @@ export const processEditGroupScore= data => postAction("contest-process/editGrou
 export const processGetPlayerTargetScores= data => postAction("contest-process/getPlayerTargetScores", data)
 // 切换靶图---获取阶段运动员组别及弹药组别
 export const processGetStageGroups= data => getAction("contest-process/getStageGroups", data)
+
+
+// 首页
+export const homeGetHomeList= data => postAction("home/getHomeList", data)
