@@ -126,6 +126,10 @@
               更多 <a-icon type="down" />
             </a>
             <a-menu slot="overlay">
+              <a-menu-item v-if='record.roleName === "学员" && org_category === "2"'>
+                <a href="javascript:;" @click="handleVip(record)">充值</a>
+              </a-menu-item>
+
               <a-menu-item>
                 <a href="javascript:;" @click="handleDetail(record)">详情</a>
               </a-menu-item>
@@ -170,6 +174,8 @@
     <!-- 用户回收站 -->
     <user-recycle-bin-modal :visible.sync="recycleBinVisible" @ok="modalFormOk" />
 
+<!--    俱乐部学员充值-->
+    <UserVipModal ref='vip' @ok='modalFormOk'></UserVipModal>
   </a-card>
 </template>
 
@@ -184,7 +190,7 @@ import JInput from '@/components/jeecg/JInput'
 import UserRecycleBinModal from './modules/UserRecycleBinModal'
 import JSuperQuery from '@/components/jeecg/JSuperQuery'
 import JThirdAppButton from '@/components/jeecgbiz/thirdApp/JThirdAppButton'
-
+import UserVipModal from '@views/system/modules/UserVipModal.vue'
 export default {
   name: "UserList",
   mixins: [JeecgListMixin],
@@ -195,98 +201,123 @@ export default {
     PasswordModal,
     JInput,
     UserRecycleBinModal,
-    JSuperQuery
+    JSuperQuery,
+    UserVipModal
   },
   data() {
+    const org_category = sessionStorage.getItem('org_category')
+    const columns = [
+      /*{
+        title: '#',
+        dataIndex: '',
+        key:'rowIndex',
+        width:60,
+        align:"center",
+        customRender:function (t,r,index) {
+          return parseInt(index)+1;
+        }
+      },*/
+      {
+        title: '用户账号',
+        align: "center",
+        dataIndex: 'username',
+        width: 120,
+        sorter: true
+      },
+      {
+        title: '用户姓名',
+        align: "center",
+        width: 100,
+        dataIndex: 'realname',
+      },
+      {
+        title: '头像',
+        align: "center",
+        width: 120,
+        dataIndex: 'avatar',
+        scopedSlots: { customRender: "avatarslot" }
+      },
+
+      {
+        title: '性别',
+        align: "center",
+        width: 80,
+        dataIndex: 'sex_dictText',
+        sorter: true
+      },
+      {
+        title: '生日',
+        align: "center",
+        width: 100,
+        dataIndex: 'birthday'
+      },
+      {
+        title: '手机号码',
+        align: "center",
+        // width: 100,
+        dataIndex: 'phone'
+      },
+
+      {
+        title: '角色',
+        align: "center",
+        // width: 180,
+        dataIndex: 'roleName'
+      },
+      {
+        title: '单位',
+        align: "center",
+        // width: 180,
+        dataIndex: 'departIds_dictText'
+      },
+      // {
+      //   title: '部门',
+      //   align: "center",
+      //   width: 180,
+      //   dataIndex: 'orgCodeTxt'
+      // },
+      // {
+      //   title: '负责部门',
+      //   align: "center",
+      //   // width: 180,
+      //   dataIndex: 'departIds_dictText'
+      // },
+      {
+        title: '状态',
+        align: "center",
+        width: 80,
+        dataIndex: 'status_dictText'
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+        scopedSlots: { customRender: 'action' },
+        align: "center",
+        width: 170,
+        fixed: 'right'
+      }
+    ]
+    /*{
+      title: '会员卡充值次数',
+        align: "center",
+      // width: 100,
+      dataIndex: 'memberCardNum'
+    },*/
+    if (org_category === "2" || org_category === "undefined") {
+      columns.splice(8, 0, {
+        title: '会员卡卡次',
+        align: "center",
+        // width: 100,
+        dataIndex: 'memberCardNum'
+      })
+    }
+
     return {
       description: '这是用户管理页面',
       queryParam: {},
       recycleBinVisible: false,
-      columns: [
-        /*{
-          title: '#',
-          dataIndex: '',
-          key:'rowIndex',
-          width:60,
-          align:"center",
-          customRender:function (t,r,index) {
-            return parseInt(index)+1;
-          }
-        },*/
-        {
-          title: '用户账号',
-          align: "center",
-          dataIndex: 'username',
-          width: 120,
-          sorter: true
-        },
-        {
-          title: '用户姓名',
-          align: "center",
-          width: 100,
-          dataIndex: 'realname',
-        },
-        {
-          title: '头像',
-          align: "center",
-          width: 120,
-          dataIndex: 'avatar',
-          scopedSlots: { customRender: "avatarslot" }
-        },
-
-        {
-          title: '性别',
-          align: "center",
-          width: 80,
-          dataIndex: 'sex_dictText',
-          sorter: true
-        },
-        {
-          title: '生日',
-          align: "center",
-          width: 100,
-          dataIndex: 'birthday'
-        },
-        {
-          title: '手机号码',
-          align: "center",
-          // width: 100,
-          dataIndex: 'phone'
-        },
-        {
-          title: '角色',
-          align: "center",
-          // width: 180,
-          dataIndex: 'roleName'
-        },
-        // {
-        //   title: '部门',
-        //   align: "center",
-        //   width: 180,
-        //   dataIndex: 'orgCodeTxt'
-        // },
-        // {
-        //   title: '负责部门',
-        //   align: "center",
-        //   // width: 180,
-        //   dataIndex: 'departIds_dictText'
-        // },
-        {
-          title: '状态',
-          align: "center",
-          width: 80,
-          dataIndex: 'status_dictText'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' },
-          align: "center",
-          width: 170,
-          fixed: 'right'
-        }
-
-      ],
+      org_category,
+      columns,
       superQueryFieldList: [
         { type: 'input', value: 'username', text: '用户账号', },
         { type: 'input', value: 'realname', text: '用户姓名', },
@@ -308,6 +339,11 @@ export default {
     }
   },
   methods: {
+    handleVip(record) {
+      console.log(record)
+      this.$refs.vip.show(record)
+    },
+
     getAvatarView: function (avatar) {
       return getFileAccessHttpUrl(avatar)
     },

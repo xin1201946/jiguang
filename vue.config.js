@@ -26,7 +26,8 @@ module.exports = {
   //   }
   // },
   //打包app时放开该配置
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  // publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  // publicPath: "./",
   configureWebpack: config => {
     //生产环境取消 console.log
     if (process.env.NODE_ENV === 'production') {

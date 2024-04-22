@@ -9,13 +9,14 @@
     </template>
     <template slot="operator">
       <a-space>
-<!--        <a-button type="primary" @click="handleAdd('tablePc')" icon="plus">添加</a-button>-->
+        <a-button type="primary" @click="handleSync">同步</a-button>
         <a-button type="primary" icon="edit" @click="handleProject()">项目控制</a-button>
         <a-button type="primary" icon="edit" @click="handleDisPlay()">显示控制</a-button>
         <a-button type="primary" icon="edit" @click="handleDevice()">设备控制</a-button>
         <a-button type="primary" icon="edit" @click='handleSlabCut()'>模式切换</a-button>
         <a-button type="primary" icon="edit" @click='handleProjectCut()'>项目切换</a-button>
         <a-button type="primary" icon="edit" @click='handleUserDelivery()'>用户下发</a-button>
+        <a-button type="primary" icon="edit" @click='handleArguments'>参数配置</a-button>
       </a-space>
     </template>
     <a-table
@@ -44,6 +45,7 @@
     <DeviceModalDevice ref="device" @list="handleLists"></DeviceModalDevice>
     <DeviceModalProject ref="project" @list="handleLists"></DeviceModalProject>
     <DeviceModalCut ref='cut' @list="handleLists"></DeviceModalCut>
+    <DeviceArgument ref='argument' @list="handleLists"></DeviceArgument>
   </Card>
 </template>
 
@@ -55,11 +57,13 @@ import BizMixins from '@views/biz/bizMixins'
 import DeviceModal from '@views/control/device/Modal/DeviceModal.vue'
 import { bizTabletPcQueryDeviceControlById, controlDelete } from '@api/control'
 import { deleteMessage } from '@/utils'
-import { bizTabletPcPageList } from '@api/biz'
+import { bizTabletPcPageList1, bizTabletPcSync } from '@api/biz'
 import DeviceModalDisplay from '@views/control/device/Modal/DeviceModalDisplay.vue'
 import DeviceModalDevice from '@views/control/device/Modal/DeviceModalDevice.vue'
 import DeviceModalProject from '@views/control/device/Modal/DeviceModalProject.vue'
 import DeviceModalCut from '@views/control/device/Modal/DeviceModalCut.vue'
+import DeviceArgument from '@views/control/device/Modal/DeviceArgument.vue'
+
 export default {
   name: 'device',
   components: {
@@ -69,7 +73,8 @@ export default {
     DeviceModalDisplay,
     DeviceModalDevice,
     DeviceModalProject,
-    DeviceModalCut
+    DeviceModalCut,
+    DeviceArgument
   },
   mixins: [BizMixins],
   data() {
@@ -116,7 +121,7 @@ export default {
         pageNum: this.pagination.current,
         pageSize: this.pagination.pageSize
       }
-      bizTabletPcPageList(data).then(res => {
+      bizTabletPcPageList1(data).then(res => {
         if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
@@ -144,6 +149,17 @@ export default {
             this.$message.error(res.message)
           }
         })
+      })
+    },
+    handleSync() {
+      bizTabletPcSync().then((res) => {
+        if (res.code === 200) {
+          this.$message.success('平板同步成功')
+          this.pagination.current = 1
+          this.getList()
+        } else {
+          this.$message.error(res.message)
+        }
       })
     },
     handleProject(record) {
@@ -191,8 +207,17 @@ export default {
         this.$refs.cut.projectInit(this.selectedRows)
       }
     },
+    handleArguments() {
+      if (this.selectedRowKeys.length === 0) {
+        this.$message.error("请选择表格信息再点击用户下发按钮")
+      }
+      else {
+        this.$refs.argument.userInit(this.selectedRows)
+      }
+    },
     // 用户下发
     handleUserDelivery () {
+
       if (this.selectedRowKeys.length === 0) {
         this.$message.error("请选择表格信息再点击用户下发按钮")
       }

@@ -8,7 +8,7 @@
     :value="arrayValue"
     @change="onChange"
     :disabled="disabled"
-    mode="multiple"
+    :mode="mode"
     :placeholder="placeholder"
     :getPopupContainer="getParentContainer"
     optionFilterProp="children"
@@ -41,6 +41,10 @@
         type: String,
         required: false,
         default: ','
+      },
+      mode: {
+        type: String,
+        default: 'multiple'
       },
       popContainer:{
         type:String,
@@ -103,7 +107,12 @@
 
       },
       onChange (selectedValue) {
-        this.$emit('change', selectedValue.join(this.spliter));
+        if (this.mode === "multiple") {
+          this.$emit('change', selectedValue.join(this.spliter));
+        }else {
+          this.$emit('change', selectedValue);
+        }
+
       },
       setCurrentDictOptions(dictOptions){
         this.dictOptions = dictOptions

@@ -40,41 +40,44 @@
           <a-input placeholder="请输入用户姓名" v-model="model.realname" />
         </a-form-model-item>
 
-        <a-form-model-item label="工号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="workNo">
-          <a-input placeholder="请输入工号" v-model="model.workNo" />
+        <a-form-model-item v-if='model.selectedroles === "1780159932051365890"' label="学员编号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="workNo">
+          <a-input placeholder="请输入学员编号" v-model="model.workNo" />
         </a-form-model-item>
 
         <a-form-model-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phone">
           <a-input placeholder="请输入手机号码" v-model="model.phone" />
         </a-form-model-item>
 
-        <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
+<!--        <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post"/>
-        </a-form-model-item>
+        </a-form-model-item>-->
 
         <a-form-model-item label="角色分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!roleDisabled" >
           <j-multi-select-tag
-                  :disabled="disableSubmit"
-                  v-model="model.selectedroles"
-                  :options="rolesOptions"
-                  placeholder="请选择角色">
+            mode='default'
+            :disabled="disableSubmit"
+            v-model="model.selectedroles"
+            :options="rolesOptions"
+            placeholder="请选择角色"
+            @change='handleSelectedrolesChange'
+          >
           </j-multi-select-tag>
         </a-form-model-item>
 
         <!--部门分配-->
-        <a-form-model-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">
-          <j-select-depart v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true">></j-select-depart>
+        <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop='selecteddeparts'>
+          <j-select-depart modelPlaceholder='请输入单位名称按回车进行搜索' title='选择单位' placeholder='请点击选择单位' v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true"></j-select-depart>
         </a-form-model-item>
-
+<!--        -->
         <!--租户分配-->
-        <a-form-model-item label="租户分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">
+<!--        <a-form-model-item label="租户分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">
           <j-multi-select-tag
                   :disabled="disableSubmit"
                   v-model="model.relTenantIds"
                   :options="tenantsOptions"
                   placeholder="请选择租户">
           </j-multi-select-tag>
-        </a-form-model-item>
+        </a-form-model-item>-->
 
         <a-form-model-item label="身份" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-radio-group  v-model="model.userIdentity"  @change="identityChange">
@@ -150,7 +153,9 @@
     components: {
     },
     data () {
+      const info = JSON.parse(localStorage.getItem('pro__Login_Userinfo')).value
       return {
+        info,
         departDisabled: false, //是否是我的部门调用该页面
         roleDisabled: false, //是否是角色维护调用该页面
         modalWidth:800,
@@ -171,9 +176,13 @@
           phone: [{required: true, message: '请输入手机号!'}, {validator: this.validatePhone}],
           email: [{validator: this.validateEmail}],
           roles:{},
-          workNo:[ { required: true, message: '请输入工号' },
+          workNo:[ { required: true, message: '请输入学员编号' },
             { validator: this.validateWorkNo }],
-          telephone: [{ pattern: /^0\d{2,3}-[1-9]\d{6,7}$/, message: '请输入正确的座机号码' },]
+          telephone: [{ pattern: /^0\d{2,3}-[1-9]\d{6,7}$/, message: '请输入正确的座机号码' },],
+          selecteddeparts: [
+            {required: info.roleName.trim() === "单位管理员", message: '请选择单位!'}
+          ]
+        //
         },
         departIdShow:false,
         title:"操作",
@@ -215,6 +224,7 @@
     },
     methods: {
       add () {
+        console.log(this.info)
         this.refresh();
         this.edit({activitiSync:'1',userIdentity:1});
       },
@@ -231,6 +241,8 @@
         }else{
           this.departIdShow=false;
         }
+        // selectedroles
+        console.log(record, 123456789)
 
         if(record.hasOwnProperty("id")){
           that.getUserRoles(record.id);
@@ -282,6 +294,9 @@
             console.log('this.rolesOptions: ',this.rolesOptions)
           }
         });
+      },
+      handleSelectedrolesChange (e) {
+        console.log(e)
       },
       getUserRoles(userid){
         queryUserRole({userid:userid}).then((res)=>{

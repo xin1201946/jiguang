@@ -1,7 +1,7 @@
 <template>
   <div class="components-input-demo-presuffix">
     <!---->
-    <a-input @click="openModal" placeholder="请点击选择部门" v-model="textVals" readOnly :disabled="disabled">
+    <a-input @click="openModal" :placeholder="placeholder" v-model="textVals" readOnly :disabled="disabled">
       <a-icon slot="prefix" type="cluster" title="部门选择控件"/>
       <a-icon v-if="storeVals" slot="suffix" type="close-circle" @click="handleEmpty" title="清空"/>
     </a-input>
@@ -15,6 +15,8 @@
       :store="storeField"
       :text="textField"
       :treeOpera="treeOpera"
+      :placeholder='modelPlaceholder'
+      :title='title'
       @ok="handleOK"
       @initComp="initComp"/>
   </div>
@@ -29,6 +31,18 @@
       JSelectDepartModal
     },
     props:{
+      modelPlaceholder: {
+        type: String,
+        default: '请输入部门名称按回车进行搜索'
+      },
+      title: {
+        type: String,
+        default: '选择部门'
+      },
+      placeholder: {
+        type: String,
+        default: '请点击选择部门'
+      },
       modalWidth:{
         type:Number,
         default:500,
@@ -80,7 +94,7 @@
         default: false,
         required: false
       }
-      
+
     },
     data(){
       return {

@@ -4,13 +4,25 @@ import { deleteAction, downFile, download, getAction, postAction } from '@/api/m
  * 平板
  */
 // 平板分页查询
-export const bizTabletPcPageList = (data) => postAction('bizTabletPc/page/list', data)
+export const bizTabletPcPageList = (data) => getAction('bizDevicePc/list', data)
 // 平板添加
-export const bizTabletPcSave = data => postAction("/bizTabletPc/save", data)
+export const bizTabletPcSave = data => postAction("bizDevicePc/add", data)
 // 平板修改
-export const bizTabletPcUpdate = data => postAction("bizTabletPc/update", data)
+export const bizTabletPcUpdate = data => postAction("bizDevicePc/edit", data)
 // 平板删除
-export const bizTabletPcDelete = id => deleteAction(`bizTabletPc/delete/${id}`)
+export const bizTabletPcDelete = id => deleteAction(`bizDevicePc/delete`, {id})
+// 平板模板下载
+// bizDevicePc/getImportTemplate
+export const bizDevicePcGetImportTemplate = () => downFile('bizDevicePc/getImportTemplate')
+
+export const bizTabletPcPageList1 = (data) => postAction('bizTabletPc/page/list', data)
+// 平板添加
+export const bizTabletPcSave1 = data => postAction("bizTabletPc/save", data)
+// 平板修改
+export const bizTabletPcUpdate1 = data => postAction("bizTabletPc/update", data)
+// 平板删除
+export const bizTabletPcDelete1 = id => deleteAction(`/bizTabletPc/delete/${id}` )
+
 // 平板列表
 // export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list", data)
 export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list2", data)
@@ -65,4 +77,8 @@ export const bizDevicegetImportTemplate = () => download("bizDevice/getImportTem
 export const bizDeviceSync = data => getAction("bizDevice/sync")
 
 //编辑靶位
-export const updateTarget = data => postAction("bizTabletPc/updateTarget", data)
+export const updateTarget = data => postAction("bizDevicePc/updateTarget", data)
+
+// 发送平板参数消息
+// bizDeviceControl/sendPcSet
+export const bizDeviceControlSendPcSet = data => postAction("bizDeviceControl/sendPcSet", data)

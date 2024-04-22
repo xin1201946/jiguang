@@ -7,76 +7,114 @@
     :loading="loadingModal"
     :width="600"
   >
-  <div style="height: 100%;overflow-y: auto;padding-right: 20px">
-    <a-descriptions bordered title="设备信息" :column="4">
-      <a-descriptions-item label="平板名称" span="2">
-        {{  data.bizTabletPc &&  data.bizTabletPc.tabletPcName}}
-      </a-descriptions-item>
-      <a-descriptions-item label="平板状态" span="2">
-        {{ getLabel(tabletPcStatus, data.bizTabletPc && data.bizTabletPc.tabletPcStatus) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="设备编号枪" span="2">
-        {{ data.bizTabletPc && data.bizTabletPc.deviceNum0 }}
-      </a-descriptions-item>
-      <a-descriptions-item label="设备编号靶" span="2">
-        {{ data.bizTabletPc && data.bizTabletPc.deviceNum1 }}
-      </a-descriptions-item>
-      <a-descriptions-item label="当前模式" span="2">
-        {{ getLabel(tabletPcModels, data.bizTabletPc && data.bizTabletPc.tabletPcModel) }}
-      </a-descriptions-item>
-    </a-descriptions>
-    <a-descriptions bordered title="项目控制信息" :column="4">
-      <a-descriptions-item label="项目名称" span="2">{{ data.bizTabletProject && data.bizTabletProject.projectName }}</a-descriptions-item>
-      <a-descriptions-item label="组数" span="2">{{ data.bizTabletProject && data.bizTabletProject.groupCount }}</a-descriptions-item>
-      <a-descriptions-item label="弹药" span="2">{{ data.bizTabletProject && data.bizTabletProject.ammo }}</a-descriptions-item>
-    </a-descriptions>
-    <a-descriptions bordered title="设备控制信息" :column="4">
-      <a-descriptions-item label="击发控制" span="2">
-        {{ getLabel(shootControl, data.bizDeviceControl && data.bizDeviceControl.shootControl) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="音效控制" span="2">
-        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.soundControl) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="报靶控制" span="2">
-        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.indicateTargetControl) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="靶机倾角采集控制" span="2">
-        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.targetCollect) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="扳机预压采集控制" span="2">
-        {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.triggerCollect) }}
-      </a-descriptions-item>
-    </a-descriptions>
-    <a-descriptions bordered title="显示控制信息" :column="4">
-      <a-descriptions-item label="靶点大小" span="2">
-        {{ getLabel(targetSize, data.bizDeviceDisplay && data.bizDeviceDisplay.targetSize) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="靶点显隐" span="2">
-        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.targetShow) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="清靶模式" span="2">
-        {{ getLabel(clearTargetWay, data.bizDeviceDisplay && data.bizDeviceDisplay.clearTargetWay) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="瞄准曲线" span="2">
-        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.aimCurveShow) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="压力曲线" span="2">
-        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.stressCurveShow) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="发序显隐" span="2">
-        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.sequenceShow) }}
-      </a-descriptions-item>
-      <a-descriptions-item label="自动放大" span="2">
-        {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.autoAmplify) }}
-      </a-descriptions-item>
-    </a-descriptions>
-  </div>
+    <div style="height: 100%;overflow-y: auto;padding-right: 20px">
+      <a-descriptions bordered title="设备信息" :column="4">
+        <a-descriptions-item label="平板名称" span="2">
+          {{  data.bizTabletPc &&  data.bizTabletPc.tabletPcName}}
+        </a-descriptions-item>
+        <a-descriptions-item label="平板状态" span="2">
+          {{ getLabel(tabletPcStatus, data.bizTabletPc && data.bizTabletPc.tabletPcStatus) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="设备编号枪" span="2">
+          {{ data.bizTabletPc && data.bizTabletPc.deviceNum0 }}
+        </a-descriptions-item>
+        <a-descriptions-item label="设备编号靶" span="2">
+          {{ data.bizTabletPc && data.bizTabletPc.deviceNum1 }}
+        </a-descriptions-item>
+        <a-descriptions-item label="当前模式" span="2">
+          {{ getLabel(tabletPcModels, data.bizTabletPc && data.bizTabletPc.tabletPcModel) }}
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-descriptions bordered title="项目控制信息" :column="4">
+        <a-descriptions-item label="项目名称" span="2">{{ data.bizTabletProject && data.bizTabletProject.projectName }}</a-descriptions-item>
+        <a-descriptions-item label="组数" span="2">{{ data.bizTabletProject && data.bizTabletProject.groupCount }}</a-descriptions-item>
+        <a-descriptions-item label="弹药" span="2">{{ data.bizTabletProject && data.bizTabletProject.ammo }}</a-descriptions-item>
+      </a-descriptions>
+      <a-descriptions bordered title="设备控制信息" :column="4">
+        <a-descriptions-item label="击发控制" span="2">
+          {{ getLabel(shootControl, data.bizDeviceControl && data.bizDeviceControl.shootControl) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="音效控制" span="2">
+          {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.soundControl) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="报靶控制" span="2">
+          {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.indicateTargetControl) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="靶机倾角采集控制" span="2">
+          {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.targetCollect) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="扳机预压采集控制" span="2">
+          {{ getLabel(triggerCollect, data.bizDeviceControl && data.bizDeviceControl.triggerCollect) }}
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-descriptions bordered title="显示控制信息" :column="4">
+        <a-descriptions-item label="靶点大小" span="2">
+          {{ getLabel(targetSize, data.bizDeviceDisplay && data.bizDeviceDisplay.targetSize) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="靶点显隐" span="2">
+          {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.targetShow) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="清靶模式" span="2">
+          {{ getLabel(clearTargetWay, data.bizDeviceDisplay && data.bizDeviceDisplay.clearTargetWay) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="瞄准曲线" span="2">
+          {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.aimCurveShow) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="压力曲线" span="2">
+          {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.stressCurveShow) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="发序显隐" span="2">
+          {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.sequenceShow) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="自动放大" span="2">
+          {{ getLabel(autoAmplify, data.bizDeviceDisplay && data.bizDeviceDisplay.autoAmplify) }}
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-descriptions bordered title="显示控制信息" :column="4">
+        <a-descriptions-item label="平板标识" span="2">
+          {{ data.pcSet && data.pcSet.defid }}
+        </a-descriptions-item>
+        <a-descriptions-item label="清靶模式" span="2">
+          {{ getLabel(clearTargetMode, data.pcSet && data.pcSet.clearTargetMode) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="自动放大" span="2">
+          {{ getLabel(isAutoBlowUp, data.pcSet && data.pcSet.isAutoBlowUp) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="瞄准" span="2">
+          {{ getLabel(isShowAimTrack, data.pcSet && data.pcSet.isAutoBlowUp) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="快捷按钮" span="2">
+          {{ getLabel(isShowFastCtrl, data.pcSet && data.pcSet.isShowFastCtrl) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="靶点显隐" span="2">
+          {{ getLabel(isShowHistoryTargetSpot, data.pcSet && data.pcSet.isShowHistoryTargetSpot) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="弹孔发序" span="2">
+          {{ getLabel(isShowTargetSerial, data.pcSet && data.pcSet.isShowTargetSerial) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="压力曲线" span="2">
+          {{ getLabel(isShowAimTrack, data.pcSet && data.pcSet.isShowTriggerPressure) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="大小模式" span="2">
+          {{ getLabel(targetSpotSize, data.pcSet && data.pcSet.targetSpotSize) }}
+        </a-descriptions-item>
+      </a-descriptions>
+    </div>
   </BizModal>
 </template>
 
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import { getLabel } from '@/utils'
+import {
+  clearTargetMode,
+  isAutoBlowUp,
+  isShowAimTrack,
+  isShowFastCtrl,
+  isShowHistoryTargetSpot,
+  isShowTargetSerial,
+  targetSpotSize
+} from '@views/control/device/device.config'
 
 
 const tabletPcStatus = [
@@ -109,7 +147,6 @@ const triggerCollect = [
     label: '关'
   }
 ]
-
 const shootControl = [
   {
     value: '1',
@@ -120,7 +157,6 @@ const shootControl = [
     label: '轨迹扫描'
   }
 ]
-
 const autoAmplify = [
   {
     value: '0',
@@ -141,7 +177,6 @@ const clearTargetWay = [
     label: '手动清靶'
   }
 ]
-
 const targetSize = [
   {
     value: '0',
@@ -170,7 +205,14 @@ export default {
       autoAmplify,
       clearTargetWay,
       targetSize,
-      tabletPcStatus
+      tabletPcStatus,
+      targetSpotSize,
+      isShowTargetSerial,
+      isShowHistoryTargetSpot,
+      isShowFastCtrl,
+      isShowAimTrack,
+      isAutoBlowUp,
+      clearTargetMode
     }
   },
   methods: {

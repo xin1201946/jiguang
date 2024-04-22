@@ -21,18 +21,18 @@ export const tabletPcModel = [
   }
 ]
 export const slabQuery = [
-  {
+  /*{
     type: "input",
     rules: [
       "tabletPcNum",
     ],
     label: '平板编号',
     placeholder: '请输入平板编号'
-  },
+  },*/
   {
     type: "input",
     rules: [
-      'tabletPcNum',
+      'pcNum',
       { rules: [{ required: false, message: '请输入平板编号' }] },
     ],
     label: '平板编号',
@@ -41,13 +41,13 @@ export const slabQuery = [
   {
     type: "input",
     rules: [
-      'tabletPcName',
+      'pcName',
       { rules: [{ required: false, message: '请输入平板名称' }] },
     ],
     label: '平板名称',
     placeholder: '请输入平板名称'
   },
-  {
+ /* {
     type: 'select',
     rules: [
       'tabletPcStatus',
@@ -66,13 +66,13 @@ export const slabQuery = [
     label: '当前模式',
     placeholder: '请选择当前模式',
     data: tabletPcModel,
-  }
+  }*/
 ]
 
 export const slabTableColumns = [
   {
     title: '平板编号',
-    dataIndex: 'tabletPcNum',
+    dataIndex: 'pcNum',
     align: 'center'
   },
   {
@@ -85,7 +85,7 @@ export const slabTableColumns = [
   },
   {
     title: '平板名称',
-    dataIndex: 'tabletPcName',
+    dataIndex: 'pcName',
     align: 'center'
   },
 
@@ -108,7 +108,7 @@ export const slabTableColumns = [
     align: 'center'
   },
 
-  {
+/*  {
     title: '平板状态',
     dataIndex: 'tabletPcStatus',
     align: 'center',
@@ -119,7 +119,15 @@ export const slabTableColumns = [
     dataIndex: 'tabletPcModel',
     align: 'center',
     customRender: (text) => getLabel(tabletPcModel, text)
+  },*/
+
+  {
+    title: '单位名称',
+    dataIndex: 'departName',
+    align: 'center',
+    // customRender: (text) => getLabel(tabletPcStatus, text)
   },
+
   {
     title: '操作',
     align: 'center',

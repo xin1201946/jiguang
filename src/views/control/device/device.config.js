@@ -192,3 +192,88 @@ export const deviceTableColumns = [
     width: 200
   }
 ]
+
+export const clearTargetMode = [
+  {
+    value: '0',
+    label: '不清理'
+  },
+  {
+    value: '1',
+    label: '自动'
+  },
+  {
+    value: '2',
+    label: '手动'
+  },
+]
+
+export const isAutoBlowUp = [
+  {
+    value: '0',
+    label: '非自动放大'
+  },
+  {
+    value: '1',
+    label: '自动放大'
+  },
+]
+
+export const isShowAimTrack = [
+  {
+    value: '0',
+    label: '隐藏'
+  },
+  {
+    value: '1',
+    label: '显示'
+  },
+]
+
+export const isShowFastCtrl = [
+  {
+    value: '0',
+    label: '不显示'
+  },
+  {
+    value: '1',
+    label: '显示'
+  },
+]
+
+export const isShowHistoryTargetSpot = [
+  {
+    value: '0',
+    label: '正常显示'
+  },
+  {
+    value: '1',
+    label: '只显示最新靶点'
+  },
+]
+
+export const isShowTargetSerial = [
+  {
+    value: '0',
+    label: '不显示发序'
+  },
+  {
+    value: '1',
+    label: '显示发序'
+  },
+]
+
+export const targetSpotSize = [
+  {
+    value: '0',
+    label: '大'
+  },
+  {
+    value: '1',
+    label: '小'
+  },
+  {
+    value: '2',
+    label: '混合'
+  },
+]

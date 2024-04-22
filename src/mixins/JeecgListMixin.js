@@ -259,6 +259,8 @@ export const JeecgListMixin = {
       //清空列表选中
       this.onClearSelected()
     },
+
+
     handleDetail:function(record){
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title="详情";

@@ -2,7 +2,9 @@ import { Modal } from 'ant-design-vue'
 
 // 获取label
 export const getLabel = (arr, value) => {
+  console.log(value)
   const a = arr.filter(item => String(item.value) === String(value))
+  console.log(a)
   if (a.length) {
     return a[0].label
   }

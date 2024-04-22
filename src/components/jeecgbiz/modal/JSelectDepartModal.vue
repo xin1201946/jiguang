@@ -1,6 +1,6 @@
 <template>
   <j-modal
-    title="选择部门"
+    :title="title || '选择部门'"
     :width="modalWidth"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -11,7 +11,7 @@
     switchFullscreen
     cancelText="关闭">
     <a-spin tip="Loading..." :spinning="false">
-      <a-input-search v-model="searchValue" style="margin-bottom: 1px" placeholder="请输入部门名称按回车进行搜索" />
+      <a-input-search v-model="searchValue" style="margin-bottom: 1px" :placeholder="placeholder || '请输入部门名称按回车进行搜索'" />
       <a-empty v-if="filterTreeData.length===0"></a-empty>
       <a-tree
         v-else
@@ -51,7 +51,7 @@
   import { queryDepartTreeList } from '@/api/api'
   export default {
     name: 'JSelectDepartModal',
-    props:['modalWidth','multi','rootOpened','departId', 'store', 'text','treeOpera'],
+    props:['modalWidth','multi','rootOpened','departId', 'store', 'text','treeOpera', 'title', 'placeholder'],
     data(){
       return {
         visible:false,
@@ -280,7 +280,7 @@
   // 限制部门选择树高度，避免部门太多时点击确定不便
   .my-dept-select-tree{
     height:350px;
-    
+
     &.fullscreen{
       height: calc(100vh - 250px);
     }

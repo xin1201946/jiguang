@@ -5,8 +5,19 @@
     </template>
     <template slot="operator">
       <a-space>
-        <a-button type="primary" @click="handleAdd('device')" icon="plus">添加</a-button>
-        <a-button type="primary" @click="handleSync">同步</a-button>
+        <a-button v-has='"biz:slab:add"' type="primary" @click="handleAdd('device')" icon="plus">添加</a-button>
+<!--        <a-upload
+          accept=".xlsx, xls"
+          name="file"
+          :showUploadList="false"
+          :multiple="false"
+          :headers="tokenHeader"
+          :action="importExcelUrl"
+          @change="handleImportExcel"
+        >
+          <a-button type="primary" icon="import">导入</a-button>
+        </a-upload>-->
+        <a-button v-has='"biz:slab:import"' type="primary" icon="import" @click='handleImportModel'>导入</a-button>
 <!--        <a-button
           type='primary'
           :disabled='rowSelection.selectedRowKeys.length === 0'
@@ -35,7 +46,7 @@
         </template>
       </a-table>
       <SlabModal ref="modal" @list="handleList" />
-
+      <SlabImportModal ref='import' @list="handleList"></SlabImportModal>
     </template>
   </Card>
 </template>
@@ -54,12 +65,15 @@ import {
 import SlabModal from '@views/biz/slab/model/SlabModal.vue'
 import bizMixins from '@views/biz/bizMixins'
 import { deleteMessage } from '@/utils'
+import SlabImportModal from '@views/biz/slab/model/SlabImportModal.vue'
+
 export default {
   name: 'slab',
   components: {
     Card,
     QuerySearch,
     SlabModal,
+    SlabImportModal
   },
   mixins: [bizMixins],
   data() {
@@ -67,11 +81,12 @@ export default {
       columns: slabTableColumns,
       data: [],
       query: {
-        tabletPcNum: undefined,
-        tabletPcName: undefined,
-        tabletPcStatus: undefined,
-        tabletPcModel: undefined,
+        pcNum: undefined,
+        pcName: undefined,
+        // tabletPcStatus: undefined,
+        // tabletPcModel: undefined,
       },
+
       rowSelection: {
         type: "checkbox",
         selectedRowKeys: [],
@@ -87,9 +102,12 @@ export default {
     this.getList()
   },
   methods: {
+    handleImportModel() {
+      this.$refs.import.show()
+    },
     setValueHandle(row) {
       updateTarget({
-        pcNo: row.tabletPcNum, //平板编号
+        pcNo: row.pcNum, //平板编号
         targetSite: row.targetSite, //靶位号
       }).then((res) => {
         if (res.success) {
@@ -102,7 +120,7 @@ export default {
     getList() {
       const data = {
         ...this.query,
-        pageNum: this.pagination.current,
+        pageNo: this.pagination.current,
         pageSize: this.pagination.pageSize,
       }
       bizTabletPcPageList(data).then((res) => {
@@ -142,7 +160,7 @@ export default {
     },
     handleDelete(record) {
       deleteMessage('是否删除当前平板信息').then(() => {
-        bizTabletPcDelete(record.tabletPcId).then(this.deleteCallback)
+        bizTabletPcDelete(record.pcId).then(this.deleteCallback)
       })
     },
   },

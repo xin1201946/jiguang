@@ -34,11 +34,7 @@ export const projectColumns = [
     align: 'center',
     dataIndex: 'projectName'
   },
-  // {
-  //   title: "平板编号",
-  //   align: 'center',
-  //   // dataIndex: 'groupCount'
-  // },
+
   {
     title: "组数",
     align: 'center',
@@ -48,6 +44,11 @@ export const projectColumns = [
     title: "弹药数量",
     align: 'center',
     dataIndex: 'ammo'
+  },
+  {
+    title: "单位",
+    align: 'center',
+    dataIndex: 'departName'
   },
   {
     title: '操作',

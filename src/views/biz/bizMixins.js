@@ -101,6 +101,7 @@ const bizMixins = {
         for (const key in this.formData) {
           this.formData[key] = row[key]
         }
+        console.log( this.formData)
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
         }

@@ -13,12 +13,33 @@
       ref="form"
       :model="formData"
     >
-      <a-form-model-item label="平板编号" prop="tabletPcNum">
-        <a-input :disabled="type === 1" v-model="formData.tabletPcNum"></a-input>
+
+      <a-form-model-item label="平板编号" prop="pcNum">
+        <a-input :disabled="type === 1" v-model="formData.pcNum"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="平板名称" prop="tabletPcName">
-        <a-input v-model="formData.tabletPcName"></a-input>
+      <a-form-model-item label="平板名称" prop="pcName">
+        <a-input v-model="formData.pcName"></a-input>
       </a-form-model-item>
+
+      <a-form-model-item label="激光训练器类型" prop="deviceGunType">
+        <a-select showSearch v-model="formData.deviceGunType">
+          <a-select-option value="0">长款激光训练器</a-select-option>
+          <a-select-option value="1">短款激光训练器</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="单位名称" prop="departId">
+        <j-select-depart
+          modelPlaceholder='请输入单位名称按回车进行搜索'
+          title='选择单位'
+          placeholder='请点击选择单位'
+          v-model="formData.departId"
+          :multi="true"
+          @back="backDepartInfo"
+          :backDepart="true"
+          :treeOpera="true"
+        ></j-select-depart>
+      </a-form-model-item>
+
 
       <a-form-model-item label="激光训练器编号" prop="deviceNum0">
         <a-select showSearch v-model="formData.deviceNum0" @change="handleDeviceChange">
@@ -39,8 +60,8 @@
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="平板状态" prop="tabletPcStatus">
-<!--        <a-input v-model="formData.tabletPcStatus"></a-input>-->
+<!--      <a-form-model-item label="平板状态" prop="tabletPcStatus">
+&lt;!&ndash;        <a-input v-model="formData.tabletPcStatus"></a-input>&ndash;&gt;
         <a-select v-model="formData.tabletPcStatus">
           <a-select-option
             v-for="item in tabletPcStatus"
@@ -49,8 +70,12 @@
           >{{ item.label }}
           </a-select-option>
         </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="当前模式" prop="tabletPcModel" :rules="{ required: formData.tabletPcStatus === '1', message: '请选择当前模式', trigger: 'blur' }">
+      </a-form-model-item>-->
+<!--      <a-form-model-item
+        label="当前模式"
+        prop="tabletPcModel"
+        :rules="{ required: formData.tabletPcStatus === '1', message: '请选择当前模式', trigger: 'blur' }"
+      >
         <a-select v-model="formData.tabletPcModel">
           <a-select-option
             v-for="item in tabletPcModel"
@@ -59,7 +84,7 @@
           >{{ item.label }}
           </a-select-option>
         </a-select>
-      </a-form-model-item>
+      </a-form-model-item>-->
     </a-form-model>
   </BizModal>
 </template>
@@ -78,30 +103,43 @@ export default {
   mixins: [bizMixins],
   data() {
     return {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
       tabletPcStatus,
       tabletPcModel,
       title: "",
       visible: false,
       type: 0,
       formData: {
-        tabletPcStatus: '',
-        tabletPcNum: '',
-        tabletPcName: '',
+        // tabletPcStatus: '',
+        // tabletPcNum: '',
+        // tabletPcName: '',
         deviceGunType: '',
         // deviceNum: '',
         deviceNum0: '',
         deviceNum1: "",
-        tabletPcId: '',
-        tabletPcModel: ''
+        pcId: '',
+        // tabletPcModel: '',
+
+        departId: "",
+        departName: "",
+        pcName: "",
+        pcNum: ""
       },
       rules: {
         tabletPcStatus: [
            { required: true, message: '请选择平板状态', trigger: 'blur' }
         ],
-        tabletPcNum: [
+        pcNum: [
            { required: true, message: '请输入平板编号', trigger: 'blur' }
         ],
-        tabletPcName: [
+        pcName: [
            { required: false, message: '请输入平板名称', trigger: 'blur' }
         ],
         deviceNum0: [
@@ -110,6 +148,9 @@ export default {
         deviceNum1: [
           { required: true, message: '请选择激光接收靶编号', trigger: 'blur' }
         ],
+        departId: [
+          { required: true, message: '请选择单位名称', trigger: 'blur' }
+        ]
         // tabletPcModel: [
         //   { required: true, message: '请选择当前模式', trigger: 'blur' }
         // ]
@@ -139,6 +180,14 @@ export default {
     }
   },
   methods: {
+    backDepartInfo(info) {
+      if (info.length) {
+        // this.formData.departId = info[0].value
+        // this.formData.departName = info[0].text
+        this.formData.departId = info.map(item => item.value).join(',')
+        this.formData.departName = info.map(item => item.text).join(',')
+      }
+    },
     handleOk() {
       this.$refs.form.validate(v => {
         if (v) {

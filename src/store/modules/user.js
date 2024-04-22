@@ -89,6 +89,7 @@ const user = {
             commit('SET_INFO', userInfo)
             commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname, welcome: welcome() })
             commit('SET_AVATAR', userInfo.avatar)
+            sessionStorage.setItem("org_category",result.org_category)
             resolve(response)
           }else{
             reject(response)
