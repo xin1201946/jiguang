@@ -10,7 +10,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build:electron": "vue-cli-service build --mode electron",
-    "exe-build": "npm run build:electron && node move.js && cd exe && cnpm run biuld && node move.js",
+    "exe-build": "npm run build:electron && cd exe && cnpm run biuld && node move.js",
     "exe-start": "cd exe && npm run start"
   },
   "dependencies": {
