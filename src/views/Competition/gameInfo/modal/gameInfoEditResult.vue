@@ -40,7 +40,7 @@
         <a-input v-model="formData.y_coord"></a-input>
       </a-form-model-item>
       <a-form-model-item label="开始时间" prop="begin_time">
-        <a-date-picker style="width: 100%" show-time v-model="formData.begin_time" valueFormat="YYYY-MM-DD HH:MM:SS" format="YYYY-MM-DD HH:MM:SS" />
+        <a-date-picker style="width: 100%" show-time v-model="formData.begin_time" valueFormat="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" />
       </a-form-model-item>
       <a-form-model-item label="当前模式" prop="current_mode">
         <a-select style="width: 100%" v-model="formData.current_mode">
