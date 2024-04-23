@@ -6,6 +6,7 @@
     @cancel="handleCancel"
     :loading="loadingModal"
     :cancelBool='false'
+    okText='关闭'
   >
     <a-form-model
       ref='form'
