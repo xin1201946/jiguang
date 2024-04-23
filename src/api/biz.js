@@ -82,3 +82,6 @@ export const updateTarget = data => postAction("bizDevicePc/updateTarget", data)
 // 发送平板参数消息
 // bizDeviceControl/sendPcSet
 export const bizDeviceControlSendPcSet = data => postAction("bizDeviceControl/sendPcSet", data)
+
+//  训练成绩表-分页列表查询 个人成绩
+export const bizTrainScoreQueryScoreList= data => getAction("bizTrainScore/queryScoreList", data)
