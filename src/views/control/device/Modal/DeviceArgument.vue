@@ -186,7 +186,9 @@ export default {
         }
       })
     },
-    handleCancel() {}
+    handleCancel() {
+      this.visible = false
+    }
   }
 }
 </script>
