@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; display: flex">
+  <div style="width: 100%; display: flex" v-show='!len'>
     <dv-border-box-8 :dur="20" class="DataScreen container" v-for="data in projectList" :key="data.configName">
       <!-- 头部 -->
       <div class="head">
@@ -258,6 +258,7 @@ export default {
       dos: [],
       timer: null,
       currentProject: [],
+      len: false
     }
   },
   created() {
@@ -285,9 +286,17 @@ export default {
 
     this.timer = setInterval(() => {
       getDataScreenCurrentConfigApi().then((res) => {
+        this.len = false
         if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
           this.currentProject = JSON.parse(JSON.stringify(res.result))
-
+          this.len = true
+          // console.log(this.len !== res.result.length && this.len !== 0)
+          // console.log(this.len)
+          // if (this.len !== res.result.length && this.len !== 0) {
+          //   this.$router.go(0)
+          // }
+          // this.len = res.result.length
+          // console.log(this.len)
           this.projectList = res.result
           this.projectList.map((item) => {
             item['fiftyRounds'] = 0
@@ -665,6 +674,7 @@ export default {
       })
     },
     getList() {
+      this.len = false
       this.projectList.forEach((data, index) => {
         if (data.configName.includes('个人资格赛')) {
           this.geren(data, index)
