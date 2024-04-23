@@ -51,7 +51,7 @@ export default {
       loginType: 0,
       model: {
         username: 'admin',
-        password: '123456',
+        password: '1234.com',
         inputCode: '',
         typesName: undefined,
       },
