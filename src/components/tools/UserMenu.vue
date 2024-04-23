@@ -175,7 +175,13 @@ export default {
       // 原先的
       // const pin = window.open('/DataScreen?type=' + row.configName + '&spear=' + spear, '_blank')
       // 现在的
-      const pin = window.open("/DataScreen", "_blank")
+      // process.env.NODE_ENV === "electron"
+      const router = this.$router;
+      // DataScreen
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+      window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`);
+      // const pin = window.open("/#/DataScreen", "_blank")
       // pin.name = JSON.stringify({
       //   ...row,
       //   spear

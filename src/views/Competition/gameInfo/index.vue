@@ -148,9 +148,9 @@
                   </template>
                 </div>
               </template>
-              <!-- 操作 -->  
+              <!-- 操作 -->
               <template slot="operation" slot-scope="text, record">
-                <a-space>  
+                <a-space>
                   <!-- 总环数为空不渲染成绩详情按钮-->
                   <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
                     size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
@@ -281,19 +281,19 @@ function extractValue(str) {
   const regex = /_([^_]*?)x/
   const match = str.match(regex)
   if (match) {
-    return match[1] // 返回第一个捕获组的内容  
+    return match[1] // 返回第一个捕获组的内容
   } else {
-    return null // 如果没有匹配，返回null或其他适当的值  
+    return null // 如果没有匹配，返回null或其他适当的值
   }
 }
 function extractValueBeforeUnderscore(str) {
   const match = str.match(/^(.*?)_(.*)$/)
   if (match) {
-    // 如果存在_，则返回_之前的部分  
+    // 如果存在_，则返回_之前的部分
     return match[1]
   } else {
-    // 如果不存在_，则返回原字符串或根据需要返回其他值  
-    return str // 或者返回null，表示没有提取到值  
+    // 如果不存在_，则返回原字符串或根据需要返回其他值
+    return str // 或者返回null，表示没有提取到值
   }
 }
 export default {
@@ -434,8 +434,8 @@ export default {
   methods: {
     handleActionsColumnContextMenu(record, event, col) {
       // console.log(col, record.col)
-      event.preventDefault() // 阻止默认的右键菜单  
-      // 在这里添加你的自定义右键菜单逻辑  
+      event.preventDefault() // 阻止默认的右键菜单
+      // 在这里添加你的自定义右键菜单逻辑
       // console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
       this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
     },
@@ -903,14 +903,17 @@ export default {
      * 选择组别
      */
     radioChangeHandle(e) {
+      // console.log(e,123456)
       let strArr = []
-      this.group = e
+      // this.group = e
+      console.log(this.groupList)
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
+          // console.log(item)
           this.status = item.status
           strArr = item.scoreGroup
           this.strArr = item.scoreGroup
-          let Source = item.bizContestPlayerList.map((item, i) => ({
+          /*let Source = item.bizContestPlayerList.map((item, i) => ({
             ...item,
             i,
           }))
@@ -921,8 +924,26 @@ export default {
               newItem['strArr'] = strArr
             }
             return newItem // 返回新对象
+          })*/
+          let Source = item.bizContestPlayerList.map((key, i) => ({
+            ...key,
+            i,
+          }))
+          const newSource = Source.map((key) => {
+            // console.log(key)
+            const newItem = { ...key }
+            if (key.groupScoreList) {
+              for (let index = 0; index < strArr.length && index < key.groupScoreList.length; index++) {
+                newItem[strArr[index]] = key.groupScoreList[index].gunGroupTotal
+                newItem['strArr'] = strArr
+              }
+
+            }
+            return newItem // 返回新对象
           })
+          // console.log(newSource, 123456)
           this.dataSource = [...newSource]
+          console.log(this.dataSource)
           // console.log(this.dataSource, 'qweqweqwewqq123123232')
 
         }
@@ -1538,12 +1559,12 @@ export default {
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 10px;
-  // display: none; /* 默认情况下不显示菜单 */  
+  // display: none; /* 默认情况下不显示菜单 */
 }
 
-// .custom-context-menu.visible {  
-//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */  
-// }  
+// .custom-context-menu.visible {
+//   display: block; /* 当 contextMenuVisible 为 true 时显示菜单 */
+// }
 .custom-context-menu ul {
   list-style: none;
   padding: 0;

@@ -15,7 +15,9 @@ const http = require('http')
 function createWindow () {
   Menu.setApplicationMenu(null)
   const win = new BrowserWindow({
-    show: false
+    show: false,
+    width: 1000,
+    height: 1000
     // frame: true, // false 取消标题栏 不显示左上角三个按钮可以设置false
     // resizable: true, // 放大按钮
     // closable: false, // 关闭按钮禁用

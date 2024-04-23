@@ -55,6 +55,7 @@ import {
 import { deleteMessage } from '@/utils'
 import ProjectPhaseDeviceTableModal from '@views/Competition/projectPhase/model/projectPhaseDeviceTableModal.vue'
 import ProjectPhaseDeviceTableModalBind from '@views/Competition/projectPhase/model/projectPhaseDeviceTableModalBind.vue'
+import { bizTabletPcPageList } from '@api/biz'
 const columns = [
   {
     title: '平板设备号',
@@ -204,7 +205,14 @@ export default {
         pageSize: this.pagination.pageSize,
         pageNum: this.pagination.current,
       }
-      bizContestProjectDevicePageList(data).then((res) => {
+
+      // const data = {
+      //   cproId: "",
+      //   pageSize: this.pagination.pageSize,
+      //   pageNo: this.pagination.current,
+      // }
+
+      bizContestProjectDevicePageList/*bizTabletPcPageList*/(data).then((res) => {
         this.data = res.result.records
         this.pagination.current = res.result.current
         this.pagination.total = res.result.total
@@ -225,10 +233,19 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/.ant-table-body {
+/*/deep/.ant-table-body {
   &::-webkit-scrollbar {
-    display: block !important;
+    display: none !important;
     width: 0 !important;
+    height: 0 !important;
   }
+}*/
+/deep/ .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+  overflow: hidden !important;
+  margin-bottom: 0 !important;
+}
+//隐藏表格底部横向滚动条
+/deep/.ant-table-body {
+  overflow-x: hidden !important;
 }
 </style>

@@ -73,36 +73,46 @@ export default {
       })
     },
     updataScreen() {
+      // console.log(1)
       if (this.name1 == this.name2) {
         return this.$message.error('选择的两场比赛相同了!')
       }
+      // console.log(2)
       if (!this.name1) {
         return this.$message.error('选择比赛!')
       }
+      // console.log(3)
       if (this.data == 2 && !this.name2) {
         return this.$message.error('选择比赛!')
       }
       // let arr = this.dataScreenList.filter((item) => item.configName === this.name1 || item.configName === this.name2)
       let arr = []
       if (this.name1) {
+        // console.log(4)
         arr[0] = this.dataScreenList.filter((item) => item.configName === this.name1)[0]
       }
       if (this.name2) {
+        // console.log(5)
         arr[1] = this.dataScreenList.filter((item) => item.configName === this.name2)[0]
       }
+      console.log(arr)
       let data = {
         amount: this.data * 1,
         leftConfigId: arr[0].configId,
-        rightConfigId: arr[1].configId,
+        rightConfigId: arr[1] && arr[1].configId,
         screenId: this.screenId,
       }
       if (arr.length == 1) {
+        // console.log(6)
         data['leftConfigId'] = arr[0].configId
       } else if (arr.length == 2) {
+        // console.log(7)
         data['rightConfigId'] = arr[1].configId
       }
+      // console.log(8)
       getDataScreenConfigUpdataApi(data).then((res) => {
         this.$message.success('更新成功！')
+        this.getList()
       })
     },
   },

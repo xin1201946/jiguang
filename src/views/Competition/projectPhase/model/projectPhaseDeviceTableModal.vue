@@ -26,7 +26,7 @@
         </a-row>
       </a-form>
       <div class="modal_body">
-        <a-table :data-source="tableList" :columns="columns" :pagination="false" rowKey="tabletPcId"
+        <a-table :data-source="tableList" :columns="columns" :pagination="false" rowKey="pcId"
           :row-selection="rowSelection" :customRow="customRow"></a-table>
       </div>
     </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { bizTabletPcList } from '@api/biz'
+import { bizTabletPcList, bizTabletPcPageList } from '@api/biz'
 import BizModal from '@comp/modal/BizModal.vue'
 import { bizContestProjectDeviceSave, bizContestProjectDeviceUpdate } from '@api/competition'
 import { deviceGunType } from '@views/biz/equipment/equipment.config'
@@ -57,7 +57,7 @@ export default {
       columns: [
         {
           title: '平板编号',
-          dataIndex: 'tabletPcNum',
+          dataIndex: 'pcNum',
           align: 'center',
         },
         {
@@ -121,13 +121,13 @@ export default {
       return {
         on: {
           click: (event) => {
-            if (this.selectedRowKeys.indexOf(record.tabletPcId) == -1) {
-              this.selectedRowKeys.push(record.tabletPcId)
+            if (this.selectedRowKeys.indexOf(record.pcId) == -1) {
+              this.selectedRowKeys.push(record.pcId)
               this.selectedRows.push(record)
             } else {
-              console.log(this.selectedRowKeys.indexOf(record.tabletPcId))
-              this.selectedRowKeys.splice(this.selectedRowKeys.indexOf(record.tabletPcId), 1)
-              this.selectedRows.splice(this.selectedRowKeys.indexOf(record.tabletPcId), 1)
+              console.log(this.selectedRowKeys.indexOf(record.pcId))
+              this.selectedRowKeys.splice(this.selectedRowKeys.indexOf(record.pcId), 1)
+              this.selectedRows.splice(this.selectedRowKeys.indexOf(record.pcId), 1)
             }
           },
         },
@@ -150,13 +150,17 @@ export default {
       }
       this.getPcTableList({
         deviceGunType: value,
-        tabletPcNum: this.tabletPcNum,
+        pcNum: this.tabletPcNum,
       })
     },
     getPcTableList(data) {
-      return bizTabletPcList(data).then((res) => {
-        this.tableList = res.result
-        this.tableLists = res.result
+      return bizTabletPcPageList({
+        ...data,
+        pageNo: 1,
+        pageSize: 1000,
+      }).then((res) => {
+        this.tableList = res.result.records
+        this.tableLists = res.result.records
         return
       })
     },
@@ -171,7 +175,24 @@ export default {
           bizContestProjectDeviceSave({
             cproId: this.cproId,
             contestId: this.$route.query.id,
-            tabletPcList: this.selectedRows,
+            tabletPcList: this.selectedRows.map((item) => {
+              return {
+                createBy: item.createBy,
+                createTime: item.createTime,
+                departId: item.departId,
+                departName: item.departName,
+                deviceGunType: item.deviceGunType,
+                deviceNum0: item.deviceNum0,
+                deviceNum1: item.deviceNum1,
+                tabletPcId: item.pcId,
+                tabletPcNum: item.pcNum,
+                tabletPcName: item.pcName,
+                targetSite: item.targetSite,
+                targetSiteStr: item.targetSiteStr,
+                updateBy: item.updateBy,
+                updateTime: item.updateTime
+              }
+            }),
           }).then((res) => {
             if (res.code === 200) {
               this.$message.success(res.message)
@@ -226,7 +247,7 @@ export default {
             }
           }
         }
-        this.selectedRowKeys = arr.map((item) => item.tabletPcId)
+        this.selectedRowKeys = arr.map((item) => item.pcId)
         this.selectedRows = arr
         this.$nextTick(() => {
           for (const key in this.formData) {
@@ -247,7 +268,7 @@ export default {
             this.formData[key] = row[key]
           }
           const keys = this.tableList.filter((item) => item.tabletPcNum === row.tabletPcNum)[0]
-          this.selectedRowKeys = [keys.tabletPcId]
+          this.selectedRowKeys = [keys.pcId]
           this.selectedRows = [keys]
         })
       })
