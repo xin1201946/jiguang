@@ -17,9 +17,9 @@
       <login-account ref="alogin" @validateFail="validateFail" @success="requestSuccess" @fail="requestFailed"></login-account>
       <a-form-model-item>
         <a-checkbox @change="handleRememberMeChange" default-checked>自动登录</a-checkbox>
-        <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
+<!--        <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
           忘记密码
-        </router-link>
+        </router-link>-->
 <!--        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
           注册账户
         </router-link>-->
