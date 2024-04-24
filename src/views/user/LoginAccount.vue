@@ -166,12 +166,17 @@ export default {
           }
           console.log("登录参数", loginParams)
           this.Login(loginParams).then((res) => {
+
             if (res.message.length > 10) {
-              this.$notification.success({
-                message: '欢迎',
-                description: res.message,
-                duration: 0,
-              })
+              // console.log(res.result.userInfo.roleName)
+              if (res.result.userInfo.roleName === '单位管理员') {
+                this.$notification.success({
+                  message: '欢迎',
+                  description: res.message,
+                  duration: 0,
+                })
+              }
+
               this.$emit('success', res.result)
             } else {
               this.$emit('success', res.result)
