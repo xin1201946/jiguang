@@ -8,7 +8,7 @@
     </span>
     <!--  -->
     <a-dropdown>
-      <span class="action action-full ant-dropdown-link user-dropdown-menu" @click="handleFullscreen()">
+      <span v-if='roleName !== "学员"' class="action action-full ant-dropdown-link user-dropdown-menu" @click="handleFullscreen()">
         <span>数据大屏</span>
       </span>
       <!-- <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
@@ -109,12 +109,13 @@ export default {
   name: 'UserMenu',
   mixins: [mixinDevice],
   data() {
+    const roleName = sessionStorage.getItem("roleName")
     return {
       // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
       searchMenuOptions: [],
       searchMenuComp: 'span',
       searchMenuVisible: false,
-
+      roleName,
       dataScreenList: [],
       // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
     }
