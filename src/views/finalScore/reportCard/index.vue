@@ -336,28 +336,28 @@ export default {
         for (let i = 0; i < item.scoreList.length; i++) {
           console.log(item.i)
           arr.push(
-            `<td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}">${item.scoreList[i]}</td>`
+            `<td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}">${item.scoreList[i]}</td>`
           )
         }
         if (item.integrationMethod === '2' || item.integrationMethod === '3') {
           return `<tr >
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.i}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.targetSiteStr}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px; text-align: left' : 'text-align: left;font-size: 12px;'}" colspan="2">${item.playerName}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px; text-align: left' : 'text-align: left;font-size: 12px;'}" colspan="2">${item.groupName}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.i}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.targetSiteStr}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'}" colspan="2">${item.playerName}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'}" colspan="2">${item.groupName}</td>
               ${arr.join('')}
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.stageTotal}-${item.goodTotal}x</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="1">${item.i <= 8 ? !item.remark ? 'Q' : 'Q ' + item.remark : item.remark ? item.remark : ''}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.stageTotal}-${item.goodTotal}x</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="1">${item.i <= 8 ? !item.remark ? 'Q' : 'Q ' + item.remark : item.remark ? item.remark : ''}</td>
             </tr>`
         } else {
           return `<tr >
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.i}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.targetSiteStr}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px; text-align: left' : 'text-align: left;font-size: 12px;'}" colspan="2">${item.playerName}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px; text-align: left' : 'text-align: left;font-size: 12px;'}" colspan="2">${item.groupName}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.i}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.targetSiteStr}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'}" colspan="2">${item.playerName}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'}" colspan="2">${item.groupName}</td>
               ${arr.join('')}
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="2">${item.stageTotal}</td>
-              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;font-size: 12px;' : 'font-size: 12px;'}" colspan="1">${item.i <= 8 ? !item.remark ? 'Q' : 'Q ' + item.remark : item.remark ? item.remark : ''}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.stageTotal}</td>
+              <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="1">${item.i <= 8 ? !item.remark ? 'Q' : 'Q ' + item.remark : item.remark ? item.remark : ''}</td>
               </tr>`
         }
       })
@@ -474,8 +474,8 @@ export default {
               <tr>
                 <th rowspan="2" colspan="2">排名</th>
                 <th rowspan="2" colspan="2">靶位</th>
-                <th rowspan="2" colspan="2" style="text-align: left">姓名</th>
-                <th rowspan="2" colspan="2" style="text-align: left">代表队</th>
+                <th rowspan="2" colspan="2" style="text-align: left; font-weight: 800;">姓名</th>
+                <th rowspan="2" colspan="2" style="text-align: left; font-weight: 800;">代表队</th>
                 <th colspan="${g}">组</th>
                 <th rowspan="2" colspan="2">总计</th>
                 <th rowspan="2">备注</th>
@@ -512,6 +512,9 @@ export default {
         td:last-of-type{
          /*text-align: left;*/
         }
+        th{
+          font-weight: 800;
+        }
         h1,h2,h3,p{
           margin: 0;
           padding: 0;
@@ -536,21 +539,21 @@ export default {
             return `
             <tr>
               <td style="font-family: 微软雅黑;font-weight: 700;"">${item.i}</td>
-              <td style="font-size: 14px;text-align: left;">${item.groupName}</td>
-              <td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;">${item.total}</td>
-              <td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;">${item.stageTotal}</td>
-              <td style="font-size: 14px;">${k === 0 ? '金牌' : k === 1 ? '银牌' : ''}</td>
+              <td style="text-align: left;">${item.groupName}</td>
+              <td style="font-family: 微软雅黑;font-weight: 700;">${item.total}</td>
+              <td style="font-family: 微软雅黑;font-weight: 700;">${item.stageTotal}</td>
+              <td style="">${k === 0 ? '金牌' : k === 1 ? '银牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
-              <td style="font-size: 14px;text-align: left">${item.player2Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="font-size: 14px;text-align: left">${item.player1Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -564,22 +567,22 @@ export default {
           .map((item, k) => {
             return `
             <tr>
-              <td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;">${item.i}</td>
-              <td style="font-size: 14px;text-align: left">${item.groupName}</td>
-              <td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;">${item.total}</td>
-              <td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;">${item.stageTotal}</td>
-              <td style="font-size: 14px;">${k === 0 ? '铜牌' : ''}</td>
+              <td style="font-family: 微软雅黑;font-weight: 700;">${item.i}</td>
+              <td style="text-align: left">${item.groupName}</td>
+              <td style="font-family: 微软雅黑;font-weight: 700;">${item.total}</td>
+              <td style="font-family: 微软雅黑;font-weight: 700;">${item.stageTotal}</td>
+              <td style="">${k === 0 ? '铜牌' : ''}</td>
             </tr>
             <tr>
               <td></td>
-              <td style="font-size: 14px;text-align: left">${item.player2Name}</td>
+              <td style="text-align: left">${item.player2Name}</td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td style="font-size: 14px;text-align: left">${item.player1Name}</td>
+              <td style="text-align: left">${item.player1Name}</td>
               <td></td>
               <td></td>
               <td></td>
@@ -699,7 +702,7 @@ export default {
 
         for (let i = 0; i < this.groupArray.length; i++) {
           arr.push(
-            `<td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;"><b>${item.scoreList[i] || ''}</b></td>`
+            `<td style="font-family: 微软雅黑;font-weight: 700;"><b>${item.scoreList[i] || ''}</b></td>`
           )
         }
         // console.log(arr)
@@ -979,7 +982,7 @@ export default {
                   // newfooter.style.marginBottom = foot.scrollHeight + 'px'
                 }
               }
-              console.log(newfooter)
+              // console.log(newfooter)
               footer.style.visibility = 'hidden'
               iframe.contentDocument.body.append(newfooter)
             }
