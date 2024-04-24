@@ -8,7 +8,7 @@
  */
 const { app, BrowserWindow, Menu } = require('electron')
 // const fs = require('fs')
-// const path = require('path')
+const path = require('path')
 const http = require('http')
 // const {URL} = require('url')
 
@@ -17,12 +17,13 @@ function createWindow () {
   const win = new BrowserWindow({
     show: false,
     width: 1000,
-    height: 1000
+    height: 1000,
+    icon: path.join(__dirname, './image/CSGO.ico')
     // frame: true, // false 取消标题栏 不显示左上角三个按钮可以设置false
     // resizable: true, // 放大按钮
     // closable: false, // 关闭按钮禁用
     // fullscreen: false,
-    // fullscreenWindowTitle: true // 窗口的标题栏显示
+    // fullscreenWindowTitle: true // 窗口的标题栏显示,
   })
 
   win.show()
@@ -34,6 +35,7 @@ function createWindow () {
   // win.webContents.openDevTools({
   //   mode: 'right'
   // })
+  let httpReq = ''
   let flag = true
   const server = http.createServer((req, res) => {
     console.log(req.headers.host)
@@ -58,16 +60,19 @@ function createWindow () {
         message: ''
       }))
     }
+    if (reqUrl.pathname === '') {
+
+    }
   })
   server.listen(5173)
 
   win.on('closed', () => {
   })
   // 开发环境使用本地路径
-  // if (process.env.NODE_ENV === 'production') {
-  //   win.loadURL('http://localhost:3000/')
-  //   return
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    win.loadURL('http://192.168.8.9:3000/')
+    return
+  }
   // 生产环境使用打包路径
   win.loadFile('lasergun-view/index.html')
 }

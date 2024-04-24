@@ -1,6 +1,6 @@
 {
   "name": "exe",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "productName": "射击比赛",
+    "productName": "激光射击训练系统",
     "appId": "com.mycompany.myapp",
     "directories": {
       "output": "dist"
@@ -23,7 +23,8 @@
       "target": [
         "nsis",
         "zip"
-      ]
+      ],
+      "icon": "image/CSGO.ico"
     }
   }
 }
