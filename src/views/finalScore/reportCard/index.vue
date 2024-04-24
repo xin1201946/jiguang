@@ -77,8 +77,6 @@ import {
 import {
   Time
 } from '@/utils'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
 export default {
   name: 'reportCard',
   components: {
@@ -422,7 +420,7 @@ export default {
       pages.push(`
           <div style="position: relative;overflow: hidden;">
             <img src="../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
-            
+
             <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">
               ${label.projectGroup}${label.projectName}
@@ -459,7 +457,7 @@ export default {
         pages.push(`
           <div style="position: relative;overflow: hidden;">
             <img src="../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
-            
+
             <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">
               ${label.projectGroup}${label.projectName}
@@ -675,8 +673,9 @@ export default {
       const label = this.list.filter((item) => item.value === this.tree)[0]
       const group = this.stageArr.filter((item) => this.dataTitle.includes(item.stageName))[0].groupCount
       const project = this.list.filter((item) => item.value === this.tree)[0]
-      console.log(this.sgTimeStart)
       let g = 0
+      // console.log(this.stageArr.filter((item) => this.dataTitle.includes(item.stageName)), 123456)
+      // console.log(this.groupArray)
       if (this.groupArray && this.groupArray.length) {
         g = this.groupArray.length
       } else {
@@ -697,13 +696,16 @@ export default {
       }
       const tr = this.data.map((item) => {
         const arr = []
+
         for (let i = 0; i < this.groupArray.length; i++) {
           arr.push(
             `<td style="font-size: 14px;font-family: 微软雅黑;font-weight: 700;"><b>${item.scoreList[i] || ''}</b></td>`
           )
         }
+        // console.log(arr)
         const list = this.groupArray && this.groupArray.length ? this.groupArray : []
         const array = []
+        // console.log(list)
         if (list.length) {
           for (let i = 0; i < list.length; i++) {
             if (i === 0) {
@@ -720,7 +722,7 @@ export default {
           }
         }
         // shoots
-
+        // console.log(array)
         // 最大多少行
         const trs = Math.max(...array.map((i) => i.arr.length))
         const rows = []
@@ -730,6 +732,7 @@ export default {
             // console.log(k,  k.arr[i] )
             j.push(`<td style="font-size: 14px">${k.arr[i] ? parseFloat(k.arr[i].score).toFixed(1) : ''}</td>`)
           }
+          // console.log(j)
           // console.log(j)
           rows.push(`
             <tr>
@@ -743,6 +746,9 @@ export default {
             </tr>
           `)
         }
+
+        // console.log(rows)
+        // console.log(tr())
         // console.log(rows)
         //  <td colspan="2">${item.targetSite}</td>
         return `
@@ -764,6 +770,7 @@ export default {
           `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${6 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.8cm;margin: 0 6px"/>`
       )
+      // console.log(imgs)
       const img = imgs.length ?
         `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
             ${imgs.join('')}
@@ -800,6 +807,13 @@ export default {
       }
 
       const pages = []
+      // console.log(contestName)
+      // console.log(this.dataTitle)
+      // console.log(label)
+      // console.log(Time)
+      // console.log(this.sgTimeStart)
+      // console.log(Time(this.sgTimeStart, 'YYYY/MM/DD'))
+      const p = this.sgTimeStart ? `<p style="text-align: center;margin: -.3cm 0 0.3cm">${Time(this.sgTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(this.sgTimeStart, 'HH:mm')}</p>` : "<p></p>"
       pages.push(`
             <div style="position: relative;overflow: hidden;">
             <img src="../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
@@ -810,7 +824,7 @@ export default {
             <h3 style="text-align: center">
               ${label.projectGroup}${label.projectName}
             </h3>
-            <p style="text-align: center;margin: -.3cm 0 0.3cm">${Time(this.sgTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(this.sgTimeStart, 'HH:mm')}</p>
+            ${p}
           </div>
         </div>
         <table class="table" align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
@@ -838,6 +852,7 @@ export default {
           </tfoot>
         </table>
         `)
+      console.log(456789)
       if (tr.length > 3) {
         pages.push(`
             <div style="position: relative;overflow: hidden;">
@@ -849,7 +864,7 @@ export default {
             <h3 style="text-align: center">
               ${label.projectGroup}${label.projectName}
             </h3>
-            <p style="text-align: center;margin: -.3cm 0 0.3cm">${Time(this.sgTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(this.sgTimeStart, 'HH:mm')}</p>
+            ${p}
           </div>
         </div>
         <table class="table" align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
@@ -901,6 +916,7 @@ export default {
     },
     // 打印
     handlePrint() {
+      console.log(123)
       const print = (fn) => {
         // const pwin = window.open(); //打开一个新窗口
         // pwin.document.write(fn)
