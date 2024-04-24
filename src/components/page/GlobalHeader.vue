@@ -5,26 +5,28 @@
     :class="[fixedHeader && 'ant-header-fixedHeader', sidebarOpened ? 'ant-header-side-opened' : 'ant-header-side-closed', ]"
     :style="{ padding: '0' }">
 
-    <div v-if="mode === 'sidemenu'" class="header" :class="theme">
-      <a-icon
-        v-if="device==='mobile'"
-        class="trigger"
-        :type="collapsed ? 'menu-fold' : 'menu-unfold'"
-        @click="toggle"></a-icon>
-      <a-icon
-        v-else
-        class="trigger"
-        :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-        @click="toggle"/>
+    <div v-if="mode === 'sidemenu'" class="header" :class="theme" style='display: flex;align-items: center;justify-content: space-between'>
+      <div>
+        <a-icon
+          v-if="device==='mobile'"
+          class="trigger"
+          :type="collapsed ? 'menu-fold' : 'menu-unfold'"
+          @click="toggle"></a-icon>
+        <a-icon
+          v-else
+          class="trigger"
+          :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+          @click="toggle"/>
 
-      <span v-if="device === 'desktop'">欢迎进入 {{ logo }}</span>
-      <span v-else>{{ logo }}</span>
+        <span v-if="device === 'desktop'">欢迎进入 {{ logo }}</span>
+        <span v-else>{{ logo }}</span>
+      </div>
 
       <user-menu :theme="theme"/>
     </div>
     <!-- 顶部导航栏模式 -->
     <div v-else :class="['top-nav-header-index', theme]">
-      <div class="header-index-wide">
+      <div class="header-index-wide" >
         <div class="header-index-left" :style="topMenuStyle.headerIndexLeft">
           <logo class="top-nav-header" :show-title="device !== 'mobile'" :style="topMenuStyle.topNavHeader"/>
           <div v-if="device !== 'mobile'" :style="topMenuStyle.topSmenuStyle">
