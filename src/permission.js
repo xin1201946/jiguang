@@ -14,8 +14,8 @@ whiteList.push(OAUTH2_LOGIN_PAGE_PATH)
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-
-  if (Vue.ls.get(ACCESS_TOKEN)) {
+  const token = sessionStorage.getItem('token')
+  if (token) {
     /* has token */
     if (to.path === '/user/login' || to.path === OAUTH2_LOGIN_PAGE_PATH) {
       next({ path: INDEX_MAIN_PAGE_PATH })
