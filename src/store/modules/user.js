@@ -174,12 +174,13 @@ const user = {
         Vue.ls.remove(UI_CACHE_DB_DICT_DATA)
         Vue.ls.remove(CACHE_INCLUDED_ROUTES)
         Vue.ls.remove(TENANT_ID)
+        sessionStorage.removeItem("token");
         //console.log('logoutToken: '+ logoutToken)
         logout(logoutToken).then(() => {
           if (process.env.VUE_APP_SSO == 'true') {
             let sevice = 'http://' + window.location.host + '/'
             let serviceUrl = encodeURIComponent(sevice)
-            window.location.href = process.env.VUE_APP_CAS_BASE_URL + '/logout?service=' + serviceUrl
+            // window.location.href = process.env.VUE_APP_CAS_BASE_URL + '/logout?service=' + serviceUrl
           }
           resolve()
         }).catch(() => {

@@ -32,7 +32,38 @@ export default {
         that.$store.dispatch('setSidebar', true)
       }
     })
+    const resize = new ResizeObserver((entries) => {
+      const targetWidth = 1912;
+      const targetHeight = 1017;
+
+      // 获取窗口的宽度和高度
+
+      entries.forEach((entry) => {
+        const windowWidth = entry.contentRect.width;
+        const windowHeight = entry.contentRect.height;
+        // console.log(entry.contentRect)
+        // console.log(entry.target)
+
+        // 缩放比例
+        const scaleX = windowWidth / targetWidth;
+        const scaleY = windowHeight / targetHeight;
+        // 选择较小的缩放比例，以确保图像完全适合窗口
+        const scale = Math.min(scaleX, scaleY);
+        // console.log(scale)
+        // 缩放 body 元素
+        // document.body.style.transformOrigin = 'top left';
+        // document.body.style.transform = 'scale(' + scale + ')';
+        //
+        // // 调整 body 元素的宽度和高度，以匹配缩放后的大小
+        // document.body.style.width = (targetWidth * scale) + 'px';
+        // document.body.style.height = (targetHeight * scale) + 'px';
+      })
+    })
+    resize.observe(document.body)
   },
+  updated() {
+    console.log(window.innerWidth)
+  }
 }
 </script>
 <style l>

@@ -98,7 +98,7 @@
           </vueSeamless>
         </div>
 
-        <div style="width: 100%;height: 100%;" v-if="data.configName.indexOf('个人决赛') != -1">
+        <div style="width: 100%;height: 100%;display: flex;flex-direction: column" v-if="data.configName.indexOf('个人决赛') != -1">
           <!--    前8位-->
           <div :class="data.finalEight.length == 0 ? '' : 'finalEight'">
             <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
@@ -715,7 +715,8 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 500px;
+  //height: 460px;
+  flex: 1;
 
   .div {
     position: relative;
@@ -740,8 +741,8 @@ export default {
     align-items: center;
     justify-content: center;
     // width: 25%;
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
     overflow: hidden;
     border-radius: 50%;
 
@@ -749,27 +750,32 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+      //position: relative;
 
       .shouqiang {
-        width: 285px;
-        height: 285px;
+        position: absolute;
+        top: -20px;
+        width: 250px;
+        height: 250px;
       }
     }
   }
 }
 
-.targetImage1 {
+/*.targetImage1 {
   position: absolute;
   left: 0;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  overflow: hidden;
   width: 100%;
-  height: 500px;
+  height: 470px;
 
   .div1 {
     position: relative;
-    flex: 0 0 25%;
+    //flex: 0 0 25%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -800,7 +806,7 @@ export default {
       align-items: center;
       justify-content: center;
       width: 2000px;
-      height: 2000px;
+      //height: 2000px;
 
       .shouqiang1 {
         width: 1000px;
@@ -808,13 +814,42 @@ export default {
       }
 
       .buqiang1 {
-        width: 860px;
-        height: 860px;
+        width: 680px;
+        height: 680px;
+      }
+    }
+  }
+}*/
+.targetImage1{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex: 1;
+  .div1{
+    width: 25%;
+    height: 40%;
+    position: relative;
+    .name1{
+      position: absolute;
+    }
+    .flex1{
+      position: absolute;
+      .box1{
+        //width: 1000px;
+        //height: 1000px;
+      }
+      .buqiang1{
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        top: -265px;
+        left: -150px;
+        transform-origin: top left;
+        transform: scale(2.54);
       }
     }
   }
 }
-
 .container {
   flex: 1;
   position: relative;

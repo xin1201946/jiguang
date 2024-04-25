@@ -51,6 +51,7 @@ const err = (error) => {
               mask: false,
               onOk: () => {
                 store.dispatch('Logout').then(() => {
+
                   Vue.ls.remove(ACCESS_TOKEN)
                   try {
                     let path = window.document.location.pathname

@@ -1,8 +1,8 @@
 <template>
-  <a-form :form="form" @submit="handleSubmit" layout="inline">
-    <a-row v-if="formData.length" :gutter="24">
-      <a-col :span="item.span || (item.label.length > 5 ? 5 : 4)" v-for="(item, i) in formData" :key="i">
-        <a-form-item colon :label="item.label">
+  <a-form-model :form="form" @submit="handleSubmit" layout="inline">
+    <a-row :gutter="24" v-if="formData.length">
+      <a-col :span="item.span || (item.label.length > 5 ? 5 : 4)" v-for="(item, i) in formData">
+        <a-form-model-item colon :label="item.label" :key="i">
           <!--          普通输入框-->
           <template v-if="item.type === 'input'">
             <a-input allowClear :placeholder="item.placeholder" v-decorator="item.rules"></a-input>
@@ -40,7 +40,7 @@
               v-decorator="item.rules"
             ></a-range-picker>
           </template>
-<!--          查询-->
+          <!--          查询-->
           <template v-else-if="item.type === 'search'">
             <a-select
               allowClear
@@ -61,18 +61,34 @@
               </a-select-option>
             </a-select>
           </template>
-        </a-form-item>
+        </a-form-model-item>
       </a-col>
-      <a-col :span="6">
-        <a-form-item :labelCol="{ span: 0 }">
+      <a-col :span='4'>
+        <a-form-model-item :labelCol="{ span: 0 }">
           <a-space>
             <a-button html-type="submit" type="primary" icon="search">查询</a-button>
             <a-button @click="handleReset" icon="reload">重置</a-button>
           </a-space>
-        </a-form-item>
+        </a-form-model-item>
       </a-col>
     </a-row>
-  </a-form>
+
+<!--    <a-row v-if="formData.length" :gutter="24">
+&lt;!&ndash;      :span="item.span || (item.label.length > 5 ? 5 : 4)"&ndash;&gt;
+      <a-col
+        :xl="item.span || (item.label.length > 5 ? 5 : 4)"
+        :lg=" (item.label.length > 5 ? 6 : 5)"
+        :md="(item.label.length > 5 ? 7 : 6)"
+        :sm="(item.label.length > 5 ? 8 : 7)"
+        :xs="24"
+       >
+
+      </a-col>
+      <a-col :span="6">
+
+      </a-col>
+    </a-row>-->
+  </a-form-model>
 </template>
 
 <script>

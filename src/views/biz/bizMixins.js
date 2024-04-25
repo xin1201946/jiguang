@@ -55,6 +55,7 @@ const bizMixins = {
   methods: {
     // 分页
     handleTableChange(pagination) {
+
       this.pagination = pagination
       this.getList()
     },
