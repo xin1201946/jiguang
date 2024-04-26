@@ -246,6 +246,6 @@ export default {
 }
 //隐藏表格底部横向滚动条
 /deep/.ant-table-body {
-  overflow-x: hidden !important;
+  overflow-x: auto !important;
 }
 </style>

@@ -2,24 +2,39 @@
   <div class="box">
     <Card>
       <template slot="query">
-        <div style='display: flex; align-items: center'>
+        <div style='display: flex; align-items: flex-start'>
           <div style='flex: 1'>
             <a-form :form="form" layout="inline">
               <a-row :gutter="24">
-                <a-col :xl="4" :lg="6" :md="7" :sm="8" :xs="24">
+                <a-col
+                  :md='24'
+                  :lg='12'
+                  :xl='6'
+                  :xxl='4'
+                >
                   <a-form-item label="平板编号">
                     <!--                <a-date-picker v-model="form.projectTime" :disabled-date="disabledDate" valueFormat="YYYY-MM-DD"-->
                     <!--                  @change="handlePickers"></a-date-picker>-->
                     <a-input v-model='form.tablePc' placeholder="请输入平板编号"></a-input>
                   </a-form-item>
                 </a-col>
-                <a-col :xl="4" :lg="6" :md="7" :sm="8" :xs="24">
+                <a-col
+                  :md='24'
+                  :lg='12'
+                  :xl='6'
+                  :xxl='4'
+                >
                   <a-form-item label="起止日期">
                     <a-date-picker v-model="form.dataTime" :disabled-date="disabledDate" valueFormat="YYYY-MM-DD"
                                    @change="handlePickers"></a-date-picker>
                   </a-form-item>
                 </a-col>
-                <a-col :xl="4" :lg="6" :md="7" :sm="8" :xs="24">
+                <a-col
+                  :md='24'
+                  :lg='12'
+                  :xl='6'
+                  :xxl='4'
+                >
                   <a-form-item>
                     <a-space>
                       <a-button type="primary" icon="search" @click="handleSubmit">查询</a-button>

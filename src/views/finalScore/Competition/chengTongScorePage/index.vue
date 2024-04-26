@@ -2,9 +2,12 @@
   <div class="tongChengBox">
     <Card>
       <template slot="query">
-        <a-form :labelCol="{ span: 5 }" :wrapperCol="{ span: 18 }">
+        <a-form :labelCol="{ span: 6 }" :wrapperCol="{ span: 18 }">
           <a-row :gutter="24">
-            <a-col :span="6">
+            <a-col :md='24'
+                   :lg='12'
+                   :xl='6'
+                   :xxl='4'>
               <a-form-item label="赛事名称">
                 <a-select allowClear v-model="formData.contestId" @change="handleChangePro">
                   <a-select-option v-for="item in dataContList" :key="item.contestId" :value="item.contestId">{{
@@ -13,7 +16,10 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="5">
+            <a-col :md='24'
+                   :lg='12'
+                   :xl='6'
+                   :xxl='4'>
               <a-form-item label="项目名称">
                 <a-select allowClear v-model="formData.cproId" @change="handleChangePro1" style="width: 100%;">
                   <a-select-option v-for="item in projectList" :key="item.cproId" :value="item.cproId">{{
@@ -23,7 +29,10 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="3">
+            <a-col :md='24'
+                   :lg='12'
+                   :xl='6'
+                   :xxl='4'>
               <a-form-item label="阶段">
                 <a-select allowClear v-model="formData.cproStageId" @change="handleChangePro2" style="width: 100%">
                   <a-select-option v-for="item in matchList" :key="item.cproStageId" :value="item.cproStageId">{{
@@ -32,12 +41,18 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="5">
+            <a-col :md='24'
+                   :lg='12'
+                   :xl='6'
+                   :xxl='4'>
               <a-form-item label="靶位">
                 <a-input placeholder="请输入靶位号" v-model="formData.targetSite" />
               </a-form-item>
             </a-col>
-            <a-col :span="5">
+            <a-col :md='24'
+                   :lg='12'
+                   :xl='6'
+                   :xxl='4'>
               <a-form-item :labelCol="{ span: 0 }">
                 <a-space>
                   <a-button html-type="submit" type="primary" icon="search" @click="handleSubmit">查询</a-button>
@@ -473,8 +488,8 @@ export default {
       this.getTableList()
     },
     handleActionsColumnContextMenu(record, event, col) {
-      event.preventDefault() // 阻止默认的右键菜单  
-      // 在这里添加你的自定义右键菜单逻辑 
+      event.preventDefault() // 阻止默认的右键菜单
+      // 在这里添加你的自定义右键菜单逻辑
       this.$refs.Achievement.edit({ ...record, stageId: this.cproStageId, projectName: this.projectName })
     },
     // 打印的资格赛

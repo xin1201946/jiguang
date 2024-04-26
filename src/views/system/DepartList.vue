@@ -6,13 +6,13 @@
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
 <!--          <a-button @click="handleAdd(1)" type="primary">添加部门</a-button>-->
-          <a-button @click="handleAdd(1)" type="primary">添加部门</a-button>
-          <a-button @click="handleAdd(2)" type="primary">添加下级</a-button>
-          <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>
-          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-            <a-button type="primary" icon="import">导入</a-button>
-          </a-upload>
-          <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
+<!--          <a-button @click="handleAdd(1)" type="primary">添加部门</a-button>-->
+<!--          <a-button @click="handleAdd(2)" type="primary">添加下级</a-button>-->
+<!--          <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>-->
+<!--          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--            <a-button type="primary" icon="import">导入</a-button>-->
+<!--          </a-upload>-->
+<!--          <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>-->
           <!--<a-button @click="refresh" type="default" icon="reload" :loading="loading">刷新</a-button>-->
         </a-row>
         <div style="background: #fff;padding-left:16px;height: 100%; margin-top: 5px">
@@ -43,9 +43,9 @@
               @expand="onExpand"/>
                 </span>
                 <!--新增右键点击事件,和增加添加和删除功能-->
-                <a-menu slot="overlay">
-                  <a-menu-item @click="handleAdd(3)" key="1">添加</a-menu-item>
-                  <a-menu-item @click="handleDelete" key="2">删除</a-menu-item>
+                <a-menu slot="overlay" slot-scope='row'>
+                  <a-menu-item @click="handleAdd(3)" key="1" v-show='rightClickSelectedKey === id'>添加</a-menu-item>
+                  <a-menu-item  @click="handleDelete" key="2">删除</a-menu-item>
                   <a-menu-item @click="closeDrop" key="3">取消</a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -54,7 +54,7 @@
         </div>
       </a-card>
       <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
-      <div class="drawer-bootom-button">
+<!--      <div class="drawer-bootom-button">
         <a-dropdown :trigger="['click']" placement="topCenter">
           <a-menu slot="overlay">
             <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
@@ -68,7 +68,7 @@
             树操作 <a-icon type="up" />
           </a-button>
         </a-dropdown>
-      </div>
+      </div>-->
       <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
     </a-col>
     <a-col :md="12" :sm="24">
@@ -76,8 +76,8 @@
         <a-tab-pane tab="基本信息" key="1" >
           <a-card :bordered="false" v-if="selectedKeys.length>0">
             <a-form-model ref="form" :model="model" :rules="validatorRules">
-              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departName" label="机构名称">
-                <a-input placeholder="请输入机构/部门名称" v-model="model.departName" />
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departName" label="单位名称">
+                <a-input placeholder="请输入单位/部门名称" v-model="model.departName" />
               </a-form-model-item>
               <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
                 <a-tree-select
@@ -89,8 +89,8 @@
                   placeholder="无">
                 </a-tree-select>
               </a-form-model-item>
-              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCode" label="机构编码">
-                <a-input disabled placeholder="请输入机构编码" v-model="model.orgCode" />
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCode" label="单位编码">
+                <a-input disabled placeholder="请输入单位编码" v-model="model.orgCode" />
               </a-form-model-item>
               <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" prop="orgCategory" label="单位类型">
                 <template v-if='model.id === "6d35e179cd814e3299bd588ea7daed3f" || model.parentId === "6d35e179cd814e3299bd588ea7daed3f"'>
@@ -156,8 +156,8 @@
         <a-tab-pane key='3' forceRender tab='会员管理'>
           <a-card :bordered="false" v-if="selectedKeys.length>0">
             <a-form-model ref="vipform" :model="vipData" :rules="validatorRules">
-              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机构名称">
-                <a-input readOnly placeholder="请输入机构/部门名称" v-model="model.departName" />
+              <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位名称">
+                <a-input readOnly placeholder="请输入单位/部门名称" v-model="model.departName" />
               </a-form-model-item>
               <a-form-model-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期日期">
 <!--                <a-input readOnly placeholder="请输入机构/部门名称" v-model="model.departName" />-->
@@ -184,7 +184,6 @@
           </a-card>
         </a-tab-pane>
       </a-tabs>
-
     </a-col>
     <depart-modal ref="departModal" @ok="loadTree"></depart-modal>
   </a-row>
@@ -245,6 +244,7 @@
     },
     data() {
       return {
+        id: '',
         iExpandedKeys: [],
         loading: false,
         autoExpandParent: true,
@@ -300,8 +300,8 @@
           exportXlsUrl: "sys/sysDepart/exportXls",
           importExcelUrl: "sys/sysDepart/importExcel",
         },
-        orgCategoryDisabled:false,
-        oldDirectorUserIds:""
+        orgCategoryDisabled: false,
+        oldDirectorUserIds: ""
       }
     },
     computed: {
@@ -336,6 +336,7 @@
               // console.log(temp.id)
             }
             console.log(that.departTree, "tree")
+            that.id = that.departTree[0].id
             this.loading = false
           }
         })
@@ -556,6 +557,7 @@
         this.$refs.sysDirectiveModal.show()
       },
       handleAdd(num) {
+        // console.log(this.rightClickSelectedKey)
         if (num == 1) {
           this.$refs.departModal.add()
           this.$refs.departModal.title = '新增'

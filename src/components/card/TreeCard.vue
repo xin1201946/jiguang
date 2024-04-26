@@ -1,9 +1,24 @@
 <template>
-  <div class="treeCard">
-    <div :class="width ? 'treeCard_width': 'treeCard_tree'">
+  <div class="treeCard" ref='treeCard'>
+<!--    <div v-show='!bool' :class="width ? 'treeCard_width': 'treeCard_tree'">
       <a-card :bordered="false">
         <slot name="tree"></slot>
       </a-card>
+    </div>
+
+    <div v-show='bool' class="treeCard_position">
+      <a-icon type="appstore" style="font-size: 30px;color: #1890ff;cursor: pointer" />
+    </div>-->
+    <div :class="width ? 'treeCard_width': 'treeCard_tree'" v-show='!bool'>
+      <a-card :bordered="false">
+
+        <div>
+          <slot name="tree"></slot>
+        </div>
+      </a-card>
+    </div>
+    <div class="treeCard_position">
+      <a-icon type="appstore" @click='handleBool' style="font-size: 25px;cursor: pointer" />
     </div>
     <div class="treeCard_card">
       <div class="example" v-if="loading">
@@ -38,8 +53,28 @@ export default {
   data() {
     return {
       loading: false,
+      bool: false
     }
   },
+  methods: {
+    handleBool () {
+      this.bool = !this.bool
+    }
+  },
+  mounted() {
+   /* const oberver = new ResizeObserver((entries) => {
+      entries.forEach(item => {
+        console.log()
+        if (item.contentRect.width < 1010) {
+          this.bool = true
+        }
+        else {
+          this.bool = false
+        }
+      })
+    })
+    oberver.observe(this.$refs.treeCard)*/
+  }
 }
 </script>
 
@@ -61,7 +96,17 @@ export default {
   display: flex;
   height: 100%;
   padding-bottom: 20px;
+  position: relative;
   overflow-y: hidden;
+  &_position{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    //background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
   &_tree {
     min-width: 200px;
     max-width: 400px;
