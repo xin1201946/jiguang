@@ -69,12 +69,12 @@ function createWindow () {
   win.on('closed', () => {
   })
   // 开发环境使用本地路径
-  // if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     win.loadURL('http://192.168.8.9:3000/')
-    // return
-  // }
+    return
+  }
   // 生产环境使用打包路径
-  // win.loadFile('lasergun-view/index.html')
+  win.loadFile('lasergun-view/index.html')
 }
 
 app.whenReady().then(() => {

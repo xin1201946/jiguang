@@ -4,13 +4,15 @@
       <a-space>
         <a-button type="primary" @click="handleBack">返回</a-button>
       </a-space>
-      <a-space v-show="check === '1'">
+<!--     -->
+      <a-space  v-show="check === '1'">
         <a-button type="primary" @click="clickApproved">审核通过</a-button>
         <a-button type="danger" @click="clickReviewrejection">驳回审核</a-button>
       </a-space>
-      <a-space v-if="!disabled">
-        <a-button type="primary" @click="clickSubmit">提交</a-button>
-      </a-space>
+<!--      v-if="!disabled"-->
+<!--      <a-space >-->
+<!--        <a-button type="primary" @click="clickSubmit">提交</a-button>-->
+<!--      </a-space>-->
     </div>
     <div class="cards">
       <TreeCard :width="true">
