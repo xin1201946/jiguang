@@ -1,8 +1,8 @@
 <template>
-  <a-form-model :form="form" @submit="handleSubmit" layout="inline">
+  <a-form :form="form" @submit="handleSubmit" layout="inline">
     <a-row :gutter="24" v-if="formData.length">
-      <a-col :span="item.span || (item.label.length > 5 ? 5 : 4)" v-for="(item, i) in formData">
-        <a-form-model-item colon :label="item.label" :key="i">
+      <a-col :span="item.span || (item.label.length > 5 ? 5 : 4)" v-for="(item, i) in formData" :key="i">
+        <a-form-item colon :label="item.label" >
           <!--          普通输入框-->
           <template v-if="item.type === 'input'">
             <a-input allowClear :placeholder="item.placeholder" v-decorator="item.rules"></a-input>
@@ -61,7 +61,7 @@
               </a-select-option>
             </a-select>
           </template>
-        </a-form-model-item>
+        </a-form-item>
       </a-col>
       <a-col :span='4'>
         <a-form-model-item :labelCol="{ span: 0 }">
@@ -88,7 +88,7 @@
 
       </a-col>
     </a-row>-->
-  </a-form-model>
+  </a-form>
 </template>
 
 <script>
