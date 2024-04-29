@@ -125,8 +125,8 @@ export default {
 
 .icon_top {
   position: absolute;
-  top: 5px;
-  left: 2px;
+  top: 0;
+  left: 0;
   z-index: 999;
   font-size: 20px;
 }

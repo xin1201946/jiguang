@@ -32,13 +32,10 @@ function createWindow () {
   // 全屏
   // win.setFullScreen(true)
   // 进入开发者工具
-  // win.webContents.openDevTools({
-  //   mode: 'right'
-  // })
+
   // let httpReq = ''
   let flag = true
   const server = http.createServer((req, res) => {
-    console.log(req.headers.host)
     const reqUrl = new URL(req.url, `http://${req.headers.host}`)
     // 打开右边控制台
     if (reqUrl.pathname === '/f12') {
@@ -59,9 +56,6 @@ function createWindow () {
         data: flag,
         message: ''
       }))
-    }
-    if (reqUrl.pathname === '') {
-
     }
   })
   server.listen(5173)

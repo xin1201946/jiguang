@@ -99,6 +99,7 @@
 import UserPassword from './UserPassword'
 import SettingDrawer from '@/components/setting/SettingDrawer'
 import DepartSelect from './DepartSelect'
+import axios from 'axios'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { mixinDevice } from '@/utils/mixin.js'
 import { getFileAccessHttpUrl, getAction } from '@/api/manage'
@@ -181,42 +182,47 @@ export default {
       // DataScreen
       const screenWidth = window.screen.width;
       const screenHeight = window.screen.height;
+      // console.log(router.resolve({ name: 'DataScreen' }).href)
+      // width=${screenWidth}, height=${screenHeight},
+      // fullscreen=yes
+      // 打开新进程全屏
+      // const pin = window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}, fullscreen=yes`);
+      // pin.focus();
+      // 最大化
       window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`);
-      // const pin = window.open("/#/DataScreen", "_blank")
-      // pin.name = JSON.stringify({
-      //   ...row,
-      //   spear
+      // axios.get("http://localhost:5173/route", {
+      //   params: {
+      //     route: router.resolve({ name: 'DataScreen' }).href
+      //   }
       // })
-      // pin.document.body.style.margin = "0"
-      // pin.document.body.style.padding = "0"
-      // var isFullscreen =
-      //   document.fullScreenElement || //W3C
-      //   document.msFullscreenElement || //IE
-      //   document.mozFullScreenElement || //火狐
-      //   document.webkitFullscreenElement || //谷歌
-      //   false
-      // if (!isFullscreen) {
-      //   let el = document.documentElement
-      //   if (el.requestFullscreen) {
-      //     el.requestFullscreen()
-      //   } else if (el.mozRequestFullScreen) {
-      //     el.mozRequestFullScreen()
-      //   } else if (el.webkitRequestFullscreen) {
-      //     el.webkitRequestFullscreen()
-      //   } else if (el.msRequestFullscreen) {
-      //     el.msRequestFullscreen()
-      //   }
-      // } else {
-      //   if (document.exitFullscreen) {
-      //     document.exitFullscreen()
-      //   } else if (document.msExitFullscreen) {
-      //     document.msExitFullscreen()
-      //   } else if (document.mozCancelFullScreen) {
-      //     document.mozCancelFullScreen()
-      //   } else if (document.webkitCancelFullScreen) {
-      //     document.webkitCancelFullScreen()
-      //   }
-      // }
+      /*let isFullscreen =
+        pin.document.fullScreenElement || //W3C
+        pin.document.msFullscreenElement || //IE
+        pin.document.mozFullScreenElement || //火狐
+        pin.document.webkitFullscreenElement || //谷歌
+        false
+      if (!isFullscreen) {
+        let el = pin.document.documentElement
+        if (el.requestFullscreen) {
+          el.requestFullscreen()
+        } else if (el.mozRequestFullScreen) {
+          el.mozRequestFullScreen()
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen()
+        } else if (el.msRequestFullscreen) {
+          el.msRequestFullscreen()
+        }
+      } else {
+        if (document.exitFullscreen) {
+          pin.document.exitFullscreen()
+        } else if (document.msExitFullscreen) {
+          pin.document.msExitFullscreen()
+        } else if (document.mozCancelFullScreen) {
+          pin.document.mozCancelFullScreen()
+        } else if (document.webkitCancelFullScreen) {
+          pin.document.webkitCancelFullScreen()
+        }
+      }*/
     },
     /* update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
     showClick() {

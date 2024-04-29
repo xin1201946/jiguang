@@ -18,7 +18,7 @@
       </a-card>
     </div>
     <div class="treeCard_position">
-      <a-icon type="appstore" @click='handleBool' style="font-size: 25px;cursor: pointer" />
+      <a-icon type="appstore" @click='handleBool' style="cursor: pointer;font-size: 20px;" />
     </div>
     <div class="treeCard_card">
       <div class="example" v-if="loading">
