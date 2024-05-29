@@ -1,6 +1,6 @@
 {
   "name": "exe",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "productName": "激光射击训练系统",
+    "productName": "激光射击训练系统 - 192.168.100.252",
     "appId": "com.mycompany.myapp",
     "directories": {
       "output": "dist"
