@@ -14,7 +14,7 @@
             <div class="flex">
               <div class="box">
                 <div :class="state.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                  <EchatTarget :dots="item.list.length ? item.list[i]:[]" :state="state" />
+                  <EchatTarget :dots="item.list.length ? item.list[i] : []" :state="state" />
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
             <div class="flex1">
               <div class="box1">
                 <div :class="state.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                  <EchatTargetB :dots="item.list.length ? item.list[i]:[]" :state="state" />
+                  <EchatTargetB :dots="item.list.length ? item.list[i] : []" :state="state" />
                 </div>
               </div>
             </div>

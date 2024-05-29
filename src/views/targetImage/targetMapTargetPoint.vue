@@ -107,14 +107,14 @@ export default {
       dataSource: [],
       columns: [
         {
-          title: '序号',
-          dataIndex: '',
-          key: 'rowIndex',
+          title: '发序',
+          dataIndex: 'shootCode',
+          key: 'shootCode',
           // width: 60,
           align: "center",
-          customRender: function (t, r, index) {
-            return parseInt(index) + 1
-          }
+          // customRender: function (t, r, index) {
+          //   return parseInt(index) + 1
+          // }
         },
         {
           dataIndex: 'score',
@@ -208,8 +208,10 @@ export default {
                 e['x_coord'] = e.xcoord
                 e['y_coord'] = e.ycoord
               })
+              item.playerScores = item.playerScores.sort((a,b)=>{return a.shootCode-b.shootCode});
             }
           })
+
           this.targetGoupList = dataARR
           this.loading = false
         } else {
@@ -370,8 +372,8 @@ export default {
       justify-content: center;
 
       .shouqiang {
-        width: 285px;
-        height: 285px;
+        width: 250px;
+        height: 250px;
       }
     }
   }
@@ -427,8 +429,8 @@ export default {
       }
 
       .buqiang1 {
-        width: 860px;
-        height: 860px;
+        width: 950px;
+        height: 950px;
       }
     }
   }

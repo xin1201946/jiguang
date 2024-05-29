@@ -125,6 +125,10 @@
                   <div class="name">{{ item.playerName }}</div>
                   <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
                     <EchatTarget :dots="item.playerScores" :state="data.configName" />
+                    <!-- [
+                      {  shootCode: 23, x_coord: 80, y_coord : 80 },
+                      {  shootCode: 24, x_coord: 80, y_coord : 80 }
+                    ] -->
                   </div>
                 </div>
               </div>
@@ -258,7 +262,7 @@ export default {
       dos: [],
       timer: null,
       currentProject: [],
-      len: false
+      len: false,
     }
   },
   created() {
@@ -754,9 +758,8 @@ export default {
 
       .shouqiang {
         position: absolute;
-        top: -20px;
-        width: 250px;
-        height: 250px;
+        width: 215px;
+        height: 215px;
       }
     }
   }
@@ -820,25 +823,25 @@ export default {
     }
   }
 }*/
-.targetImage1{
+.targetImage1 {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   flex: 1;
-  .div1{
+  .div1 {
     width: 25%;
     height: 40%;
     position: relative;
-    .name1{
+    .name1 {
       position: absolute;
     }
-    .flex1{
+    .flex1 {
       position: absolute;
-      .box1{
+      .box1 {
         //width: 1000px;
         //height: 1000px;
       }
-      .buqiang1{
+      .buqiang1 {
         position: absolute;
         width: 300px;
         height: 300px;
