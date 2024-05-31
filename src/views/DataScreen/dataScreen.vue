@@ -758,8 +758,8 @@ export default {
 
       .shouqiang {
         position: absolute;
-        width: 215px;
-        height: 215px;
+        width: 230px;
+        height: 230px;
       }
     }
   }

@@ -336,7 +336,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 500px;
+  height: 250px;
 
   .div {
     position: relative;
@@ -372,8 +372,8 @@ export default {
       justify-content: center;
 
       .shouqiang {
-        width: 250px;
-        height: 250px;
+        width: 270px;
+        height: 270px;
       }
     }
   }
