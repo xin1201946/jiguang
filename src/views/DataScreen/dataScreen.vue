@@ -843,9 +843,9 @@ export default {
       }
       .buqiang1 {
         position: absolute;
-        width: 300px;
-        height: 300px;
-        top: -265px;
+        width: 285px;
+        height: 285px;
+        top: -255px;
         left: -150px;
         transform-origin: top left;
         transform: scale(2.54);

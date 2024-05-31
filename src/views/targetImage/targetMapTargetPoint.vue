@@ -429,8 +429,8 @@ export default {
       }
 
       .buqiang1 {
-        width: 950px;
-        height: 950px;
+        width: 860px;
+        height: 860px;
       }
     }
   }
