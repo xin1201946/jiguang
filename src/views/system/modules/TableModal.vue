@@ -59,10 +59,7 @@ export default {
           { required: true, message: '请输入版本号!' },
           { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' },
         ],
-        info: [
-          { required: true, message: '请输入更新内容!' },
-         
-        ],
+        info: [{ required: true, message: '请输入更新内容!' }],
         file: [{ required: true, message: '请上传apk文件!' }],
       },
     }
@@ -141,7 +138,7 @@ export default {
       // 将最新的文件赋值给model.file
       this.model.file = latestFile
     },
-    handleRemove(e) {
+    handleRemove() {
       this.fileList = []
       this.model.file = null
     },
