@@ -10,7 +10,7 @@ export const bizTabletPcSave = data => postAction("bizDevicePc/add", data)
 // 平板修改
 export const bizTabletPcUpdate = data => postAction("bizDevicePc/edit", data)
 // 平板删除
-export const bizTabletPcDelete = id => deleteAction(`bizDevicePc/delete`, {id})
+export const bizTabletPcDelete = id => deleteAction(`bizDevicePc/delete`, { id })
 // 平板模板下载
 // bizDevicePc/getImportTemplate
 export const bizDevicePcGetImportTemplate = () => downFile('bizDevicePc/getImportTemplate')
@@ -21,7 +21,7 @@ export const bizTabletPcSave1 = data => postAction("bizTabletPc/save", data)
 // 平板修改
 export const bizTabletPcUpdate1 = data => postAction("bizTabletPc/update", data)
 // 平板删除
-export const bizTabletPcDelete1 = id => deleteAction(`/bizTabletPc/delete/${id}` )
+export const bizTabletPcDelete1 = id => deleteAction(`/bizTabletPc/delete/${id}`)
 
 // 平板列表
 // export const bizTabletPcList = (data = {}) => postAction("bizTabletPc/list", data)
@@ -75,13 +75,18 @@ export const bizDeviceList = data => postAction("bizDevice/list", data)
 export const bizDevicegetImportTemplate = () => download("bizDevice/getImportTemplate")
 //同步
 export const bizDeviceSync = data => getAction("bizDevice/sync")
-
 //编辑靶位
 export const updateTarget = data => postAction("bizDevicePc/updateTarget", data)
-
 // 发送平板参数消息
 // bizDeviceControl/sendPcSet
 export const bizDeviceControlSendPcSet = data => postAction("bizDeviceControl/sendPcSet", data)
-
 //  训练成绩表-分页列表查询 个人成绩
-export const bizTrainScoreQueryScoreList= data => getAction("bizTrainScore/queryScoreList", data)
+export const bizTrainScoreQueryScoreList = data => getAction("bizTrainScore/queryScoreList", data)
+//上传平板版本apk
+export const bizUploadApk = (data) => postAction("bizApk/uploadApk", data)
+//获取平板数据
+export const bizTableList = data => getAction("bizApk/list", data)
+//删除apk
+export const bizDleteAPK = data => getAction("bizApk/delete", data)
+//给平板设置更新版本
+export const bizDeviceSetPcApkversion = data => postAction("bizDevicePc/setPcApkversion", data)
