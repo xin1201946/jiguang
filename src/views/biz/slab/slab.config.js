@@ -127,6 +127,12 @@ export const slabTableColumns = [
     align: 'center',
     // customRender: (text) => getLabel(tabletPcStatus, text)
   },
+  {
+    title: 'apk更新版本',
+    dataIndex: 'version',
+    align: 'center',
+    // customRender: (text) => getLabel(tabletPcStatus, text)
+  },
 
   {
     title: '操作',
