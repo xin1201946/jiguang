@@ -15,6 +15,9 @@
         <a-form-model-item label="版本号" required prop="version">
           <a-input v-model="model.version" :disabled="roleDisabled" placeholder="请输入版本号" />
         </a-form-model-item>
+        <a-form-model-item label="版本编号" required prop="versionCode">
+          <a-input v-model="model.versionCode" :disabled="roleDisabled" placeholder="请输入版本编号" />
+        </a-form-model-item>
         <a-form-model-item label="更新内容" required prop="info">
           <!-- <a-input v-model="model.info" placeholder="请输入更新内容" /> -->
           <a-textarea placeholder="请输入更新内容" :rows="4" v-model="model.info" />
@@ -59,6 +62,10 @@ export default {
           { required: true, message: '请输入版本号!' },
           { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' },
         ],
+        versionCode: [
+          { required: true, message: '请输入版本编号!' },
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' },
+        ],
         info: [{ required: true, message: '请输入更新内容!' }],
         file: [{ required: true, message: '请上传apk文件!' }],
       },
@@ -86,6 +93,7 @@ export default {
       const that = this
       const data = new FormData()
       data.append('version', this.model.version)
+      data.append('versionCode', this.model.versionCode)
       data.append('info', this.model.info)
       data.append('file', this.model.file)
 

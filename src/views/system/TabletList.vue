@@ -59,11 +59,18 @@ export default {
           dataIndex: 'name',
           width: 240,
         },
+
         {
           title: '版本号',
           align: 'center',
           width: 120,
           dataIndex: 'version',
+        },
+        {
+          title: '版本编号',
+          align: 'center',
+          width: 120,
+          dataIndex: 'versionCode',
         },
         {
           title: '更新内容',
