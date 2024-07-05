@@ -273,11 +273,11 @@ export default {
         </div>
         `]
       for (let i = 0; i < ((this.data.length - 6) / 6).toFixed(0); i++) {
-        // 
+        //
         pages.push(
           `
           <div style="position: relative;overflow: hidden;">
-          <img src="../../${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="2">
+          <img src="${require('../../' + window._CONFIG.zbfLogo)}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="2">
           <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -316,11 +316,12 @@ export default {
           </div>
         </div>-->
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-          <img src="../../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `
         )
       }
+      console.log(pages)
       return `
       <style>
       @page{
@@ -419,7 +420,7 @@ export default {
     getStageList() {
       this.data = []
       // 类型
-      var index = this.mixParameters.indexOf('枪') // 获取"枪"的索引位置  
+      var index = this.mixParameters.indexOf('枪') // 获取"枪"的索引位置
       if (index !== -1) {
         var resultType = this.mixParameters.slice(index - 1, index) // 截取"枪"的前一个字符
       }
