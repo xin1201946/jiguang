@@ -68,7 +68,7 @@ function createWindow () {
   //   return
   // }
   // 生产环境使用打包路径
-  win.loadFile('lasergun-view/index.html')
+  win.loadFile('view/lasergun-view/index.html')
 }
 
 app.whenReady().then(() => {
