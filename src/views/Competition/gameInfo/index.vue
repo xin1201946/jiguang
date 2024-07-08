@@ -6,9 +6,7 @@
         <!-- v-if="groupActive" -->
         <div class="btns_right_left" v-if="groupActive">
           <a-tooltip>
-            <template slot="title">
-              {{ projectName }} - {{ projectGroup }}- {{ stageName }}
-            </template>
+            <template slot="title"> {{ projectName }} - {{ projectGroup }}- {{ stageName }} </template>
             {{ projectName }} - {{ projectGroup }}- {{ stageName }}
           </a-tooltip>
         </div>
@@ -37,15 +35,18 @@
       <div class="example" v-if="loading2">
         <div>
           <a-spin />
-          <p style="width: 100%;color: #333;">推送数据中...请稍后</p>
+          <p style="width: 100%; color: #333">推送数据中...请稍后</p>
         </div>
       </div>
       <!--  -->
       <AppstoreTreeCard ref="treeCard" @success="successOkTree">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup">
+            <a-tree-node
+              v-for="item in treeList"
+              :key="item.projectId + item.projectGroup"
+              :title="item.projectName + ' - ' + item.projectGroup"
+            >
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -66,10 +67,18 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary"
-              @click="nextStageHandle">下一阶段</a-button>
-            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary"
-              @click="nextStageHandle">结束阶段</a-button>
+            <a-button
+              v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'"
+              type="primary"
+              @click="nextStageHandle"
+              >下一阶段</a-button
+            >
+            <a-button
+              v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')"
+              type="primary"
+              @click="nextStageHandle"
+              >结束阶段</a-button
+            >
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
@@ -84,13 +93,17 @@
         <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
             <a-tabs v-model="group" @change="radioChangeHandle">
-              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group"
-                :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
+              <a-tab-pane
+                v-for="item in groupList"
+                :value="item.group"
+                :key="item.group"
+                :tab="`${numToCapital(item.group)}组`"
+              ></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
             <div class="table_box_total">
-              <a-space style="margin-bottom: 20px;">
+              <a-space style="margin-bottom: 20px">
                 <span>总人数：{{ this.dataSource.length }}</span>
                 <span v-if="status">当前状态：{{ status }}</span>
                 <a-button @click.stop="handleZhunbei()">准备</a-button>
@@ -99,35 +112,59 @@
                 <a-button @click.stop="handleEnd()">结束</a-button>
               </a-space>
               <div class="table_box_total_right">
-                <a-button type="primary" style="margin-right: 8px;" @click="handleTargetLocation()">靶图</a-button>
+                <a-button type="primary" style="margin-right: 8px" @click="handleTargetLocation()">靶图</a-button>
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
-              rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
-              :scroll="{ x: 1500 }">
-              <template slot="power0Slot" slot-scope="text,record">
-                <div style="display: flex;justify-content: space-around;align-items: center">
+            <a-table
+              :rowSelection="rowSelection"
+              :rowClassName="(r, i) => rowClassName(r, i)"
+              bordered
+              rowKey="playerId"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource"
+              :loading="loading"
+              :scroll="{ x: 1500 }"
+            >
+              <template slot="power0Slot" slot-scope="text, record">
+                <div style="display: flex; justify-content: space-around; align-items: center">
                   <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
                   <span
-                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
+                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"
+                  ></span>
                   <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
                   <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
-                  <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射">
+                  <img
+                    width="25"
+                    height="25"
+                    v-if="record.model == '0'"
+                    src="../../../assets/icon-copy.png"
+                    alt="试射"
+                  />
                   <!-- <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/bottom-left.png" alt="试射"> -->
-                  <img width='15' height='15' v-if="record.model == '1'" src="../../../assets/zhengfangxing.png"
-                    alt="射击">
+                  <img
+                    width="15"
+                    height="15"
+                    v-if="record.model == '1'"
+                    src="../../../assets/zhengfangxing.png"
+                    alt="射击"
+                  />
                   <!-- <img width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
                   <img width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击"> -->
-                  <Electricitylevel :power="text" width='32' height='32'></Electricitylevel>
-                  <Electricitylevel :power="record.power1" width='32' height='32'></Electricitylevel>
+                  <Electricitylevel :power="text" width="32" height="32"></Electricitylevel>
+                  <Electricitylevel :power="record.power1" width="32" height="32"></Electricitylevel>
                 </div>
               </template>
               <!-- 总成绩 -->
-              <template slot="totalScoreSlot" slot-scope="text,record">
-                <a-input placeholder="请输入" v-if="record.editableTotal" :value="text"
-                  @change="e => handleChangeTotal(e.target.value, record.serialNumber, record.totalScore)"
-                  @blur="handleBlurTotal(record, text)" />
+              <template slot="totalScoreSlot" slot-scope="text, record">
+                <a-input
+                  placeholder="请输入"
+                  v-if="record.editableTotal"
+                  :value="text"
+                  @change="(e) => handleChangeTotal(e.target.value, record.serialNumber, record.totalScore)"
+                  @blur="handleBlurTotal(record, text)"
+                />
                 <template v-else>
                   <!-- 单击 -->
                   <a @click="editAchievementTotal(record.serialNumber)">{{ record.totalScore }}</a>
@@ -136,9 +173,13 @@
               <!-- 10 20 30组别编辑 -->
               <template v-for="col in strArr" v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
-                  <a-input placeholder="请输入" v-if="record.editable" :value="text"
-                    @change="e => handleChange(e.target.value, record.serialNumber, col)"
-                    @blur="handleBlur(record, col, text)" />
+                  <a-input
+                    placeholder="请输入"
+                    v-if="record.editable"
+                    :value="text"
+                    @change="(e) => handleChange(e.target.value, record.serialNumber, col)"
+                    @blur="handleBlur(record, col, text)"
+                  />
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
@@ -155,16 +196,33 @@
                   <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
                     size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button v-if="projectName.includes('团体')" type="primary" size="small" ghost icon="profile"
-                    @click="handleInfo(record)">成绩详情</a-button>
-                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop"
-                    @click="handleStop(record)">停止比赛</a-button>
+                  <a-button
+                    v-if="projectName.includes('团体')"
+                    type="primary"
+                    size="small"
+                    ghost
+                    icon="profile"
+                    @click="handleInfo(record)"
+                    >成绩详情</a-button
+                  >
+                  <a-button
+                    v-if="record.eliminationStatus != 1"
+                    type="danger"
+                    size="small"
+                    ghost
+                    icon="stop"
+                    @click="handleStop(record)"
+                    >停止比赛</a-button
+                  >
                   <a-dropdown>
-                    <a style="display:block;width: 80px" @click="e => e.preventDefault()"> 更多 <a-icon type="down" />
+                    <a style="display: block; width: 80px" @click="(e) => e.preventDefault()">
+                      更多 <a-icon type="down" />
                     </a>
                     <a-menu slot="overlay">
                       <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
-                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
+                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)"
+                          >更换靶位</a-button
+                        >
                       </a-menu-item>
                       <a-menu-item>
                         <a-button type="link" size="small" icon="flag" @click="handlePenalty(record)">判罚</a-button>
@@ -173,9 +231,14 @@
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
                       <a-menu-item>
-                        <a-button type="link" size="small" icon="swap"
+                        <a-button
+                          type="link"
+                          size="small"
+                          icon="swap"
                           v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'"
-                          @click="handleGrouping(record)">变更组别</a-button>
+                          @click="handleGrouping(record)"
+                          >变更组别</a-button
+                        >
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -184,14 +247,23 @@
             </a-table>
           </div>
         </div>
-        <a-space style="margin-bottom: 20px;" v-if="!groupActive && this.dataSource.length != 0">
+        <a-space style="margin-bottom: 20px" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"
-          :pagination="false" :loading="loading">
+        <a-table
+          bordered
+          v-if="!groupActive"
+          rowKey="playerId"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="false"
+          :loading="loading"
+        >
         </a-table>
         <!-- 抽签 -->
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
+        <!-- 抽签混合团体 -->
+        <gameInfoBlendModal ref="blend" @list="blendListHandle"></gameInfoBlendModal>
         <!-- 编辑靶位 -->
         <gameInfoTargetModal></gameInfoTargetModal>
         <!-- 分组 -->
@@ -231,6 +303,7 @@ import Card from '@comp/card/card.vue'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import { gameInfoColumns } from '@views/Competition/gameInfo/gameInfo.config'
 import gameInfoTargetModal from '@views/Competition/gameInfo/modal/gameInfoTargetModal.vue'
+import gameInfoBlendModal from '@views/Competition/gameInfo/modal/gameInfoBlendModal.vue'
 import gameInfoDrawModal from '@views/Competition/gameInfo/modal/gameInfoDrawModal.vue'
 import GameInfoGroupModal from '@views/Competition/gameInfo/modal/gameInfoGroupModal.vue'
 import GameInfoAchievementModal from '@views/Competition/gameInfo/modal/gameInfoAchievementModal.vue'
@@ -320,6 +393,7 @@ export default {
     GameinfoChengTongJudge,
     TargetMapTargetPoint,
     Electricitylevel,
+    gameInfoBlendModal,
   },
   inject: ['closeCurrent'],
   data() {
@@ -356,7 +430,7 @@ export default {
           title: '设备连接状态（枪、靶）',
           align: 'center',
           scopedSlots: {
-            customRender: 'power0Slot'
+            customRender: 'power0Slot',
           },
         },
         // {
@@ -387,9 +461,9 @@ export default {
           title: '总环数',
           align: 'center',
           scopedSlots: {
-            customRender: 'totalScoreSlot'
+            customRender: 'totalScoreSlot',
           },
-        }
+        },
       ],
       group: null,
       groupList: [],
@@ -437,12 +511,18 @@ export default {
       event.preventDefault() // 阻止默认的右键菜单
       // 在这里添加你的自定义右键菜单逻辑
       // console.log('Right-clicked on actions column for record:', record, event, event.target.innerText, 'qaaaaa')
-      this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
+      this.$refs.Achievement.edit({
+        ...record,
+        col,
+        stageId: this.cproStageId,
+        projectName: this.projectName,
+        numberOfRings: event.target.innerText,
+      })
     },
     // 可编辑
     handleChange(value, serialNumber, column) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find((item) => serialNumber === item.serialNumber)
       if (target) {
         target[column] = value
         this.dataSource = newData
@@ -450,7 +530,7 @@ export default {
     },
     editAchievement(serialNumber) {
       const newData = this.dataSource
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find((item) => serialNumber === item.serialNumber)
       this.editingKey = serialNumber
       if (target) {
         target.editable = true
@@ -464,12 +544,12 @@ export default {
         type: 1,
         finalScoreId: record.finalScoreId,
         scoreGroup: cal,
-        score: text
+        score: text,
       }
       processEditGroupScore(dataBlur).then((res) => {
         if (res.success) {
           const newData = [...this.dataSource]
-          const target = newData.find(item => record.serialNumber === item.serialNumber)
+          const target = newData.find((item) => record.serialNumber === item.serialNumber)
           if (target) {
             delete target.editable
             this.dataSource = newData
@@ -484,10 +564,13 @@ export default {
     },
     cancelAchievement(serialNumber) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find((item) => serialNumber === item.serialNumber)
       this.editingKey = ''
       if (target) {
-        Object.assign(target, this.dataSource.find(item => serialNumber === item.serialNumber))
+        Object.assign(
+          target,
+          this.dataSource.find((item) => serialNumber === item.serialNumber)
+        )
         delete target.editable
         this.dataSource = newData
         this.$forceUpdate()
@@ -496,7 +579,7 @@ export default {
     // 总成绩
     editAchievementTotal(serialNumber) {
       const newData = this.dataSource
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find((item) => serialNumber === item.serialNumber)
       // this.editingKey = serialNumber
       if (target) {
         target.editableTotal = true
@@ -507,12 +590,11 @@ export default {
     // 编辑赋值
     handleChangeTotal(value, serialNumber) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find((item) => serialNumber === item.serialNumber)
       if (target) {
         target.totalScore = value
         this.dataSource = newData
       }
-
     },
 
     // 总成绩失去焦点
@@ -523,19 +605,19 @@ export default {
           type: 0,
           finalScoreId: record.finalScoreId,
           goodTotal: extractValue(cal), //好十环，type=0，且页面显示好十环时
-          score: extractValueBeforeUnderscore(cal)
+          score: extractValueBeforeUnderscore(cal),
         }
       } else {
         dataBlur = {
           type: 0,
           finalScoreId: record.finalScoreId,
-          score: extractValueBeforeUnderscore(cal)
+          score: extractValueBeforeUnderscore(cal),
         }
       }
       processEditGroupScore(dataBlur).then((res) => {
         if (res.success) {
           const newData = [...this.dataSource]
-          const target = newData.find(item => record.serialNumber === item.serialNumber)
+          const target = newData.find((item) => record.serialNumber === item.serialNumber)
           if (target) {
             delete target.editableTotal
             this.dataSource = newData
@@ -903,10 +985,9 @@ export default {
      * 选择组别
      */
     radioChangeHandle(e) {
-      // console.log(e,123456)
       let strArr = []
       // this.group = e
-      console.log(this.groupList)
+      // console.log(this.groupList)
       this.groupList.forEach((item) => {
         if (item.group == this.group) {
           // console.log(item)
@@ -937,7 +1018,6 @@ export default {
                 newItem[strArr[index]] = key.groupScoreList[index].gunGroupTotal
                 newItem['strArr'] = strArr
               }
-
             }
             return newItem // 返回新对象
           })
@@ -945,7 +1025,6 @@ export default {
           this.dataSource = [...newSource]
           console.log(this.dataSource)
           // console.log(this.dataSource, 'qweqweqwewqq123123232')
-
         }
       })
       // gameInfoColumns
@@ -976,7 +1055,7 @@ export default {
           align: 'center',
           width: 200,
           scopedSlots: {
-            customRender: 'power0Slot'
+            customRender: 'power0Slot',
           },
         },
         // {
@@ -1007,9 +1086,9 @@ export default {
           title: '总环数',
           align: 'center',
           scopedSlots: {
-            customRender: 'totalScoreSlot'
+            customRender: 'totalScoreSlot',
           },
-        }
+        },
       ]
       let arrColumns = []
       for (let i = 0; i < strArr.length; i++) {
@@ -1018,7 +1097,7 @@ export default {
           title: `${strArr[i]}`,
           align: 'center',
           scopedSlots: {
-            customRender: strArr[i]
+            customRender: strArr[i],
           },
         })
       }
@@ -1027,7 +1106,7 @@ export default {
         align: 'center',
         dataIndex: 'operation',
         scopedSlots: {
-          customRender: 'operation'
+          customRender: 'operation',
         },
         width: 220,
         fixed: 'right',
@@ -1063,7 +1142,11 @@ export default {
      * 主表单按钮功能
      */
     handleDraw() {
-      this.$refs.draw.init()
+      if (this.projectName.includes('混合团体')) {
+        this.$refs.blend.init()
+      } else {
+        this.$refs.draw.init()
+      }
     },
     /**
      * 分组
@@ -1135,7 +1218,9 @@ export default {
     /**
      * 左侧功能
      */
+
     onSelect(keys, event) {
+      console.log('Trigger Select', event.node)
       this.$refs.treeCard.loading = true
       // isLeaf 为true时是最底层
       // keys 阶段id
@@ -1182,7 +1267,9 @@ export default {
         this.$refs.treeCard.loading = false
       }
     },
-    onExpand() { },
+    onExpand(v, e) {
+      console.log(1)
+    },
     // 查询
     handleSubmit() {
       this.getTableList()
@@ -1280,6 +1367,26 @@ export default {
         }
       })
     },
+    // 抽签混合弹窗
+    blendListHandle(e) {
+      this.draw = true
+      const noStr = e.noStr
+      drawing({
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+        group: this.group, //人员组别
+        noStr: noStr,
+      }).then((res) => {
+        if (res.success) {
+          console.log(res);
+          this.$message.success('抽签成功！')
+          this.getTableList()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
     handleExports() {
       // 导出
       const data = {
@@ -1311,7 +1418,7 @@ export default {
         })
       }
     },
-    groupListHandle() { },
+    groupListHandle() {},
 
     // 平板监控
     handleTablet() {
@@ -1332,7 +1439,7 @@ export default {
           contestId: this.data.contestId, //赛事id
           cproId: this.cproId, //赛事项目id
           stageId: this.cproStageId, //项目阶段id
-          playerIds: this.selectedRowKeys.join(',')
+          playerIds: this.selectedRowKeys.join(','),
         }
         this.$refs.gameinfoChengTongJudgeRef.edit(arr)
       } else {
@@ -1375,9 +1482,9 @@ export default {
           selected
             ? this.selectionRows.push(record)
             : this.selectionRows.splice(
-              this.selectionRows.findIndex((x) => x.id === record.id),
-              1
-            )
+                this.selectionRows.findIndex((x) => x.id === record.id),
+                1
+              )
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
           this.selectionRows = selected
@@ -1477,7 +1584,8 @@ export default {
         display: flex;
       }
 
-      .ant-tree-treenode-selected {}
+      .ant-tree-treenode-selected {
+      }
 
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal {
         display: flex;
@@ -1615,6 +1723,5 @@ export default {
   /deep/.ant-form-item {
     margin-bottom: 0;
   }
-
 }
 </style>

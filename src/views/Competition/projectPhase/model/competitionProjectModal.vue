@@ -80,6 +80,10 @@ import dayjs from 'dayjs'
 import { projectGroup } from '@views/Competition/participant/participant.config'
 
 const projectGroup1 = [
+{
+    label: "专业组",
+    value: "专业组"
+  },
   {
     label: "甲组",
     value: "甲组"
@@ -91,6 +95,10 @@ const projectGroup1 = [
   {
     label: "丙组",
     value: "丙组"
+  },
+  {
+    label: "丁组",
+    value: "丁组"
   },
 ]
 
