@@ -137,6 +137,6 @@ export default {
 <style scoped lang="less">
 .tree {
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 </style>

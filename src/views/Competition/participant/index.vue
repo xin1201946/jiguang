@@ -419,4 +419,8 @@ export default {
 /deep/.ant-page-header-back {
   font-size: 20px;
 }
+/deep/.treeCard[data-v-1f5a15ad] .ant-card-body {
+    height: 100%;
+    overflow: auto;
+}
 </style>
