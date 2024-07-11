@@ -422,7 +422,7 @@
         console.log()
         const pages = [`
       <div style="position: relative;overflow: hidden;">
-          <img src="${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
           <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -463,14 +463,15 @@
           </div>
         </div>-->
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-            <img src="${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+            <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `];
+
         for (let i = 0; i < Number(((this.data.length - 6) / 6).toFixed(1)); i++) {
           pages.push(
             `
           <div style="position: relative;overflow: hidden;">
-          <img src="${window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
           <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
           <h2 style="text-align: center">
             ${label.projectGroup}${label.projectName}
@@ -511,7 +512,7 @@
           </div>
         </div>-->
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
-          <img src="${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
         `
           )
