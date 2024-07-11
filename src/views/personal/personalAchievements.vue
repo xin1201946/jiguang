@@ -217,6 +217,7 @@ export default {
     handleTabPc() {
       this.tab = !this.tab
       if (this.tab) {
+        console.log(123)
         this.arr = []
         this.arrData = []
         bizTrainScoreQueryScoreList({
@@ -249,6 +250,7 @@ export default {
       // let arrData = []
       // this.arr = []
       // this.arrData = []
+      console.log(123456)
       bizTrainScoreQueryScoreList({
         ...this.form,
         // order: {
@@ -260,21 +262,14 @@ export default {
         pageSize: this.pagination.pageSize,
       }).then((res) => {
         if (res.success) {
+          console.log(res)
           if (res.result.records.length) {
             this.dataSource = res.result.records
             this.names = this.dataSource[0].userAccount
-            this.pagination.total = res.result.total
-            this.pagination.current = res.result.current
-            this.pagination.pageSize = res.result.size
-            // this.dataSource.map((item) => {
-            //   this.arr.push(item.shootCode)
-            //   this.arrData.push(item.score)
-            // })
-            // this.$nextTick(() => {
-            //   this.handleEcharts(this.arr, this.arrData)
-            // })
-            // this.loading = false
           }
+          this.pagination.total = res.result.total
+          this.pagination.current = res.result.current
+          this.pagination.pageSize = res.result.size
         } else {
           this.$message.error(res.message)
 
@@ -328,6 +323,7 @@ export default {
       this.pagination.current = 1
       this.pagination.pageSize = 10
       if (this.tab) {
+        console.log(123)
         this.arr = []
         this.arrData = []
         bizTrainScoreQueryScoreList({
