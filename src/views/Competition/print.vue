@@ -388,7 +388,10 @@ export default {
 .RealTimeView {
   height: 100%;
   overflow-y: hidden;
-
+  /deep/.treeCard[data-v-1f5a15ad] .ant-card-body {
+    height: 100%;
+    overflow-y: auto;
+}
   .btns {
     height: @btnHeight;
     background: #fff;
