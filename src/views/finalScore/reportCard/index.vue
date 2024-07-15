@@ -419,9 +419,10 @@ export default {
         }
       }
       const pages = []
+      // <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
       pages.push(`
           <div style="position: relative;overflow: hidden;">
-            <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+           
 
             <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">
@@ -456,10 +457,11 @@ export default {
           </table>
         `)
       if (tr.length > 32) {
+        // <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
         pages.push(`
           <div style="position: relative;overflow: hidden;">
 
-            <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+            
 
             <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">
@@ -650,7 +652,7 @@ export default {
           <div style="height: 90vh">
             <div style="position: relative;ovflow: hidden;">
 
-              <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: -100px;left: 0;right: 0;width: 20%" alt="">
+              
               <h1 style="text-align: center; font-size: 24px;margin-top: 100px;">${contestName}</h1>
               <h2 style="text-align: center">${label.label.split('-').reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
@@ -798,7 +800,7 @@ export default {
         </div>`
         }
         return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0px;height: 2.7cm">
-                 <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
+                
           <div style="width: 100%;" class="footer">
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
@@ -822,7 +824,7 @@ export default {
       const p = this.sgTimeStart ? `<p style="text-align: center;margin: -.3cm 0 0.3cm">${Time(this.sgTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(this.sgTimeStart, 'HH:mm')}</p>` : "<p></p>"
       pages.push(`
             <div style="position: relative;overflow: hidden;">
-            <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+      
 
           <div ">
             <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
@@ -862,7 +864,6 @@ export default {
       if (tr.length > 3) {
         pages.push(`
             <div style="position: relative;overflow: hidden;">
-            <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo}" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
 
           <div ">
             <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
