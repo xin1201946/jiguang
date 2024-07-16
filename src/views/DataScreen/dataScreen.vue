@@ -41,20 +41,23 @@
         </div>
         <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
           <!--    整页的滚动-->
-          <vueSeamless :classOption="classOption" class="foots" :data="data.listsList" ref="scorllBox">
+          <vueSeamless :classOption="{
+            step: 0.1,
+            limitMoveNum: 16,
+          }" class="foots" :data="data.listsList" ref="scorllBox">
             <div class="footContent" ref="scorllArr">
               <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
-                <div style="width: 60px">{{ item.rank }}</div>
-                <div style="width: 60px">{{ item.targetSite }}</div>
-                <div style="width: 100px">{{ item.playerName }}</div>
-                <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+                <div style="width: 60px; font-size: 26px">{{ item.rank }}</div>
+                <div style="width: 60px; font-size: 26px">{{ item.targetSite }}</div>
+                <div style="width: 100px; font-size: 24px">{{ item.playerName }}</div>
+                <div style="flex: 1;text-align: left; font-size: 26px">{{ item.groupName }}</div>
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative; font-size: 20px">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
-                <div style="width: 80px;">{{ item.total }}</div>
-                <div style="width: 60px;">{{ item.remark }}</div>
-                <div style="width: 30px">{{ item.bePromoted }}</div>
+                <div style="width: 80px; font-size: 26px">{{ item.total }}</div>
+                <div style="width: 60px; font-size: 26px">{{ item.remark }}</div>
+                <div style="width: 30px; font-size: 26px">{{ item.bePromoted }}</div>
               </div>
             </div>
           </vueSeamless>
