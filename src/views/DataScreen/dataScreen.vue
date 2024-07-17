@@ -859,7 +859,7 @@ export default {
 .container {
   flex: 1;
   position: relative;
-  height: 100vh;
+  height: 141vh;
   overflow: hidden;
   background: #001441;
   box-sizing: border-box;
