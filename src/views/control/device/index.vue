@@ -1,11 +1,7 @@
 <template>
   <Card>
     <template slot="query">
-      <QuerySearch
-        ref="query"
-        @reset="handleSearch"
-        @submit="handleSearch"
-      ></QuerySearch>
+      <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch"></QuerySearch>
     </template>
     <template slot="operator">
       <a-space>
@@ -19,16 +15,7 @@
         <a-button type="primary" icon="edit" @click='handleArguments'>参数配置</a-button>
       </a-space>
     </template>
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      rowKey="tabletPcId"
-      :pagination="pagination"
-      @change="handleTableChange"
-      :rowSelection="rowSelection"
-      bordered
-      :scroll="{x: 1400}"
-    >
+    <a-table :columns="columns" :data-source="data" rowKey="tabletPcId" :pagination="pagination" @change="handleTableChange" :rowSelection="rowSelection" bordered :scroll="{x: 1400}">
       <template slot="operation" slot-scope="text, record, index">
         <a-space>
           <a-space>
@@ -74,7 +61,7 @@ export default {
     DeviceModalDevice,
     DeviceModalProject,
     DeviceModalCut,
-    DeviceArgument
+    DeviceArgument,
   },
   mixins: [BizMixins],
   data() {
@@ -82,12 +69,13 @@ export default {
       data: [],
       columns: deviceTableColumns,
       query: {
+        tabletPcNum: undefined,
         tabletPcName: undefined,
         tabletPcStatus: undefined,
-        tabletPcModel: undefined
+        tabletPcModel: undefined,
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
     }
   },
   computed: {
@@ -96,9 +84,9 @@ export default {
         fixed: true,
         type: 'checkbox',
         onChange: this.handleChange,
-        selectedRowKeys: this.selectedRowKeys
+        selectedRowKeys: this.selectedRowKeys,
       }
-    }
+    },
   },
   mounted() {
     this.$refs.query.init(deviceQuery)
@@ -107,7 +95,7 @@ export default {
   methods: {
     handleInfo(record) {
       console.log(record.tabletPcId)
-      bizTabletPcQueryDeviceControlById(record.tabletPcId).then(res => {
+      bizTabletPcQueryDeviceControlById(record.tabletPcId).then((res) => {
         this.$refs.info.init(res.result)
       })
     },
@@ -115,13 +103,13 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    getList () {
+    getList() {
       const data = {
         ...this.query,
         pageNum: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
       }
-      bizTabletPcPageList1(data).then(res => {
+      bizTabletPcPageList1(data).then((res) => {
         if (res.code === 200) {
           this.data = res.result.records
           this.pagination.current = res.result.current
@@ -136,7 +124,7 @@ export default {
     },
     handleDelete(record) {
       deleteMessage().then(() => {
-        controlDelete(record.deviceControlId).then(res => {
+        controlDelete(record.deviceControlId).then((res) => {
           if (res.code === 200) {
             if (this.data.length === 1) {
               this.pagination.current = this.pagination.current - 1
@@ -145,7 +133,7 @@ export default {
               this.getList()
             })
             this.$message.success(res.message)
-          }else {
+          } else {
             this.$message.error(res.message)
           }
         })
@@ -164,72 +152,65 @@ export default {
     },
     handleProject(record) {
       const arr = []
-      if (record){
+      if (record) {
         arr.push(record.tabletPcNum)
-        bizTabletPcQueryDeviceControlById(record.tabletPcId).then(res => {
+        bizTabletPcQueryDeviceControlById(record.tabletPcId).then((res) => {
           this.$refs.project.init(arr.join(','), res.result)
         })
       } else {
         if (this.selectedRows.length) {
           if (this.selectedRows.length === 1) {
             arr.push(this.selectedRows[0].tabletPcNum)
-            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then((res) => {
               this.$refs.project.init(arr.join(','), res.result)
             })
-          }else{
-            this.selectedRows.map(item => {
+          } else {
+            this.selectedRows.map((item) => {
               arr.push(item.tabletPcNum)
             })
             this.$refs.project.init(arr.join(','))
           }
-
-        }else {
-          this.$message.error("请选择表格信息再点击批量项目控制按钮")
+        } else {
+          this.$message.error('请选择表格信息再点击批量项目控制按钮')
         }
       }
-
     },
     // 模式切换
     handleSlabCut() {
       if (this.selectedRowKeys.length === 0) {
-        this.$message.error("请选择表格信息再点击模式切换按钮")
-      }
-      else {
+        this.$message.error('请选择表格信息再点击模式切换按钮')
+      } else {
         this.$refs.cut.slabInit(this.selectedRows)
       }
     },
     // 项目切换
-    handleProjectCut () {
+    handleProjectCut() {
       if (this.selectedRowKeys.length === 0) {
-        this.$message.error("请选择表格信息再点击项目切换按钮")
-      }
-      else {
+        this.$message.error('请选择表格信息再点击项目切换按钮')
+      } else {
         this.$refs.cut.projectInit(this.selectedRows)
       }
     },
     handleArguments() {
       if (this.selectedRowKeys.length === 0) {
-        this.$message.error("请选择表格信息再点击用户下发按钮")
-      }
-      else {
+        this.$message.error('请选择表格信息再点击用户下发按钮')
+      } else {
         this.$refs.argument.userInit(this.selectedRows)
       }
     },
     // 用户下发
-    handleUserDelivery () {
-
+    handleUserDelivery() {
       if (this.selectedRowKeys.length === 0) {
-        this.$message.error("请选择表格信息再点击用户下发按钮")
-      }
-      else {
+        this.$message.error('请选择表格信息再点击用户下发按钮')
+      } else {
         this.$refs.cut.userInit(this.selectedRows)
       }
     },
     handleDevice(record) {
       const arr = []
-      if (record){
+      if (record) {
         arr.push(record.tabletPcNum)
-        bizTabletPcQueryDeviceControlById(record.tabletPcId).then(res => {
+        bizTabletPcQueryDeviceControlById(record.tabletPcId).then((res) => {
           console.log(arr.join(','))
           this.$refs.device.init(arr.join(','), res.result)
         })
@@ -238,50 +219,48 @@ export default {
         if (this.selectedRows.length) {
           if (this.selectedRows.length === 1) {
             arr.push(this.selectedRows[0].tabletPcNum)
-            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then((res) => {
               this.$refs.device.init(arr.join(','), res.result)
             })
-          }else {
-            this.selectedRows.map(item => {
+          } else {
+            this.selectedRows.map((item) => {
               arr.push(item.tabletPcNum)
             })
             this.$refs.device.init(arr.join(','))
           }
-        }else{
-          this.$message.error("请选择表格信息再点击批量设备控制按钮")
+        } else {
+          this.$message.error('请选择表格信息再点击批量设备控制按钮')
         }
       }
-
     },
     handleDisPlay(record) {
       const arr = []
-      if (record){
-        arr.push( record.tabletPcNum)
-        bizTabletPcQueryDeviceControlById(record.tabletPcId).then(res => {
+      if (record) {
+        arr.push(record.tabletPcNum)
+        bizTabletPcQueryDeviceControlById(record.tabletPcId).then((res) => {
           this.$refs.display.init(arr.join(','), res.result)
         })
       } else {
         if (this.selectedRows.length) {
           if (this.selectedRows.length === 1) {
             arr.push(this.selectedRows[0].tabletPcNum)
-            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then(res => {
+            bizTabletPcQueryDeviceControlById(this.selectedRows[0].tabletPcId).then((res) => {
               this.$refs.display.init(arr.join(','), res.result)
             })
-          }else {
-            this.selectedRows.map(item => {
+          } else {
+            this.selectedRows.map((item) => {
               arr.push(item.tabletPcNum)
             })
             this.$refs.display.init(arr.join(','))
           }
-        }else{
-          this.$message.error("请选择表格信息再点击批量显示控制按钮")
+        } else {
+          this.$message.error('请选择表格信息再点击批量显示控制按钮')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped lang="scss">
-
 </style>

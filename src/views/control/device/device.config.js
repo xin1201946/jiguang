@@ -57,67 +57,68 @@ export const triggerCollect = [
 ]
 
 export const deviceQuery = [
-/*   {
+
+  /*    {
+     type: 'select',
+     rules: [
+       'indicateTargetControl',
+       { rules: [{ required: false, message: '请输入平板名称' }] },
+     ],
+     data: indicateTargetControl,
+     label: '报靶控制',
+     placehorder: '请选择报靶控制'
+   },
+   {
+     type: 'select',
+     rules: [
+       'shootControl',
+       { rules: [{ required: false, message: '请输入平板名称' }] },
+     ],
+     data: shootControl,
+     label: '击发控制',
+     placehorder: '请选择击发控制'
+   },
+   {
+     type: 'select',
+     rules: [
+       'soundControl',
+       { rules: [{ required: false, message: '请输入平板名称' }] },
+     ],
+     data: soundControl,
+     label: '音效控制',
+     placehorder: '请选择音效控制'
+   },
+   {
+     type: 'select',
+     rules: [
+       'targetCollect',
+       { rules: [{ required: false, message: '请输入平板名称' }] },
+     ],
+     data: targetCollect,
+     label: '靶机倾角采集',
+     placehorder: '请选择靶机倾角采集',
+     span: 4
+   },
+   {
+     type: 'select',
+     rules: [
+       'triggerCollect',
+       { rules: [{ required: false, message: '请输入平板名称' }] },
+     ],
+     data: triggerCollect,
+     label: '扳机预压采集',
+     placehorder: '请选择扳机预压采集',
+     span: 4
+   } */
+  {
     type: "input",
     rules: [
       'tabletPcNum',
       { rules: [{ required: false, message: '请输入平板名称' }] },
     ],
     label: '平板编号',
-    placehorder: '请输入平板编号'
+    placeholder: '请输入平板编号'
   },
-  {
-    type: 'select',
-    rules: [
-      'indicateTargetControl',
-      { rules: [{ required: false, message: '请输入平板名称' }] },
-    ],
-    data: indicateTargetControl,
-    label: '报靶控制',
-    placehorder: '请选择报靶控制'
-  },
-  {
-    type: 'select',
-    rules: [
-      'shootControl',
-      { rules: [{ required: false, message: '请输入平板名称' }] },
-    ],
-    data: shootControl,
-    label: '击发控制',
-    placehorder: '请选择击发控制'
-  },
-  {
-    type: 'select',
-    rules: [
-      'soundControl',
-      { rules: [{ required: false, message: '请输入平板名称' }] },
-    ],
-    data: soundControl,
-    label: '音效控制',
-    placehorder: '请选择音效控制'
-  },
-  {
-    type: 'select',
-    rules: [
-      'targetCollect',
-      { rules: [{ required: false, message: '请输入平板名称' }] },
-    ],
-    data: targetCollect,
-    label: '靶机倾角采集',
-    placehorder: '请选择靶机倾角采集',
-    span: 4
-  },
-  {
-    type: 'select',
-    rules: [
-      'triggerCollect',
-      { rules: [{ required: false, message: '请输入平板名称' }] },
-    ],
-    data: triggerCollect,
-    label: '扳机预压采集',
-    placehorder: '请选择扳机预压采集',
-    span: 4
-  } */
   {
     type: "input",
     rules: [
