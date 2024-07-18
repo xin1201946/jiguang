@@ -69,7 +69,7 @@ export const competitionListTableColumns = [
     title: "赛事名称",
     dataIndex: "contestName",
     align: 'center',
-    width: 200
+    width: 300
   },
   {
     title: "赛事类型",
