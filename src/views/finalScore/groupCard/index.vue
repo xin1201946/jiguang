@@ -327,6 +327,9 @@
       },
       // 成绩打印
       bodyContent() {
+        // this.data.reverse()
+        const lists = JSON.parse(JSON.stringify(this.data)).reverse()
+        // this.data = [...this.data,...lists]
         const contestName = this.treeList.filter(item => item.contestId === this.contestId)[0].contestName
         const label = this.list.filter(item => item.value === this.tree)[0]
         // todo 没有阶段数组不渲染打印按钮, 如果显示了这里需要修改
@@ -461,9 +464,9 @@
             </div>
           </div>
         </div>-->
-        <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
+        <!--<div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
             <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
-        </div>
+        </div>-->
         `];
 
         for (let i = 0; i < Number(((this.data.length - 6) / 6).toFixed(1)); i++) {
@@ -508,10 +511,10 @@
               备注:
             </div>
           </div>
-        </div>-->
+        </div>
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
           <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
-        </div>
+        </div>-->
         `
           )
         }

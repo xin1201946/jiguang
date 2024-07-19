@@ -384,13 +384,11 @@ export default {
               </div>
             </div>
           </div>
-          ${img}
         </div>`
         }
 
         if (tr.length > 32) {
           return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0;height: 2cm">
-          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg }" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
           <div class="footer" style="width: 100%;">
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
@@ -404,7 +402,6 @@ export default {
         </div>`
         } else {
           return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0;height: 2.6cm">
-          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg }" style="position: absolute;bottom: -10px;left: 0;right: 0;width: 20%" alt="">
           <div class="footer" style="width: 100%;">
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
@@ -421,22 +418,30 @@ export default {
       const pages = []
       // <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
       pages.push(`
-          <div style="position: relative;overflow: hidden;">
-           
-
-            <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
-            <h2 style="text-align: center">
-              ${label.projectGroup}${label.projectName}
-            </h2>
-            <h3 style="text-align: center">资格赛</h3>
-            <p style="text-align: center">${contest.location}</p>
-            <p style="text-align: center;margin-bottom: 1cm">${Time(
+<!--<div">
+                    <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
+                    <h2 style="text-align: center">
+                      ${label.projectGroup}${label.projectName}
+                    </h2>
+                    <h3 style="text-align: center">资格赛</h3>
+                    <p style="text-align: center">${contest.location}</p>
+                    <p style="text-align: center;margin-bottom: 1cm">${Time(
         project.projectTimeStart,
         'YYYY/MM/DD'
       )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
-          </div>
+                  </div>
+                   -->
           <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
             <thead>
+               <tr >
+                <th colspan='${11+g}' rowspan='1' style='border: 0;'>
+                    <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
+                    <h2 style="text-align: center">${label.projectGroup}${label.projectName}</h2>
+                    <h3 style="text-align: center">资格赛</h3>
+                    <p style="text-align: center">${contest.location}</p>
+                    <p style="text-align: center;">${Time(project.projectTimeStart,'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+                </th>
+              </tr>
               <tr>
                 <th rowspan="2" colspan="2">排名</th>
                 <th rowspan="2" colspan="2">靶位</th>
@@ -448,7 +453,7 @@ export default {
               </tr>
               <tr>${th()}</tr>
             </thead>
-            <tbody> ${tr.slice(0, 32).join('')} </tbody>
+            <tbody> ${tr.slice(0, 32).join('')}</tbody>
             <tfoot>
               <tr style="margin-top: 1cm">
                 <td colspan="${g + 7}" style="height: 5cm; margin-top: 20px"></td>
@@ -456,12 +461,12 @@ export default {
             </tfoot>
           </table>
         `)
-      if (tr.length > 32) {
+      /*if (tr.length > 32) {
         // <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
         pages.push(`
           <div style="position: relative;overflow: hidden;">
 
-            
+
 
             <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">
@@ -495,7 +500,10 @@ export default {
             </tfoot>
           </table>
         `)
-      }
+      }*/
+      // <h3 style="text-align: center">资格赛</h3>
+      // <p style="text-align: center">${contest.location}</p>
+
       return `
       <style>
         td{text-align: center}
@@ -603,7 +611,7 @@ export default {
               <thead>
                 <tr>
                   <th>排名</th>
-                  <th style="text-align: left">姓名</th>
+                  <th style="text-align: left; width: 150px">姓名</th>
                   <th>总分</th>
                   <th>总环数</th>
                   <th>备注</th>
@@ -651,8 +659,6 @@ export default {
         <div>
           <div style="height: 90vh">
             <div style="position: relative;ovflow: hidden;">
-
-              
               <h1 style="text-align: center; font-size: 24px;margin-top: 100px;">${contestName}</h1>
               <h2 style="text-align: center">${label.label.split('-').reverse().join('')}</h2>
               <h3 style="text-align: center">奖牌赛</h3>
@@ -668,10 +674,6 @@ export default {
               ${ydiv}
             </div>
           </div>
-          <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;padding-top: .2cm;width: 100%;display: flex;justify-content: space-between;margin-top: 1mm">
-            ${imgs.join('')}
-          </div>
-          <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg }" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
         </div>
       `
     },
@@ -796,11 +798,10 @@ export default {
               </div>
             </div>
           </div>
-          ${img}
         </div>`
         }
         return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0px;height: 2.7cm">
-                
+
           <div style="width: 100%;" class="footer">
             <div style="width: 100%;border: 0px solid;height: 2cm">
               <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
@@ -823,9 +824,8 @@ export default {
       // console.log(Time(this.sgTimeStart, 'YYYY/MM/DD'))
       const p = this.sgTimeStart ? `<p style="text-align: center;margin: -.3cm 0 0.3cm">${Time(this.sgTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(this.sgTimeStart, 'HH:mm')}</p>` : "<p></p>"
       pages.push(`
-            <div style="position: relative;overflow: hidden;">
-      
-
+           <div style=';height: 100vh'>
+            <div style="position: relative;overflow: hidden">
           <div ">
             <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">${this.dataTitle}成绩</h2>
@@ -840,8 +840,8 @@ export default {
             <tr style="padding-bottom: 1cm">
               <th rowspan="2" colspan="2">排名</th>
 <!--              <th rowspan="2" colspan="2">靶位</th>-->
-              <th rowspan="2" colspan="2">姓名</th>
-              <th rowspan="2" colspan="2">代表队</th>
+              <th rowspan="2" colspan="2" style='width: 60px'>姓名</th>
+              <th rowspan="2" colspan="2" style='width: 290px'>代表队</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
               <th rowspan="2">备注</th>
@@ -859,12 +859,13 @@ export default {
             </tr>
           </tfoot>
         </table>
+</div>
         `)
       console.log(456789)
       if (tr.length > 3) {
         pages.push(`
-            <div style="position: relative;overflow: hidden;">
-
+<div style='height: 90vh'>
+ <div style="position: relative;overflow: hidden">
           <div ">
             <h1 style="text-align: center;font-size: 24px;margin-top: 100px;">${contestName}</h1>
             <h2 style="text-align: center">${this.dataTitle}成绩</h2>
@@ -879,8 +880,8 @@ export default {
             <tr style="padding-bottom: 1cm">
               <th rowspan="2" colspan="2">排名</th>
 <!--              <th rowspan="2" colspan="2">靶位</th>-->
-              <th rowspan="2" colspan="2">姓名</th>
-              <th rowspan="2" colspan="2">代表队</th>
+              <th rowspan="2" colspan="2" style='width: 60px'>姓名</th>
+              <th rowspan="2" colspan="2" style='width: 290px'>代表队</th>
               <th colspan="${g}">组</th>
               <th rowspan="2" colspan="2">总计</th>
               <th rowspan="2">备注</th>
@@ -898,6 +899,8 @@ export default {
             </tr>
           </tfoot>
         </table>
+</div>
+
         `)
       }
       return `
@@ -925,13 +928,6 @@ export default {
     handlePrint() {
       console.log(123)
       const print = (fn) => {
-        // const pwin = window.open(); //打开一个新窗口
-        // pwin.document.write(fn)
-        // pwin.print(); //调用打印机
-        // pwin.close() //这个点取消和打印就会关闭新打开的窗口
-        // pwin.addEventListener('afterprint', () => {
-        //   pwin.close()
-        // });
         const title = this.dataTitle
         const iframe = document.createElement('iframe')
         document.body.appendChild(iframe)
@@ -957,33 +953,32 @@ export default {
               newfooter.innerHTML = footer.innerHTML
               if (title.includes('决赛')) {
                 // 判断低图是否有
-                if (window._CONFIG.printSponsorBottomImgs.length) {
-                  newfooter.style.marginTop =
-                    totalHeight * pageCount - (body + foot.scrollHeight + foot.scrollHeight + foot
-                      .scrollHeight) + 'px'
-                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
-                } else {
-                  newfooter.style.marginTop =
-                    totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 20) +
-                    'px'
-                  // newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
-                }
+                // if (window._CONFIG.printSponsorBottomImgs.length) {
+                //   newfooter.style.marginTop =
+                //     totalHeight * pageCount - (body + foot.scrollHeight + foot.scrollHeight + foot
+                //       .scrollHeight) + 'px'
+                //   newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                // } else {
+                //   newfooter.style.marginTop =
+                //     totalHeight * pageCount -
+                //     (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 20) +
+                //     'px'
+                //   // newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                // }
               }
               // 资格赛
               else {
+                console.log(totalHeight, pageCount, foot.scrollHeight)
+                console.log((foot.scrollHeight * pageCount) * 3)
                 if (window._CONFIG.printSponsorBottomImgs.length) {
                   newfooter.style.marginTop =
                     totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight / 2) +
+                    (body + foot.scrollHeight +  foot.scrollHeight / 2) +
                     'px'
                   newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
                 } else {
-                  newfooter.style.marginTop =
-                    totalHeight * pageCount -
-                    (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 100) +
-                    'px'
-                  // newfooter.style.marginBottom = foot.scrollHeight + 'px'
+                  // newfooter.style.marginTop = '450px'
+                  newfooter.style.marginTop = (foot.scrollHeight * pageCount) + 'px'
                 }
               }
               // console.log(newfooter)
@@ -991,9 +986,9 @@ export default {
               iframe.contentDocument.body.append(newfooter)
             }
           }
-          if (!title.includes('团体')) {
+          // if (!title.includes('团体')) {
             getNumberOfPages()
-          }
+          // }
         })
         iframe.contentWindow.addEventListener('afterprint', () => {
           document.body.removeChild(iframe)

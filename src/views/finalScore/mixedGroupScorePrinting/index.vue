@@ -182,11 +182,13 @@ export default {
         const rows = this.groupArrayData.map((item, index) => {
           // if (i >= index + 1) {
           const printTds = []
+          console.log(g, 'g')
           for (let i = 0; i < g; i++) {
             printTds.push(
               `<td style="${item.i + 1 == 10 ? 'border-top: 1px solid #000;background: #ccc;line-height: 30px;' : 'background: #ccc;line-height: 30px;'}">${item.groupList[i]}</td>`
             )
           }
+          console.log(printTds)
 
           const trs = []
           const tdsboy = []
@@ -237,7 +239,8 @@ export default {
           <h3 style="text-align: center">资格赛</h3>
           <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         </div>
-        <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
+       <div>
+       <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
           <thead>
             <tr>
               <th rowspan="2">排名</th>
@@ -260,16 +263,17 @@ export default {
             </tr>
           </tfoot>
         </table>
+</div>
         <!--<div style="position: fixed;bottom: 0px;width: 100%;height: 100px;left: 0px">
           <div style="height: 90px; width: 96%;border: 1px solid">
             <div>
               备注:
             </div>
           </div>
-        </div>-->
+        </div>
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
             <img src="../../${window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
-        </div>
+        </div>-->
         `]
       for (let i = 0; i < ((this.data.length - 6) / 6).toFixed(0); i++) {
         //
@@ -283,6 +287,7 @@ export default {
           <h3 style="text-align: center">资格赛</h3>
           <p style="text-align: center;margin-bottom: 1cm">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
         </div>
+       <div>
         <table class="tables" align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
           <thead>
             <tr>
@@ -306,16 +311,17 @@ export default {
             </tr>
           </tfoot>
         </table>
+</div>
         <!--<div style="position: fixed;bottom: 0px;width: 100%;height: 100px;left: 0px">
           <div style="height: 90px; width: 96%;border: 1px solid">
             <div>
               备注:
             </div>
           </div>
-        </div>-->
+        </div>
         <div style="position: fixed;left: 0;bottom: 0;height: 2.8cm;margin-bottom: .5cm;padding-top: .2cm ;width: 100%;display: flex;justify-content: space-between">
           <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.printSponsorImg : '../' + window._CONFIG.printSponsorImg}" style="position: absolute;bottom: 0;left: 0;right: 0;width: 20%" alt="">
-        </div>
+        </div>-->
         `
         )
       }
@@ -328,6 +334,9 @@ export default {
         h1,h2,h3,h4,p{
           margin: 0;
           padding: 0;
+        }
+        .tables{
+          width: 100%;
         }
         td{text-align: center}.tables>thead>tr>th{border: 1px solid;}
         td:nth-of-type(2){
