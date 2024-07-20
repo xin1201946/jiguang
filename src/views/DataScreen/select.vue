@@ -13,19 +13,21 @@
           </a-radio-group>
         </a-form-model-item>
         <a-form-model-item label="选择比赛（左）">
-          <a-select style="width: 100%" v-model="name1">
+          <a-select style="width: 50%" v-model="name1">
             <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configName">
               {{ item.configName }}
             </a-select-option>
           </a-select>
-          <span v-if="data != 2" style="color: #FF0000">展示数量为一时默认全屏</span>
+          <a-button type="primary" style="width: 40%;margin-left: 20px;" @click="toDataScreen('左')">数据大屏（比赛左）</a-button>
+          <span style="width: 100%;display: block;color: #FF0000" v-if="data != 2">展示数量为一时默认全屏</span>
         </a-form-model-item>
         <a-form-model-item label="选择比赛（右）" v-if="data == 2">
-          <a-select style="width: 100%" v-model="name2">
+          <a-select style="width: 50%" v-model="name2">
             <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configName">
               {{ item.configName }}
             </a-select-option>
           </a-select>
+          <a-button type="primary" style="width: 40%;margin-left: 20px;" @click="toDataScreen('右')">数据大屏（比赛右）</a-button>
         </a-form-model-item>
       </a-form-model>
       <a-button type="primary" style="text-align:center;" @click="updataScreen">更新</a-button>
@@ -56,6 +58,26 @@ export default {
     document.body.style.overflow = 'hidden'
   },
   methods: {
+    toDataScreen(type) {
+      let obj = []
+      if (type == '左') {
+        obj = this.dataScreenList.filter((item) => item.configName == this.name1)
+      } else {
+        obj = this.dataScreenList.filter((item) => item.configName == this.name2)
+      }
+      console.log(this.name1)
+      console.log(this.name2)
+      console.log(this.dataScreenList)
+      console.log(obj)
+      const router = this.$router
+      const screenWidth = window.screen.width
+      const screenHeight = window.screen.height
+      window.open(
+        router.resolve({ name: 'DataScreen', query: { data: encodeURI(JSON.stringify(obj)) } }).href,
+        '_blank',
+        `width=${screenWidth}, height=${screenHeight}`
+      )
+    },
     getList() {
       getDataScreenList({}).then((res) => {
         this.dataScreenList = res.result
@@ -132,7 +154,7 @@ export default {
 }
 
 .box {
-  width: 500px;
+  width: 800px;
   height: 500px;
   padding: 30px 30px 10px 30px;
   // border: 2px solid #2174B6;

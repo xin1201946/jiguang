@@ -269,9 +269,11 @@ export default {
     }
   },
   created() {
-    getDataScreenCurrentConfigApi().then((res) => {
-      this.currentProject = JSON.parse(JSON.stringify(res.result))
-      this.projectList = res.result
+    let data = this.$route.query.data
+    if (data) {
+      data = JSON.parse(decodeURI(data))
+      this.currentProject = JSON.parse(JSON.stringify(data))
+      this.projectList = data
       this.projectList.map((item) => {
         item['fiftyRounds'] = 0
         item['finalEight'] = []
@@ -289,42 +291,86 @@ export default {
         item['number'] = 0
       })
       this.getList()
-    })
-
-    this.timer = setInterval(() => {
+      this.timer = setInterval(() => {
+        this.currentProject = JSON.parse(JSON.stringify(data))
+        this.projectList = data
+        this.projectList.map((item) => {
+          item['fiftyRounds'] = 0
+          item['finalEight'] = []
+          item['list'] = []
+          item['listsList'] = []
+          item['projectName'] = ''
+          item['stageGroup'] = ''
+          item['stageName'] = ''
+          item['bisaiTime'] = ''
+          item['contestName'] = ''
+          item['addr'] = ''
+          item['th'] = []
+          item['shootGroups'] = 0
+          item['rankingList'] = []
+          item['number'] = 0
+        })
+        this.getList()
+      }, 3000)
+    } else {
+      console.log(this.$route)
       getDataScreenCurrentConfigApi().then((res) => {
-        this.len = false
-        if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
-          this.currentProject = JSON.parse(JSON.stringify(res.result))
-          this.len = true
-          // console.log(this.len !== res.result.length && this.len !== 0)
-          // console.log(this.len)
-          // if (this.len !== res.result.length && this.len !== 0) {
-          //   this.$router.go(0)
-          // }
-          // this.len = res.result.length
-          // console.log(this.len)
-          this.projectList = res.result
-          this.projectList.map((item) => {
-            item['fiftyRounds'] = 0
-            item['finalEight'] = []
-            item['list'] = []
-            item['listsList'] = []
-            item['projectName'] = ''
-            item['stageGroup'] = ''
-            item['stageName'] = ''
-            item['bisaiTime'] = ''
-            item['contestName'] = ''
-            item['addr'] = ''
-            item['th'] = []
-            item['shootGroups'] = 0
-            item['rankingList'] = []
-            item['number'] = 0
-          })
-          this.getList()
-        }
+        this.currentProject = JSON.parse(JSON.stringify(res.result))
+        this.projectList = res.result
+        this.projectList.map((item) => {
+          item['fiftyRounds'] = 0
+          item['finalEight'] = []
+          item['list'] = []
+          item['listsList'] = []
+          item['projectName'] = ''
+          item['stageGroup'] = ''
+          item['stageName'] = ''
+          item['bisaiTime'] = ''
+          item['contestName'] = ''
+          item['addr'] = ''
+          item['th'] = []
+          item['shootGroups'] = 0
+          item['rankingList'] = []
+          item['number'] = 0
+        })
+        this.getList()
       })
-    }, 3000)
+
+      this.timer = setInterval(() => {
+        getDataScreenCurrentConfigApi().then((res) => {
+          this.len = false
+          if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
+            this.currentProject = JSON.parse(JSON.stringify(res.result))
+            this.len = true
+            // console.log(this.len !== res.result.length && this.len !== 0)
+            // console.log(this.len)
+            // if (this.len !== res.result.length && this.len !== 0) {
+            //   this.$router.go(0)
+            // }
+            // this.len = res.result.length
+            // console.log(this.len)
+            this.projectList = res.result
+            this.projectList.map((item) => {
+              item['fiftyRounds'] = 0
+              item['finalEight'] = []
+              item['list'] = []
+              item['listsList'] = []
+              item['projectName'] = ''
+              item['stageGroup'] = ''
+              item['stageName'] = ''
+              item['bisaiTime'] = ''
+              item['contestName'] = ''
+              item['addr'] = ''
+              item['th'] = []
+              item['shootGroups'] = 0
+              item['rankingList'] = []
+              item['number'] = 0
+            })
+            this.getList()
+          }
+        })
+      }, 3000)
+    }
   },
   mounted() {
     document.body.style.overflow = 'hidden'
@@ -849,7 +895,7 @@ export default {
         width: 285px;
         height: 285px;
         top: -255px;
-        left: -150px;
+        left: -240px;
         transform-origin: top left;
         transform: scale(2.54);
       }
@@ -859,7 +905,8 @@ export default {
 .container {
   flex: 1;
   position: relative;
-  height: 141vh;
+  // height: 141vh;
+  height: 100vh;
   overflow: hidden;
   background: #001441;
   box-sizing: border-box;
