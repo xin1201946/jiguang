@@ -110,6 +110,10 @@ export default {
             width: this.number == 1 ? '' : '100px',
           },
           {
+            name: '当前总环数',
+            width: this.number == 1 ? '' : '100px',
+          },
+          {
             name: '总环数',
             width: this.number == 1 ? '' : '100px',
           },
@@ -145,6 +149,7 @@ export default {
                 item.player2Score ? item.player2Score.toFixed(1) : 0,
                 item.player1Score ? item.player1Score.toFixed(1) : 0,
               ],
+              当前总环数: item.currentShootStageTotal,
               // 环数: [(Math.random() * 10).toFixed(1), (Math.random() * 10).toFixed(1)],
               总环数: item.stageTotal.toFixed(1),
               总分: item.total.toFixed(0),
