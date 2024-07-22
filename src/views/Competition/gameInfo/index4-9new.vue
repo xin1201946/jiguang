@@ -147,23 +147,23 @@
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text,record">
                 <a-input placeholder="请输入" v-if="record.editableTotal" :value="text"
-                  @change="e => handleChangeTotal(e.target.value, record.serialNumber, record.totalScore)"
+                  @change="e => handleChangeTotal(e.target.value, record.playerId, record.totalScore)"
                   @blur="handleBlurTotal(record, text)" />
                 <template v-else>
                   <!-- 单击 -->
-                  <a @click="editAchievementTotal(record.serialNumber)">{{ record.totalScore }}</a>
+                  <a @click="editAchievementTotal(record.playerId)">{{ record.totalScore }}</a>
                 </template>
               </template>
               <!-- 10 20 30组别编辑 -->
               <template v-for=" col  in  strArr " v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col)">
                   <a-input placeholder="请输入" v-if="record.editable" :value="text"
-                    @change="e => handleChange(e.target.value, record.serialNumber, col)"
+                    @change="e => handleChange(e.target.value, record.playerId, col)"
                     @blur="handleBlur(record, col, text)" />
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
-                    <a @click="editAchievement(record.serialNumber)">{{ text }}</a>
+                    <a @click="editAchievement(record.playerId)">{{ text }}</a>
                     <!-- 双击 -->
                     <!-- <a @dblclick="editAchievement(record.serialNumber)">{{ text }}---*</a> -->
                   </template>
@@ -505,18 +505,18 @@ export default {
       this.$refs.Achievement.edit({ ...record, col, stageId: this.cproStageId, projectName: this.projectName, numberOfRings: event.target.innerText })
     },
     // 可编辑
-    handleChange(value, serialNumber, column) {
+    handleChange(value, playerId, column) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find(item => playerId === item.playerId)
       if (target) {
         target[column] = value
         this.dataSource = newData
       }
     },
-    editAchievement(serialNumber) {
+    editAchievement(playerId) {
       const newData = this.dataSource
-      const target = newData.find(item => serialNumber === item.serialNumber)
-      this.editingKey = serialNumber
+      const target = newData.find(item => playerId === item.playerId)
+      this.editingKey = playerId
       if (target) {
         target.editable = true
         this.dataSource = newData
@@ -534,7 +534,7 @@ export default {
       processEditGroupScore(dataBlur).then((res) => {
         if (res.success) {
           const newData = [...this.dataSource]
-          const target = newData.find(item => record.serialNumber === item.serialNumber)
+          const target = newData.find(item => record.playerId === item.playerId)
           if (target) {
             delete target.editable
             this.dataSource = newData
@@ -547,22 +547,22 @@ export default {
         }
       })
     },
-    cancelAchievement(serialNumber) {
+    cancelAchievement(playerId) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find(item => playerId === item.playerId)
       this.editingKey = ''
       if (target) {
-        Object.assign(target, this.dataSource.find(item => serialNumber === item.serialNumber))
+        Object.assign(target, this.dataSource.find(item => playerId === item.playerId))
         delete target.editable
         this.dataSource = newData
         this.$forceUpdate()
       }
     },
     // 总成绩
-    editAchievementTotal(serialNumber) {
+    editAchievementTotal(playerId) {
       const newData = this.dataSource
-      const target = newData.find(item => serialNumber === item.serialNumber)
-      // this.editingKey = serialNumber
+      const target = newData.find(item => playerId === item.playerId)
+      // this.editingKey = playerId
       if (target) {
         target.editableTotal = true
         this.dataSource = newData
@@ -570,9 +570,9 @@ export default {
       }
     },
     // 编辑赋值
-    handleChangeTotal(value, serialNumber) {
+    handleChangeTotal(value, playerId) {
       const newData = [...this.dataSource]
-      const target = newData.find(item => serialNumber === item.serialNumber)
+      const target = newData.find(item => playerId === item.playerId)
       if (target) {
         target.totalScore = value
         this.dataSource = newData
@@ -600,7 +600,7 @@ export default {
       processEditGroupScore(dataBlur).then((res) => {
         if (res.success) {
           const newData = [...this.dataSource]
-          const target = newData.find(item => record.serialNumber === item.serialNumber)
+          const target = newData.find(item => record.playerId === item.playerId)
           if (target) {
             delete target.editableTotal
             this.dataSource = newData

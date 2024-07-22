@@ -418,22 +418,22 @@ export default {
       const pages = []
       // <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
       pages.push(`
-<!--<div">
-                    <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
+<div">
+                    <h1 style="font-size: 24px;text-align: center;">${contestName}</h1>
                     <h2 style="text-align: center">
                       ${label.projectGroup}${label.projectName}
                     </h2>
                     <h3 style="text-align: center">资格赛</h3>
                     <p style="text-align: center">${contest.location}</p>
-                    <p style="text-align: center;margin-bottom: 1cm">${Time(
+                    <p style="text-align: center;">${Time(
         project.projectTimeStart,
         'YYYY/MM/DD'
       )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
                   </div>
-                   -->
+
           <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
             <thead>
-               <tr >
+              <!-- <tr >
                 <th colspan='${11+g}' rowspan='1' style='border: 0;'>
                     <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
                     <h2 style="text-align: center">${label.projectGroup}${label.projectName}</h2>
@@ -441,7 +441,7 @@ export default {
                     <p style="text-align: center">${contest.location}</p>
                     <p style="text-align: center;">${Time(project.projectTimeStart,'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
                 </th>
-              </tr>
+              </tr> -->
               <tr>
                 <th rowspan="2" colspan="2">排名</th>
                 <th rowspan="2" colspan="2">靶位</th>
@@ -461,7 +461,7 @@ export default {
             </tfoot>
           </table>
         `)
-      /*if (tr.length > 32) {
+      if (tr.length > 32) {
         // <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
         pages.push(`
           <div style="position: relative;overflow: hidden;">
@@ -500,7 +500,7 @@ export default {
             </tfoot>
           </table>
         `)
-      }*/
+      }
       // <h3 style="text-align: center">资格赛</h3>
       // <p style="text-align: center">${contest.location}</p>
 
