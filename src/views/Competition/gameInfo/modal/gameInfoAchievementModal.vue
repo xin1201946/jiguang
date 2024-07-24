@@ -16,7 +16,7 @@
         <a-button type="primary" @click="handleEdit({}, 'add')">添加成绩</a-button>
       </div>
       <div>
-        <a-table rowKey="playerScoreId" size="middle" :columns="columns" :dataSource="dataSource" :pagination="false"
+        <a-table rowKey="playerScoreId" size="middle" :rowClassName="(r, i) => rowClassName(r, i)" :columns="columns" :dataSource="dataSource" :pagination="false"
           bordered>
           <template slot="scoreSlots" slot-scope="text,record">
             <a-input style="width: 60px;" placeholder="请输入" v-if="record.editable" :value="text"
@@ -94,9 +94,15 @@ export default {
 
       spanArr: [],
       pos: 0,
+      customRow: {}
     }
   },
   methods: {
+    rowClassName(r, i) {
+      if (r.state == -1) {
+        return 'red'
+      }
+    },
     // 可编辑
     handleChange(value, playerScoreId) {
       const newData = [...this.dataSource]
@@ -245,6 +251,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/.red {
+  background: rgba(209, 35, 4, 0.3);
+}
 .modal {
   height: 100%;
   overflow-y: auto;

@@ -109,8 +109,9 @@
               <div style="width: 60px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
               <div style="width: 300px;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in data.shootGroups" :key="k.id" style="flex: 1;">
+              <div v-for="k in data.shootGroups" :key="k.id" style="flex: 1;position: relative;">
                 {{ item[k] }}
+                <span class="currentShoot" v-if="item.shootNum == k"></span>
               </div>
               <div style="flex: 1;" v-for="(n, i) in data.number" :key="n">
                 {{ item.sameScoreList && item.sameScoreList[i] ? item.sameScoreList[i].scores : '' }}
@@ -757,6 +758,16 @@ export default {
 <style scoped lang='less'>
 @height: 46px;
 
+.currentShoot {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  display: flex;
+  width: 28px;
+  height: 2px;
+  background-color: #ff0000;
+  margin-left: -14px;
+}
 .xiahuaxian {
   text-decoration: underline;
 }

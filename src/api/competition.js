@@ -192,12 +192,17 @@ export const bizUnifiedSaveUnified = data => postAction("bizUnified/saveUnified"
 // 查询运动员每组详细成绩
 export const processGetPlayerScore = data => postAction("contest-process/getPlayerScore", data)
 // 修改组别成绩
-export const processEditGroupScore= data => postAction("contest-process/editGroupScore", data)
+export const processEditGroupScore = data => postAction("contest-process/editGroupScore", data)
 // 切换靶图--查询运动员及运动员详细成绩信息
-export const processGetPlayerTargetScores= data => postAction("contest-process/getPlayerTargetScores", data)
+export const processGetPlayerTargetScores = data => postAction("contest-process/getPlayerTargetScores", data)
 // 切换靶图---获取阶段运动员组别及弹药组别
-export const processGetStageGroups= data => getAction("contest-process/getStageGroups", data)
+export const processGetStageGroups = data => getAction("contest-process/getStageGroups", data)
 
 
 // 首页
-export const homeGetHomeList= data => postAction("home/getHomeList", data)
+export const homeGetHomeList = data => postAction("home/getHomeList", data)
+
+
+// 设置发序无效
+export const grabShot = data => postAction("contest-process/grabShot", data)
+

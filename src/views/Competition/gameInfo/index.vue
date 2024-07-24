@@ -42,11 +42,7 @@
       <AppstoreTreeCard ref="treeCard" @success="successOkTree">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node
-              v-for="item in treeList"
-              :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup"
-            >
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup" :title="item.projectName + ' - ' + item.projectGroup">
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -67,18 +63,8 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button
-              v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'"
-              type="primary"
-              @click="nextStageHandle"
-              >下一阶段</a-button
-            >
-            <a-button
-              v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')"
-              type="primary"
-              @click="nextStageHandle"
-              >结束阶段</a-button
-            >
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary" @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary" @click="nextStageHandle">结束阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
@@ -93,12 +79,7 @@
         <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
             <a-tabs v-model="group" @change="radioChangeHandle">
-              <a-tab-pane
-                v-for="item in groupList"
-                :value="item.group"
-                :key="item.group"
-                :tab="`${numToCapital(item.group)}组`"
-              ></a-tab-pane>
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group" :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -116,40 +97,16 @@
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table
-              :rowSelection="rowSelection"
-              :rowClassName="(r, i) => rowClassName(r, i)"
-              bordered
-              rowKey="playerId"
-              :pagination="false"
-              :columns="columns"
-              :dataSource="dataSource"
-              :loading="loading"
-              :scroll="{ x: 1500 }"
-            >
+            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading" :scroll="{ x: 1500 }">
               <template slot="power0Slot" slot-scope="text, record">
                 <div style="display: flex; justify-content: space-around; align-items: center">
                   <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
-                  <span
-                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"
-                  ></span>
+                  <span :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
                   <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
                   <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
-                  <img
-                    width="25"
-                    height="25"
-                    v-if="record.model == '0'"
-                    src="../../../assets/icon-copy.png"
-                    alt="试射"
-                  />
+                  <img width="25" height="25" v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射" />
                   <!-- <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/bottom-left.png" alt="试射"> -->
-                  <img
-                    width="15"
-                    height="15"
-                    v-if="record.model == '1'"
-                    src="../../../assets/zhengfangxing.png"
-                    alt="射击"
-                  />
+                  <img width="15" height="15" v-if="record.model == '1'" src="../../../assets/zhengfangxing.png" alt="射击" />
                   <!-- <img width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
                   <img width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击"> -->
                   <Electricitylevel :power="text" width="32" height="32"></Electricitylevel>
@@ -158,13 +115,7 @@
               </template>
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text, record">
-                <a-input
-                  placeholder="请输入"
-                  v-if="record.editableTotal"
-                  :value="text"
-                  @change="(e) => handleChangeTotal(e.target.value, record.playerId, record.totalScore)"
-                  @blur="handleBlurTotal(record, text)"
-                />
+                <a-input placeholder="请输入" v-if="record.editableTotal" :value="text" @change="(e) => handleChangeTotal(e.target.value, record.playerId, record.totalScore)" @blur="handleBlurTotal(record, text)" />
                 <template v-else>
                   <!-- 单击 -->
                   <a @click="editAchievementTotal(record.playerId)">{{ record.totalScore }}</a>
@@ -173,13 +124,7 @@
               <!-- 10 20 30组别编辑 -->
               <template v-for="col in strArr" v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col,index)">
-                  <a-input
-                    placeholder="请输入"
-                    v-if="record.editable"
-                    :value="text"
-                    @change="(e) => handleChange(e.target.value, record.playerId, col)"
-                    @blur="handleBlur(record, col, text)"
-                  />
+                  <a-input placeholder="请输入" v-if="record.editable" :value="text" @change="(e) => handleChange(e.target.value, record.playerId, col)" @blur="handleBlur(record, col, text)" />
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
@@ -196,33 +141,15 @@
                   <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
                     size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button
-                    v-if="projectName.includes('团体')"
-                    type="primary"
-                    size="small"
-                    ghost
-                    icon="profile"
-                    @click="handleInfo(record)"
-                    >成绩详情</a-button
-                  >
-                  <a-button
-                    v-if="record.eliminationStatus != 1"
-                    type="danger"
-                    size="small"
-                    ghost
-                    icon="stop"
-                    @click="handleStop(record)"
-                    >停止比赛</a-button
-                  >
+                  <a-button v-if="projectName.includes('团体')" type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button v-if="record.eliminationStatus != 1" type="danger" size="small" ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
                   <a-dropdown>
                     <a style="display: block; width: 80px" @click="(e) => e.preventDefault()">
                       更多 <a-icon type="down" />
                     </a>
                     <a-menu slot="overlay">
                       <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
-                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)"
-                          >更换靶位</a-button
-                        >
+                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                       </a-menu-item>
                       <a-menu-item>
                         <a-button type="link" size="small" icon="flag" @click="handlePenalty(record)">判罚</a-button>
@@ -231,15 +158,12 @@
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
                       <a-menu-item>
-                        <a-button
-                          type="link"
-                          size="small"
-                          icon="swap"
-                          v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'"
-                          @click="handleGrouping(record)"
-                          >变更组别</a-button
-                        >
+                        <a-button type="link" size="small" icon="swap" v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'" @click="handleGrouping(record)">变更组别</a-button>
                       </a-menu-item>
+                      <a-menu-item>
+                        <a-button type="link" size="small" icon="swap" v-if="stageName !== '金/铜牌赛'" @click="handleSetShoot(record)">设置发序无效</a-button>
+                      </a-menu-item>
+
                     </a-menu>
                   </a-dropdown>
                 </a-space>
@@ -250,15 +174,7 @@
         <a-space style="margin-bottom: 20px" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table
-          bordered
-          v-if="!groupActive"
-          rowKey="playerId"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="false"
-          :loading="loading"
-        >
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource" :pagination="false" :loading="loading">
         </a-table>
         <!-- 抽签 -->
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
@@ -293,6 +209,8 @@
         <GameinfoChengTongJudge ref="gameinfoChengTongJudgeRef" @success="successOk"></GameinfoChengTongJudge>
         <!-- 靶图靶点 -->
         <TargetMapTargetPoint ref="TargetMapTargetPointRef" @success="successOk"></TargetMapTargetPoint>
+        <!-- 靶图靶点 -->
+        <GameSetShootModel ref="GameSetShootModel" @confirm="setShootSuccessHandle"></GameSetShootModel>
       </AppstoreTreeCard>
     </div>
   </div>
@@ -322,6 +240,7 @@ import GameInfoStartModal from '@views/Competition/gameInfo/modal/gameInfoStartM
 import GameinfoChengTongJudge from '@views/Competition/gameInfo/modal/gameinfoChengTongJudge.vue'
 import TargetMapTargetPoint from '@/views/targetImage/targetMapTargetPoint'
 import Electricitylevel from '@views/Competition/gameInfo/electricitylevel.vue'
+import GameSetShootModel from '@views/Competition/gameInfo/modal/gameSetShootModel.vue'
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -348,6 +267,7 @@ import {
   changeGroupContest,
   selectStageStatusList, //变更分组
   processEditGroupScore,
+  grabShot, // 设置发序无效
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 function extractValue(str) {
@@ -394,6 +314,7 @@ export default {
     TargetMapTargetPoint,
     Electricitylevel,
     gameInfoBlendModal,
+    GameSetShootModel,
   },
   inject: ['closeCurrent'],
   data() {
@@ -506,7 +427,28 @@ export default {
     }
   },
   methods: {
-    handleActionsColumnContextMenu(record, event, col,i) {
+    //设置发序无效
+    handleSetShoot(row) {
+      this.$refs.GameSetShootModel.init(row)
+    },
+    setShootSuccessHandle(row) {
+      const data = {
+        finalScoreId: row.finalScoreId,
+        groupCount: row.groupCount,
+        mode: this.stageName === '资格赛' ? 1 : 2,
+        shootCode: row.shootCode,
+      }
+      grabShot(data).then((res) => {
+        if (res.success) {
+          this.$message.success('设置成功！')
+          this.getTableList()
+          this.$refs.GameSetShootModel.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handleActionsColumnContextMenu(record, event, col, i) {
       // console.log(col, record.col,i)
       event.preventDefault() // 阻止默认的右键菜单
       // 在这里添加你的自定义右键菜单逻辑
