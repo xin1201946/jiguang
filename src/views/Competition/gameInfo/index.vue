@@ -157,11 +157,11 @@
                       <a-menu-item>
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
-                      <a-menu-item>
-                        <a-button type="link" size="small" icon="swap" v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'" @click="handleGrouping(record)">变更组别</a-button>
+                      <a-menu-item v-if="stageName !== '金/铜牌赛' && stageName !== '决赛'">
+                        <a-button type="link" size="small" icon="swap"  @click="handleGrouping(record)">变更组别</a-button>
                       </a-menu-item>
-                      <a-menu-item>
-                        <a-button type="link" size="small" icon="swap" v-if="stageName !== '金/铜牌赛'" @click="handleSetShoot(record)">设置发序无效</a-button>
+                      <a-menu-item v-if="stageName !== '金/铜牌赛'">
+                        <a-button type="link" size="small" icon="swap"  @click="handleSetShoot(record)">设置发序无效</a-button>
                       </a-menu-item>
 
                     </a-menu>
