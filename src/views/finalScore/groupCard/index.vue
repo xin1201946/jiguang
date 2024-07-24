@@ -286,7 +286,8 @@ export default {
                   return {
                     ...obj,
                     ...value,
-                    total: totals,
+                    total: value.goodTotal ? totals + '-' + value.goodTotal + 'x' : totals,
+                    // total: totals,
                   }
                 })
                 .map((v, index) => ({
@@ -382,6 +383,7 @@ export default {
                   total += Number(key)
                 }
               }
+              total = value.goodTotal ? total + '-' + value.goodTotal + 'x' : total
               if (value.integrationMethod === '1' || value.integrationMethod === '2') {
                 trs.push(`
               <tr >
