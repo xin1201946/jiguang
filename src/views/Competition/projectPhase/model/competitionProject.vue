@@ -21,7 +21,7 @@
         :customRow="customRow"
         :columns="columns"
         :row-selection="rowSelection"
-        :scroll="{ y: !disabled ? 130 : 180, x: 1380}"
+        :scroll="{ y: !disabled ? 255 : 320, x: true}"
       >
         <template slot="operation" slot-scope="text, record, index">
           <a-space>
@@ -103,7 +103,6 @@ const columns = [
     title: "比赛时间",
     dataIndex: "projectTime",
     align: 'center',
-    width: 400,
     customRender: (text, record) => {
       return `${record.projectTimeStart} - ${record.projectTimeEnd}`
     },

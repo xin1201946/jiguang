@@ -222,10 +222,9 @@ export default {
 
 .tables {
   height: 670px;
-  overflow-y: hidden;
 
   .project {
-    height: 40%;
+    height: 60%;
     overflow-y: hidden;
   }
 
