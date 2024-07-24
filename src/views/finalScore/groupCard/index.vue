@@ -227,6 +227,13 @@ export default {
       this.getColumns(this.group)
       bizPlayerFinalScoreTeamSports(data).then((res) => {
         if (res.code === 200) {
+          function FloatAdd(arg1,arg2){
+            var r1,r2,m;
+            try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+            try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+            m=Math.pow(10,Math.max(r1,r2));
+            return (arg1*m+arg2*m)/m;
+          }
           console.log(res.result)
           // this.dataTitle = res.result.title
           const list = res.result.map((item) => {
@@ -234,7 +241,7 @@ export default {
             const obj = {}
             for (let i = 0; i < item.teamScoreList.length; i++) {
               if (!isNaN(Number(item.teamScoreList[i]))) {
-                total += Number(item.teamScoreList[i])
+                total = FloatAdd(total, Number(item.teamScoreList[i]))
                 obj[`teamScoreList${i + 1}`] = item.teamScoreList[i]
               }
             }
@@ -268,6 +275,7 @@ export default {
               }
               return i
             })
+            
 
             return {
               ...item,
@@ -280,14 +288,14 @@ export default {
                   for (let i = 0; i < value.scoreList.length; i++) {
                     obj[`teamScoreList${i + 1}`] = value.scoreList[i]
                     if (!isNaN(Number(value.scoreList[i]))) {
-                      totals += Number(value.scoreList[i])
+                      totals = FloatAdd(totals, Number(value.scoreList[i]))
                     }
                   }
                   return {
                     ...obj,
                     ...value,
-                    total: value.goodTotal ? totals + '-' + value.goodTotal + 'x' : totals,
-                    // total: totals,
+                    total: value.goodTotal != null ? totals + '-' + value.goodTotal + 'x' : totals,
+                    goodTotal: totals,
                   }
                 })
                 .map((v, index) => ({
@@ -301,7 +309,7 @@ export default {
           this.data = list.map((item, i) => {
             return {
               ...item,
-              teamStageTotal: item.goodTotal ? item.teamStageTotal + '-' + item.goodTotal + 'x' : item.teamStageTotal,
+              teamStageTotal: item.goodTotal != null ? item.teamStageTotal + '-' + item.goodTotal + 'x' : item.teamStageTotal,
               i: i + 1,
             }
           })
@@ -383,14 +391,13 @@ export default {
                   total += Number(key)
                 }
               }
-              total = value.goodTotal ? total + '-' + value.goodTotal + 'x' : total
               if (value.integrationMethod === '1' || value.integrationMethod === '2') {
                 trs.push(`
               <tr >
                 <td></td>
                 <td>${value.playerName}</td>
                 ${tds.join('')}
-                <td>${total}</td>
+                <td>${value.goodTotal != null ? total + '-' + value.goodTotal + 'x' : total}</td>
               </tr>
             `)
               } else {
@@ -399,7 +406,7 @@ export default {
                 <td></td>
                 <td>${value.playerName}</td>
                 ${tds.join('')}
-                <td>${total.toFixed(1)}</td>
+                <td>${value.goodTotal != null ? total.toFixed(1) + '-' + value.goodTotal + 'x' : total.toFixed(1)}</td>
               </tr>
             `)
               }
@@ -431,7 +438,6 @@ export default {
             6 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.5cm;margin: 0 6px"/>`
       )
-      console.log()
       const pages = [
         `
       <div style="position: relative;overflow: hidden;">

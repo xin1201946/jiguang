@@ -204,13 +204,13 @@ export default {
               <td></td>
               <td>${item.grilList[0].playerName}</td>
               ${tdsgril.join('')}
-              <td>${item.grilList[0].goodTotal ? item.grilList[0].stageTotal + '-' + item.grilList[0].goodTotal + 'x' : item.grilList[0].stageTotal}</td>
+              <td>${item.grilList[0].goodTotal != null ? item.grilList[0].stageTotal + '-' + item.grilList[0].goodTotal + 'x' : item.grilList[0].stageTotal}</td>
             </tr>
             <tr >
               <td></td>
               <td>${item.boyList[0].playerName}</td>
               ${tdsboy.join('')}
-              <td>${item.boyList[0].goodTotal ? item.boyList[0].stageTotal + '-' + item.boyList[0].goodTotal + 'x' : item.boyList[0].stageTotal}</td>
+              <td>${item.boyList[0].goodTotal != null ? item.boyList[0].stageTotal + '-' + item.boyList[0].goodTotal + 'x' : item.boyList[0].stageTotal}</td>
             </tr>`)
 
           return `
@@ -223,7 +223,7 @@ export default {
           }</td>
               ${printTds.join('')}
               <td style="${item.i + 1 == 10 ? 'border-top: 1px solid #000;background: #ccc' : 'background: #ccc'}" >${
-            item.goodTotal ? item.score + '-' + item.goodTotal + 'x' : item.score
+            item.goodTotal != null ? item.score + '-' + item.goodTotal + 'x' : item.score
           }</td>
               ${trs.join('')}
             </tr>
@@ -506,17 +506,17 @@ export default {
             var objgril = {}
             for (let i = 0; i < item.boyList.length; i++) {
               objboy.playerName = item.boyList[1].playerName
-              objboy.stageTotal = item.boyList[1].goodTotal ? item.boyList[1].stageTotal + '-' + item.boyList[1].goodTotal + 'x' : item.boyList[1].stageTotal
+              objboy.stageTotal = item.boyList[1].goodTotal != null ? item.boyList[1].stageTotal + '-' + item.boyList[1].goodTotal + 'x' : item.boyList[1].stageTotal
               objboy[`teamScoreList${i + 1}`] = item.boyList[i].gunGroupTotalStr
             }
             for (let i = 0; i < item.grilList.length; i++) {
               objgril.playerName = item.grilList[1].playerName
-              objgril.stageTotal = item.grilList[1].goodTotal ? item.grilList[1].stageTotal + '-' + item.grilList[1].goodTotal + 'x' : item.grilList[1].stageTotal
+              objgril.stageTotal = item.grilList[1].goodTotal != null ? item.grilList[1].stageTotal + '-' + item.grilList[1].goodTotal + 'x' : item.grilList[1].stageTotal
               objgril[`teamScoreList${i + 1}`] = item.grilList[i].gunGroupTotalStr
             }
             return {
               ...item,
-              score: item.goodTotal ? item.score + '-' + item.goodTotal + 'x' : item.score,
+              score: item.goodTotal != null ? item.score + '-' + item.goodTotal + 'x' : item.score,
               ...obj,
               total,
               // 队员名字分数
