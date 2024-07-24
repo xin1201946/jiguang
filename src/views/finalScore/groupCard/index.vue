@@ -300,7 +300,7 @@ export default {
           this.data = list.map((item, i) => {
             return {
               ...item,
-              teamStageTotal: item.goodTotal ? item.teamStageTotal + '_x' + item.goodTotal : item.teamStageTotal,
+              teamStageTotal: item.goodTotal ? item.teamStageTotal + '-' + item.goodTotal + 'x' : item.teamStageTotal,
               i: i + 1,
             }
           })
