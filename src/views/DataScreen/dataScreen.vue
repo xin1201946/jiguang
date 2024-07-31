@@ -9,7 +9,7 @@
               <img class="logo" :src="data.configName.indexOf('手枪') != -1 ? shou :
                 data.configName.indexOf('步枪') != -1 ? bu : shou" alt="" />
               <div>
-                <div style="margin-bottom: 10px;">{{ data.contestName }}</div>
+                <div style="margin-bottom: 5px;font-size: 28px;">{{ data.contestName }}</div>
                 <div v-if="data.configName != '团队综合排名'">
                   <span v-if="data.stageName">{{ data.stageName }}</span>
                   <span v-if="data.projectName">-{{ data.projectName }}</span>
@@ -35,7 +35,8 @@
       <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
         <!--    表头-->
         <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          <div v-for='(item, i) in data.th' :key='i'
+            :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
             {{ item.name }}
           </div>
         </div>
@@ -51,11 +52,12 @@
                 <div style="width: 60px; font-size: 26px">{{ item.targetSite }}</div>
                 <div style="width: 100px; font-size: 24px">{{ item.playerName }}</div>
                 <div style="flex: 1;text-align: left; font-size: 26px">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative; font-size: 20px">
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
+                  v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative; font-size: 20px">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
-                <div style="width: 80px; font-size: 26px">{{ item.total }}</div>
+                <div style="width: 110px; font-size: 26px">{{ item.total }}</div>
                 <div style="width: 60px; font-size: 26px">{{ item.remark }}</div>
                 <div style="width: 30px; font-size: 26px">{{ item.bePromoted }}</div>
               </div>
@@ -70,11 +72,12 @@
               <div style="width: 60px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
               <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+              <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
+                v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                 {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                 <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
               </div>
-              <div style="width: 80px;">{{ item.total }}</div>
+              <div style="width: 110px;">{{ item.total }}</div>
               <!--              <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
               <div style="width: 60px;">{{ item.remark }}</div>
               <div style="width: 30px">{{ item.bePromoted }}</div>
@@ -88,11 +91,12 @@
                 <div style="width: 60px">{{ item.targetSite }}</div>
                 <div style="width: 100px">{{ item.playerName }}</div>
                 <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 50px;position: relative;">
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
+                  v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
-                <div style="width: 80px;">{{ item.total }}</div>
+                <div style="width: 110px;">{{ item.total }}</div>
                 <!--                <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
                 <div style="width: 60px;">{{ item.remark }}</div>
                 <div style="width: 30px">{{ item.bePromoted }}</div>
@@ -101,10 +105,12 @@
           </vueSeamless>
         </div>
 
-        <div style="width: 100%;height: 100%;display: flex;flex-direction: column" v-if="data.configName.indexOf('个人决赛') != -1">
+        <div style="width: 100%;height: 100%;display: flex;flex-direction: column"
+          v-if="data.configName.indexOf('个人决赛') != -1">
           <!--    前8位-->
           <div :class="data.finalEight.length == 0 ? '' : 'finalEight'">
-            <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
+            <div v-for="(item, i) in data.finalEight" :key="i"
+              :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
               <div style="width: 60px">{{ item.rank }}</div>
               <div style="width: 60px">{{ item.targetSite }}</div>
               <div style="width: 100px">{{ item.playerName }}</div>
@@ -170,14 +176,16 @@
         </div>
       </div>
       <!-- 混团赛 -->
-      <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+      <div class="box_box"
+        v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
         <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
       </div>
       <!-- 团队赛 -->
       <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
         <!--    表头-->
         <div class='th'>
-          <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+          <div v-for='(item, i) in data.th' :key='i'
+            :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
             {{ item.name }}
           </div>
         </div>
@@ -417,6 +425,7 @@ export default {
     },
     // 个人资格赛
     geren(data, index) {
+      console.log(data, '226322');
       littleScreen({
         type: data.configName,
       }).then((res) => {
@@ -454,11 +463,11 @@ export default {
           for (let i = 0; i < result.shootGroups; i++) {
             data.th.push({
               name: `${i + 1}0`,
-              width: '50px',
+              width: '75px',
             })
           }
         }
-        data.th.push({ name: '总环数', width: '80px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
+        data.th.push({ name: '总环数', width: '110px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
         data.fiftyRounds = '0'
         // 判断到没有到50发
         if (result.players) {
@@ -649,7 +658,7 @@ export default {
             })
           }
         }
-        data.th.push({ name: '个人成绩', width: '80px' }, { name: '总环数', width: '80px' })
+        data.th.push({ name: '个人成绩', width: '80px' }, { name: '总环数', width: '100px' })
         if (result && result.scoreList.length != 0) {
           result.scoreList.forEach((item, index) => {
             item.playerList.forEach((e, v) => {
@@ -768,6 +777,7 @@ export default {
   background-color: #ff0000;
   margin-left: -14px;
 }
+
 .xiahuaxian {
   text-decoration: underline;
 }
@@ -888,19 +898,24 @@ export default {
   flex-wrap: wrap;
   align-content: flex-start;
   flex: 1;
+
   .div1 {
     width: 25%;
     height: 40%;
     position: relative;
+
     .name1 {
       position: absolute;
     }
+
     .flex1 {
       position: absolute;
+
       .box1 {
         //width: 1000px;
         //height: 1000px;
       }
+
       .buqiang1 {
         position: absolute;
         width: 285px;
@@ -913,6 +928,7 @@ export default {
     }
   }
 }
+
 .container {
   flex: 1;
   position: relative;
@@ -945,7 +961,7 @@ export default {
 
     .left {
       display: flex;
-      font-size: 15px;
+      font-size: 26px;
 
       .logo {
         height: 70px;
@@ -954,11 +970,10 @@ export default {
     }
 
     .right {
-      font-size: 15px;
+      font-size: 22px;
       text-align: right;
 
-      .nameTitle {
-      }
+      .nameTitle {}
 
       .times {
         letter-spacing: 6px;
@@ -977,14 +992,14 @@ export default {
 .th {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   height: 45px;
   line-height: 40px;
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  & > div {
+  &>div {
     flex: 1;
     text-align: center;
   }
@@ -1007,8 +1022,8 @@ export default {
 
   div {
     text-align: center;
-    font-size: 20px;
-    // font-weight: 600;
+    font-size: 24px;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1041,5 +1056,4 @@ export default {
   position: absolute;
   bottom: 10%;
   left: 22%;
-}
-</style>
+}</style>

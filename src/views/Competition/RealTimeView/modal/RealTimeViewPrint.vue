@@ -150,7 +150,7 @@ export default {
         const l = arr.map((item, index) => {
           if ((index + 1) % 10 === 0 && index !== 0) {
             return (`
-              <tr style="height: 45px; line-height: 45px">
+              <tr style="height: 25px; line-height: 25px">
                 <td align="center">${item.shootCode}</td>
                 <td align="center">${item.score}</td>
                 <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
@@ -164,7 +164,7 @@ export default {
             `)
           }
           return (
-            `<tr style="height: 45px; line-height: 45px">
+            `<tr style="height: 25px; line-height: 25px">
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
             <td align="center">${item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)}</td>
@@ -181,13 +181,13 @@ export default {
         `)
         const tds = []
         tds.push([])
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 32; i++) {
           tds[0].push(l[i])
         }
-        if (l.length > 14) {
-          l.splice(0, 14)
-          for (let i = 0; i < l.length; i += 20) {
-            tds.push(l.slice(i, i + 20))
+        if (l.length > 32) {
+          l.splice(0, 32)
+          for (let i = 0; i < l.length; i += 35) {
+            tds.push(l.slice(i, i + 35))
           }
         }
         const tables = []
@@ -197,12 +197,12 @@ export default {
               <div style="box-sizing: border-box;padding: 10px">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">靶位:${this.formData.targetSiteStr}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.projectGroup}${this.formData.projectName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.dtlDto.title || this.list[0].title}</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">靶位:${this.formData.targetSiteStr}</th></tr>
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">时间:${this.formData.sgTimeStart}</th></tr>
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.projectGroup}${this.formData.projectName}</th></tr>
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.playerName}</th></tr>
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.dtlDto.title || this.list[0].title}</th></tr>
+                    <tr style="height: 30px; line-height: 30px">
                       <th>发序</th>
                       <th>环数</th>
                       <th>时间</th>
@@ -219,7 +219,7 @@ export default {
               <div style="box-sizing: border-box;padding: 10px">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr style="height: 50px; line-height: 50px">
+                    <tr style="height: 30px; line-height: 30px">
                       <th>发序</th>
                       <th>环数</th>
                       <th>时间</th>
@@ -246,12 +246,12 @@ export default {
         @media print {
           @page {
             margin: 0;
-            margin-top: 2cm;
+            margin-top: 1cm;
           }
         }
         thead>tr{
-          height: 50px;
-          line-height: 50px;
+          height: 25px;
+          line-height: 25px;
         }
         .print>div{
           display: grid;

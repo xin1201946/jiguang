@@ -72,6 +72,7 @@ export default {
       const router = this.$router
       const screenWidth = window.screen.width
       const screenHeight = window.screen.height
+      console.log(obj, '63622555---');
       window.open(
         router.resolve({ name: 'DataScreen', query: { data: encodeURI(JSON.stringify(obj)) } }).href,
         '_blank',

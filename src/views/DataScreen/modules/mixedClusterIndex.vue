@@ -96,6 +96,7 @@ export default {
           },
           {
             name: '代表队',
+            width: '380px',
           },
           {
             name: '姓名',
@@ -103,7 +104,8 @@ export default {
           },
           {
             name: '发序',
-            width: this.number == 1 ? '' : '60px',
+            // width: this.number == 1 ? '' : '60px',
+            width: '60px',
           },
           {
             name: '环数',
@@ -175,6 +177,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .targetImage {
   position: absolute;
   left: 0;
@@ -183,6 +186,7 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   height: 620px;
+
   .div {
     position: relative;
     flex: 0 0 50%;
@@ -199,6 +203,7 @@ export default {
     font-size: 24px;
     font-weight: bold;
   }
+
   .flex {
     // flex: 0 0 25%;
     display: flex;
@@ -238,6 +243,7 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   height: 620px;
+
   .div1 {
     position: relative;
     flex: 0 0 50%;
@@ -254,6 +260,7 @@ export default {
     font-size: 24px;
     font-weight: bold;
   }
+
   .flex1 {
     // flex: 0 0 25%;
     display: flex;
@@ -284,6 +291,7 @@ export default {
     }
   }
 }
+
 .head {
   height: 10%;
   font-size: 24px;
@@ -321,5 +329,4 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}
-</style>
+}</style>

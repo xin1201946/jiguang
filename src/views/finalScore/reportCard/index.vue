@@ -1,6 +1,6 @@
 <template>
   <div class="RealTimeView">
-<!--    23456-->
+    <!--    23456-->
     <div class="btns">
       <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId"
         @change="handleContest">
@@ -332,6 +332,11 @@ export default {
         return arr.join('')
       }
       const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
+      console.log(datas, th, this.groupArray, contest,
+        contestName,
+        label,
+        group,
+        project,'******************8',this.data);
       const tr = datas.map((item, trIndex) => {
         const arr = []
         for (let i = 0; i < item.scoreList.length; i++) {
@@ -419,11 +424,11 @@ export default {
       // <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
       pages.push(`
 <div">
-                    <h1 style="font-size: 24px;text-align: center;">${contestName}</h1>
-                    <h2 style="text-align: center">
+                    <h2 style="font-size: 20px;text-align: center;">${contestName}</h2>
+                    <h3 style="text-align: center;">
                       ${label.projectGroup}${label.projectName}
-                    </h2>
-                    <h3 style="text-align: center">资格赛</h3>
+                    </h3>
+                    <h4 style="text-align: center">资格赛</h4>
                     <p style="text-align: center">${contest.location}</p>
                     <p style="text-align: center;">${Time(
         project.projectTimeStart,
@@ -431,15 +436,15 @@ export default {
       )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
                   </div>
 
-          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
+          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;font-size:14px;">
             <thead>
               <!-- <tr >
-                <th colspan='${11+g}' rowspan='1' style='border: 0;'>
-                    <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
-                    <h2 style="text-align: center">${label.projectGroup}${label.projectName}</h2>
-                    <h3 style="text-align: center">资格赛</h3>
+                <th colspan='${11 + g}' rowspan='1' style='border: 0;'>
+                    <h2 style="font-size: 20px;text-align: center;margin-top: 60px;">${contestName}</h2>
+                    <h3 style="text-align: center;padding: 0;">${label.projectGroup}${label.projectName}</h3>
+                    <h4 style="text-align: center">资格赛</h4>
                     <p style="text-align: center">${contest.location}</p>
-                    <p style="text-align: center;">${Time(project.projectTimeStart,'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+                    <p style="text-align: center;">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
                 </th>
               </tr> -->
               <tr>
@@ -453,33 +458,30 @@ export default {
               </tr>
               <tr>${th()}</tr>
             </thead>
-            <tbody> ${tr.slice(0, 32).join('')}</tbody>
+            <tbody> ${tr.slice(0, 40).join('')}</tbody>
             <tfoot>
               <tr style="margin-top: 1cm">
-                <td colspan="${g + 7}" style="height: 5cm; margin-top: 20px"></td>
+                <td colspan="${g + 7}" style="height: 4cm; margin-top: 20px"></td>
               </tr>
             </tfoot>
           </table>
         `)
-      if (tr.length > 32) {
+      if (tr.length > 40) {
         // <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
         pages.push(`
           <div style="position: relative;overflow: hidden;">
-
-
-
-            <h1 style="font-size: 24px;text-align: center;margin-top: 100px;">${contestName}</h1>
-            <h2 style="text-align: center">
+            <h2 style="font-size: 20px;text-align: center;margin-top: 80px;">${contestName}</h2>
+            <h3 style="text-align: center;padding: 0;">
               ${label.projectGroup}${label.projectName}
-            </h2>
-            <h3 style="text-align: center">资格赛</h3>
+            </h3>
+            <h3 style="text-align: center">资格赛</h4>
             <p style="text-align: center">${contest.location}</p>
             <p style="text-align: center;margin-bottom: 1cm">${Time(
           project.projectTimeStart,
           'YYYY/MM/DD'
         )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
           </div>
-          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
+          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;font-size:14px;">
             <thead>
               <tr>
                 <th rowspan="2" colspan="2">排名</th>
@@ -492,10 +494,10 @@ export default {
               </tr>
               <tr>${th()}</tr>
             </thead>
-            <tbody> ${tr.slice(32, tr.length).join('')} </tbody>
+            <tbody> ${tr.slice(40, tr.length).join('')} </tbody>
             <tfoot>
               <tr style="margin-top: 1cm">
-                <td colspan="${g + 7}" style="height: 5cm; margin-top: 20px"></td>
+                <td colspan="${g + 7}" style="height: 4cm; margin-top: 20px"></td>
               </tr>
             </tfoot>
           </table>
@@ -528,7 +530,7 @@ export default {
         th{
           font-weight: 800;
         }
-        h1,h2,h3,p{
+        h1,h2,h3,h4,p{
           margin: 0;
           padding: 0;
         }
@@ -664,9 +666,9 @@ export default {
               <h3 style="text-align: center">奖牌赛</h3>
               <p style="text-align: center">${contest.location}</p>
               <p style="text-align: center;margin-bottom: 1cm">${Time(
-          project.projectTimeStart,
-          'YYYY/MM/DD'
-        )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+        project.projectTimeStart,
+        'YYYY/MM/DD'
+      )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
             </div>
             <div>
               ${jdiv}
@@ -926,7 +928,7 @@ export default {
     },
     // 打印
     handlePrint() {
-      console.log(123)
+      console.log(123,this.dataTitle)
       const print = (fn) => {
         const title = this.dataTitle
         const iframe = document.createElement('iframe')
@@ -973,7 +975,7 @@ export default {
                 if (window._CONFIG.printSponsorBottomImgs.length) {
                   newfooter.style.marginTop =
                     totalHeight * pageCount -
-                    (body + foot.scrollHeight +  foot.scrollHeight / 2) +
+                    (body + foot.scrollHeight + foot.scrollHeight / 2) +
                     'px'
                   newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
                 } else {
@@ -987,7 +989,7 @@ export default {
             }
           }
           // if (!title.includes('团体')) {
-            getNumberOfPages()
+          getNumberOfPages()
           // }
         })
         iframe.contentWindow.addEventListener('afterprint', () => {
@@ -1058,10 +1060,12 @@ export default {
 .RealTimeView {
   height: 100%;
   overflow-y: hidden;
-/deep/.treeCard[data-v-1f5a15ad] .ant-card-body {
+
+  /deep/.treeCard[data-v-1f5a15ad] .ant-card-body {
     height: 100%;
     overflow-y: auto;
-}
+  }
+
   .btns {
     height: @btnHeight;
     background: #fff;

@@ -8,7 +8,7 @@ window._CONFIG = {
   // VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
   VUE_APP_API_BASE_URL: 'http://192.168.100.252:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.100.231:8080/lasergun-training/',
-  // VUE_APP_API_BASE_URL: 'http://192.168.100.205:8080/lasergun-training/',
+  // VUE_APP_API_BASE_URL: 'http://192.168.1.7:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.8.162:8087/lasergun-training/',
   // 单点登录地址
   VUE_APP_CAS_BASE_URL: '',

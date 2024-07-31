@@ -329,7 +329,8 @@ p {
       }
       p {
         flex: 1;
-        font-size: 20px;
+        font-size: 24px;
+        font-weight: 400;
         // background: #3d6198;
 
         text-overflow: ellipsis;
