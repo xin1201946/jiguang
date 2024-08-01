@@ -40,7 +40,7 @@ export default {
     return {
       name: '',
       stageTotal: '',
-      goodTotal:'',
+      goodTotal: '',
       title: '',
       visible: false,
       type: 0,
@@ -151,7 +151,6 @@ export default {
     // 打印的资格赛
     bodyContent() {
       const list = (arr) => {
-       
         //每次小计的好十环数
         let goodXcount = 0
         const l = arr
@@ -194,7 +193,7 @@ export default {
               <tr>
                 <td align="center" style="font-weight: 1000;">小计</td>
                 <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1) / 10 - 1] || 0}${
-                  goodXcount != 0 ? `${'-' + goodXcount} *` : ''
+                goodXcount != 0 ? `${'-' + goodXcount} *` : ''
               }</td>
               </tr>,
             `
@@ -243,7 +242,7 @@ export default {
         for (let i = 0; i < tds.length; i++) {
           if (i === 0) {
             tables.push(`
-              <div style="box-sizing: border-box;padding: 10px">
+              <div style="box-sizing: border-box;padding: 5px">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
                     <tr><th colspan="5" style="font-size: 18px; text-align: left">靶位:${
@@ -260,12 +259,12 @@ export default {
                       this.formData.dtlDto.title || this.list[0].title
                     }</th></tr>
                     <tr style="height: 25px; line-height: 25px">
-                      <th >发序</th>
-                      <th>方向点</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                      <th style="font-size: 14px;width:40px;">发序</th>
+                      <th style="font-size: 14px;width:45px;">方向点</th>
+                      <th style="font-size: 14px;">环数</th>
+                      <th style="font-size: 14px;width:130px;">时间</th>
+                      <th style="font-size: 14px;">X</th>
+                      <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -278,12 +277,12 @@ export default {
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
                     <tr style="height: 25px; line-height: 25px">
-                      <th>发序</th>
-                      <th>方向点</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                      <th style="font-size: 14px;width:40px;">发序</th>
+                      <th style="font-size: 14px;width:45px;">方向点</th>
+                      <th style="font-size: 14px;">环数</th>
+                      <th style="font-size: 14px;width:130px;">时间</th>
+                      <th style="font-size: 14px;">X</th>
+                      <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
