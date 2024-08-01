@@ -40,6 +40,7 @@ export default {
     return {
       name: '',
       stageTotal: '',
+      goodTotal:'',
       title: '',
       visible: false,
       type: 0,
@@ -132,11 +133,13 @@ export default {
                 list: item.dtlDto.scoreList,
                 scoreList: item.scoreList,
                 stageTotal: item.stageTotal,
+                goodTotal: item.goodTotal,
               }
             })
           this.name = arr[0].title
           this.scoreList = arr[0].scoreList
           this.stageTotal = arr[0].stageTotal
+          this.goodTotal = arr[0].goodTotal
           this.formData = data.list.filter((item) => item.cproStageId === data.stageId)[0]
           this.list = arr
         }
@@ -148,13 +151,7 @@ export default {
     // 打印的资格赛
     bodyContent() {
       const list = (arr) => {
-        //好十环总数
-        const goodCount = arr.reduce((acc, curr) => {
-          if (curr.isGood === '是') {
-            acc++
-          }
-          return acc
-        }, 0)
+       
         //每次小计的好十环数
         let goodXcount = 0
         const l = arr
@@ -197,7 +194,7 @@ export default {
               <tr>
                 <td align="center" style="font-weight: 1000;">小计</td>
                 <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1) / 10 - 1] || 0}${
-                item.isGood === '是' ? `${'-' + goodXcount} *` : ''
+                  goodXcount != 0 ? `${'-' + goodXcount} *` : ''
               }</td>
               </tr>,
             `
@@ -228,7 +225,7 @@ export default {
             <td align="center" style="font-weight: 900;">总计</td>
             <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
             <td align="center" style="font-weight: 900;">好十环总数</td>
-            <td align="left" style="font-weight: 900;">${goodCount}</td>
+            <td align="left" style="font-weight: 900;">${this.goodTotal}</td>
           </tr>,
         `)
         const tds = []
