@@ -219,7 +219,8 @@ export default {
           .split(',')
           .map((item) => item.replace('//n/g').trim())
           .filter((item) => item.length !== 0)
-        l.push(`
+        if (this.formData.projectName.includes('手枪')) {
+          l.push(`
           <tr style="text-align: right">
             <td align="center" style="font-weight: 900;">总计</td>
             <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
@@ -227,6 +228,14 @@ export default {
             <td align="left" style="font-weight: 900;">${this.goodTotal}</td>
           </tr>,
         `)
+        } else {
+          l.push(`
+          <tr style="text-align: right">
+            <td align="center" style="font-weight: 900;">总计</td>
+            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
+          </tr>,
+        `)
+        }
         const tds = []
         tds.push([])
         for (let i = 0; i < 32; i++) {
