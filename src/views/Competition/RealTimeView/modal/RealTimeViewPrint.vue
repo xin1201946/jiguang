@@ -223,9 +223,7 @@ export default {
           l.push(`
           <tr style="text-align: right">
             <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
-            <td align="center" style="font-weight: 900;">好十环总数</td>
-            <td align="left" style="font-weight: 900;">${this.goodTotal}</td>
+            <td align="center" style="font-weight: 900; width:60px">${this.stageTotal}-${this.goodTotal}*</td>
           </tr>,
         `)
         } else {
