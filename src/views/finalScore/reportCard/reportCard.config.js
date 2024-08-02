@@ -19,7 +19,7 @@ export const reportCardFinalColumns = [
 // 阶段赛表
 export const reportCardStageColumns = [
   {
-    title: '排名232',
+    title: '排名',
     align: 'center',
     dataIndex: 'i'
   },
