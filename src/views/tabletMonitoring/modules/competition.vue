@@ -50,6 +50,14 @@
               </a-select> -->
             </a-form-item>
           </a-col>
+          <a-col :xl="8" :lg="8" :md="8" :sm="24">
+            <a-form-item label="打印状态：">
+              <a-select v-model="params.printStatus" placeholder="请选择打印状态" show-search>
+                <a-select-option value="0">未打印</a-select-option>
+                <a-select-option value="1">已打印</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -63,6 +71,11 @@
     <div>
       <a-table ref="table" size="middle" rowKey="id" :rowClassName="(r, i) => rowClassName(r, i)" :columns="columns"
         :pagination="ipagination" :dataSource="dataSource" @change="handleTableChange" :loading="loading">
+        <template slot="operation" slot-scope="text, record">
+          <a-button type="link" size="small" icon="edit"
+            v-if="record.printStatus === '0' && record.shootCode >= record.projectTotal"
+            @click="handleModifyprinting(record)">修改打印状态</a-button>
+        </template>
       </a-table>
     </div>
   </div>
@@ -71,6 +84,7 @@
 <script>
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { postAction } from '@/api/manage'
+import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 export default {
   name: 'competition', //比赛
   components: {
@@ -83,6 +97,7 @@ export default {
       provinceData: [],
       url: {
         list: '/bizPlayerScore/selectDeviceList',
+        statusList: '/bizPlayerScore/updatePrintStatus',
       },
       columns: [
         {
@@ -90,6 +105,11 @@ export default {
           align: 'center',
           dataIndex: 'tabletPcNum'
         },
+        // {
+        //   title: '总发序',
+        //   align: 'center',
+        //   dataIndex: 'projectTotal'
+        // },
         {
           title: '最大发序',
           align: 'center',
@@ -99,6 +119,28 @@ export default {
           title: '数量',
           align: 'center',
           dataIndex: 'scoreCount'
+        },
+        {
+          title: '打印状态',
+          align: 'center',
+          dataIndex: 'printStatus',
+          customRender: function (text) {
+            if (text === '0') {
+              return '未打印'
+            } else if (text === '1') {
+              return '已打印'
+            } else {
+              return text
+            }
+          },
+        },
+        {
+          title: '操作',
+          align: 'center',
+          dataIndex: 'operation',
+          scopedSlots: {
+            customRender: 'operation',
+          },
         },
       ],
       visible: false, //判断组件中 created 中是否请求列表的
@@ -114,6 +156,12 @@ export default {
       if (r.scoreCount !== r.shootCode) {
         return 'red'
       }
+      if (r.printStatus === '1') {
+        return 'print_btn'
+      }
+      // if (r.projectTotal === r.shootCode) {
+      //   return 'print_btns'
+      // }
     },
     init(res) {
       this.params = res
@@ -140,9 +188,31 @@ export default {
       })
     },
     // 重置
-    searchReset(){
+    searchReset() {
       this.params.tabletPcNum = undefined
+      this.params.printStatus = undefined
       this.loadData(1)
+    },
+    // 修改打印状态
+    handleModifyprinting(record) {
+      infoMessage('此操作当前靶位的状态修改为已打印！请确认成绩单是否已打印？').then(() => {
+
+        let params = {
+          contestId: this.params.contestId, //赛事id
+          cproId: this.params.cproId, //赛事项目id
+          cproStageId: this.params.cproStageId, //项目阶段id
+          stageGroup: this.params.stageGroup, //项目阶段id
+          tabletPcNum: record.tabletPcNum, //项目阶段id
+        }
+        postAction(this.url.statusList, params).then((res) => {
+          if (res.success) {
+            this.$message.success('修改成功！')
+            this.loadData()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      })
     },
   }
 }
@@ -151,5 +221,9 @@ export default {
 <style lang="less" scoped>
 /deep/.red {
   background: rgba(209, 35, 4, 0.3);
+}
+
+/deep/.print_btn {
+  background: #519705;
 }
 </style>

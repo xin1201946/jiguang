@@ -469,12 +469,13 @@ export default {
         }
         data.th.push({ name: '总环数', width: '110px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
         data.fiftyRounds = '0'
-        // 判断到没有到50发
+        // 判断有没有到50发 (初始到60发展示前八名)
+        // 20发之后(都展示展示前八名)
         if (result.players) {
           result.players.map((item) => {
             item.groupList.map((it, i) => {
-              if (it.groupCount === 5 && Number(it.groupTotal)) {
-                this.classOption.limitMoveNum = 8
+              if (it.groupCount === 2 && Number(it.groupTotal)) {
+                this.classOption.limitMoveNum = 8 
                 data.fiftyRounds = it.groupTotal
                 // 设置前8名
                 data.finalEight = result.players

@@ -150,6 +150,7 @@ export const getDataScreenCurrentConfigApi = data => postAction("bizScreen/query
 
 //阶段最终成绩
 export const bizPlayerFinalScoreFinalSportsList = data => postAction('bizPlayerFinalScore/finalSportsList', data)
+export const bizPlayerFinalScoreFinalPdfListByTarget = data => postAction('bizPlayerFinalScore/finalPdfListByTarget', data)
 // 团队最终成绩
 export const bizPlayerFinalScoreTeamSports = data => postAction('bizPlayerFinalScore/teamSports', data)
 

@@ -5,7 +5,7 @@
       <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId"
         @change="handleContest">
         <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{ item.contestName
-        }}</a-select-option>
+          }}</a-select-option>
       </a-select>
     </div>
     <div class="cards">
@@ -43,6 +43,7 @@
           <a-space v-show="this.stageArr.length">
             <!--            :disabled="!data.length"-->
             <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
+            <a-button :disabled="!data.length" type="primary" @click="handlePrintTargetSite">靶位成绩打印</a-button>
             <!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
           </a-space>
         </template>
@@ -53,6 +54,8 @@
           <a-empty v-show="!this.stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
+      <!--组别 -->
+      <gameInfoReportCard ref="oReportCard" @ok="remarkSuccessHandle" />
     </div>
   </div>
 </template>
@@ -67,6 +70,7 @@ import {
   bizContestProjectList,
   bizContestProjectStageList,
   bizPlayerFinalScoreFinalSportsList,
+  bizPlayerFinalScoreFinalPdfListByTarget,
 } from '@api/competition'
 import {
   stageName
@@ -78,10 +82,13 @@ import {
 import {
   Time
 } from '@/utils'
+import gameInfoReportCard from '@views/finalScore/reportCard/gameInfoReportCard.vue'
+import { getStagePlayerGroup } from '@api/competition'
 export default {
   name: 'reportCard',
   components: {
     TreeCard,
+    gameInfoReportCard,
   },
   data() {
     return {
@@ -131,6 +138,7 @@ export default {
       },
       deep: true,
       immediate: true,
+      groupList: [],
     },
   },
   created() { },
@@ -332,15 +340,9 @@ export default {
         return arr.join('')
       }
       const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
-      console.log(datas, th, this.groupArray, contest,
-        contestName,
-        label,
-        group,
-        project,'******************8',this.data);
       const tr = datas.map((item, trIndex) => {
         const arr = []
         for (let i = 0; i < item.scoreList.length; i++) {
-          console.log(item.i)
           arr.push(
             `<td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}">${item.scoreList[i]}</td>`
           )
@@ -364,6 +366,239 @@ export default {
               ${arr.join('')}
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.stageTotal}</td>
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="1">${item.i <= 8 ? !item.remark ? 'Q' : 'Q ' + item.remark : item.remark ? item.remark : ''}</td>
+              </tr>`
+        }
+      })
+
+      const imgs = window._CONFIG.printSponsorBottomImgs.map(
+        (item, index) =>
+          `<img src="../${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+          }px); height: 2.8cm;margin: 0 6px"/>`
+      )
+      const img = imgs.length ?
+        `<div class="foot" style="height: 2.8cm;padding-top: 20px;width: 100%;display: flex;justify-content: space-between">
+            ${imgs.join('')}
+          </div>` :
+        ''
+      const foot = () => {
+        if (window._CONFIG.printSponsorBottomImgs.length) {
+          return `<div class="foot" style="position: fixed;left: 0;width: 100%;bottom: 0;height: 5.5cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
+                <div style="margin-bottom: 6px;font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 14px">${this.rank.join('，')}</div>
+              </div>
+            </div>
+          </div>
+        </div>`
+        }
+
+        if (tr.length > 32) {
+          return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0;height: 2cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
+                <div style="font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 12px">
+                  ${this.rank.join('，')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`
+        } else {
+          return `<div class="foot" style="position: fixed;left: 0px;width: 100%;bottom: 0;height: 2.6cm">
+          <div class="footer" style="width: 100%;">
+            <div style="width: 100%;border: 0px solid;height: 2cm">
+              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
+                <div style="font-size: 14px">备注</div>
+                <div style="color: #595656;font-size: 12px">
+                  ${this.rank.join('，')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`
+        }
+      }
+      const pages = []
+      // <img src="${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+      pages.push(`
+<div">
+                    <h2 style="font-size: 20px;text-align: center;">${contestName}</h2>
+                    <h3 style="text-align: center;">
+                      ${label.projectGroup}${label.projectName}
+                    </h3>
+                    <h4 style="text-align: center">资格赛</h4>
+                    <p style="text-align: center">${contest.location}</p>
+                    <p style="text-align: center;">${Time(
+        project.projectTimeStart,
+        'YYYY/MM/DD'
+      )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+                  </div>
+
+          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;font-size:14px;">
+            <thead>
+              <!-- <tr >
+                <th colspan='${11 + g}' rowspan='1' style='border: 0;'>
+                    <h2 style="font-size: 20px;text-align: center;margin-top: 60px;">${contestName}</h2>
+                    <h3 style="text-align: center;padding: 0;">${label.projectGroup}${label.projectName}</h3>
+                    <h4 style="text-align: center">资格赛</h4>
+                    <p style="text-align: center">${contest.location}</p>
+                    <p style="text-align: center;">${Time(project.projectTimeStart, 'YYYY/MM/DD')}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+                </th>
+              </tr> -->
+              <tr>
+                <th rowspan="2" colspan="2">排名</th>
+                <th rowspan="2" colspan="2">靶位</th>
+                <th rowspan="2" colspan="2" style="text-align: left">姓名</th>
+                <th rowspan="2" colspan="2" style="text-align: left">代表队</th>
+                <th colspan="${g}">组</th>
+                <th rowspan="2" colspan="2">总计</th>
+                <th rowspan="2">备注</th>
+              </tr>
+              <tr>${th()}</tr>
+            </thead>
+            <tbody> ${tr.slice(0, 40).join('')}</tbody>
+            <tfoot>
+              <tr style="margin-top: 1cm">
+                <td colspan="${g + 7}" style="height: 4cm; margin-top: 20px"></td>
+              </tr>
+            </tfoot>
+          </table>
+        `)
+      if (tr.length > 40) {
+        // <img src=" ${ process.env.NODE_ENV === 'electron' ? window._CONFIG.zbfLogo : '../' + window._CONFIG.zbfLogo }" style="position: absolute;top: 0;left: 0;right: 0;width: 20%" alt="">
+        pages.push(`
+          <div style="position: relative;overflow: hidden;">
+            <h2 style="font-size: 20px;text-align: center;margin-top: 80px;">${contestName}</h2>
+            <h3 style="text-align: center;padding: 0;">
+              ${label.projectGroup}${label.projectName}
+            </h3>
+            <h3 style="text-align: center">资格赛</h4>
+            <p style="text-align: center">${contest.location}</p>
+            <p style="text-align: center;margin-bottom: 1cm">${Time(
+          project.projectTimeStart,
+          'YYYY/MM/DD'
+        )}, 开始时间 ${Time(project.projectTimeStart, 'HH:mm')}</p>
+          </div>
+          <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;font-size:14px;">
+            <thead>
+              <tr>
+                <th rowspan="2" colspan="2">排名</th>
+                <th rowspan="2" colspan="2">靶位</th>
+                <th rowspan="2" colspan="2" style="text-align: left; font-weight: 800;">姓名</th>
+                <th rowspan="2" colspan="2" style="text-align: left; font-weight: 800;">代表队</th>
+                <th colspan="${g}">组</th>
+                <th rowspan="2" colspan="2">总计</th>
+                <th rowspan="2">备注</th>
+              </tr>
+              <tr>${th()}</tr>
+            </thead>
+            <tbody> ${tr.slice(40, tr.length).join('')} </tbody>
+            <tfoot>
+              <tr style="margin-top: 1cm">
+                <td colspan="${g + 7}" style="height: 4cm; margin-top: 20px"></td>
+              </tr>
+            </tfoot>
+          </table>
+        `)
+      }
+      // <h3 style="text-align: center">资格赛</h3>
+      // <p style="text-align: center">${contest.location}</p>
+
+      return `
+      <style>
+        td{text-align: center}
+        th{border: 1px solid;}
+        @media print {
+          @page{
+            margin-top: 2cm;
+            margin-bottom: 0cm;
+          }
+        }
+        td:nth-of-type(4){
+          text-align: left;
+          /*text-indent: 4rem*/
+        }
+        td:nth-of-type(3){
+          text-align: left;
+          /*text-indent: 4rem*/
+        }
+        td:last-of-type{
+         /*text-align: left;*/
+        }
+        th{
+          font-weight: 800;
+        }
+        h1,h2,h3,h4,p{
+          margin: 0;
+          padding: 0;
+        }
+      </style>
+      <div>
+        ${pages.join("")}
+        ${foot()}
+      </div>`
+    },
+    // 资格2 靶位排名
+    bodyContent2() {
+      const contest = this.treeList.filter((item) => item.contestId === this.contestId)[0]
+      const contestName = this.treeList.filter((item) => item.contestId === this.contestId)[0].contestName
+      const label = this.list.filter((item) => item.value === this.tree)[0]
+      const group = this.stageArr.filter((item) => this.dataTitle.includes(item.stageName))[0].groupCount
+      // const stage = this.stageArr.filter(item => this.dataTitle.includes(item.stageName))[0]
+      // console.log(label)
+      const project = this.list.filter((item) => item.value === this.tree)[0]
+      // console.log(contest)
+      let g = 0
+      if (this.groupArray && this.groupArray.length) {
+        g = this.groupArray.length
+      } else {
+        g = group
+      }
+
+      const th = () => {
+        const arr = []
+        if (this.groupArray && this.groupArray.length) {
+          for (const item of this.groupArray) {
+            arr.push(`<th>${item}</th>`)
+          }
+          return arr.join('')
+        }
+        for (let i = 0; i < group; i++) {
+          arr.push(`<th>${(i + 1) * 10}</th>`)
+        }
+        return arr.join('')
+      }
+      const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
+      const tr = datas.map((item, trIndex) => {
+        const arr = []
+        for (let i = 0; i < item.scoreList.length; i++) {
+          arr.push(
+            `<td>${item.scoreList[i]}</td>`
+          )
+        }
+        if (item.integrationMethod === '2' || item.integrationMethod === '3') {
+          return `<tr >
+              <td colspan="2">${item.i}</td>
+              <td colspan="2">${item.targetSiteStr}</td>
+              <td style="text-align: left;" colspan="2">${item.playerName}</td>
+              <td style="text-align: left;" colspan="2">${item.groupName}</td>
+              ${arr.join('')}
+              <td colspan="2">${item.stageTotal}-${item.goodTotal}x</td>
+              <td colspan="1">${item.remark ? item.remark : ''}</td>
+            </tr>`
+        } else {
+          return `<tr >
+              <td colspan="2">${item.i}</td>
+              <td colspan="2">${item.targetSiteStr}</td>
+              <td style="text-align: left" colspan="2">${item.playerName}</td>
+              <td style="text-align: left;" colspan="2">${item.groupName}</td>
+              ${arr.join('')}
+              <td colspan="2">${item.stageTotal}</td>
+              <td colspan="1">${item.remark ? item.remark : ''}</td>
               </tr>`
         }
       })
@@ -926,9 +1161,125 @@ export default {
         ${foot()}
       </div>`
     },
-    // 打印
+    // 普通成绩打印
     handlePrint() {
-      console.log(123,this.dataTitle)
+      const data = {
+        ...this.query,
+        // pageNum: this.pagination.current,
+        // pageSize: this.pagination.pageSize,
+        contestId: this.contestId,
+        cproId: this.tree,
+      }
+      bizPlayerFinalScoreFinalSportsList(data).then((res) => {
+        // includes("团体")
+        if (res.code === 200) {
+          this.rank = res.result.remark
+          if (res.result.title.includes('团体')) {
+            this.columns = reportCardFinalColumns
+            this.data = res.result.data.map((item, i) => {
+              return {
+                ...item,
+                i: i + 1,
+              }
+            })
+          } else {
+            // 组
+            this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
+            this.groupArray = res.result.shoots
+            this.data = res.result.data.map((item, i) => {
+              const obj = {}
+              for (let k = 0; k < item.scoreList.length; k++) {
+                obj['scoreList' + (k + 1)] = item.scoreList[k]
+              }
+              return {
+                ...item,
+                ...obj,
+                i: i + 1,
+              }
+            })
+          }
+          this.dataTitle = res.result.title
+          this.sgTimeStart = res.result.sgTimeStart
+          this.$nextTick(() => {
+            this.getHandelPrint()
+          })
+        } else { }
+      })
+    },
+    // 靶位打印
+    handlePrintTargetSite() {
+      this.groupList = []
+      const row = {
+        contestId: this.contestId, //赛事id
+        cproId: this.tree, //赛事项目id
+        stageId: this.query.cproStageId, //项目阶段id
+      }
+      getStagePlayerGroup(row).then((res) => {
+        if (res.success) {
+          this.groupList = res.result
+          if (this.groupList.length > 1) {
+            this.$refs.oReportCard.init(row)
+          } else {
+            let stageGroup = {
+              group: 1
+            }
+            this.remarkSuccessHandle(stageGroup)
+          }
+
+        }
+      })
+
+    },
+    // 回调
+    remarkSuccessHandle(e) {
+      const data = {
+        ...this.query,
+        // pageNum: this.pagination.current,
+        // pageSize: this.pagination.pageSize,
+        contestId: this.contestId,
+        cproId: this.tree,
+        // stageGroup: this.stageGroup,
+        stageGroup: e.group,
+      }
+      bizPlayerFinalScoreFinalPdfListByTarget(data).then((res) => {
+        console.log(res, '63622!!')
+        // includes("团体")
+        if (res.code === 200) {
+          this.rank = res.result.remark
+          if (res.result.title.includes('团体')) {
+            this.columns = reportCardFinalColumns
+            this.data = res.result.data.map((item, i) => {
+              return {
+                ...item,
+                i: i + 1,
+              }
+            })
+          } else {
+            // 组
+            this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
+            this.groupArray = res.result.shoots
+            this.data = res.result.data.map((item, i) => {
+              const obj = {}
+              for (let k = 0; k < item.scoreList.length; k++) {
+                obj['scoreList' + (k + 1)] = item.scoreList[k]
+              }
+              return {
+                ...item,
+                ...obj,
+                i: i + 1,
+              }
+            })
+          }
+          this.dataTitle = res.result.title
+          this.sgTimeStart = res.result.sgTimeStart
+          const e = 1
+          this.getHandelPrint(e)
+        } else { }
+      })
+    },
+    // 打印弹窗
+    getHandelPrint(i) {
+      // console.log(123,this.dataTitle,i)
       const print = (fn) => {
         const title = this.dataTitle
         const iframe = document.createElement('iframe')
@@ -1008,7 +1359,11 @@ export default {
           print(this.content())
         } else {
           // 资格赛
-          print(this.bodyContent())
+          if (i === 1) {
+            print(this.bodyContent2())
+          } else {
+            print(this.bodyContent())
+          }
         }
       }
     },

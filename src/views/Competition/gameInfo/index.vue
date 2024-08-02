@@ -103,12 +103,24 @@
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered rowKey="playerId"
-              :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading" :scroll="{ x: 1500 }">
+            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
+              rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
+              :scroll="{ x: 1500 }">
+              <!-- 当前状态 -->
+              <template slot="stageStatusSlot" slot-scope="text,record">
+                <span v-if="record.stageStatus === 0">未开始</span>
+                <span v-if="record.stageStatus === 1">等待中</span>
+                <span v-if="record.stageStatus === 2">准备中</span>
+                <span v-if="record.stageStatus === 3">试射中</span>
+                <span v-if="record.stageStatus === 4">比赛中</span>
+                <span v-if="record.stageStatus === 5">成绩显示</span>
+                <span v-if="record.stageStatus === 6">已结束</span>
+              </template>
               <template slot="power0Slot" slot-scope="text, record">
                 <div style="display: flex; justify-content: space-around; align-items: center">
                   <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
-                  <span :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
+                  <span
+                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
                   <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
                   <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
                   <img width="25" height="25" v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射" />
@@ -142,7 +154,7 @@
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
                     <a @click="editAchievement(record.playerId)">{{ text }}</a>
                     <!-- 双击 -->
-                    <!-- <a @dblclick="editAchievement(record.serialNumber)">{{ text }}---*</a> -->
+                    <!-- <a @dblclick="editAchievement(record.stageStatus)">{{ text }}---*</a> -->
                   </template>
                 </div>
               </template>
@@ -347,9 +359,12 @@ export default {
       // columns: gameInfoColumns,
       columns: [
         {
-          dataIndex: 'serialNumber',
+          dataIndex: 'stageStatus',
           title: '选手编号',
           align: 'center',
+          scopedSlots: {
+            customRender: 'stageStatusSlot',
+          },
         },
         {
           dataIndex: 'playerName',
@@ -992,9 +1007,12 @@ export default {
       // gameInfoColumns
       this.columns = [
         {
-          dataIndex: 'serialNumber',
+          dataIndex: 'stageStatus',
           title: '选手编号',
           align: 'center',
+          scopedSlots: {
+            customRender: 'stageStatusSlot',
+          },
         },
         {
           dataIndex: 'playerName',
@@ -1243,6 +1261,7 @@ export default {
     },
     handleZhunbei(row) {
       ready({
+        playerIds: this.selectedRowKeys,
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
       }).then((res) => {
@@ -1298,6 +1317,7 @@ export default {
     },
     handleEnd() {
       endFire({
+        playerIds: this.selectedRowKeys,
         stageId: this.cproStageId, //项目阶段id
         group: this.group,
       }).then((res) => {
@@ -1423,10 +1443,10 @@ export default {
         stageName: this.stageName, //资格赛
         group: this.group // 几组 一组 1
       }
-      let str = this.projectName;
-      let index = str.indexOf("枪");
+      let str = this.projectName
+      let index = str.indexOf("枪")
       if (index !== -1) {
-        let result = str.substring(index - 1, index + 1);
+        let result = str.substring(index - 1, index + 1)
         let nameData = result + '个人' + arr.stageName + arr.group
         this.$refs.GameInfoChecklistModel.init(nameData)
       } else {
