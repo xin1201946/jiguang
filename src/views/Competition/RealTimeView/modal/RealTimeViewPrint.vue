@@ -17,7 +17,19 @@
         <div v-for="(item, i) in list" :key="i" class="list">
           <template v-if="item.list && item.list.length">
             <h3>{{ item.title }}</h3>
-            <a-table bordered :pagination="false" :columns="columns" :data-source="item.list"></a-table>
+            <a-table bordered :pagination="false" :columns="columns" :data-source="item.list">
+              <template slot="operation" slot-scope="text, record, index">
+                <a-button
+                  v-if="index + 1 > extractNumber(formData.projectName)"
+                  type="danger"
+                  size="small"
+                  ghost
+                  icon="delete"
+                  @click="handleDelete(item.list, record, index)"
+                  >删除</a-button
+                ></template
+              ></a-table
+            >
           </template>
         </div>
       </div>
@@ -31,6 +43,7 @@
 <script >
 import { Time } from '@/utils'
 import BizModal from '@comp/modal/BizModal.vue'
+import { deleteSurplusShoot } from '@/api/competition'
 export default {
   name: 'RealTimeViewPrint',
   components: {
@@ -65,6 +78,14 @@ export default {
             // return Time(new Date(text), "YYYY-MM-DD HH:mm:ss") || ""
           },
         },
+        {
+          title: '操作',
+          dataIndex: '',
+          align: 'center',
+          scopedSlots: {
+            customRender: 'operation',
+          },
+        },
       ],
       list: [],
       scoreList: [],
@@ -95,6 +116,7 @@ export default {
       this.title = '成绩打印'
       this.type = 0
       this.visible = true
+
       if (Array.isArray(data)) {
         this.formData = data[0]
         // this.visible = true
@@ -107,6 +129,7 @@ export default {
           })
           .filter((item) => item.stageName === data.stageName)
         this.list = arr
+        console.log(this.list)
       } else {
         this.formData = {}
         this.stageName = data.stageName
@@ -145,19 +168,24 @@ export default {
         }
       }
     },
+    extractNumber(str) {
+      const match = str.match(/(\d+)发/) // 匹配字符串中最后一个不在括号内的数字序列
+      return match ? parseInt(match[1], 10) : null
+    },
+    //删除多余发序
+    handleDelete(i, r, index) {
+      deleteSurplusShoot({ playerScoreId: r.playerScoreId }).then((res) => {
+        this.$emit('delete-success')
+      })
+    },
     handleCancel() {
       this.visible = false
     },
     // 打印的资格赛
     bodyContent() {
       const list = (arr) => {
-        //每次小计的好十环数
-        let goodXcount = 0
         const l = arr
           .map((item, index) => {
-            if (item.isGood === '是') {
-              goodXcount++ // 如果当前项满足条件，增加计数器
-            }
             const imgSrc =
               item.directionPoint == 1
                 ? `${window._CONFIG.jiantoushang}`
@@ -179,39 +207,41 @@ export default {
             if ((index + 1) % 10 === 0 && index !== 0) {
               return `
               <tr style="height: 25px; line-height: 25px">
-                <td align="center">${item.shootCode}</td>
+                <td align="center" style="font-size:12px;">${item.shootCode}</td>
                 <td align="center"  ><img style="width:15px;height: 15px;" src="${
                   process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
                 }" ></td>
-                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-                <td align="center">${
+                <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+                <td align="center" style="font-size:12px;">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
+                <td align="center" style="font-size:12px;">${item.xcoord}</td>
+                <td align="center" style="font-size:12px;">${item.ycoord}</td>
               </tr>,
               <tr>
-                <td align="center" style="font-weight: 1000;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1) / 10 - 1] || 0}${
-                goodXcount != 0 ? `${'-' + goodXcount} *` : ''
+                <td align="center" style="font-weight: 1000;font-size:12px;">小计</td>
+                <td align="center" style="font-weight: 900;font-size:12px;">${
+                  this.formData.groupScoreList[(index + 1) / 10 - 1].groupTotal
+                }${
+                this.formData.groupScoreList[(index + 1) / 10 - 1].groupGood != null
+                  ? `${'-' + this.formData.groupScoreList[(index + 1) / 10 - 1].groupGood}*`
+                  : ''
               }</td>
               </tr>,
             `
-              // 重置计数器以便下一轮计数
-              goodXcount = 0
             }
             return `<tr style="height: 25px; line-height: 25px">
-            <td align="center">${item.shootCode}</td>
+            <td align="center" style="font-size:12px;">${item.shootCode}</td>
             <td align="center"><img style="width:15px;height:15px;" src="${
               process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
             }" ></td>
-            <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+            <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
            
-            <td align="center">${
+            <td align="center" style="font-size:12px;">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
+            <td align="center" style="font-size:12px;">${item.xcoord}</td>
+            <td align="center" style="font-size:12px;">${item.ycoord}</td>
           </tr>,`
           })
           .filter((item) => item.length !== 0)
@@ -219,21 +249,16 @@ export default {
           .split(',')
           .map((item) => item.replace('//n/g').trim())
           .filter((item) => item.length !== 0)
-        if (this.formData.projectName.includes('手枪')) {
-          l.push(`
+
+        l.push(`
           <tr style="text-align: right">
-            <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900; width:60px">${this.stageTotal}-${this.goodTotal}*</td>
-          </tr>,
+            <td align="center" style="font-weight: 900;font-size:12px;">总计</td>
+            <td align="center" style="font-weight: 900;font-size:12px; width:60px">${this.stageTotal}${
+          this.goodTotal != null ? `${'-' + this.goodTotal}*` : ''
+        }</td>
+          </tr>
         `)
-        } else {
-          l.push(`
-          <tr style="text-align: right">
-            <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
-          </tr>,
-        `)
-        }
+
         const tds = []
         tds.push([])
         for (let i = 0; i < 32; i++) {
@@ -345,7 +370,7 @@ export default {
               </tr>,
               <tr>
                 <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1) / 5 - 1] || 0}</td>
+                <td align="center" style="font-weight: 900;">${this.formData.groupScoreList[(index + 1) / 5 - 1]}</td>
               </tr>,
             `
             }
@@ -362,7 +387,9 @@ export default {
               </tr>,
               <tr>
                 <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.scoreList[(index + 1 - 10) / 2 + 1]}</td>
+                <td align="center" style="font-weight: 900;">${
+                  this.formData.groupScoreList[(index + 1 - 10) / 2 + 1]
+                }</td>
               </tr>,
             `
             }

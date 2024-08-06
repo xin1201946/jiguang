@@ -8,7 +8,7 @@
       <div class="notesDiv" v-if="this.stageName === '决赛'">
         决赛组数 请输入5、10、12、14、16、18、20、22、24等顺序 ! !
       </div>
-      <a-form-model-item label="发序组数" prop="groupCount">
+      <a-form-model-item label="发序组数" prop="groupCount"  v-if="this.stageName !== '金/铜牌赛'">
         <!-- <a-input v-model="formData.groupCount" /> -->
         <a-select style="width: 100%" v-model="formData.groupCount" v-if="this.stageName === '决赛'">
           <a-select-option :value="5">5</a-select-option>

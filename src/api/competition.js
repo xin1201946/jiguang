@@ -207,3 +207,11 @@ export const homeGetHomeList = data => postAction("home/getHomeList", data)
 // 设置发序无效
 export const grabShot = data => postAction("contest-process/grabShot", data)
 
+//删除多余发序
+export const deleteSurplusShoot = data => getAction("bizPlayerScore/deleteSurplusShoot", data)
+//设置混团发序无效
+export const grabShotGroup = data => postAction("contest-process/grabShotGroup", data)
+//混团积分监控
+export const getDetailList = data => postAction("bizTeamGoldScore/getDetailList", data)
+//混团变更组别
+export const changeGroupContestGroup = data => postAction("contest-process/changeGroupContestGroup", data)

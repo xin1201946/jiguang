@@ -14,7 +14,7 @@
         <a-button type="primary" @click="handleEdit({}, 'add')">添加成绩</a-button>
       </div>
       <div>
-        <a-table rowKey="playerScoreId" size="middle" :columns="columns" :dataSource="dataSource" :pagination="false" bordered>
+        <a-table rowKey="playerScoreId" size="middle" :rowClassName="(r, i) => rowClassName(r, i)" :columns="columns" :dataSource="dataSource" :pagination="false" bordered>
           <template slot="operation" slot-scope="text, record">
             <a-space>
               <a-button type="primary" size="small" ghost icon="edit" @click="handleEdit(record,'edit')">修改成绩</a-button>
@@ -79,7 +79,12 @@ export default {
     }
   },
   methods: {
-    editResultHandle(row) {
+
+    rowClassName(r, i) {
+      if (r.state == -1) {
+        return 'red'
+      }
+    },    editResultHandle(row) {
       if (row.type === 'edit') {
         updateScore({
           playerScoreId: row.data.playerScoreId,

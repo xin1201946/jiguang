@@ -1,9 +1,14 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId"
-        @change="handleContest">
-        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{ item.contestName
+      <a-select
+        :placeholder="(treeList.length && '请选择赛事') || '请先创建赛事'"
+        style="width: 300px"
+        v-model="contestId"
+        @change="handleContest"
+      >
+        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{
+          item.contestName
         }}</a-select-option>
       </a-select>
     </div>
@@ -11,7 +16,8 @@
       <TreeCard>
         <template slot="tree">
           <a-radio-group v-if="list.length" v-model="tree" @change="handleTreeChange">
-            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value"> {{ item.label }}
+            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value">
+              {{ item.label }}
             </a-radio>
           </a-radio-group>
           <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else />
@@ -20,7 +26,7 @@
           <QuerySearch ref="query" @reset="handleSearch" @submit="handleSearch"></QuerySearch>
         </template>
         <template slot="operator">
-          <RealTimeViewPrint ref="print"></RealTimeViewPrint>
+          <RealTimeViewPrint ref="print" @delete-success="onDeleteSuccess"></RealTimeViewPrint>
           <PrintModal ref="modal"></PrintModal>
         </template>
         <template slot="default">
@@ -40,7 +46,9 @@
               <a-space>
                 <!--                <a-icon type="profile" />-->
                 <!--                <a-button type="primary" size="small" ghost icon="profile" @click="handleInfo(record)">详情</a-button>-->
-                <a-button type="primary" size="small" ghost icon="profile" @click="handlePrint(record)">成绩打印</a-button>
+                <a-button type="primary" size="small" ghost icon="profile" @click="handlePrint(record)"
+                  >成绩打印</a-button
+                >
                 <!--                <a-button type="danger" size="small" ghost icon="delete" @click="handleDelete(record)">删除</a-button>-->
               </a-space>
             </template>
@@ -59,7 +67,7 @@ import {
   RealTimeViewQueryPrint,
   RealTimeViewTableColumns,
   RealTimeViewTableColumnsPrint,
-  RealTimeViewTreeStyle
+  RealTimeViewTreeStyle,
 } from '@views/Competition/RealTimeView/RealTimeView.config'
 import { deleteMessage } from '@/utils'
 import PrintModal from '@views/Competition/RealTimeView/modal/printModal.vue'
@@ -68,8 +76,10 @@ import {
   bizContestPlayerList,
   bizContestProjectList,
   bizContestProjectStageList,
-  bizPlayerFinalScoreSportsList, bizPlayerFinalScoreSportsListGroup,
-  bizPlayerFinalScoreSportsScoresList, bizPlayerFinalScoreSportsScoresListGroup
+  bizPlayerFinalScoreSportsList,
+  bizPlayerFinalScoreSportsListGroup,
+  bizPlayerFinalScoreSportsScoresList,
+  bizPlayerFinalScoreSportsScoresListGroup,
 } from '@api/competition'
 import QuerySearch from '@comp/query/QuerySearch.vue'
 import RealTimeViewModal from '@views/Competition/RealTimeView/modal/RealTimeViewModal.vue'
@@ -80,13 +90,14 @@ export default {
     QuerySearch,
     RealTimeViewModal,
     RealTimeViewPrint,
-    PrintModal
+    PrintModal,
   },
   mixins: [BizMixins],
   data() {
     return {
       style: RealTimeViewTreeStyle,
       contestId: '',
+      rdata: {},
       tree: '',
       treeLabel: '',
       treeList: [],
@@ -100,8 +111,8 @@ export default {
       },
       columns: RealTimeViewTableColumnsPrint,
       scroll: {
-        x: 1500
-      }
+        x: 1500,
+      },
     }
   },
   computed: {},
@@ -114,23 +125,25 @@ export default {
         })
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
-  created() { },
+  created() {},
   methods: {
     rowClassName(record, index) {
       if (record.remark) {
-        if (record.remark.toUpperCase() === "DNF"){
-          return "dnf"
+        if (record.remark.toUpperCase() === 'DNF') {
+          return 'dnf'
         }
-        if (record.remark.toUpperCase() === "DNS"){
+        if (record.remark.toUpperCase() === 'DNS') {
           return 'dns'
         }
       }
-      return "null"
+      return 'null'
     },
     handlePrint(record) {
+      this.rdata = record
+
       if (this.treeLabel.includes('团体')) {
         const data = {
           contestId: record.contestId,
@@ -138,14 +151,14 @@ export default {
           playerName: record.playerName,
           playerId: record.playerId,
           groupName: record.groupName,
-          cproStageId: this.query.cproStageId
+          cproStageId: this.query.cproStageId,
         }
-        bizPlayerFinalScoreSportsScoresListGroup(data).then(res => {
+        bizPlayerFinalScoreSportsScoresListGroup(data).then((res) => {
           if (res.code === 200) {
             this.$refs.print.init({
               ...res.result,
               stageName: this.treeLabel,
-              stageId: this.query.cproStageId
+              stageId: this.query.cproStageId,
             })
           } else {
             this.$message.warning(res.message)
@@ -156,19 +169,23 @@ export default {
           contestId: record.contestId,
           playerId: record.playerId,
           cproId: this.tree,
-          cproStageId: this.query.cproStageId
-        }).then(res => {
+          cproStageId: this.query.cproStageId,
+        }).then((res) => {
           if (res.code === 200) {
             this.$refs.print.init({
               list: res.result,
               stageName: this.treeLabel,
-              stageId: this.query.cproStageId
+              stageId: this.query.cproStageId,
             })
           } else {
             this.$message.warning(res.message)
           }
         })
       }
+    },
+    //打印删除多余发序成功后处理
+    onDeleteSuccess() {
+      this.handlePrint(this.rdata)
     },
     // 修改赛事
     handleContest() {
@@ -178,28 +195,27 @@ export default {
     },
     // 获取姓名
     getUserName(data) {
-
       bizContestPlayerList({
         isAll: 1,
         contestId: this.contestId,
         cproId: this.tree,
-      }).then(res => {
-        const result = res.result.map(item => ({
+      }).then((res) => {
+        const result = res.result.map((item) => ({
           label: item.playerName,
-          value: item.playerName
+          value: item.playerName,
         }))
-        const query = RealTimeViewQueryPrint.map(item => {
+        const query = RealTimeViewQueryPrint.map((item) => {
           if (item.type === 'search' && item.label === '姓名') {
             return {
               ...item,
-              data: result
+              data: result,
             }
           }
           if (item.type === 'select' && item.label === '阶段名称') {
             return {
               ...item,
               data: data,
-              value: data[0].value
+              value: data[0].value,
             }
           }
           return item
@@ -214,14 +230,14 @@ export default {
     getStage() {
       bizContestProjectStageList({
         cproId: this.tree,
-        contestId: this.contestId
-      }).then(res => {
+        contestId: this.contestId,
+      }).then((res) => {
         if (res.result.length) {
-          const data = res.result.map(item => {
+          const data = res.result.map((item) => {
             return {
               ...item,
               label: item.stageName,
-              value: item.cproStageId
+              value: item.cproStageId,
             }
           })
           this.getUserName(data)
@@ -233,18 +249,18 @@ export default {
     // 获取项目
     getProjectList() {
       bizContestProjectList({
-        contestId: this.contestId
-      }).then(res => {
+        contestId: this.contestId,
+      }).then((res) => {
         if (res.code === 200) {
           // 查询下拉框
           if (res.result.length) {
-            const data = res.result.map(item => {
+            const data = res.result.map((item) => {
               return {
                 ...item,
                 label: `${item.projectName} - ${item.projectGroup}`,
-                value: item.cproId
+                value: item.cproId,
               }
-            })/* .filter(item => !item.projectName.includes("团体")) */
+            }) /* .filter(item => !item.projectName.includes("团体")) */
             this.tree = data[0].value
             this.treeLabel = data[0].projectName
             this.list = data
@@ -259,7 +275,7 @@ export default {
     },
     // 获取比赛信息
     getTreeList() {
-      bizContestList({}).then(res => {
+      bizContestList({}).then((res) => {
         this.treeList = res.result
         this.contestId = res.result[0].contestId
         this.pagination.current = 1
@@ -268,8 +284,7 @@ export default {
       })
     },
     handleDelete() {
-      deleteMessage("").then(() => {
-      })
+      deleteMessage('').then(() => {})
     },
     // 获取比赛成绩表头
     getColumns(total) {
@@ -279,7 +294,7 @@ export default {
           // title: numToCapital((i + 1) * 10),
           title: (i + 1) * 10,
           align: 'center',
-          dataIndex: `scoreList${i + 1}`
+          dataIndex: `scoreList${i + 1}`,
         })
       }
       // children.push({
@@ -287,11 +302,11 @@ export default {
       //   align: 'center'
       // })
 
-      this.columns = RealTimeViewTableColumns.map(item => {
+      this.columns = RealTimeViewTableColumns.map((item) => {
         if (item.children) {
           return {
             ...item,
-            children: children
+            children: children,
           }
         }
         return item
@@ -307,7 +322,7 @@ export default {
           contestId: this.contestId,
           cproId: this.tree,
         }
-        bizPlayerFinalScoreSportsListGroup(data).then(res => {
+        bizPlayerFinalScoreSportsListGroup(data).then((res) => {
           this.pagination.current = res.result.current
           this.pagination.total = res.result.total
           this.$nextTick(() => {
@@ -326,10 +341,10 @@ export default {
           contestId: this.contestId,
           cproId: this.tree,
         }
-        bizPlayerFinalScoreSportsList(data).then(res => {
+        bizPlayerFinalScoreSportsList(data).then((res) => {
           if (res.code === 200) {
             if (res.result.records.length) {
-              const arr = res.result.records.map(item => item.gunTotalGroup)
+              const arr = res.result.records.map((item) => item.gunTotalGroup)
               // this.getColumns(Math.max(...[...new Set(arr)]))
             }
             this.$nextTick(() => {
@@ -349,21 +364,19 @@ export default {
       }
     },
     handleTreeChange(v) {
-      this.treeLabel = this.list.filter(item => item.value === this.tree)[0].projectName
+      this.treeLabel = this.list.filter((item) => item.value === this.tree)[0].projectName
       this.getStage()
     },
     handleBack() {
-      this.$nextTick(() => {
-
-      })
+      this.$nextTick(() => {})
     },
     handleInfo(record) {
       bizPlayerFinalScoreSportsScoresList({
         contestId: record.contestId,
         playerId: record.playerId,
         cproId: this.tree,
-        cproStageId: record.stageId
-      }).then(res => {
+        cproStageId: record.stageId,
+      }).then((res) => {
         // const body = document.body
         // const main = document.createElement('div')
         // const old = body.innerHTML
@@ -377,7 +390,7 @@ export default {
           this.$refs.modal.info(res.result, record)
         }
       }) */
-    }
+    },
   },
 }
 </script>
@@ -391,7 +404,7 @@ export default {
   /deep/.treeCard[data-v-1f5a15ad] .ant-card-body {
     height: 100%;
     overflow-y: auto;
-}
+  }
   .btns {
     height: @btnHeight;
     background: #fff;
