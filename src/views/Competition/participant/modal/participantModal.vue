@@ -120,11 +120,11 @@ export default {
         mixedGroupNo: '',
       },
       rules: {
-        serialNumber: [{ required: true, message: '请输入选手编号', trigger: 'blur' }],
+        serialNumber: [{ required: false, message: '请输入选手编号', trigger: 'blur' }],
         playerName: [{ required: true, message: '请输入选手姓名', trigger: 'blur' }],
         playerSex: [{ required: true, message: '请选择选手性别', trigger: 'blur' }],
         idCardNum: [
-          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { required: false, message: '请输入身份证号', trigger: 'blur' },
           {
             pattern: /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0\d|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/,
             message: '请输入正确的身份证号',

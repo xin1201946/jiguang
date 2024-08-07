@@ -230,7 +230,7 @@
                     >成绩详情</a-button
                   >
                   <a-button
-                    v-if="record.eliminationStatus != 1"
+                    v-if="record.eliminationStatus != 1&&stageName !== '金/铜牌赛'"
                     type="danger"
                     size="small"
                     ghost
@@ -256,7 +256,7 @@
                       <a-menu-item>
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="stageName !== '决赛'">
+                      <a-menu-item v-if="stageName == '资格赛'">
                         <a-button type="link" size="small" icon="swap" @click="handleGrouping(record)"
                           >变更组别</a-button
                         >
@@ -942,7 +942,7 @@ export default {
         cproId: this.cproId,
         stageGroup: this.group,
         stageId: this.cproStageId,
-      })
+      },this.stageName)
     },
     /**
      * 变更组别
@@ -955,10 +955,16 @@ export default {
         cproId: i.cproId,
         playerId: i.playerId,
         stageId: i.stageId,
-        stageGroup: i.stageGroupNew,
-        teamGoldReplaceDept: i.groupName,
+        stageGroup: i.stageGroup,
+        teamGoldReplaceId: i.teamGoldScoreId,
       }).then((res) => {
-        console.log(res, 'res')
+        if (res.success) {
+          this.$message.success('变更组别成功！')
+          this.getTableList()
+          this.$refs.gameChangeGroupRef.handleCancel()
+        } else {
+          this.$message.error(res.message)
+        }
       })
       }
       else{

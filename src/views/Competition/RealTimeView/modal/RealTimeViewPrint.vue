@@ -359,9 +359,9 @@ export default {
           .map((item, index) => {
             if (index + 1 <= 10 && (index + 1) % 5 === 0) {
               return `
-              <tr style="height: 45px; line-height: 45px">
+              <tr style="height: 25px; line-height: 25px">
                 <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
+                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
                 <td align="center">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
@@ -370,15 +370,21 @@ export default {
               </tr>,
               <tr>
                 <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${this.formData.groupScoreList[(index + 1) / 5 - 1]}</td>
+                <td align="center" style="font-weight: 900;">
+                  ${this.formData.groupScoreList[(index + 1) / 5 - 1].groupTotal}${
+                this.formData.groupScoreList[(index + 1) / 5 - 1].groupGood != null
+                  ? `${'-' + this.formData.groupScoreList[(index + 1) / 5 - 1].groupGood}*`
+                  : ''
+              }
+                  </td>
               </tr>,
             `
             }
             if (index + 1 > 10 && (index + 1) % 2 === 0) {
               return `
-              <tr style="height: 45px; line-height: 45px">
+              <tr style="height: 35px; line-height: 35px">
                 <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
+                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
                 <td align="center">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
@@ -387,13 +393,16 @@ export default {
               </tr>,
               <tr>
                 <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">${
-                  this.formData.groupScoreList[(index + 1 - 10) / 2 + 1]
-                }</td>
+                <td align="center" style="font-weight: 900;">
+                ${this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupTotal}${
+                this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupGood != null
+                  ? `${'-' + this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupGood}*`
+                  : ''
+              }</td>
               </tr>,
             `
             }
-            return `<tr style="height: 45px; line-height: 45px">
+            return `<tr style="height:35px; line-height:35px">
             <td align="center">${item.shootCode}</td>
             <td align="center">${item.score}</td>
             <td align="center">${
@@ -411,16 +420,18 @@ export default {
         l.push(`
           <tr style="text-align: right">
             <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}</td>
-          </tr>,
+            <td align="center" style="font-weight: 900;">${this.stageTotal}${
+          this.goodTotal != null ? `${'-' + this.goodTotal}*` : ''
+        }</td>
+          </tr>
         `)
         const tds = []
         tds.push([])
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 20; i++) {
           tds[0].push(l[i])
         }
-        if (l.length > 14) {
-          l.splice(0, 14)
+        if (l.length > 20) {
+          l.splice(0, 20)
           for (let i = 0; i < l.length; i += 20) {
             tds.push(l.slice(i, i + 20))
           }
@@ -432,20 +443,20 @@ export default {
               <div style="box-sizing: border-box;padding: 10px;">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">靶位:${
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">靶位:${
                       this.formData.targetSiteStr
                     }</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">时间:${
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">时间:${
                       this.formData.sgTimeStart
                     }</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.projectGroup}${
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.projectGroup}${
               this.formData.projectName
             }</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.playerName}</th></tr>
+                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${
                       this.formData.dtlDto.title
                     }</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
+                    <tr style="height: 40px; line-height: 40px">
                       <th>发序</th>
                       <th>环数</th>
                       <th>时间</th>
@@ -462,7 +473,7 @@ export default {
               <div style="box-sizing: border-box;padding: 10px;">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr style="height: 50px; line-height: 50px">
+                    <tr style="height: 40px; line-height: 40px">
                       <th>发序</th>
                       <th>环数</th>
                       <th>时间</th>
@@ -514,7 +525,7 @@ export default {
               return `
               <tr style="height: 50px; line-height: 50px">
                 <td align="center">${item.shootCode}</td>
-                <td align="center">${item.score}</td>
+                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
                 <td align="center">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
@@ -529,7 +540,7 @@ export default {
             }
             return `<tr style="height: 50px; line-height: 50px">
               <td align="center">${item.shootCode}</td>
-              <td align="center">${item.score}</td>
+              <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
               <td align="center">${
                 item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
               }</td>
@@ -573,12 +584,12 @@ export default {
                     <tr><th colspan="5" style="font-size: 22px; text-align: left">${
                       this.formData.detailScoreList[0].stageName
                     }</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                    <tr style="height: 25px; line-height: 25px;">
+                    <th style="font-size: 14px;"><b>发序</b></th>
+                    <th style="font-size: 14px;"><b>环数</b></th>
+                    <th style="font-size: 14px;"><b>时间</b></th>
+                    <th style="font-size: 14px;"><b>X</b></th>
+                    <th style="font-size: 14px;"><b>Y</b></th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -593,12 +604,12 @@ export default {
                     <tr><th colspan="5" style="font-size: 22px; text-align: left">${
                       this.formData.detailScoreList[0].stageName
                     }</th></tr>
-                    <tr style="height: 50px; line-height: 50px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                    <tr style="height: 25px; line-height: 25px;">
+                    <th style="font-size: 28px;"><b>发序</b></th>
+                    <th style="font-size: 14px;"><b>环数</b></th>
+                    <th style="font-size: 14px;"><b>时间</b></th>
+                    <th style="font-size: 14px;"><b>X</b></th>
+                    <th style="font-size: 14px;"><b>Y</b></th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -616,7 +627,7 @@ export default {
           for (const item of this.jt['金牌赛']) {
             jtds.push(`<tr style="height: 50px; line-height: 50px">
             <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
+            <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
             <td align="center">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
@@ -629,7 +640,7 @@ export default {
           for (const item of this.jt['铜牌赛']) {
             ttds.push(`<tr style="height: 50px; line-height: 50px">
             <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
+            <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
             <td align="center">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
@@ -654,12 +665,12 @@ export default {
           ? `
           <thead>
             <tr style="font-size: 24px"><th>铜牌赛</th></tr>
-            <tr style="height: 50px; line-height: 50px">
-              <th>发序</th>
-              <th>环数</th>
-              <th>时间</th>
-              <th>X</th>
-              <th>Y</th>
+            <tr style="height: 25px; line-height: 25px;">
+              <th style="font-size: 14px;">发序</th>
+              <th style="font-size: 14px;">环数</th>
+              <th style="font-size: 14px;">时间</th>
+              <th style="font-size: 14px;">X</th>
+              <th style="font-size: 14px;">Y</th>
             </tr>
           </thead>
           <tbody style="font-family: 宋体;">
@@ -668,14 +679,14 @@ export default {
         `
           : `
         <thead>
-          <tr style="font-size: 24px"><th>金牌赛</th></tr>
-          <tr style="height: 50px; line-height: 50px">
-            <th>发序</th>
-            <th>环数</th>
-            <th>时间</th>
-            <th>X</th>
-            <th>Y</th>
-          </tr>
+          <tr style="font-size: 24px"><th>金牌赛1111</th></tr>
+          <tr style="height: 25px; line-height: 25px;">
+              <th style="font-size: 14px;">发序</th>
+              <th style="font-size: 14px;">环数</th>
+              <th style="font-size: 14px;">时间</th>
+              <th style="font-size: 14px;">X</th>
+              <th style="font-size: 14px;">Y</th>
+            </tr>
         </thead>
         <tbody style="font-family: 宋体;">
           ${jtds.join('')}
@@ -683,10 +694,10 @@ export default {
         `
         return `
           <div>
-            <p style="font-size: 24px"><b>靶位:${this.formData.targetSite}</b></p>
-            <p style="font-size: 24px"><b>时间:${this.formData.sgTimeStart}</b></p>
-            <p style="font-size: 24px"><b>${this.formData.detailScoreList[0].projectName}</b></p>
-            <p style="font-size: 24px"><b>${this.formData.playerName}</b></p>
+            <p style="font-size: 18px"><b>靶位:${this.formData.targetSite}</b></p>
+            <p style="font-size: 18px"><b>时间:${this.formData.sgTimeStart}</b></p>
+            <p style="font-size: 18px"><b>${this.formData.detailScoreList[0].projectName}</b></p>
+            <p style="font-size: 18px"><b>${this.formData.playerName}</b></p>
             <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
               ${table}
             </table>
@@ -702,8 +713,7 @@ export default {
             }
           }
           thead>tr{
-            height: 50px;
-            line-height: 50px;
+          font-weight: 900;
           }
           .print{
             display: grid;

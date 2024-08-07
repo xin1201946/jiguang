@@ -85,10 +85,12 @@ export default {
   },
   methods: {
     init(row) {
+     
       this.visible = true
       this.loadingModal = false
       this.$nextTick(() => {
         this.formData = row
+        this.formData.remark = ''
         const data = {
           contestId: row.contestId,
           cproId: row.cproId,

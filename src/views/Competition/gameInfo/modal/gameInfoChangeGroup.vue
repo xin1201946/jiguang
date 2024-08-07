@@ -4,7 +4,15 @@
       <a-form-model-item label="原靶位" prop="targetSite">
         <a-input v-model="formData.targetSite" disabled />
       </a-form-model-item>
-      <a-form-model-item label="新分组" prop="stageGroupNew">
+      <a-form-model-item label="替换代表队" prop="teamGoldScoreId" v-if="stageName === '金/铜牌赛'">
+        <a-select style="width: 320px" v-model="formData.teamGoldScoreId" placeholder="请选择替换代表队" @change="selectChange">
+          <a-select-option v-for="item in selectList1" :key="item.groupName" :value="item.teamGoldScoreId">
+            {{ item.groupName+'-'+item.player1Name+'-'+item.player2Name}}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <div v-else>
+        <a-form-model-item label="新分组" prop="stageGroupNew">
         <a-input v-model="formData.stageGroupNew" @change="handleOnChange" placeholder="请输入新分组" />
       </a-form-model-item>
       <a-form-model-item label="新靶位" prop="targetSiteNew">
@@ -14,12 +22,13 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
+      </div>
     </a-form-model>
   </BizModal>
 </template>
 
 <script>
-import { selectTargetList } from '@/api/competition'
+import { selectTargetList,changeGroupList } from '@/api/competition'
 import BizModal from '@comp/modal/BizModal.vue'
 export default {
   name: 'gameInfoChangeGroup',
@@ -32,6 +41,7 @@ export default {
       visible: false,
       loadingModal: false,
       formData: {},
+      stageName: '',
       rules: {
         // targetSiteNew: {
         //   required: true,
@@ -53,17 +63,40 @@ export default {
             }
           },
         },
+        teamGoldScoreId: {
+          required: true,
+          validator: (rule, value, callback) => {
+            if (value) {
+              callback()
+            } else {
+              callback('请选择替换代表队')
+            }
+          },
+        },
       },
       row: {},
       selectList: [],
+      selectList1: [],
     }
   },
   methods: {
-    init(row) {
+    init(row,i) {
       this.visible = true
       this.loadingModal = false
       this.$nextTick(() => {
         this.formData = row
+        this.formData.teamGoldScoreId = undefined
+        this.stageName = i
+      })
+      const data = {
+        contestId: row.contestId,
+        cproId: row.cproId,
+        stageGroup: row.stageGroup,
+        stageId: row.stageId,
+        playerId:row.playerId
+      }
+      changeGroupList(data).then((res) => {
+        this.selectList1 = res.result
       })
     },
     handleOk() {

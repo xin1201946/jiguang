@@ -215,3 +215,6 @@ export const grabShotGroup = data => postAction("contest-process/grabShotGroup",
 export const getDetailList = data => postAction("bizTeamGoldScore/getDetailList", data)
 //混团变更组别
 export const changeGroupContestGroup = data => postAction("contest-process/changeGroupContestGroup", data)
+
+// 混团变更组别下拉框数据
+export const changeGroupList = data => postAction("contest-process/changeGroupList", data)

@@ -9,9 +9,15 @@
     :width="700"
     destroyOnClose
   >
-    <a-button style="margin-left: 85%;margin-bottom: 10px;" type="primary" size="default" icon="sync" @click="handleSearch()">刷新</a-button>
-    <a-table   rowKey="shootCode" :columns="columns" :data-source="list" :pagination="false" size="small">
-</a-table>
+    <a-button
+      style="margin-left: 85%; margin-bottom: 10px"
+      type="primary"
+      size="default"
+      icon="sync"
+      @click="handleSearch()"
+      >刷新</a-button
+    >
+    <a-table rowKey="shootCode" :columns="columns" :data-source="list" :pagination="false" size="small"> </a-table>
   </BizModal>
 </template>
   
@@ -39,7 +45,7 @@ export default {
           align: 'center',
         },
         {
-          title:'代表队1',
+          title: '代表队1',
           align: 'center',
           customRender: (text, record, index) => {
             if (record.detailList && record.detailList.length > 0) {
@@ -59,7 +65,7 @@ export default {
         //   },
         // },
         {
-          title: "代表队2",
+          title: '代表队2',
           align: 'center',
           customRender: (text, record, index) => {
             if (record.detailList && record.detailList.length > 0) {
@@ -98,6 +104,16 @@ export default {
             return ''
           },
         },
+        {
+          title: '总分数',
+          align: 'center',
+          customRender: (text, record, index) => {
+            if (record.detailList && record.detailList.length >= 2) {
+              return `${record.detailList[0].stageTotal}/${record.detailList[1].stageTotal}`
+            }
+            return ''
+          },
+        },
       ],
     }
   },
@@ -115,17 +131,27 @@ export default {
       getDetailList(this.data).then((res) => {
         console.log(res, '232222-')
         this.list = res.result
-          // 更新表头标题
-          this.updateColumnTitles(res.result);
+        // 更新表头标题
+        this.updateColumnTitles(res.result)
       })
-      
     },
     updateColumnTitles(list) {
       if (list.length > 0) {
-        const team1Name = list[0].detailList[0].groupName+'总分' || '代表队1';
-        const team2Name = list[0].detailList[1].groupName+'总分' || '代表队2';
-        this.columns[1].title = team1Name;
-        this.columns[2].title = team2Name;
+        let team1Name = ''
+        let team2Name = ''
+        if (list[0].detailList[0].stageTotal) {
+          team1Name = list[0].detailList[0].groupName + '总分' || '代表队1'
+        } else {
+          team1Name = '--' + '总分' || '代表队1'
+        }
+        if (list[0].detailList[1].stageTotal) {
+          team2Name = list[0].detailList[1].groupName + '总分' || '代表队2'
+        } else {
+          team2Name = '--' + '总分' || '代表队2'
+        }
+
+        this.columns[1].title = team1Name
+        this.columns[2].title = team2Name
       }
     },
     handleSearch() {
@@ -144,6 +170,5 @@ export default {
   color: red;
   font-size: 16px;
   margin-bottom: 20px;
- 
 }
 </style>
