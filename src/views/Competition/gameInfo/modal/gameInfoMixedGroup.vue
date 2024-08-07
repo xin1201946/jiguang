@@ -129,7 +129,6 @@ export default {
     },
     handleGetDetailList() {
       getDetailList(this.data).then((res) => {
-        console.log(res, '232222-')
         this.list = res.result
         // 更新表头标题
         this.updateColumnTitles(res.result)
@@ -140,18 +139,22 @@ export default {
         let team1Name = ''
         let team2Name = ''
         if (list[0].detailList[0].stageTotal) {
-          team1Name = list[0].detailList[0].groupName + '总分' || '代表队1'
+          team1Name = list[0].detailList[0].groupName + '总分' 
         } else {
-          team1Name = '--' + '总分' || '代表队1'
+          team1Name = '--' + '总分' 
         }
         if (list[0].detailList[1].stageTotal) {
-          team2Name = list[0].detailList[1].groupName + '总分' || '代表队2'
+          team2Name = list[0].detailList[1].groupName + '总分' 
         } else {
-          team2Name = '--' + '总分' || '代表队2'
+          team2Name = '--' + '总分' 
         }
 
         this.columns[1].title = team1Name
         this.columns[2].title = team2Name
+      }else{
+      
+        this.columns[1].title = '--' + '总分'
+        this.columns[2].title =  '--' + '总分'
       }
     },
     handleSearch() {

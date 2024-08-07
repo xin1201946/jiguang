@@ -169,8 +169,10 @@ export default {
       }
     },
     extractNumber(str) {
-      const match = str.match(/(\d+)发/) // 匹配字符串中最后一个不在括号内的数字序列
-      return match ? parseInt(match[1], 10) : null
+      if (str) {
+        const match = str.match(/(\d+)发/) // 匹配字符串中最后一个不在括号内的数字序列
+        return match ? parseInt(match[1], 10) : null
+      }
     },
     //删除多余发序
     handleDelete(i, r, index) {
@@ -220,6 +222,7 @@ export default {
               </tr>,
               <tr>
                 <td align="center" style="font-weight: 1000;font-size:12px;">小计</td>
+                <td></td>
                 <td align="center" style="font-weight: 900;font-size:12px;">${
                   this.formData.groupScoreList[(index + 1) / 10 - 1].groupTotal
                 }${
@@ -253,6 +256,7 @@ export default {
         l.push(`
           <tr style="text-align: right">
             <td align="center" style="font-weight: 900;font-size:12px;">总计</td>
+            <td></td>
             <td align="center" style="font-weight: 900;font-size:12px; width:60px">${this.stageTotal}${
           this.goodTotal != null ? `${'-' + this.goodTotal}*` : ''
         }</td>
@@ -345,7 +349,8 @@ export default {
         }
         .print>div{
           display: grid;
-          grid-template-columns: 47% 50%;
+          grid-template-columns: 45% 46%;
+          grid-column-gap: 8%;
         }
       </style>
       <div class="print" style="height: auto;">
@@ -357,20 +362,42 @@ export default {
       const list = (arr) => {
         const l = arr
           .map((item, index) => {
+            const imgSrc =
+              item.directionPoint == 1
+                ? `${window._CONFIG.jiantoushang}`
+                : item.directionPoint == 2
+                ? `${window._CONFIG.jiantouxia}`
+                : item.directionPoint == 3
+                ? `${window._CONFIG.jiantouzuo}`
+                : item.directionPoint == 4
+                ? `${window._CONFIG.jiantouyou}`
+                : item.directionPoint == 5
+                ? `${window._CONFIG.jiantouyoushang}`
+                : item.directionPoint == 6
+                ? `${window._CONFIG.jiantouyouxia}`
+                : item.directionPoint == 7
+                ? `${window._CONFIG.jiantouzuoshang}`
+                : item.directionPoint == 8
+                ? `${window._CONFIG.jiantouzuoxia}`
+                : `''`
             if (index + 1 <= 10 && (index + 1) % 5 === 0) {
               return `
               <tr style="height: 25px; line-height: 25px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-                <td align="center">${
+                <td align="center" style="font-size:12px;">${item.shootCode}</td>
+                <td align="center"  ><img style="width:15px;height: 15px;" src="${
+                  process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
+                }" ></td>
+                <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+                <td align="center" style="font-size:12px;">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
+                <td align="center" style="font-size:12px;">${item.xcoord}</td>
+                <td align="center" style="font-size:12px;">${item.ycoord}</td>
               </tr>,
               <tr>
-                <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">
+                <td align="center" style="font-weight: 900;font-size:12px;">小计</td>
+                <td></td>
+                <td align="center" style="font-weight: 900;font-size:12px;">
                   ${this.formData.groupScoreList[(index + 1) / 5 - 1].groupTotal}${
                 this.formData.groupScoreList[(index + 1) / 5 - 1].groupGood != null
                   ? `${'-' + this.formData.groupScoreList[(index + 1) / 5 - 1].groupGood}*`
@@ -382,18 +409,22 @@ export default {
             }
             if (index + 1 > 10 && (index + 1) % 2 === 0) {
               return `
-              <tr style="height: 35px; line-height: 35px">
-                <td align="center">${item.shootCode}</td>
-                <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-                <td align="center">${
+              <tr style="height: 25px; line-height: 25px">
+                <td align="center" style="font-size:12px;">${item.shootCode}</td>
+                <td align="center"  ><img style="width:15px;height: 15px;" src="${
+                  process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
+                }" ></td>
+                <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+                <td align="center" style="font-size:12px;">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
-                <td align="center">${item.xcoord}</td>
-                <td align="center">${item.ycoord}</td>
+                <td align="center" style="font-size:12px;">${item.xcoord}</td>
+                <td align="center" style="font-size:12px;">${item.ycoord}</td>
               </tr>,
               <tr>
-                <td align="center" style="font-weight: 900;">小计</td>
-                <td align="center" style="font-weight: 900;">
+                <td align="center" style="font-weight: 900;font-size:12px;">小计</td>
+                <td></td>
+                <td align="center" style="font-weight: 900;font-size:12px;">
                 ${this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupTotal}${
                 this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupGood != null
                   ? `${'-' + this.formData.groupScoreList[(index + 1 - 10) / 2 + 1].groupGood}*`
@@ -403,13 +434,16 @@ export default {
             `
             }
             return `<tr style="height:35px; line-height:35px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.score}</td>
-            <td align="center">${
+            <td align="center" style="font-size:12px;">${item.shootCode}</td>
+            <td align="center"  ><img style="width:15px;height: 15px;" src="${
+              process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
+            }" ></td>
+                <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+            <td align="center" style="font-size:12px;">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
+            <td align="center" style="font-size:12px;">${item.xcoord}</td>
+            <td align="center" style="font-size:12px;">${item.ycoord}</td>
           </tr>,`
           })
           .filter((item) => item.length !== 0)
@@ -419,8 +453,9 @@ export default {
           .filter((item) => item.length !== 0)
         l.push(`
           <tr style="text-align: right">
-            <td align="center" style="font-weight: 900;">总计</td>
-            <td align="center" style="font-weight: 900;">${this.stageTotal}${
+            <td align="center" style="font-weight: 900;font-size:12px;">总计</td>
+            <td></td>
+            <td align="center" style="font-weight: 900;font-size:12px;">${this.stageTotal}${
           this.goodTotal != null ? `${'-' + this.goodTotal}*` : ''
         }</td>
           </tr>
@@ -440,7 +475,7 @@ export default {
         for (let i = 0; i < tds.length; i++) {
           if (i === 0) {
             tables.push(`
-              <div style="box-sizing: border-box;padding: 10px;">
+              <div style="box-sizing: border-box;">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
                     <tr><th colspan="5" style="font-size: 18px; text-align: left">靶位:${
@@ -456,12 +491,13 @@ export default {
                     <tr><th colspan="5" style="font-size: 18px; text-align: left">${
                       this.formData.dtlDto.title
                     }</th></tr>
-                    <tr style="height: 40px; line-height: 40px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                    <tr style="height:25px; line-height:25px">
+                      <th style="font-size: 14px;width:40px;">发序</th>
+                      <th style="font-size: 14px;width:45px;">方向点</th>
+                      <th style="font-size: 14px;">环数</th>
+                      <th style="font-size: 14px;width:130px;">时间</th>
+                      <th style="font-size: 14px;">X</th>
+                      <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -473,12 +509,13 @@ export default {
               <div style="box-sizing: border-box;padding: 10px;">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr style="height: 40px; line-height: 40px">
-                      <th>发序</th>
-                      <th>环数</th>
-                      <th>时间</th>
-                      <th>X</th>
-                      <th>Y</th>
+                    <tr style="height: 25px; line-height: 25px">
+                      <th style="font-size: 14px;width:40px;">发序</th>
+                      <th style="font-size: 14px;width:45px;">方向点</th>
+                      <th style="font-size: 14px;">环数</th>
+                      <th style="font-size: 14px;width:130px;">时间</th>
+                      <th style="font-size: 14px;">X</th>
+                      <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -509,7 +546,8 @@ export default {
         }
         .print>div{
           display: grid;
-          grid-template-columns: 45% 45%;
+          grid-template-columns: 45% 46%;
+          grid-column-gap: 8%;
         }
       </style>
       <div class="print" style="height: auto">
@@ -585,11 +623,11 @@ export default {
                       this.formData.detailScoreList[0].stageName
                     }</th></tr>
                     <tr style="height: 25px; line-height: 25px;">
-                    <th style="font-size: 14px;"><b>发序</b></th>
-                    <th style="font-size: 14px;"><b>环数</b></th>
-                    <th style="font-size: 14px;"><b>时间</b></th>
-                    <th style="font-size: 14px;"><b>X</b></th>
-                    <th style="font-size: 14px;"><b>Y</b></th>
+                    <th style="font-size: 14px;">发序</th>
+                    <th style="font-size: 14px;">环数</th>
+                    <th style="font-size: 14px;">时间</th>
+                    <th style="font-size: 14px;">X</th>
+                    <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
                   <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
@@ -625,27 +663,73 @@ export default {
         const ttds = []
         if (this.jt['金牌赛'].length != 0) {
           for (const item of this.jt['金牌赛']) {
-            jtds.push(`<tr style="height: 50px; line-height: 50px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-            <td align="center">${
+            const imgSrc =
+              item.directionPoint == 1
+                ? `${window._CONFIG.jiantoushang}`
+                : item.directionPoint == 2
+                ? `${window._CONFIG.jiantouxia}`
+                : item.directionPoint == 3
+                ? `${window._CONFIG.jiantouzuo}`
+                : item.directionPoint == 4
+                ? `${window._CONFIG.jiantouyou}`
+                : item.directionPoint == 5
+                ? `${window._CONFIG.jiantouyoushang}`
+                : item.directionPoint == 6
+                ? `${window._CONFIG.jiantouyouxia}`
+                : item.directionPoint == 7
+                ? `${window._CONFIG.jiantouzuoshang}`
+                : item.directionPoint == 8
+                ? `${window._CONFIG.jiantouzuoxia}`
+                : `''`
+            jtds.push(`<tr style="height: 25px; line-height: 25px">
+            <td align="center" style="width:25px;font-size:12px;">${item.shootCode}</td>
+            <td align="center" style="width:42px" ><img style="width:15px;height: 15px;" src="${
+              process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
+            }" ></td>
+            <td align="center" style="width:40px;font-size:12px;">${
+              item.isGood === '是' ? `${item.score} *` : item.score
+            }</td>
+            <td align="center" style="font-size:12px;" >${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
+            <td align="center"  style="font-size:12px;">${item.xcoord}</td>
+            <td align="center"  style="font-size:12px;">${item.ycoord}</td>
           </tr>`)
           }
         }
         if (this.jt['铜牌赛'].length != 0) {
           for (const item of this.jt['铜牌赛']) {
-            ttds.push(`<tr style="height: 50px; line-height: 50px">
-            <td align="center">${item.shootCode}</td>
-            <td align="center">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-            <td align="center">${
+            const imgSrc =
+              item.directionPoint == 1
+                ? `${window._CONFIG.jiantoushang}`
+                : item.directionPoint == 2
+                ? `${window._CONFIG.jiantouxia}`
+                : item.directionPoint == 3
+                ? `${window._CONFIG.jiantouzuo}`
+                : item.directionPoint == 4
+                ? `${window._CONFIG.jiantouyou}`
+                : item.directionPoint == 5
+                ? `${window._CONFIG.jiantouyoushang}`
+                : item.directionPoint == 6
+                ? `${window._CONFIG.jiantouyouxia}`
+                : item.directionPoint == 7
+                ? `${window._CONFIG.jiantouzuoshang}`
+                : item.directionPoint == 8
+                ? `${window._CONFIG.jiantouzuoxia}`
+                : `''`
+            ttds.push(`<tr style="height: 25px; line-height: 25px">
+            <td align="center" style="width:25px;font-size:12px;" >${item.shootCode}</td>
+            <td align="center"  style="width:42px" ><img style="width:15px;height: 15px;" src="${
+              process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
+            }" ></td>
+            <td align="center" style="width:40px;font-size:12px;">${
+              item.isGood === '是' ? `${item.score} *` : item.score
+            }</td>
+            <td align="center"  style="font-size:12px;">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
-            <td align="center">${item.xcoord}</td>
-            <td align="center">${item.ycoord}</td>
+            <td align="center"  style="font-size:12px;">${item.xcoord}</td>
+            <td align="center"  style="font-size:12px;">${item.ycoord}</td>
           </tr>`)
           }
         }
@@ -664,14 +748,15 @@ export default {
         const table = ttds.length
           ? `
           <thead>
-            <tr style="font-size: 24px"><th>铜牌赛</th></tr>
-            <tr style="height: 25px; line-height: 25px;">
-              <th style="font-size: 14px;">发序</th>
-              <th style="font-size: 14px;">环数</th>
-              <th style="font-size: 14px;">时间</th>
-              <th style="font-size: 14px;">X</th>
-              <th style="font-size: 14px;">Y</th>
-            </tr>
+            <tr><th></th><b style="font-size: 18px">铜牌赛</b></tr>
+            <p style="height: 25px; line-height: 25px;">
+            <span style="font-size: 14px;font-weight:bold;">发序</span>
+            <span style="font-size: 14px;font-weight:bold;">方向点</span>
+              <span style="font-size: 14px;font-weight:bold;">环数</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:1.7cm;">时间</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:1.8cm;">X</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:0.7cm;">Y</span>
+            </p>
           </thead>
           <tbody style="font-family: 宋体;">
             ${ttds.join('')}
@@ -679,14 +764,15 @@ export default {
         `
           : `
         <thead>
-          <tr style="font-size: 24px"><th>金牌赛1111</th></tr>
-          <tr style="height: 25px; line-height: 25px;">
-              <th style="font-size: 14px;">发序</th>
-              <th style="font-size: 14px;">环数</th>
-              <th style="font-size: 14px;">时间</th>
-              <th style="font-size: 14px;">X</th>
-              <th style="font-size: 14px;">Y</th>
-            </tr>
+          <tr ><th></th><b style="font-size: 18px">金牌赛</b></tr>
+          <p style="height: 25px; line-height: 25px;">
+            <span style="font-size: 14px;font-weight:bold;">发序</span>
+            <span style="font-size: 14px;font-weight:bold;">方向点</span>
+              <span style="font-size: 14px;font-weight:bold;">环数</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:1.7cm;">时间</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:1.8cm;">X</span>
+              <span style="font-size: 14px;font-weight:bold;margin-left:0.7cm;">Y</span>
+            </p>
         </thead>
         <tbody style="font-family: 宋体;">
           ${jtds.join('')}
@@ -712,9 +798,7 @@ export default {
               margin: 0;
             }
           }
-          thead>tr{
-          font-weight: 900;
-          }
+
           .print{
             display: grid;
             grid-template-columns: 45% 45%;
@@ -723,6 +807,11 @@ export default {
         <div class="print" style="height: auto">${jtList()}</div>
       `
       // return ""
+      //          <th style="font-size: 16px;">发序</th>
+      //         <th style="font-size: 16px;">环数</th>
+      //         <th style="font-size: 16px;">时间</th>
+      //         <th style="font-size: 16px;">X</th>
+      //         <th style="font-size: 16px;">Y</th>
     },
     handlePrint() {
       const prints = (fn) => {

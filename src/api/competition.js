@@ -218,3 +218,5 @@ export const changeGroupContestGroup = data => postAction("contest-process/chang
 
 // 混团变更组别下拉框数据
 export const changeGroupList = data => postAction("contest-process/changeGroupList", data)
+//阶段打印分组打印
+export const qualificationScorePdfByGroup = data => postAction("bizPlayerFinalScore/qualificationScorePdfByGroup", data)

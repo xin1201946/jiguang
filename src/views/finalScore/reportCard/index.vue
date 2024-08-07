@@ -51,6 +51,7 @@
             <!--            :disabled="!data.length"-->
             <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
             <a-button :disabled="!data.length" type="primary" @click="handlePrintTargetSite">靶位成绩打印</a-button>
+            <a-button v-if="dataTitle.includes('资格')&&group" :disabled="!data.length" type="primary" @click="handleGroupPrint">成绩打印（分组）</a-button>
             <a-button type="primary" @click="handleSameScore">同分</a-button>
             <!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
           </a-space>
@@ -59,7 +60,7 @@
           <a-table
             v-show="this.stageArr.length"
             :rowSelection="rowSelection"
-              :rowClassName="(r, i) => rowClassName(r, i)"
+            :rowClassName="(r, i) => rowClassName(r, i)"
             :columns="columns"
             :data-source="data"
             :pagination="false"
@@ -70,8 +71,10 @@
           <a-empty v-show="!this.stageArr.length" description="当前项目没有阶段, 暂时无法查询最终成绩" />
         </template>
       </TreeCard>
-      <!--组别 -->
+      <!--靶位打印组别 -->
       <gameInfoReportCard ref="oReportCard" @ok="remarkSuccessHandle" />
+      <!-- 成绩打印组别 -->
+      <gameInfoReportCardT ref="oReportCardT" @ok="remarkSuccessHandleT"></gameInfoReportCardT>
       <!-- 同分 -->
       <GameInfoSameScoreModal ref="sameScore" @ok="sameScoreSuccessHandle" />
     </div>
@@ -88,18 +91,22 @@ import {
   bizContestProjectStageList,
   bizPlayerFinalScoreFinalSportsList,
   bizPlayerFinalScoreFinalPdfListByTarget,
+  qualificationScorePdfByGroup,
+  getStagePlayerGroup
 } from '@api/competition'
 import { stageName } from '@views/Competition/projectPhase/projectPhase.config'
 import { reportCardFinalColumns, reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
 import { Time } from '@/utils'
 import gameInfoReportCard from '@views/finalScore/reportCard/gameInfoReportCard.vue'
-import { getStagePlayerGroup, sameFinals, } from '@api/competition'
+import gameInfoReportCardT from '@views/finalScore/reportCard/gameInfoReportCardT.vue'
+import {  sameFinals } from '@api/competition'
 export default {
   name: 'reportCard',
   components: {
     TreeCard,
     gameInfoReportCard,
-    GameInfoSameScoreModal
+    GameInfoSameScoreModal,
+    gameInfoReportCardT,
   },
   data() {
     return {
@@ -136,6 +143,8 @@ export default {
       },
       rank: [],
       sgTimeStart: undefined,
+      grouplenght: '',
+      groupL:'',
     }
   },
   computed: {},
@@ -152,7 +161,6 @@ export default {
       groupList: [],
       selectedRowKeys: [],
       selectionRows: [],
-
     },
   },
   created() {},
@@ -197,6 +205,8 @@ export default {
           this.$message.error(res.message)
         }
       })
+      
+     
     },
     // 获取项目
     getProjectList() {
@@ -222,12 +232,14 @@ export default {
           }
           // 阶段
           this.getStage()
+       
         }
       })
     },
     // 获取比赛信息
     getTreeList() {
       bizContestList({}).then((res) => {
+
         this.treeList = res.result
         this.contestId = res.result[0].contestId
         this.pagination.current = 1
@@ -314,6 +326,7 @@ export default {
     handleTreeChange(v) {
       this.getStage()
     },
+   
     // 查询
     handleSubmit() {
       // console.log(this.query)
@@ -355,17 +368,47 @@ export default {
         return arr.join('')
       }
       const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
-      const tr = datas.map((item, trIndex) => {
-        const arr = []
-        for (let i = 0; i < item.scoreList.length; i++) {
-          arr.push(`<td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}">${item.scoreList[i]}</td>`)
-        }
-        if (item.integrationMethod === '2' || item.integrationMethod === '3') {
-          return `<tr >
+      let tr = []
+      if (this.grouplenght > 1) {
+        tr = datas.map((item, trIndex) => {
+          const arr = []
+          for (let i = 0; i < item.scoreList.length; i++) {
+            arr.push(`<td style="">${item.scoreList[i]}</td>`)
+          }
+          if (item.integrationMethod === '2' || item.integrationMethod === '3') {
+            return `<tr >
+              <td style="" colspan="2">${item.i}</td>
+              <td style="" colspan="2">${item.targetSiteStr}</td>
+              <td style="" colspan="2">${item.playerName}</td>
+              <td style=" text-align: left;" colspan="2">${item.groupName}</td>
+              ${arr.join('')}
+              <td style="" colspan="2">${item.stageTotal}-${item.goodTotal}x</td>
+              <td style="" colspan="1">${item.remark ? item.remark : ''}</td>
+            </tr>`
+          } else {
+            return `<tr >
+              <td style="" colspan="2">${item.i}</td>
+              <td style="" colspan="2">${item.targetSiteStr}</td>
+              <td style=""colspan="2">${item.playerName}</td>
+              <td style=""colspan="2">${item.groupName}</td>
+              ${arr.join('')}
+              <td style="" colspan="2">${item.stageTotal}</td>
+              <td style="" colspan="1">${item.remark ? item.remark : ''}</td>
+              </tr>`
+          }
+        })
+      } else {
+        tr = datas.map((item, trIndex) => {
+          const arr = []
+          for (let i = 0; i < item.scoreList.length; i++) {
+            arr.push(`<td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}">${item.scoreList[i]}</td>`)
+          }
+          if (item.integrationMethod === '2' || item.integrationMethod === '3') {
+            return `<tr >
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.i}</td>
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${
-            item.targetSiteStr
-          }</td>
+              item.targetSiteStr
+            }</td>
               <td style="${
                 item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'
               }" colspan="2">${item.playerName}</td>
@@ -374,18 +417,18 @@ export default {
               }" colspan="2">${item.groupName}</td>
               ${arr.join('')}
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.stageTotal}-${
-            item.goodTotal
-          }x</td>
+              item.goodTotal
+            }x</td>
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="1">${
-            item.i <= 8 ? (!item.remark ? 'Q' : 'Q ' + item.remark) : item.remark ? item.remark : ''
-          }</td>
+              item.i <= 8 ? (!item.remark ? 'Q' : 'Q ' + item.remark) : item.remark ? item.remark : ''
+            }</td>
             </tr>`
-        } else {
-          return `<tr >
+          } else {
+            return `<tr >
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.i}</td>
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${
-            item.targetSiteStr
-          }</td>
+              item.targetSiteStr
+            }</td>
               <td style="${
                 item.i + 1 == 9 ? 'border-bottom: 1px solid #000; text-align: left' : 'text-align: left;'
               }" colspan="2">${item.playerName}</td>
@@ -395,11 +438,12 @@ export default {
               ${arr.join('')}
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="2">${item.stageTotal}</td>
               <td style="${item.i + 1 == 9 ? 'border-bottom: 1px solid #000;' : ''}" colspan="1">${
-            item.i <= 8 ? (!item.remark ? 'Q' : 'Q ' + item.remark) : item.remark ? item.remark : ''
-          }</td>
+              item.i <= 8 ? (!item.remark ? 'Q' : 'Q ' + item.remark) : item.remark ? item.remark : ''
+            }</td>
               </tr>`
-        }
-      })
+          }
+        })
+      }
 
       const imgs = window._CONFIG.printSponsorBottomImgs.map(
         (item, index) =>
@@ -996,7 +1040,9 @@ export default {
         const arr = []
 
         for (let i = 0; i < this.groupArray.length; i++) {
-          arr.push(`<td style="font-family: 微软雅黑;font-weight: 700;font-size:14px;"><b>${item.scoreList[i] || ''}</b></td>`)
+          arr.push(
+            `<td style="font-family: 微软雅黑;font-weight: 700;font-size:14px;"><b>${item.scoreList[i] || ''}</b></td>`
+          )
         }
         // console.log(arr)
         const list = this.groupArray && this.groupArray.length ? this.groupArray : []
@@ -1234,7 +1280,79 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
-      bizPlayerFinalScoreFinalSportsList(data).then((res) => {
+      
+        bizPlayerFinalScoreFinalSportsList(data).then((res) => {
+          // includes("团体")
+          if (res.code === 200) {
+            this.rank = res.result.remark
+            if (res.result.title.includes('团体')) {
+              this.columns = reportCardFinalColumns
+              this.data = res.result.data.map((item, i) => {
+                return {
+                  ...item,
+                  i: i + 1,
+                }
+              })
+            } else {
+              // 组
+              this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
+              this.groupArray = res.result.shoots
+              this.data = res.result.data.map((item, i) => {
+                const obj = {}
+                for (let k = 0; k < item.scoreList.length; k++) {
+                  obj['scoreList' + (k + 1)] = item.scoreList[k]
+                }
+                return {
+                  ...item,
+                  ...obj,
+                  i: i + 1,
+                }
+              })
+            }
+            this.dataTitle = res.result.title
+            this.sgTimeStart = res.result.sgTimeStart
+            this.$nextTick(() => {
+              this.getHandelPrint()
+            })
+          } else {
+          }
+        })
+    },
+    //分组打印
+    handleGroupPrint(){
+      this.groupList = []
+      const row = {
+        contestId: this.contestId, //赛事id
+        cproId: this.tree, //赛事项目id
+        stageId: this.query.cproStageId, //项目阶段id
+      }
+      getStagePlayerGroup(row).then((res) => {
+          if (res.success) {
+            this.groupList = res.result
+            this.grouplenght = this.groupList.length
+            if (this.groupList.length > 1) {
+              this.$refs.oReportCardT.init(row)
+            } else {
+              let stageGroup = {
+                group: 1,
+              }
+              this.remarkSuccessHandleT(stageGroup)
+            }
+          }
+        })
+    },
+    //资格赛打印分组回调
+    remarkSuccessHandleT(e) {
+      const data = {
+        ...this.query,
+        // pageNum: this.pagination.current,
+        // pageSize: this.pagination.pageSize,
+        contestId: this.contestId,
+        cproId: this.tree,
+        // stageGroup: this.stageGroup,
+        stageGroup: e.group,
+      }
+      qualificationScorePdfByGroup(data).then((res) => {
         // includes("团体")
         if (res.code === 200) {
           this.rank = res.result.remark
@@ -1280,6 +1398,7 @@ export default {
         stageId: this.query.cproStageId, //项目阶段id
       }
       getStagePlayerGroup(row).then((res) => {
+        console.log(res, 'res')
         if (res.success) {
           this.groupList = res.result
           if (this.groupList.length > 1) {
@@ -1467,19 +1586,18 @@ export default {
       const a = this.stageArr.filter((item) => item.value === v)[0]
       this.title = a.label
       this.group = a.groupCount
+      
     },
     //可编辑结尾
     rowClassName(r, i) {
-      
       if (r.sameStatus == 1) {
         return 'tongfen'
       }
-     
     },
-       /**
+    /**
      * 同分
      */
-     handleSameScore() {
+    handleSameScore() {
       if (this.selectedRowKeys.length < 2) {
         return this.$message.error('至少选中两名参赛选手!')
       }
@@ -1506,9 +1624,8 @@ export default {
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
-           
-            this.selectedRowKeys = selectedRowKeys
-            this.selectionRows = selectedRows
+          this.selectedRowKeys = selectedRowKeys
+          this.selectionRows = selectedRows
         },
       }
     },
@@ -1519,6 +1636,9 @@ export default {
 <style scoped lang="less">
 @btnHeight: 50px;
 
+/deep/.tongfen {
+  background: rgba(252, 241, 87, 0.3);
+}
 .RealTimeView {
   height: 100%;
   overflow-y: hidden;

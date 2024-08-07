@@ -66,7 +66,7 @@
         </div>
         <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
           <!--    前8位-->
-          <div class='finalEight'>
+          <div :class="{'finalEight': line, 'finalEightT': !line}">
             <div v-for="(item, i) in data.finalEight" :key="i" class="finalEightRow">
               <div style="width: 60px">{{ item.rank }}</div>
               <div style="width: 60px">{{ item.targetSite }}</div>
@@ -275,10 +275,12 @@ export default {
       timer: null,
       currentProject: [],
       len: false,
+      line: false,
     }
   },
   created() {
     let data = this.$route.query.data
+    console.log(data,'data');
     if (data) {
       data = JSON.parse(decodeURI(data))
       this.currentProject = JSON.parse(JSON.stringify(data))
@@ -324,6 +326,7 @@ export default {
     } else {
       console.log(this.$route)
       getDataScreenCurrentConfigApi().then((res) => {
+        console.log(res,'res');
         this.currentProject = JSON.parse(JSON.stringify(res.result))
         this.projectList = res.result
         this.projectList.map((item) => {
@@ -429,6 +432,8 @@ export default {
       littleScreen({
         type: data.configName,
       }).then((res) => {
+       this.line = res.result.line
+       console.log(this.line,'line')
         data.finalEight = []
         data.list = []
         data.listsList = []
@@ -478,7 +483,24 @@ export default {
                 this.classOption.limitMoveNum = 8 
                 data.fiftyRounds = it.groupTotal
                 // 设置前8名
-                data.finalEight = result.players
+                // data.finalEight = result.players
+                //   .filter((item) => item.rank <= 8)
+                //   .map((item, i) => {
+                //     return {
+                //       ...item,
+                //       total:
+                //         result.isGood === '是'
+                //           ? !item.totalScore
+                //             ? item.totalScore
+                //             : `${item.totalScore}-${item.good}x`
+                //           : item.totalScore,
+                //       notes: '',
+                //       bePromoted: 'Q',
+                //     }
+                //   })
+                //多组时没有Q
+                  if(this.line){
+                    data.finalEight = result.players
                   .filter((item) => item.rank <= 8)
                   .map((item, i) => {
                     return {
@@ -493,6 +515,23 @@ export default {
                       bePromoted: 'Q',
                     }
                   })
+                  }else{
+                    data.finalEight = result.players
+                  .filter((item) => item.rank <= 8)
+                  .map((item, i) => {
+                    return {
+                      ...item,
+                      total:
+                        result.isGood === '是'
+                          ? !item.totalScore
+                            ? item.totalScore
+                            : `${item.totalScore}-${item.good}x`
+                          : item.totalScore,
+                      notes: '',
+                      bePromoted: '',
+                    }
+                  })
+                  }
                 // 除了前8名
                 data.list = result.players
                   .filter((item) => item.rank > 8)
@@ -1012,7 +1051,11 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-
+.finalEightT {
+  // display: flex;
+  // justify-content: space-between;
+  padding-bottom: 5px;
+}
 .finalEightRow {
   flex: 1;
   display: flex;
