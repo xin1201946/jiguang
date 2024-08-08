@@ -51,7 +51,13 @@
             <!--            :disabled="!data.length"-->
             <a-button :disabled="!data.length" type="primary" @click="handlePrint">成绩打印</a-button>
             <a-button :disabled="!data.length" type="primary" @click="handlePrintTargetSite">靶位成绩打印</a-button>
-            <a-button v-if="dataTitle.includes('资格')&&group" :disabled="!data.length" type="primary" @click="handleGroupPrint">成绩打印（分组）</a-button>
+            <a-button
+              v-if="dataTitle.includes('资格')"
+              :disabled="!data.length"
+              type="primary"
+              @click="handleGroupPrint"
+              >成绩打印（分组）</a-button
+            >
             <a-button type="primary" @click="handleSameScore">同分</a-button>
             <!--            <a-button :disabled="!data.length"  type="primary" @click="handleExport">成绩导出</a-button>-->
           </a-space>
@@ -92,14 +98,14 @@ import {
   bizPlayerFinalScoreFinalSportsList,
   bizPlayerFinalScoreFinalPdfListByTarget,
   qualificationScorePdfByGroup,
-  getStagePlayerGroup
+  getStagePlayerGroup,
 } from '@api/competition'
 import { stageName } from '@views/Competition/projectPhase/projectPhase.config'
 import { reportCardFinalColumns, reportCardStageColumns } from '@views/finalScore/reportCard/reportCard.config'
 import { Time } from '@/utils'
 import gameInfoReportCard from '@views/finalScore/reportCard/gameInfoReportCard.vue'
 import gameInfoReportCardT from '@views/finalScore/reportCard/gameInfoReportCardT.vue'
-import {  sameFinals } from '@api/competition'
+import { sameFinals } from '@api/competition'
 export default {
   name: 'reportCard',
   components: {
@@ -144,7 +150,7 @@ export default {
       rank: [],
       sgTimeStart: undefined,
       grouplenght: '',
-      groupL:'',
+      groupL: [],
     }
   },
   computed: {},
@@ -205,8 +211,6 @@ export default {
           this.$message.error(res.message)
         }
       })
-      
-     
     },
     // 获取项目
     getProjectList() {
@@ -232,14 +236,12 @@ export default {
           }
           // 阶段
           this.getStage()
-       
         }
       })
     },
     // 获取比赛信息
     getTreeList() {
       bizContestList({}).then((res) => {
-
         this.treeList = res.result
         this.contestId = res.result[0].contestId
         this.pagination.current = 1
@@ -325,8 +327,9 @@ export default {
     // 左侧选中
     handleTreeChange(v) {
       this.getStage()
+     
     },
-   
+
     // 查询
     handleSubmit() {
       // console.log(this.query)
@@ -1041,7 +1044,7 @@ export default {
 
         for (let i = 0; i < this.groupArray.length; i++) {
           arr.push(
-            `<td style="font-family: 微软雅黑;font-weight: 700;font-size:14px;"><b>${item.scoreList[i] || ''}</b></td>`
+            `<td style="font-family: 微软雅黑;font-weight: 700;font-size:12px;"><b>${item.scoreList[i] || ''}</b></td>`
           )
         }
         // console.log(arr)
@@ -1095,12 +1098,12 @@ export default {
         //  <td colspan="2">${item.targetSite}</td>
         return `
           <tr>
-            <td colspan="2" style="line-height:25px;text-align: center;">${item.i}</td>
+            <td colspan="2" style="text-align: center;">${item.i}</td>
 
-            <td colspan="2" style="line-height: 25px;text-align: left;">${item.playerName}</td>
-            <td colspan="2" style="line-height: 25px;text-align: left;">${item.groupName}</td>
+            <td colspan="2" style="text-align: left;">${item.playerName}</td>
+            <td colspan="2" style="text-align: left;">${item.groupName}</td>
             ${arr.join('')}
-            <td colspan="2" style="font-family: 微软雅黑;font-weight: 700;"><b>${item.stageTotal}</b></td>
+            <td colspan="2" style="font-family: 微软雅黑;font-weight: 700;font-size: 12px;">${item.stageTotal}</td>
             <td colspan="2" style="font-family: 微软雅黑;font-weight: 700;">${item.remark ? item.remark : ''}</td>
           </tr>
           ${rows.join('')}
@@ -1125,9 +1128,9 @@ export default {
           return `<div class="foot" style="position: fixed;left: 0;width: 100%;bottom: 0;height: 5.5cm">
           <div class="footer" style="width: 100%;">
             <div style="width: 100%;border: 0px solid;height: 2cm">
-              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
+              <div style="width: 100%;display:flex;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;height: 1.6cm">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
-                <div style="color: #595656;font-size: 14px">${this.rank.join('，')}</div>
+                <div style="color: #595656;font-size: 14px;margin-left:8px">${this.rank.join('，')}</div>
               </div>
             </div>
           </div>
@@ -1137,9 +1140,9 @@ export default {
 
           <div style="width: 100%;" class="footer">
             <div style="width: 100%;border: 0px solid;">
-              <div style="width: 100%;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
+              <div style="width: 100%;display:flex;border-color: #333;border-style: solid;border-left: 1px;border-right: 1px;margin: 0;padding-bottom: 8px;">
                 <div style="margin-bottom: 6px;font-size: 14px">备注</div>
-                <div style="color: #595656;font-size: 14px">
+                <div style="color: #595656;font-size: 14px;margin-left:8px">
                   ${this.rank.join('，')}
                 </div>
               </div>
@@ -1174,8 +1177,8 @@ export default {
               <th rowspan="2" colspan="2">排名</th>
 <!--              <th rowspan="2" colspan="2">靶位</th>-->
               <th rowspan="2" colspan="2" style='width: 60px'>姓名</th>
-              <th rowspan="2" colspan="2" style='width: 290px'>代表队</th>
-              <th colspan="${g}">组</th>
+              <th rowspan="2" colspan="2" style='width: 230px'>代表队</th>
+              <th colspan="${g}" style='width: 380px'>组</th>
               <th rowspan="2" colspan="2">总计</th>
               <th rowspan="2">备注</th>
             </tr>
@@ -1280,46 +1283,46 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
-      
-        bizPlayerFinalScoreFinalSportsList(data).then((res) => {
-          // includes("团体")
-          if (res.code === 200) {
-            this.rank = res.result.remark
-            if (res.result.title.includes('团体')) {
-              this.columns = reportCardFinalColumns
-              this.data = res.result.data.map((item, i) => {
-                return {
-                  ...item,
-                  i: i + 1,
-                }
-              })
-            } else {
-              // 组
-              this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
-              this.groupArray = res.result.shoots
-              this.data = res.result.data.map((item, i) => {
-                const obj = {}
-                for (let k = 0; k < item.scoreList.length; k++) {
-                  obj['scoreList' + (k + 1)] = item.scoreList[k]
-                }
-                return {
-                  ...item,
-                  ...obj,
-                  i: i + 1,
-                }
-              })
-            }
-            this.dataTitle = res.result.title
-            this.sgTimeStart = res.result.sgTimeStart
-            this.$nextTick(() => {
-              this.getHandelPrint()
+
+      bizPlayerFinalScoreFinalSportsList(data).then((res) => {
+        // includes("团体")
+        if (res.code === 200) {
+          this.rank = res.result.remark
+          if (res.result.title.includes('团体')) {
+            this.columns = reportCardFinalColumns
+            this.data = res.result.data.map((item, i) => {
+              return {
+                ...item,
+                i: i + 1,
+              }
             })
           } else {
+            // 组
+            this.getColumns(res.result.shoots && res.result.shoots.length ? res.result.shoots : this.group)
+            this.groupArray = res.result.shoots
+            this.data = res.result.data.map((item, i) => {
+              const obj = {}
+              for (let k = 0; k < item.scoreList.length; k++) {
+                obj['scoreList' + (k + 1)] = item.scoreList[k]
+              }
+              return {
+                ...item,
+                ...obj,
+                i: i + 1,
+              }
+            })
           }
-        })
+          this.dataTitle = res.result.title
+          this.sgTimeStart = res.result.sgTimeStart
+          this.$nextTick(() => {
+            this.getHandelPrint()
+          })
+        } else {
+        }
+      })
     },
     //分组打印
-    handleGroupPrint(){
+    handleGroupPrint() {
       this.groupList = []
       const row = {
         contestId: this.contestId, //赛事id
@@ -1327,19 +1330,19 @@ export default {
         stageId: this.query.cproStageId, //项目阶段id
       }
       getStagePlayerGroup(row).then((res) => {
-          if (res.success) {
-            this.groupList = res.result
-            this.grouplenght = this.groupList.length
-            if (this.groupList.length > 1) {
-              this.$refs.oReportCardT.init(row)
-            } else {
-              let stageGroup = {
-                group: 1,
-              }
-              this.remarkSuccessHandleT(stageGroup)
+        if (res.success) {
+          this.groupList = res.result
+          this.grouplenght = this.groupList.length
+          if (this.groupList.length > 1) {
+            this.$refs.oReportCardT.init(row)
+          } else {
+            let stageGroup = {
+              group: 1,
             }
+            this.remarkSuccessHandleT(stageGroup)
           }
-        })
+        }
+      })
     },
     //资格赛打印分组回调
     remarkSuccessHandleT(e) {
@@ -1586,7 +1589,6 @@ export default {
       const a = this.stageArr.filter((item) => item.value === v)[0]
       this.title = a.label
       this.group = a.groupCount
-      
     },
     //可编辑结尾
     rowClassName(r, i) {
