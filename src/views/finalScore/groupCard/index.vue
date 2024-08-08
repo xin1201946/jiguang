@@ -369,7 +369,7 @@ export default {
       const tr = (i) => {
         console.log(i)
         const rows = this.data.map((item, index) => {
-          if (i >= index + 1 && index >= (i / 6 - 1) * 6) {
+          if (i >= index + 1 && index >= (i / 7 - 1) * 7) {
             const printTds = []
             for (let i = 0; i < g; i++) {
               printTds.push(
@@ -435,7 +435,7 @@ export default {
       const imgs = window._CONFIG.printSponsorBottomImgs.map(
         (item, index) =>
           `<img src="${item}" style="width: calc(${100 / window._CONFIG.printSponsorBottomImgs.length}% - ${
-            6 * 2 * window._CONFIG.printSponsorBottomImgs.length
+            7 * 2 * window._CONFIG.printSponsorBottomImgs.length
           }px); height: 2.5cm;margin: 0 6px"/>`
       )
       const pages = [
@@ -466,11 +466,11 @@ export default {
             </tr>
           </thead>
           <tbody>
-            ${tr(6)}
+            ${tr(7)}
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="${6 + g}">
+              <td colspan="${7 + g}">
                 <div style="height: 2.8cm"></div>
               </td>
             </tr>
@@ -493,7 +493,7 @@ export default {
         `,
       ]
 
-      for (let i = 0; i < Number(((this.data.length - 6) / 6).toFixed(1)); i++) {
+      for (let i = 0; i < Number(((this.data.length - 7) / 7).toFixed(1)); i++) {
         pages.push(
           `
           <div style="position: relative;overflow: hidden;">
@@ -522,11 +522,11 @@ export default {
             </tr>
           </thead>
           <tbody>
-            ${tr((i + 2) * 6)}
+            ${tr((i + 2) * 7)}
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="${6 + g}">
+              <td colspan="${7 + g}">
                 <div style="height: 2.8cm"></div>
               </td>
             </tr>
@@ -553,7 +553,8 @@ export default {
       return `
       <style>
       @page{
-        margin-top: 2cm;
+        margin-top: 0cm;
+        padding:0;
       }
         h1,h2,h3,h4,p{
           margin: 0;

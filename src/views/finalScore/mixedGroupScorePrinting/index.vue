@@ -189,7 +189,6 @@ export default {
             )
           }
           console.log(printTds)
-
           const trs = []
           const tdsboy = []
           const tdsgril = []
@@ -349,7 +348,8 @@ export default {
       return `
       <style>
       @page{
-        margin-top: 2cm;
+        margin-top: 0cm;
+        padding:0;
       }
         h1,h2,h3,h4,p{
           margin: 0;
