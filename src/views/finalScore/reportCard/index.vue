@@ -151,6 +151,7 @@ export default {
       sgTimeStart: undefined,
       grouplenght: '',
       groupL: [],
+      zgdata: '',
     }
   },
   computed: {},
@@ -327,7 +328,6 @@ export default {
     // 左侧选中
     handleTreeChange(v) {
       this.getStage()
-     
     },
 
     // 查询
@@ -372,7 +372,7 @@ export default {
       }
       const datas = [...this.data /*  ...this.data, ...this.data, ...this.data, ...this.data */]
       let tr = []
-      if (this.grouplenght > 1) {
+      if (this.zgdata == 2) {
         tr = datas.map((item, trIndex) => {
           const arr = []
           for (let i = 0; i < item.scoreList.length; i++) {
@@ -400,7 +400,7 @@ export default {
               </tr>`
           }
         })
-      } else {
+      } else if (this.zgdata == 1) {
         tr = datas.map((item, trIndex) => {
           const arr = []
           for (let i = 0; i < item.scoreList.length; i++) {
@@ -1276,6 +1276,7 @@ export default {
     },
     // 普通成绩打印
     handlePrint() {
+      this.zgdata = 1
       const data = {
         ...this.query,
         // pageNum: this.pagination.current,
@@ -1323,6 +1324,7 @@ export default {
     },
     //分组打印
     handleGroupPrint() {
+      this.zgdata = 2
       this.groupList = []
       const row = {
         contestId: this.contestId, //赛事id
