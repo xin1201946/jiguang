@@ -99,6 +99,11 @@
                 :key="item.group"
                 :tab="`${numToCapital(item.group)}组`"
               ></a-tab-pane>
+              <!-- 新增分组 -->
+              <template #tabBarExtraContent v-if="stageName == '资格赛'">
+                <a-button style="border: 0px" icon="plus-circle" shape="circle" @click="addNewTab"></a-button>
+                <!-- <a-icon type="plus-circle" @click="addNewTab" /> -->
+              </template>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -110,6 +115,7 @@
                 <a-button @click.stop="handleShishe()" v-if="isAdjustment == '1'">试射</a-button>
                 <a-button @click.stop="handleBisai()">开始</a-button>
                 <a-button @click.stop="handleEnd()">结束</a-button>
+                <a-button @click.stop="addNewparticipants()">添加参赛人员</a-button>
               </a-space>
               <div class="table_box_total_right">
                 <a-button
@@ -230,7 +236,7 @@
                     >成绩详情</a-button
                   >
                   <a-button
-                    v-if="record.eliminationStatus != 1&&stageName !== '金/铜牌赛'"
+                    v-if="record.eliminationStatus != 1 && stageName !== '金/铜牌赛'"
                     type="danger"
                     size="small"
                     ghost
@@ -243,9 +249,7 @@
                       更多 <a-icon type="down" />
                     </a>
                     <a-menu slot="overlay">
-                      <a-menu-item
-                        v-if="record.targetSite && record.eliminationStatus != 1"
-                      >
+                      <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
                         <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)"
                           >更换靶位</a-button
                         >
@@ -327,6 +331,8 @@
         <!-- 混团积分监控 -->
         <GameInfoMixedGroup ref="GameInfoMixedGroup"></GameInfoMixedGroup>
         <!-- @confirm="ChecklistSuccessHandleOk" -->
+        <!-- 添加参赛人员 -->
+        <ParticipantAddModal ref="participantAddModal" @ok =  handleOk()></ParticipantAddModal>
       </AppstoreTreeCard>
     </div>
   </div>
@@ -359,6 +365,7 @@ import Electricitylevel from '@views/Competition/gameInfo/electricitylevel.vue'
 import GameSetShootModel from '@views/Competition/gameInfo/modal/gameSetShootModel.vue'
 import GameInfoChecklist from '@views/Competition/gameInfo/modal/gameInfoChecklist.vue'
 import GameInfoMixedGroup from '@views/Competition/gameInfo/modal/gameInfoMixedGroup.vue'
+import ParticipantAddModal from '@views/Competition/gameInfo/modal/participantAddModal.vue'
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -387,7 +394,7 @@ import {
   processEditGroupScore,
   grabShot, // 设置发序无效
   grabShotGroup, //设置混团发序无效
-  changeGroupContestGroup,//混团变更组别
+  changeGroupContestGroup, //混团变更组别
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 function extractValue(str) {
@@ -436,7 +443,8 @@ export default {
     gameInfoBlendModal,
     GameSetShootModel,
     GameInfoChecklist,
-    GameInfoMixedGroup
+    GameInfoMixedGroup,
+    ParticipantAddModal, //添加参赛人员
   },
   inject: ['closeCurrent'],
   data() {
@@ -561,15 +569,28 @@ export default {
         stageGroup: this.group, //分组id}
       }
       this.$refs.GameInfoMixedGroup.init(data)
-      
     },
     //设置发序无效
     handleSetShoot(row) {
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
+    // 增加新的分组
+ 
+    //新增参赛人员
+    addNewparticipants() {
+      const data = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id}
+        stageGroup: this.group, //分组id}
+      }
+      this.$refs.participantAddModal.init(data)
+    },
+    handleOk(){
+      this.getTableList()
+    },
     setShootSuccessHandle(row) {
       if (this.stageName === '金/铜牌赛') {
-   
         const data = {
           teamGoldScoreId: row.teamGoldScoreId,
           playerId: row.playerId,
@@ -937,55 +958,56 @@ export default {
      * 打开变更组别 handleGrouping
      */
     handleGrouping(row) {
-      this.$refs.gameChangeGroupRef.init({
-        ...row,
-        cproId: this.cproId,
-        stageGroup: this.group,
-        stageId: this.cproStageId,
-      },this.stageName)
+      this.$refs.gameChangeGroupRef.init(
+        {
+          ...row,
+          cproId: this.cproId,
+          stageGroup: this.group,
+          stageId: this.cproStageId,
+        },
+        this.stageName
+      )
     },
     /**
      * 变更组别
      */
     changeGroupRefHandle(i) {
       console.log(i, 'i')
-      if(this.stageName === '金/铜牌赛'){
+      if (this.stageName === '金/铜牌赛') {
         changeGroupContestGroup({
-        contestId: i.contestId,
-        cproId: i.cproId,
-        playerId: i.playerId,
-        stageId: i.stageId,
-        stageGroup: i.stageGroup,
-        teamGoldReplaceId: i.teamGoldScoreId,
-      }).then((res) => {
-        if (res.success) {
-          this.$message.success('变更组别成功！')
-          this.getTableList()
-          this.$refs.gameChangeGroupRef.handleCancel()
-        } else {
-          this.$message.error(res.message)
-        }
-      })
-      }
-      else{
+          contestId: i.contestId,
+          cproId: i.cproId,
+          playerId: i.playerId,
+          stageId: i.stageId,
+          stageGroup: i.stageGroup,
+          teamGoldReplaceId: i.teamGoldScoreId,
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('变更组别成功！')
+            this.getTableList()
+            this.$refs.gameChangeGroupRef.handleCancel()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
         changeGroupContest({
-        contestId: i.contestId,
-        cproId: i.cproId,
-        playerId: i.playerId,
-        stageId: i.stageId,
-        stageGroup: i.stageGroupNew,
-        targetSite: i.targetSiteNew,
-      }).then((res) => {
-        if (res.success) {
-          this.$message.success('变更组别成功！')
-          this.getTableList()
-          this.$refs.gameChangeGroupRef.handleCancel()
-        } else {
-          this.$message.error(res.message)
-        }
-      })
+          contestId: i.contestId,
+          cproId: i.cproId,
+          playerId: i.playerId,
+          stageId: i.stageId,
+          stageGroup: i.stageGroupNew,
+          targetSite: i.targetSiteNew,
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('变更组别成功！')
+            this.getTableList()
+            this.$refs.gameChangeGroupRef.handleCancel()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       }
-      
     },
     handleTableChange(pagination) {
       this.pagination = pagination
@@ -1100,6 +1122,7 @@ export default {
           this.$refs.treeCard.loading = false
         })
     },
+
     /**
      * 选择组别
      */
@@ -1744,9 +1767,14 @@ export default {
   }
 
   .gameInfoTables {
+    position: relative;
     height: 100%;
     overflow: hidden;
-
+    .gameInfoTables_add {
+      position: absolute;
+      top: 0.5%;
+      right: 20%;
+    }
     &_group {
       width: 100%;
       // height: 100%;

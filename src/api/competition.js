@@ -220,3 +220,6 @@ export const changeGroupContestGroup = data => postAction("contest-process/chang
 export const changeGroupList = data => postAction("contest-process/changeGroupList", data)
 //阶段打印分组打印
 export const qualificationScorePdfByGroup = data => postAction("bizPlayerFinalScore/qualificationScorePdfByGroup", data)
+
+//资格赛添加运动员
+export const savePlayer = data => postAction("contest-process/savePlayer", data)

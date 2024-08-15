@@ -4,8 +4,8 @@
 window._CONFIG = {
   // 接口父路径
   // VUE_APP_API_BASE_URL: 'http://192.168.8.119:8080/lasergun-training/',
-  // VUE_APP_API_BASE_URL: 'http://192.168.8.162:8082/lasergun-training/',
-  VUE_APP_API_BASE_URL: 'http://192.168.8.121:8080/lasergun-training/',
+  VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
+  // VUE_APP_API_BASE_URL: 'http://192.168.8.121:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.100.252:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.100.231:8080/lasergun-training/',
