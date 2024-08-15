@@ -9,8 +9,8 @@
         <a-form-model-item label="团队名称" prop="groupName">
           <a-input allowClear v-model="formData.groupName"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="组" prop="stageGroup">
-          <a-input allowClear v-model="formData.stageGroup"></a-input>
+        <a-form-model-item label="组别" prop="stageGroup">
+          <a-input allowClear type="number" v-model="formData.stageGroup"></a-input>
         </a-form-model-item>
         <a-form-model-item label="靶位" prop="targetSite">
           <a-select allowClear v-model="formData.targetSite" @change="handleChange">
@@ -28,10 +28,8 @@
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
 import {
-  bizContestPlayerSave,
-  bizContestPlayerUpdate,
+ 
   processSelectGroupList,
-  processSelectTargetList,
   savePlayer,
   bizContestProjectDeviceList,
 } from '@api/competition'
@@ -93,9 +91,10 @@ export default {
       this.cproId = data.cproId
       // this.stageGroup = data.stageGroup
       this.stageId = data.stageId
-
+     
       bizContestProjectDeviceList(data).then((res) => {
         this.listTarge = res.result
+        console.log( this.listTarge);
       })
     },
 
@@ -118,9 +117,26 @@ export default {
                 this.$emit('ok')
                 this.loadingModal = false
                 this.visible = false
+                this.formData = {
+                  serialNumber: '',
+                  playerName: '',
+                  playerSex: '',
+                  idCardNum: '',
+                  groupName: '',
+                  projectGroup: '',
+                  playerId: '',
+                  project1: '',
+                  isGroup1: '',
+                  project2: '',
+                  isGroup2: '',
+                  project3: '',
+                  mixedGroupNo: '',
+                }
                 if (res.code == 500) {
                   this.loadingModal = false
                 }
+              }else{
+                this.$message.error(res.message)
               }
             })
           }
@@ -152,35 +168,8 @@ export default {
         project3: '',
         mixedGroupNo: '',
       }
-      this.$refs.form.resetFields()
-      this.$set(this.rules, 'stageGroup', [{ required: false, trigger: 'change' }])
-      this.$set(this.rules, 'targetSite', [{ required: false, trigger: 'change' }])
     },
-    // 单选radio
-    handleOnChange(Event) {
-      this.formData.project1 = null
-      this.formData.isGroup1 = null
-      this.formData.project2 = null
-      this.formData.isGroup2 = null
-      this.formData.project3 = null
-      this.formData.mixedGroupNo = null
-    },
-    handleChangePro1(ev) {
-      this.$nextTick(() => {
-        this.handleSelectGroup(ev)
-      })
-    },
-    // 组别
-    handleSelectGroup(ev) {
-      const arr = {
-        contestId: this.contestId,
-        cproName: ev,
-        projectGroup: this.formData.projectGroup,
-      }
-      processSelectGroupList(arr).then((res) => {
-        this.listStage = res.result
-      })
-    },
+ 
   },
 }
 </script>

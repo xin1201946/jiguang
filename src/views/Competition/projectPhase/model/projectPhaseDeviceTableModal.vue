@@ -134,6 +134,8 @@ export default {
       }
     },
     resetClick() {
+      this.selectedRowKeys=[]
+      this.selectedRows=[]
       this.deviceType = undefined
       this.tabletPcNum = undefined
       this.getPcTableList({
@@ -142,6 +144,8 @@ export default {
       })
     },
     handleClick() {
+      this.selectedRowKeys=[]
+      this.selectedRows=[]
       let value = ''
       for (const item of deviceGunType) {
         if (item.label === this.deviceType) {

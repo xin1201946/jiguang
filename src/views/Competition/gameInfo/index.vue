@@ -63,13 +63,7 @@
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
-            <a-button
-              v-if="stageName == '资格赛'"
-              type="primary"
-              style="margin-right: 8px"
-              @click.stop="addNewparticipants()"
-              >添加参赛人员</a-button
-            >
+
             <a-button v-if="group === null" type="primary" @click="editHandle">编辑参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
@@ -94,6 +88,18 @@
             <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
             <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
+            <a-button
+              v-if="stageName == '资格赛'"
+              type="primary"
+              style="
+                margin-right: 8px;
+                border-color: rgb(62 187 1);
+                background-color: rgb(62 187 1);
+                color: rgb(255 255 255);
+              "
+              @click.stop="addNewparticipants()"
+              >添加参赛人员</a-button
+            >
             <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
           </a-space>
         </template>
@@ -247,8 +253,8 @@
                     @click="handleStop(record)"
                     >停止比赛</a-button
                   >
-                  <a-dropdown>
-                    <a style="display: block; width: 80px" @click="(e) => e.preventDefault()">
+                  <a-dropdown >
+                    <a style="display: block; width: 80px" @click="(e) => e.preventDefault()" >
                       更多 <a-icon type="down" />
                     </a>
                     <a-menu slot="overlay">
@@ -277,10 +283,21 @@
                       <a-menu-item v-if="stageName == '资格赛'">
                         <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="stageName == '资格赛'">
-                        <a-button type="link" size="small" icon="delete" @click="handleDeletePlayer(record)"
-                          >删除</a-button
+                      <a-menu-item v-if="stageName == '资格赛'" >
+                        <a-popconfirm
+                          title="是否要删除该运动员?"
+                          ok-text="确定"
+                          cancel-text="取消"
+                          placement="left"
+                          trigger="hover"
+                          @confirm="deleteConfirm(record)"
+                          @cancel="deleteCancel"
+                          style="position: relative;right: 0;"
                         >
+                          <a-button type="link" size="small" icon="delete"
+                          @click.prevent >删除</a-button
+                          >
+                        </a-popconfirm>
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -466,7 +483,7 @@ export default {
   data() {
     return {
       loading2: false,
-
+      isDropdownVisible: false,
       treeList: [],
       cproStageId: null,
       cproId: null,
@@ -474,7 +491,7 @@ export default {
       columns: [
         {
           dataIndex: 'stageStatus',
-          title: '选手编号',
+          title: '比赛状态',
           align: 'center',
           scopedSlots: {
             customRender: 'stageStatusSlot',
@@ -588,6 +605,7 @@ export default {
     },
     //设置发序无效
     handleSetShoot(row) {
+      this.isDropdownVisible = false;
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
     // 增加新的分组
@@ -602,6 +620,9 @@ export default {
       }
       this.$refs.participantAddModal.init(data)
     },
+    toggleDropdown(show) {
+      this.isDropdownVisible = show;
+    },
     //删除运动员
     handleDeletePlayer(r) {
       const data = {
@@ -614,9 +635,19 @@ export default {
       deletePlayer(data).then((res) => {
         if (res.success) {
           this.$message.success(res.message)
+          this.isDropdownVisible = false;
           this.getTableList()
+        } else {
+          this.$message.error(res.message)
+          this.isDropdownVisible = false;
         }
       })
+    },
+    deleteConfirm(r){
+      this.handleDeletePlayer(r)
+    },
+    deleteCancel(){
+      this.isDropdownVisible = false;
     },
     //回调刷新
     handleOk() {
@@ -624,6 +655,7 @@ export default {
     },
     //编辑人员姓名和代表队
     handleSetPlayer(r) {
+      this.isDropdownVisible = false;
       const data = {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
@@ -896,6 +928,7 @@ export default {
      * 更换靶位
      */
     handleRetweet(row) {
+      this.isDropdownVisible = false;
       this.$refs.retweet.init({ ...row, cproId: this.cproId, stageGroup: this.group, stageId: this.cproStageId })
     },
     retweetSuccessHandle(row) {
@@ -956,6 +989,7 @@ export default {
      * 打开备注
      */
     handleRemark(row) {
+      this.isDropdownVisible = false;
       this.$refs.remark.init(row)
     },
     remarkSuccessHandle(e) {
@@ -975,6 +1009,7 @@ export default {
     },
     // 打开判罚
     handlePenalty(row) {
+      this.isDropdownVisible = false;
       this.$refs.penalty.init(row)
     },
     /**
@@ -1001,6 +1036,7 @@ export default {
      * 打开变更组别 handleGrouping
      */
     handleGrouping(row) {
+      this.isDropdownVisible = false;
       this.$refs.gameChangeGroupRef.init(
         {
           ...row,
@@ -1216,7 +1252,7 @@ export default {
       this.columns = [
         {
           dataIndex: 'stageStatus',
-          title: '选手编号',
+          title: '比赛状态',
           align: 'center',
           scopedSlots: {
             customRender: 'stageStatusSlot',
@@ -1775,6 +1811,7 @@ export default {
       background: rgba(255, 255, 255, 0.8);
       border-radius: 4px;
     }
+
 
     /deep/.ant-tree-child-tree.ant-tree-child-tree-open {
       //选中后设置背景色及高度

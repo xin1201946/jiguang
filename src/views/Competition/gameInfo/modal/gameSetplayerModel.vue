@@ -34,19 +34,9 @@ export default {
       loadingModal: false,
       type: 1,
       formData: {
-        serialNumber: '',
         playerName: '',
-        playerSex: '',
-        idCardNum: '',
+
         groupName: '',
-        projectGroup: '',
-        playerId: '',
-        project1: '',
-        isGroup1: '',
-        project2: '',
-        isGroup2: '',
-        project3: '',
-        mixedGroupNo: '',
       },
       rules: {
         playerName: [{ required: true, message: '请输入选手姓名', trigger: 'blur' }],
@@ -95,6 +85,8 @@ export default {
               if (res.code == 500) {
                 this.loadingModal = false
               }
+            } else {
+              this.$message.error(res.message)
             }
           })
         }
@@ -119,9 +111,6 @@ export default {
         project3: '',
         mixedGroupNo: '',
       }
-      this.$refs.form.resetFields()
-      this.$set(this.rules, 'stageGroup', [{ required: false, trigger: 'change' }])
-      this.$set(this.rules, 'targetSite', [{ required: false, trigger: 'change' }])
     },
   },
 }
