@@ -63,6 +63,13 @@
         <template slot="operator">
           <a-space v-show="cproStageId !== null">
             <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
+            <a-button
+              v-if="stageName == '资格赛'"
+              type="primary"
+              style="margin-right: 8px"
+              @click.stop="addNewparticipants()"
+              >添加参赛人员</a-button
+            >
             <a-button v-if="group === null" type="primary" @click="editHandle">编辑参赛人员</a-button>
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
@@ -99,11 +106,6 @@
                 :key="item.group"
                 :tab="`${numToCapital(item.group)}组`"
               ></a-tab-pane>
-              <!-- 新增分组 -->
-              <template #tabBarExtraContent v-if="stageName == '资格赛'">
-                <a-button style="border: 0px" icon="plus-circle" shape="circle" @click="addNewTab"></a-button>
-                <!-- <a-icon type="plus-circle" @click="addNewTab" /> -->
-              </template>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -115,7 +117,7 @@
                 <a-button @click.stop="handleShishe()" v-if="isAdjustment == '1'">试射</a-button>
                 <a-button @click.stop="handleBisai()">开始</a-button>
                 <a-button @click.stop="handleEnd()">结束</a-button>
-                <a-button @click.stop="addNewparticipants()">添加参赛人员</a-button>
+                <!-- <a-button @click.stop="addNewparticipants()">添加参赛人员</a-button> -->
               </a-space>
               <div class="table_box_total_right">
                 <a-button
@@ -125,6 +127,7 @@
                   v-if="this.stageName === '资格赛'"
                   >成绩核对单</a-button
                 >
+
                 <a-button
                   type="primary"
                   style="margin-right: 8px"
@@ -271,6 +274,14 @@
                           >设置发序无效</a-button
                         >
                       </a-menu-item>
+                      <a-menu-item v-if="stageName == '资格赛'">
+                        <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
+                      </a-menu-item>
+                      <a-menu-item v-if="stageName == '资格赛'">
+                        <a-button type="link" size="small" icon="delete" @click="handleDeletePlayer(record)"
+                          >删除</a-button
+                        >
+                      </a-menu-item>
                     </a-menu>
                   </a-dropdown>
                 </a-space>
@@ -332,7 +343,9 @@
         <GameInfoMixedGroup ref="GameInfoMixedGroup"></GameInfoMixedGroup>
         <!-- @confirm="ChecklistSuccessHandleOk" -->
         <!-- 添加参赛人员 -->
-        <ParticipantAddModal ref="participantAddModal" @ok =  handleOk()></ParticipantAddModal>
+        <ParticipantAddModal ref="participantAddModal" @ok="handleOk()"></ParticipantAddModal>
+        <!-- 编辑人员信息 -->
+        <GameSetplayerModel ref="GameSetplayerModel" @playerOk="handleOk()"></GameSetplayerModel>
       </AppstoreTreeCard>
     </div>
   </div>
@@ -366,6 +379,7 @@ import GameSetShootModel from '@views/Competition/gameInfo/modal/gameSetShootMod
 import GameInfoChecklist from '@views/Competition/gameInfo/modal/gameInfoChecklist.vue'
 import GameInfoMixedGroup from '@views/Competition/gameInfo/modal/gameInfoMixedGroup.vue'
 import ParticipantAddModal from '@views/Competition/gameInfo/modal/participantAddModal.vue'
+import GameSetplayerModel from '@views/Competition/gameInfo/modal/gameSetplayerModel.vue'
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -395,6 +409,7 @@ import {
   grabShot, // 设置发序无效
   grabShotGroup, //设置混团发序无效
   changeGroupContestGroup, //混团变更组别
+  deletePlayer, //删除运动员
 } from '@api/competition'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 function extractValue(str) {
@@ -445,6 +460,7 @@ export default {
     GameInfoChecklist,
     GameInfoMixedGroup,
     ParticipantAddModal, //添加参赛人员
+    GameSetplayerModel, //编辑人员信息
   },
   inject: ['closeCurrent'],
   data() {
@@ -575,7 +591,7 @@ export default {
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
     // 增加新的分组
- 
+
     //新增参赛人员
     addNewparticipants() {
       const data = {
@@ -586,8 +602,35 @@ export default {
       }
       this.$refs.participantAddModal.init(data)
     },
-    handleOk(){
+    //删除运动员
+    handleDeletePlayer(r) {
+      const data = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id
+        playerId: r.playerId, //运动员id
+        stageGroup: this.group, //分组id
+      }
+      deletePlayer(data).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message)
+          this.getTableList()
+        }
+      })
+    },
+    //回调刷新
+    handleOk() {
       this.getTableList()
+    },
+    //编辑人员姓名和代表队
+    handleSetPlayer(r) {
+      const data = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id}
+        stageGroup: this.group, //分组id}
+      }
+      this.$refs.GameSetplayerModel.init(r, data)
     },
     setShootSuccessHandle(row) {
       if (this.stageName === '金/铜牌赛') {

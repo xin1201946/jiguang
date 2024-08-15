@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { selectTargetList,changeGroupList } from '@/api/competition'
+import { selectTargetList } from '@/api/competition'
 import BizModal from '@comp/modal/BizModal.vue'
 export default {
   name: 'gameInfoChangeGroup',
@@ -88,16 +88,7 @@ export default {
         this.formData.teamGoldScoreId = undefined
         this.stageName = i
       })
-      const data = {
-        contestId: row.contestId,
-        cproId: row.cproId,
-        stageGroup: row.stageGroup,
-        stageId: row.stageId,
-        playerId:row.playerId
-      }
-      changeGroupList(data).then((res) => {
-        this.selectList1 = res.result
-      })
+     
     },
     handleOk() {
       this.$refs.form.validate(valid => {

@@ -223,3 +223,9 @@ export const qualificationScorePdfByGroup = data => postAction("bizPlayerFinalSc
 
 //资格赛添加运动员
 export const savePlayer = data => postAction("contest-process/savePlayer", data)
+//资格赛编辑人员信息
+
+export const updatePlayer = data => postAction("contest-process/updatePlayer", data)
+//删除运动员
+
+export const deletePlayer = data => postAction("contest-process/deletePlayer", data)
