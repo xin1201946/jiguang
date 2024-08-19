@@ -42,11 +42,8 @@
       <AppstoreTreeCard ref="treeCard" @success="successOkTree">
         <template slot="tree">
           <a-directory-tree multiple default-expand-all @select="onSelect" @expand="onExpand">
-            <a-tree-node
-              v-for="item in treeList"
-              :key="item.projectId + item.projectGroup"
-              :title="item.projectName + ' - ' + item.projectGroup"
-            >
+            <a-tree-node v-for="item in treeList" :key="item.projectId + item.projectGroup"
+              :title="item.projectName + ' - ' + item.projectGroup">
               <a-tree-node v-for="i in item.children" is-leaf :slots="{ title: 'title' }" :key="i.cproStageId">
                 <template slot="title">
                   <div class="title">
@@ -68,18 +65,10 @@
             <a-button type="primary" @click="handleGroup">分组</a-button>
             <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
             <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-            <a-button
-              v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'"
-              type="primary"
-              @click="nextStageHandle"
-              >下一阶段</a-button
-            >
-            <a-button
-              v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')"
-              type="primary"
-              @click="nextStageHandle"
-              >结束阶段</a-button
-            >
+            <a-button v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'" type="primary"
+              @click="nextStageHandle">下一阶段</a-button>
+            <a-button v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')" type="primary"
+              @click="nextStageHandle">结束阶段</a-button>
             <!--            选中组别-->
             <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
             <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
@@ -88,30 +77,20 @@
             <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
             <a-button type="primary" @click="getTableList">刷新</a-button>
             <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
-            <a-button
-              v-if="stageName == '资格赛'"
-              type="primary"
-              style="
+            <a-button v-if="stageName == '资格赛'" type="primary" style="
                 margin-right: 8px;
                 border-color: rgb(62 187 1);
                 background-color: rgb(62 187 1);
                 color: rgb(255 255 255);
-              "
-              @click.stop="addNewparticipants()"
-              >添加参赛人员</a-button
-            >
+              " @click.stop="addNewparticipants()">添加参赛人员</a-button>
             <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
           </a-space>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
           <div class="gameInfoTables_group">
             <a-tabs v-model="group" @change="radioChangeHandle">
-              <a-tab-pane
-                v-for="item in groupList"
-                :value="item.group"
-                :key="item.group"
-                :tab="`${numToCapital(item.group)}组`"
-              ></a-tab-pane>
+              <a-tab-pane v-for="item in groupList" :value="item.group" :key="item.group"
+                :tab="`${numToCapital(item.group)}组`"></a-tab-pane>
             </a-tabs>
           </div>
           <div class="gameInfoTables_table">
@@ -126,36 +105,18 @@
                 <!-- <a-button @click.stop="addNewparticipants()">添加参赛人员</a-button> -->
               </a-space>
               <div class="table_box_total_right">
-                <a-button
-                  type="primary"
-                  style="margin-right: 8px"
-                  @click="handleChecklist()"
-                  v-if="this.stageName === '资格赛'"
-                  >成绩核对单</a-button
-                >
+                <!-- <a-button type="primary" style="margin-right: 8px" @click="handleChecklist()"
+                  v-if="this.stageName === '资格赛'">成绩核对单</a-button> -->
 
-                <a-button
-                  type="primary"
-                  style="margin-right: 8px"
-                  @click="handleGrouplist()"
-                  v-if="this.stageName === '金/铜牌赛'"
-                  >积分监控</a-button
-                >
+                <a-button type="primary" style="margin-right: 8px" @click="handleGrouplist()"
+                  v-if="this.stageName === '金/铜牌赛'">积分监控</a-button>
                 <a-button type="primary" style="margin-right: 8px" @click="handleTargetLocation()">靶图</a-button>
                 <a-button type="primary" style="" @click="handleTablet()">平板监控</a-button>
               </div>
             </div>
-            <a-table
-              :rowSelection="rowSelection"
-              :rowClassName="(r, i) => rowClassName(r, i)"
-              bordered
-              rowKey="playerId"
-              :pagination="false"
-              :columns="columns"
-              :dataSource="dataSource"
-              :loading="loading"
-              :scroll="{ x: 1500 }"
-            >
+            <a-table :rowSelection="rowSelection" :rowClassName="(r, i) => rowClassName(r, i)" bordered
+              rowKey="playerId" :pagination="false" :columns="columns" :dataSource="dataSource" :loading="loading"
+              :scroll="{ x: 1500 }">
               <!-- 当前状态 -->
               <template slot="stageStatusSlot" slot-scope="text, record">
                 <span v-if="record.stageStatus === 0">未开始</span>
@@ -170,25 +131,13 @@
                 <div style="display: flex; justify-content: space-around; align-items: center">
                   <!-- <span :class="record.pcStatus == '0' ? 'spanGRed' : record.pcStatus == '1' ? 'spanGreen' : ''"></span> -->
                   <span
-                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"
-                  ></span>
+                    :class="record.pcStatus == '0' ? 'spanGreen' : record.pcStatus == '1' ? 'spanGreen' : ''"></span>
                   <!-- <img width='32' height='32' v-if="record.pcStatus == '0'" src="../../../assets/未连接.svg" alt="未连接">
                   <img  width='32' height='32' v-if="record.pcStatus == '1'" src="../../../assets/已连接.svg" alt="已连接"> -->
-                  <img
-                    width="25"
-                    height="25"
-                    v-if="record.model == '0'"
-                    src="../../../assets/icon-copy.png"
-                    alt="试射"
-                  />
+                  <img width="25" height="25" v-if="record.model == '0'" src="../../../assets/icon-copy.png" alt="试射" />
                   <!-- <img width='25' height='25' v-if="record.model == '0'" src="../../../assets/bottom-left.png" alt="试射"> -->
-                  <img
-                    width="15"
-                    height="15"
-                    v-if="record.model == '1'"
-                    src="../../../assets/zhengfangxing.png"
-                    alt="射击"
-                  />
+                  <img width="15" height="15" v-if="record.model == '1'" src="../../../assets/zhengfangxing.png"
+                    alt="射击" />
                   <!-- <img width='32' height='32' v-if="record.model == '0'" src="../../../assets/试射.svg" alt="试射">
                   <img width='32' height='32' v-if="record.model == '1'" src="../../../assets/射击.svg" alt="射击"> -->
                   <Electricitylevel :power="text" width="32" height="32"></Electricitylevel>
@@ -197,13 +146,9 @@
               </template>
               <!-- 总成绩 -->
               <template slot="totalScoreSlot" slot-scope="text, record">
-                <a-input
-                  placeholder="请输入"
-                  v-if="record.editableTotal"
-                  :value="text"
+                <a-input placeholder="请输入" v-if="record.editableTotal" :value="text"
                   @change="(e) => handleChangeTotal(e.target.value, record.playerId, record.totalScore)"
-                  @blur="handleBlurTotal(record, text)"
-                />
+                  @blur="handleBlurTotal(record, text)" />
                 <template v-else>
                   <!-- 单击 -->
                   <a @click="editAchievementTotal(record.playerId)">{{ record.totalScore }}</a>
@@ -212,13 +157,9 @@
               <!-- 10 20 30组别编辑 -->
               <template v-for="col in strArr" v-slot:[col]="text, record, index">
                 <div :key="col" @contextmenu.prevent="handleActionsColumnContextMenu(record, $event, col, index)">
-                  <a-input
-                    placeholder="请输入"
-                    v-if="record.editable"
-                    :value="text"
+                  <a-input placeholder="请输入" v-if="record.editable" :value="text"
                     @change="(e) => handleChange(e.target.value, record.playerId, col)"
-                    @blur="handleBlur(record, col, text)"
-                  />
+                    @blur="handleBlur(record, col, text)" />
                   <template v-else>
                     <!-- 单击 -->
                     <!-- <a @click="handleClickAchievement(record)">{{ text }}---*</a> -->
@@ -235,33 +176,17 @@
                   <!-- <a-button v-if="['准备中', '试射中', '比赛中', '成绩显示', '已结束'].indexOf(status) !== -1" type="primary"
                     size="small" ghost icon="profile" @click="handleInfo(record)">成绩详情</a-button> -->
                   <!-- ['成绩显示','已结束'].indexOf(status) == -1 &&  -->
-                  <a-button
-                    v-if="projectName.includes('团体')"
-                    type="primary"
-                    size="small"
-                    ghost
-                    icon="profile"
-                    @click="handleInfo(record)"
-                    >成绩详情</a-button
-                  >
-                  <a-button
-                    v-if="record.eliminationStatus != 1 && stageName !== '金/铜牌赛'"
-                    type="danger"
-                    size="small"
-                    ghost
-                    icon="stop"
-                    @click="handleStop(record)"
-                    >停止比赛</a-button
-                  >
-                  <a-dropdown >
-                    <a style="display: block; width: 80px" @click="(e) => e.preventDefault()" >
+                  <a-button v-if="projectName.includes('团体')" type="primary" size="small" ghost icon="profile"
+                    @click="handleInfo(record)">成绩详情</a-button>
+                  <a-button v-if="record.eliminationStatus != 1 && stageName !== '金/铜牌赛'" type="danger" size="small"
+                    ghost icon="stop" @click="handleStop(record)">停止比赛</a-button>
+                  <a-dropdown>
+                    <a style="display: block; width: 80px" @click="(e) => e.preventDefault()">
                       更多 <a-icon type="down" />
                     </a>
                     <a-menu slot="overlay">
                       <a-menu-item v-if="record.targetSite && record.eliminationStatus != 1">
-                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)"
-                          >更换靶位</a-button
-                        >
+                        <a-button type="link" size="small" icon="retweet" @click="handleRetweet(record)">更换靶位</a-button>
                       </a-menu-item>
                       <a-menu-item>
                         <a-button type="link" size="small" icon="flag" @click="handlePenalty(record)">判罚</a-button>
@@ -270,33 +195,19 @@
                         <a-button type="link" size="small" icon="form" @click="handleRemark(record)">备注</a-button>
                       </a-menu-item>
                       <a-menu-item v-if="stageName == '资格赛'">
-                        <a-button type="link" size="small" icon="swap" @click="handleGrouping(record)"
-                          >变更组别</a-button
-                        >
+                        <a-button type="link" size="small" icon="swap" @click="handleGrouping(record)">变更组别</a-button>
                       </a-menu-item>
                       <!-- v-if="stageName !== '金/铜牌赛'" -->
                       <a-menu-item>
-                        <a-button type="link" size="small" icon="swap" @click="handleSetShoot(record)"
-                          >设置发序无效</a-button
-                        >
+                        <a-button type="link" size="small" icon="swap" @click="handleSetShoot(record)">设置发序无效</a-button>
                       </a-menu-item>
                       <a-menu-item v-if="stageName == '资格赛'">
                         <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="stageName == '资格赛'" >
-                        <a-popconfirm
-                          title="是否要删除该运动员?"
-                          ok-text="确定"
-                          cancel-text="取消"
-                          placement="left"
-                          trigger="hover"
-                          @confirm="deleteConfirm(record)"
-                          @cancel="deleteCancel"
-                          style="position: relative;right: 0;"
-                        >
-                          <a-button type="link" size="small" icon="delete"
-                          @click.prevent >删除</a-button
-                          >
+                      <a-menu-item v-if="stageName == '资格赛'">
+                        <a-popconfirm title="是否要删除该运动员?" ok-text="确定" cancel-text="取消" placement="left" trigger="hover"
+                          @confirm="deleteConfirm(record)" @cancel="deleteCancel" style="position: relative;right: 0;">
+                          <a-button type="link" size="small" icon="delete" @click.prevent>删除</a-button>
                         </a-popconfirm>
                       </a-menu-item>
                     </a-menu>
@@ -309,15 +220,8 @@
         <a-space style="margin-bottom: 20px" v-if="!groupActive && this.dataSource.length != 0">
           <span>总人数：{{ this.dataSource.length }}</span>
         </a-space>
-        <a-table
-          bordered
-          v-if="!groupActive"
-          rowKey="playerId"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="false"
-          :loading="loading"
-        >
+        <a-table bordered v-if="!groupActive" rowKey="playerId" :columns="columns" :dataSource="dataSource"
+          :pagination="false" :loading="loading">
         </a-table>
         <!-- 抽签 -->
         <gameInfoDrawModal ref="draw" @list="drawListHandle"></gameInfoDrawModal>
@@ -605,7 +509,7 @@ export default {
     },
     //设置发序无效
     handleSetShoot(row) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
     // 增加新的分组
@@ -621,7 +525,7 @@ export default {
       this.$refs.participantAddModal.init(data)
     },
     toggleDropdown(show) {
-      this.isDropdownVisible = show;
+      this.isDropdownVisible = show
     },
     //删除运动员
     handleDeletePlayer(r) {
@@ -635,19 +539,19 @@ export default {
       deletePlayer(data).then((res) => {
         if (res.success) {
           this.$message.success(res.message)
-          this.isDropdownVisible = false;
+          this.isDropdownVisible = false
           this.getTableList()
         } else {
           this.$message.error(res.message)
-          this.isDropdownVisible = false;
+          this.isDropdownVisible = false
         }
       })
     },
-    deleteConfirm(r){
+    deleteConfirm(r) {
       this.handleDeletePlayer(r)
     },
-    deleteCancel(){
-      this.isDropdownVisible = false;
+    deleteCancel() {
+      this.isDropdownVisible = false
     },
     //回调刷新
     handleOk() {
@@ -655,7 +559,7 @@ export default {
     },
     //编辑人员姓名和代表队
     handleSetPlayer(r) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       const data = {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
@@ -928,7 +832,7 @@ export default {
      * 更换靶位
      */
     handleRetweet(row) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       this.$refs.retweet.init({ ...row, cproId: this.cproId, stageGroup: this.group, stageId: this.cproStageId })
     },
     retweetSuccessHandle(row) {
@@ -989,7 +893,7 @@ export default {
      * 打开备注
      */
     handleRemark(row) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       this.$refs.remark.init(row)
     },
     remarkSuccessHandle(e) {
@@ -1009,7 +913,7 @@ export default {
     },
     // 打开判罚
     handlePenalty(row) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       this.$refs.penalty.init(row)
     },
     /**
@@ -1036,7 +940,7 @@ export default {
      * 打开变更组别 handleGrouping
      */
     handleGrouping(row) {
-      this.isDropdownVisible = false;
+      this.isDropdownVisible = false
       this.$refs.gameChangeGroupRef.init(
         {
           ...row,
@@ -1644,7 +1548,7 @@ export default {
         })
       }
     },
-    groupListHandle() {},
+    groupListHandle() { },
 
     // 平板监控
     handleTablet() {
@@ -1726,9 +1630,9 @@ export default {
           selected
             ? this.selectionRows.push(record)
             : this.selectionRows.splice(
-                this.selectionRows.findIndex((x) => x.id === record.id),
-                1
-              )
+              this.selectionRows.findIndex((x) => x.id === record.id),
+              1
+            )
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
           this.selectionRows = selected
@@ -1829,8 +1733,7 @@ export default {
         display: flex;
       }
 
-      .ant-tree-treenode-selected {
-      }
+      .ant-tree-treenode-selected {}
 
       .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-normal {
         display: flex;
@@ -1850,11 +1753,13 @@ export default {
     position: relative;
     height: 100%;
     overflow: hidden;
+
     .gameInfoTables_add {
       position: absolute;
       top: 0.5%;
       right: 20%;
     }
+
     &_group {
       width: 100%;
       // height: 100%;

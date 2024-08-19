@@ -229,3 +229,6 @@ export const updatePlayer = data => postAction("contest-process/updatePlayer", d
 //删除运动员
 
 export const deletePlayer = data => postAction("contest-process/deletePlayer", data)
+
+//发送资格赛成绩
+export const bizSendScoreSend = data => getAction("/bizSendScore/send", data)
