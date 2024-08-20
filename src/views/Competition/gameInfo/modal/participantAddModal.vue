@@ -5,12 +5,11 @@
         <a-form-model-item label="姓名" prop="playerName">
           <a-input allowClear v-model="formData.playerName"></a-input>
         </a-form-model-item>
-
         <a-form-model-item label="团队名称" prop="groupName">
           <a-input allowClear v-model="formData.groupName"></a-input>
         </a-form-model-item>
         <a-form-model-item label="组别" prop="stageGroup">
-          <a-input allowClear type="number" v-model="formData.stageGroup"></a-input>
+          <a-input allowClear type="number" :min="0" v-model="formData.stageGroup"></a-input>
         </a-form-model-item>
         <a-form-model-item label="靶位" prop="targetSite">
           <a-select allowClear v-model="formData.targetSite" @change="handleChange">
@@ -27,12 +26,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
-import {
- 
-  processSelectGroupList,
-  savePlayer,
-  bizContestProjectDeviceList,
-} from '@api/competition'
+import { processSelectGroupList, savePlayer, bizContestProjectDeviceList } from '@api/competition'
 import { projectGroup } from '@views/Competition/participant/participant.config'
 export default {
   name: 'participantAddModal',
@@ -44,7 +38,6 @@ export default {
     return {
       projectGroup,
       title: '添加参赛人员',
-
       visible: false,
       loadingModal: false,
       type: 1,
@@ -66,9 +59,7 @@ export default {
       rules: {
         serialNumber: [{ required: false, message: '请输入选手编号', trigger: 'blur' }],
         playerName: [{ required: true, message: '请输入选手姓名', trigger: 'blur' }],
-
         groupName: [{ required: true, message: '请输入团队名称', trigger: 'blur' }],
-
         stageGroup: [{ required: true, message: '请选择分组组别', trigger: 'blur' }],
         targetSite: [{ required: true, message: '请选择靶位', trigger: 'blur' }],
       },
@@ -91,10 +82,8 @@ export default {
       this.cproId = data.cproId
       // this.stageGroup = data.stageGroup
       this.stageId = data.stageId
-     
       bizContestProjectDeviceList(data).then((res) => {
         this.listTarge = res.result
-        console.log( this.listTarge);
       })
     },
 
@@ -135,7 +124,7 @@ export default {
                 if (res.code == 500) {
                   this.loadingModal = false
                 }
-              }else{
+              } else {
                 this.$message.error(res.message)
               }
             })
@@ -169,7 +158,6 @@ export default {
         mixedGroupNo: '',
       }
     },
- 
   },
 }
 </script>
