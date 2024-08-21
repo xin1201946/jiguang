@@ -18,6 +18,10 @@
     <div class="personally" v-if="state.indexOf('个人资格赛') != -1">
       <TableListVue type="个人赛" :TitleList="personallyList.title" :List="[...personallyList.List[0], ...personallyList.List[1], ...personallyList.List[2]]" style="width: 100%; min-height: 100%"/>
     </div>
+    <!-- 个人资格赛总排名 -->
+    <div class="personally" v-if="state.indexOf('资格赛总排名') != -1">
+      <TableListVue type="资格赛总排名" :TitleList="personallyList.title" :List="[...personallyList.List[0], ...personallyList.List[1], ...personallyList.List[2]]" style="width: 100%; min-height: 100%"/>
+    </div>
     <!-- 个人赛淘汰赛 -->
     <div class="personally" v-if="state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1">
       <a-carousel style="width: 100%; min-height: 100%">
@@ -80,6 +84,7 @@ import {
   getMixeTeamFinalsListAPI,
   getTeamScoresAPI,
   getTeamTotalScores,
+  littleScreenByTotal,
   getMassingScores,
 } from '@api/competition'
 // 个人赛和混团赛滚动成绩tabelList
@@ -383,6 +388,64 @@ export default {
           configName: this.state,
         }).then((res) => {
           this.rankingList = res.result
+        })
+      }else if(this.state.indexOf('资格赛总排名') == -1){
+         
+        littleScreenByTotal({ type: this.state }).then((res) => {
+
+          console.log(res);
+          this.personallyFinalsList.List = [[]]
+          let data = res.result
+          this.projectName = data.projectName
+          this.stageGroup = data.stageGroup
+          this.shootGroups = data.shootGroups
+          this.stageName = data.stageName
+          this.personallyFinalsList.title = [
+            {
+              name: '排名',
+              width: '80px',
+            },
+            {
+              name: '代表队',
+            },
+            {
+              name: '靶位',
+            },
+            {
+              name: '姓名',
+            },
+          ]
+          if (data.shoots) {
+            data.shoots.forEach((item) => {
+              this.personallyFinalsList.title.push({
+                name: item,
+                width: '70px',
+              })
+            })
+          }
+          this.personallyFinalsList.title.push({
+            name: '总环数',
+          })
+          if (data.players && data.players.length != 0) {
+            data.players.forEach((item, index) => {
+              let obj = {
+                id: item.playerName,
+                排名: item.rank,
+                代表队: item.groupName,
+                靶位: item.targetSite,
+                姓名: item.playerName,
+                总环数: data.isGood == '是' ? `${item.totalScore}-${item.good}x` : item.totalScore,
+                playerScores: item.playerScores,
+              }
+              item.groupList.forEach((e, v) => {
+                obj[e.groupCount] = e.groupTotal
+              })
+              this.personallyFinalsList.List[0].push(obj)
+            })
+          } else {
+            this.personallyFinalsList.List = [[]]
+          }
+          console.log(this.personallyFinalsList, '个人资格赛总排名')
         })
       }
       // else if (

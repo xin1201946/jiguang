@@ -27,6 +27,7 @@ export default {
       loadingModal: false,
       option: {},
       table: [],
+      r:{},
       columns: [
         {
           title: '赛事名称',
@@ -75,9 +76,11 @@ export default {
     }
   },
   methods: {
-    init(data, option) {
+    init(data, option,r) {
+     this.r = r
+     console.log(r)
       if (data.code === 200) {
-        console.log(data.result)
+        
         this.table = data.result
         this.option = option
         this.visible = true
@@ -93,10 +96,13 @@ export default {
           this.$emit('list')
         } else {
           this.$message.error(res.message)
+          this.visible = false
         }
       })
+   
     },
     edit(record) {
+      const that =this
       infoMessage(
         `是否结束${record.cproName}-${record.projectGroup}  ${record.stageName}${numToCapital(record.stageGroup)}组`
       ).then(() => {
@@ -106,8 +112,9 @@ export default {
         }).then((res) => {
           if (res.success) {
             this.$message.success('结束成功！')
-            selectStageStatusList().then((r) => {
+            selectStageStatusList(that.r).then((r) => {
               if (r.code === 200) {
+                console.log(r)
                 this.table = r.result
               }
             })

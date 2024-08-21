@@ -88,8 +88,9 @@
               <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
               <a-button type="primary" @click="getTableList">刷新</a-button>
               <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
+              <!--     v-if="stageName == '资格赛'" -->
               <a-button
-                v-if="stageName == '资格赛'"
+            
                 type="primary"
                 style="border-color: rgb(62 187 1); background-color: rgb(62 187 1); color: rgb(255 255 255)"
                 @click.stop="addNewparticipants()"
@@ -271,10 +272,10 @@
                           >设置发序无效</a-button
                         >
                       </a-menu-item>
-                      <a-menu-item v-if="stageName == '资格赛'">
+                      <a-menu-item >
                         <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="stageName == '资格赛'">
+                      <a-menu-item >
                         <a-popconfirm
                           title="是否要删除该运动员?"
                           ok-text="确定"
@@ -1520,16 +1521,23 @@ export default {
       })
     },
     handleBisai(row) {
+      const data = {
+        contestId: this.data.contestId,
+        cproId: this.cproId, //赛事项目id
+        stageGroup: this.group,
+        stageId: this.cproStageId
+      }
       selectStageStatusList({
         contestId: this.data.contestId,
         cproId: this.cproId, //赛事项目id
         stageGroup: this.group,
+        stageId: this.cproStageId
       }).then((r) => {
         if (r.result.length) {
           this.$refs.start.init(r, {
             stageId: this.cproStageId, //项目阶段id
             group: this.group,
-          })
+          },data)
         } else {
           startFire({
             stageId: this.cproStageId, //项目阶段id
@@ -1538,7 +1546,7 @@ export default {
           }).then((res) => {
             if (res.success) {
               this.$message.success('操作成功！')
-              his.selectedRowKeys = []
+              this.selectedRowKeys = []
               this.selectionRows = []
             } else {
               this.$message.error(res.message)

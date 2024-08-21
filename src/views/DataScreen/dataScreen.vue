@@ -204,6 +204,7 @@
         <div class="box_box" v-if="data.configName === '团队综合排名'">
           <RankingList :data="data.rankingList" />
         </div>
+        
       </dv-border-box-8>
     </a-carousel>
   </div>
@@ -216,6 +217,7 @@ import {
   getTeamTotalScores,
   littleScreen,
   getDataScreenCurrentConfigApi,
+  littleScreenByTotal
 } from '@api/competition'
 import Display from '@views/control/display/index.vue'
 import mixedClusterIndex from './modules/mixedClusterIndex.vue'
@@ -577,6 +579,157 @@ export default {
         })
       })
     },
+     // 个人资格赛
+     gerenzong(data, index) {
+      console.log(data, '资格赛总排名')
+      littleScreenByTotal({
+        type: data.configName,
+      }).then((res) => {
+        // this.line = res.result.line
+        console.log(res, 'res')
+        data.finalEight = []
+        data.list = []
+        data.listsList = []
+        const { result } = res
+        data.projectName = result.projectName
+        data.stageGroup = result.stageGroup
+        data.stageName = result.stageName
+        data.bisaiTime = result.time
+        data.contestName = result.contestName
+        data.addr = result.addr
+        // 设置表头
+        data.th = [
+          {
+            name: '排名',
+            width: '60px',
+          },
+          {
+            name: '靶位',
+            width: '60px',
+          },
+          {
+            name: '姓名',
+            width: '100px',
+          },
+          {
+            name: '代表队',
+            align: 'left',
+          },
+        ]
+        if (result.shootGroups) {
+          data.shootGroups = result.shootGroups
+          for (let i = 0; i < result.shootGroups; i++) {
+            data.th.push({
+              name: `${i + 1}0`,
+              width: '75px',
+            })
+          }
+        }
+        data.th.push({ name: '总环数', width: '110px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
+        data.fiftyRounds = '0'
+        // 判断有没有到50发 (初始到60发展示前八名)
+        // 20发之后(都展示展示前八名)
+        if (result.players) {
+          result.players.map((item) => {
+            item.groupList.map((it, i) => {
+              if (it.groupCount === 2 && Number(it.groupTotal)) {
+                this.classOption.limitMoveNum = 8
+                data.fiftyRounds = it.groupTotal
+                // 设置前8名
+                // data.finalEight = result.players
+                //   .filter((item) => item.rank <= 8)
+                //   .map((item, i) => {
+                //     return {
+                //       ...item,
+                //       total:
+                //         result.isGood === '是'
+                //           ? !item.totalScore
+                //             ? item.totalScore
+                //             : `${item.totalScore}-${item.good}x`
+                //           : item.totalScore,
+                //       notes: '',
+                //       bePromoted: 'Q',
+                //     }
+                //   })
+                //多组时没有Q
+                if (this.line) {
+                  data.finalEight = result.players
+                    .filter((item) => item.rank <= 8)
+                    .map((item, i) => {
+                      return {
+                        ...item,
+                        total:
+                          result.isGood === '是'
+                            ? !item.totalScore
+                              ? item.totalScore
+                              : `${item.totalScore}-${item.good}x`
+                            : item.totalScore,
+                        notes: '',
+                        bePromoted: 'Q',
+                      }
+                    })
+                } else {
+                  data.finalEight = result.players
+                    .filter((item) => item.rank <= 8)
+                    .map((item, i) => {
+                      return {
+                        ...item,
+                        total:
+                          result.isGood === '是'
+                            ? !item.totalScore
+                              ? item.totalScore
+                              : `${item.totalScore}-${item.good}x`
+                            : item.totalScore,
+                        notes: '',
+                        bePromoted: '',
+                      }
+                    })
+                }
+                // 除了前8名
+                data.list = result.players
+                  .filter((item) => item.rank > 8)
+                  .map((item) => {
+                    return {
+                      ...item,
+                      total:
+                        result.isGood === '是'
+                          ? !item.totalScore
+                            ? item.totalScore
+                            : `${item.totalScore}-${item.good}x`
+                          : item.totalScore,
+                      notes: '',
+                      bePromoted: '',
+                    }
+                  })
+              } else {
+                this.classOption.limitMoveNum = 16
+                data.listsList = result.players.map((item) => {
+                  return {
+                    ...item,
+                    total:
+                      result.isGood === '是'
+                        ? !item.totalScore
+                          ? item.totalScore
+                          : `${item.totalScore}-${item.good}x`
+                        : item.totalScore,
+                    notes: '',
+                    bePromoted: '',
+                  }
+                })
+                // data.listsList = [
+                //   ...data.listsList,
+                // ]
+              }
+            })
+          })
+        }
+
+        this.$nextTick(() => {
+          this.$forceUpdate()
+          this.upload()
+        })
+      })
+    },
     // 个人决赛
     gerenjuesaii(data) {
       littleScreen({
@@ -759,7 +912,7 @@ export default {
     },
     getData() {
       this.projectList.forEach((data, index) => {
-        if (data.configName.includes('个人资格赛')) {
+        if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
           this.geren(data, index)
         }
         if (data.configName.includes('个人决赛')) {
@@ -773,13 +926,17 @@ export default {
         }
         if (data.configName.includes('综合排名')) {
           this.tuandui(data)
+        }
+        if (data.configName.includes('资格赛总排名')) {
+          this.gerenzong(data)
         }
       })
     },
     getList() {
       this.len = false
       this.projectList.forEach((data, index) => {
-        if (data.configName.includes('个人资格赛')) {
+      
+        if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
           this.geren(data, index)
         }
         if (data.configName.includes('个人决赛')) {
@@ -793,6 +950,9 @@ export default {
         }
         if (data.configName.includes('综合排名')) {
           this.tuandui(data)
+        }
+        if (data.configName.includes('资格赛总排名')) {
+          this.gerenzong(data)
         }
       })
     },

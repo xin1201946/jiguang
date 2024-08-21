@@ -128,6 +128,8 @@ export const editStagePlayer = data => postAction("contest-process/editStagePlay
 
 //屏幕展示 ---- 个人赛
 export const littleScreen = data => getAction("contest-process/littleScreen", data)
+//屏幕展示----所有组别成绩
+export const littleScreenByTotal = data => getAction("contest-process/littleScreenByTotal", data)
 //屏幕展示 ---- 混团赛决赛
 export const getMixeTeamFinalsListAPI = data => postAction("largeScreen/getTeamGoldList", data)
 //屏幕展示 ---- 团队赛
@@ -232,3 +234,5 @@ export const deletePlayer = data => postAction("contest-process/deletePlayer", d
 
 //发送资格赛成绩
 export const bizSendScoreSend = data => getAction("/bizSendScore/send", data)
+//发送决赛成绩
+export const bizSendScoreSendFinal = data => getAction("bizSendScore/sendFinal", data)

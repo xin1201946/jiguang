@@ -106,6 +106,7 @@ export default {
                   this.$message.warning(res.message)
                 }
               } else {
+                this.loadingModal = false
                 this.$message.error(res.message)
               }
             })
