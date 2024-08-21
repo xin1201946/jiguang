@@ -1,14 +1,12 @@
 <template>
   <div class="card">
     <Card>
-      <a-tabs default-active-key="1" @change="callback">
+      <a-tabs default-active-key="资格赛" @change="callback">
         <a-tab-pane key="资格赛" tab="资格赛">
-          <!-- <template slot="query"> -->
           <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 5 }">
             <a-row :gutter="24">
               <a-col>
                 <a-form-item label="平板编号">
-                  <!-- <a-input placeholder="请输入平板编号" v-model="formData.pads" /> -->
                   <a-select allowClear mode="multiple" v-model="formData.pads" placeholder="请输入平板编号">
                     <a-select-option v-for="item in list" :key="item.pcNum" :value="item.pcNum"
                       >{{ item.pcName + '枪' + item.pcNum }}
@@ -24,21 +22,17 @@
               </a-col>
               <a-form-item>
                 <a-space class="spce_div">
-                  <!-- <a-button html-type="submit" type="primary" icon="search" @click="handleCancel">取消</a-button> -->
-                  <a-button html-type="submit" type="primary" @click="handleSubmit">提交</a-button>
+                  <a-button html-type="submit" type="primary" @click="handleSubmit">发送</a-button>
                 </a-space>
               </a-form-item>
             </a-row>
           </a-form>
-          <!-- </template> -->
         </a-tab-pane>
         <a-tab-pane key="决赛" tab="决赛" force-render>
-          <!-- <template slot="query"> -->
           <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 5 }">
             <a-row :gutter="24">
               <a-col>
-                <a-form-item label="决赛平板编号">
-                  <!-- <a-input placeholder="请输入平板编号" v-model="formData.pads" /> -->
+                <a-form-item label="平板编号">
                   <a-select allowClear mode="multiple" v-model="formData.pads" placeholder="请输入平板编号">
                     <a-select-option v-for="item in list" :key="item.pcNum" :value="item.pcNum"
                       >{{ item.pcName + '枪' + item.pcNum }}
@@ -48,25 +42,49 @@
               </a-col>
               <a-col>
                 <a-form-item label="开始发序">
-                  <a-input placeholder="请输入总组数" v-model="formData.startShoot" />
+                  <a-input placeholder="请输入开始发序" v-model="formData.startShoot" />
                   <span class="text_s"> 如决赛第一组传1，第二组传6，依次类推11、13、15、17、19、21、23！！！</span>
                 </a-form-item>
               </a-col>
               <a-col>
                 <a-form-item label="结束发序">
-                  <a-input placeholder="请输入总组数" v-model="formData.endShoot" />
+                  <a-input placeholder="请输入结束发序" v-model="formData.endShoot" />
                   <span class="text_s">如决赛第一组传5，第二组传10，依次类推12、14、16、18、20、22、24！！！</span>
                 </a-form-item>
               </a-col>
               <a-form-item>
                 <a-space class="spce_div">
-                  <!-- <a-button html-type="submit" type="primary" icon="search" @click="handleCancel">取消</a-button> -->
                   <a-button html-type="submit" type="primary" @click="handleSubmit">发送</a-button>
                 </a-space>
               </a-form-item>
             </a-row>
           </a-form>
-          <!-- </template> -->
+        </a-tab-pane>
+        <a-tab-pane key="混团" tab="混团" force-render>
+          <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 5 }">
+            <a-row :gutter="24">
+              <a-col>
+                <a-form-item label="平板编号">
+                  <a-select allowClear mode="multiple" v-model="formData.pads" placeholder="请输入平板编号">
+                    <a-select-option v-for="item in list" :key="item.pcNum" :value="item.pcNum"
+                      >{{ item.pcName + '枪' + item.pcNum }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col>
+                <a-form-item label="当前发序">
+                  <a-input placeholder="请输入当前发序" v-model="formData.startShoot" />
+                </a-form-item>
+              </a-col>
+
+              <a-form-item>
+                <a-space class="spce_div">
+                  <a-button html-type="submit" type="primary" @click="handleSubmit">发送</a-button>
+                </a-space>
+              </a-form-item>
+            </a-row>
+          </a-form>
         </a-tab-pane>
       </a-tabs>
     </Card>
@@ -103,8 +121,6 @@ export default {
 
   methods: {
     handleSubmit() {
-      // console.log(this.formData)
-      // return
       if (this.title == '资格赛') {
         let pads = this.formData.pads.join(',')
         const data = {
@@ -125,13 +141,19 @@ export default {
           pads: pads,
           endShoot: this.formData.endShoot,
         }
-          bizSendScoreSendFinal(data).then((res) => {
+        bizSendScoreSendFinal(data).then((res) => {
           if (res.success) {
             this.$message.success('发送成功')
           } else {
             this.$message.error(res.message)
           }
         })
+      } else if (this.title == '混团') {
+        let pads = this.formData.pads.join(',')
+        const data = {
+          pads: pads,
+          endShoot: this.formData.endShoot,
+        }
       }
     },
     callback(key) {
