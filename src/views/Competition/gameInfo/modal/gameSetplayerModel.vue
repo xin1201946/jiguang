@@ -29,13 +29,11 @@ export default {
     return {
       projectGroup,
       title: '编辑参赛人员',
-
       visible: false,
       loadingModal: false,
       type: 1,
       formData: {
         playerName: '',
-
         groupName: '',
       },
       rules: {
@@ -97,19 +95,8 @@ export default {
       this.visible = false
       this.isField1Modified = false
       this.formData = {
-        serialNumber: '',
         playerName: '',
-        playerSex: '',
-        idCardNum: '',
         groupName: '',
-        projectGroup: '',
-        playerId: '',
-        project1: '',
-        isGroup1: '',
-        project2: '',
-        isGroup2: '',
-        project3: '',
-        mixedGroupNo: '',
       }
     },
   },

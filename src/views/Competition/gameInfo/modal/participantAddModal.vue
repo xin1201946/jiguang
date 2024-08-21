@@ -22,7 +22,6 @@
     </div>
   </BizModal>
 </template>
-
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
@@ -42,22 +41,12 @@ export default {
       loadingModal: false,
       type: 1,
       formData: {
-        serialNumber: '',
         playerName: '',
-        playerSex: '',
-        idCardNum: '',
+        stageGroup: '',
         groupName: '',
-        projectGroup: '',
-        playerId: '',
-        project1: '',
-        isGroup1: '',
-        project2: '',
-        isGroup2: '',
-        project3: '',
-        mixedGroupNo: '',
+        targetSite: '',
       },
       rules: {
-        serialNumber: [{ required: false, message: '请输入选手编号', trigger: 'blur' }],
         playerName: [{ required: true, message: '请输入选手姓名', trigger: 'blur' }],
         groupName: [{ required: true, message: '请输入团队名称', trigger: 'blur' }],
         stageGroup: [{ required: true, message: '请选择分组组别', trigger: 'blur' }],
@@ -107,22 +96,14 @@ export default {
                 this.loadingModal = false
                 this.visible = false
                 this.formData = {
-                  serialNumber: '',
                   playerName: '',
-                  playerSex: '',
-                  idCardNum: '',
+                  stageGroup: '',
                   groupName: '',
-                  projectGroup: '',
-                  playerId: '',
-                  project1: '',
-                  isGroup1: '',
-                  project2: '',
-                  isGroup2: '',
-                  project3: '',
-                  mixedGroupNo: '',
+                  targetSite: '',
                 }
                 if (res.code == 500) {
                   this.loadingModal = false
+                  this.$message.warning(res.message)
                 }
               } else {
                 this.$message.error(res.message)
@@ -143,19 +124,10 @@ export default {
       this.visible = false
       this.isField1Modified = false
       this.formData = {
-        serialNumber: '',
         playerName: '',
-        playerSex: '',
-        idCardNum: '',
+        stageGroup: '',
         groupName: '',
-        projectGroup: '',
-        playerId: '',
-        project1: '',
-        isGroup1: '',
-        project2: '',
-        isGroup2: '',
-        project3: '',
-        mixedGroupNo: '',
+        targetSite: '',
       }
     },
   },
