@@ -96,6 +96,7 @@
                 @click.stop="addNewparticipants()"
                 >添加参赛人员</a-button
               >
+              <a-button v-if="stageName == '金/铜牌赛'" type="danger" @click="handhandeleteModel()">删除</a-button>
               <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
             </a-space>
           </div>
@@ -275,7 +276,7 @@
                       <a-menu-item >
                         <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
                       </a-menu-item>
-                      <a-menu-item >
+                      <a-menu-item v-if="stageName !== '金/铜牌赛'" >
                         <a-popconfirm
                           title="是否要删除该运动员?"
                           ok-text="确定"
@@ -350,8 +351,12 @@
         <!-- @confirm="ChecklistSuccessHandleOk" -->
         <!-- 添加参赛人员 -->
         <ParticipantAddModal ref="participantAddModal" @ok="handleOk()"></ParticipantAddModal>
+        <!-- 混团添加人员 -->
+        <participantAddTeamModal ref="participantAddTeamModal" @ok="handleOk()"></participantAddTeamModal>
         <!-- 编辑人员信息 -->
         <GameSetplayerModel ref="GameSetplayerModel" @playerOk="handleOk()"></GameSetplayerModel>
+        <!-- 混团删除代表队 -->
+        <GameInfoDeleteGroupModal ref="GameInfoDeleteGroupModal" @ok="handleOk()"></GameInfoDeleteGroupModal>
       </AppstoreTreeCard>
     </div>
   </div>
@@ -386,6 +391,8 @@ import GameInfoChecklist from '@views/Competition/gameInfo/modal/gameInfoCheckli
 import GameInfoMixedGroup from '@views/Competition/gameInfo/modal/gameInfoMixedGroup.vue'
 import ParticipantAddModal from '@views/Competition/gameInfo/modal/participantAddModal.vue'
 import GameSetplayerModel from '@views/Competition/gameInfo/modal/gameSetplayerModel.vue'
+import participantAddTeamModal from '@views/Competition/gameInfo/modal/participantAddTeamModal.vue'
+import GameInfoDeleteGroupModal from '@views/Competition/gameInfo/modal/gameInfoDeleteGroupModal.vue'
 import {
   bizContestProjectList,
   bizContestProjectStageList,
@@ -467,6 +474,8 @@ export default {
     GameInfoMixedGroup,
     ParticipantAddModal, //添加参赛人员
     GameSetplayerModel, //编辑人员信息
+    participantAddTeamModal,//添加混团参赛人员
+    GameInfoDeleteGroupModal,//混团删除代表队
   },
   inject: ['closeCurrent'],
   data() {
@@ -597,7 +606,16 @@ export default {
       this.isDropdownVisible = false
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
-    // 增加新的分组
+   //混团删除代表队
+   handhandeleteModel(){
+    const data = {
+        contestId: this.data.contestId, //赛事id
+        cproId: this.cproId, //赛事项目id
+        stageId: this.cproStageId, //项目阶段id}
+        stageGroup: this.group, //分组id}
+      }
+    this.$refs.GameInfoDeleteGroupModal.init(data)
+   },
 
     //新增参赛人员
     addNewparticipants() {
@@ -607,7 +625,11 @@ export default {
         stageId: this.cproStageId, //项目阶段id}
         stageGroup: this.group, //分组id}
       }
-      this.$refs.participantAddModal.init(data)
+      if(this.stageName !== '金/铜牌赛'){
+        this.$refs.participantAddModal.init(data)
+      }else{
+        this.$refs.participantAddTeamModal.init(data, this.stageName)
+      }
     },
     toggleDropdown(show) {
       this.isDropdownVisible = show

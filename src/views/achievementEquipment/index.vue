@@ -74,7 +74,8 @@
               </a-col>
               <a-col>
                 <a-form-item label="当前发序">
-                  <a-input placeholder="请输入当前发序" v-model="formData.startShoot" />
+                  <a-input placeholder="请输入当前发序" v-model="formData.shootCode" />
+                  <span class="text_s">如第1发传1！！！</span>
                 </a-form-item>
               </a-col>
 
@@ -93,7 +94,7 @@
 
 <script>
 import Card from '@comp/card/card.vue'
-import { bizSendScoreSend, bizSendScoreSendFinal } from '@api/competition'
+import { bizSendScoreSend, bizSendScoreSendFinal,bizSendScoreSendTeam } from '@api/competition'
 import { bizTabletPcPageList } from '@api/biz'
 export default {
   name: 'achievementEquipment',
@@ -152,12 +153,20 @@ export default {
         let pads = this.formData.pads.join(',')
         const data = {
           pads: pads,
-          endShoot: this.formData.endShoot,
+          shootCode: this.formData.shootCode,
         }
+        bizSendScoreSendTeam(data).then((res) => {
+          if (res.success) {
+            this.$message.success('发送成功')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       }
     },
     callback(key) {
       this.title = key
+      this.formData = {}
     },
   },
 }

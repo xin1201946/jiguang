@@ -223,7 +223,7 @@ export const changeGroupList = data => postAction("contest-process/changeGroupLi
 //阶段打印分组打印
 export const qualificationScorePdfByGroup = data => postAction("bizPlayerFinalScore/qualificationScorePdfByGroup", data)
 
-//资格赛添加运动员
+//资格赛 决赛添加运动员
 export const savePlayer = data => postAction("contest-process/savePlayer", data)
 //资格赛编辑人员信息
 
@@ -236,3 +236,11 @@ export const deletePlayer = data => postAction("contest-process/deletePlayer", d
 export const bizSendScoreSend = data => getAction("/bizSendScore/send", data)
 //发送决赛成绩
 export const bizSendScoreSendFinal = data => getAction("bizSendScore/sendFinal", data)
+//发送混团成绩
+
+export const bizSendScoreSendTeam = data => getAction("bizSendScore/sendTeam", data)
+//混团添加运动员
+
+export const savePlayerGroup = data => postAction("contest-process/savePlayerGroup", data)
+//混团删除运动员
+export const deletePlayerGroup = data => postAction("contest-process/deletePlayerGroup", data)
