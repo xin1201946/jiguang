@@ -2,11 +2,14 @@
   <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
     <div style="height: 100%; overflow-y: auto">
       <a-form-model :labelCol="{ span: 8 }" :wrapperCol="{ span: 14 }" :rules="rules" ref="form" :model="formData">
-        <a-form-model-item label="代表队名称" prop="groupName">
-          <a-input allowClear v-model="formData.groupName"></a-input>
-        </a-form-model-item>
         <a-form-model-item label="组别" prop="stageGroup">
-          <a-input allowClear type="number" :min="0" v-model="formData.stageGroup"></a-input>
+          <a-input allowClear type="number" :min="0" v-model="formData.stageGroup" @change="handleChange"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="代表队名称" prop="groupName">
+          <!-- <a-input allowClear v-model="formData.groupName"></a-input> -->
+          <a-select allowClear v-model="formData.groupName">
+            <a-select-option v-for="item in listGroup" :key="item" :value="item">{{ item }} </a-select-option>
+          </a-select>
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -15,7 +18,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
-import { bizContestProjectDeviceList, deletePlayerGroup } from '@api/competition'
+import { bizContestProjectDeviceList, deletePlayerGroup, getGroupNameList } from '@api/competition'
 import { projectGroup } from '@views/Competition/participant/participant.config'
 export default {
   name: 'gameInfoDeleteGroupModal',
@@ -50,6 +53,7 @@ export default {
     }
   },
   watch: {},
+  created() {},
   methods: {
     init(data) {
       this.visible = true
@@ -59,6 +63,23 @@ export default {
       this.stageId = data.stageId
       bizContestProjectDeviceList(data).then((res) => {
         this.listTarge = res.result
+      })
+      getGroupNameList({
+        contestId: this.contestId,
+        cproId: this.cproId,
+        stageId: this.stageId,
+      }).then((res) => {
+        this.listGroup = res.result
+      })
+    },
+    handleChange(e) {
+      getGroupNameList({
+        contestId: this.contestId,
+        cproId: this.cproId,
+        stageId: this.stageId,
+        stageGroup: e.data,
+      }).then((res) => {
+        this.listGroup = res.result
       })
     },
     handleOk() {

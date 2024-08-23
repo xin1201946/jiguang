@@ -244,3 +244,7 @@ export const bizSendScoreSendTeam = data => getAction("bizSendScore/sendTeam", d
 export const savePlayerGroup = data => postAction("contest-process/savePlayerGroup", data)
 //混团删除运动员
 export const deletePlayerGroup = data => postAction("contest-process/deletePlayerGroup", data)
+//混团删除运动员代表队集合
+export const getGroupNameList = data => postAction("bizTeamGoldScore/getGroupNameList", data)
+//混团添加运动员 运动员集合数据
+export const getPlayerList = data => postAction("bizTeamGoldScore/getPlayerList", data)

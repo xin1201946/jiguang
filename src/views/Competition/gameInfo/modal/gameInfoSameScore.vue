@@ -1,9 +1,9 @@
 <template>
   <BizModal :title="title" :visible="visible" @ok="handleOk" @cancel="handleCancel" :loading="loadingModal">
-    <a-form-model :labelCol="{span: 6}" :wrapperCol="{span: 14}" :rules="rules" ref="form" :model="formData">
+    <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 14 }" :rules="rules" ref="form" :model="formData">
       <a-form-model-item label="同分选手">
-        <template v-for="(item,index) in data">
-          <span :key="item.playerId">{{item.playerName}}<span v-if="data.length - 1 != index">,</span></span>
+        <template v-for="(item, index) in data">
+          <span :key="item.playerId">{{ item.playerName }}<span v-if="data.length - 1 != index">,</span></span>
         </template>
       </a-form-model-item>
       <a-form-model-item label="当前发序">
@@ -24,7 +24,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 export default {
-  name: 'gameInfoTargetModal',
+  name: 'gameInfoSameScoreModal',
   components: {
     BizModal,
   },
@@ -47,7 +47,6 @@ export default {
       this.type = 0
       this.loadingModal = false
       this.$nextTick(() => {
-        console.log(row)
         this.data = row
         this.formData = {}
         if (this.$refs.form) {

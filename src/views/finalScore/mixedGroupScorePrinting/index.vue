@@ -1,8 +1,14 @@
 <template>
   <div class="RealTimeView">
     <div class="btns">
-      <a-select :placeholder="treeList.length && '请选择赛事' || '请先创建赛事'" style="width: 300px" v-model="contestId" @change="handleContest">
-        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{ item.contestName
+      <a-select
+        :placeholder="(treeList.length && '请选择赛事') || '请先创建赛事'"
+        style="width: 300px"
+        v-model="contestId"
+        @change="handleContest"
+      >
+        <a-select-option v-for="(item, i) in treeList" :key="i" :value="item.contestId">{{
+          item.contestName
         }}</a-select-option>
       </a-select>
     </div>
@@ -10,22 +16,40 @@
       <TreeCard>
         <template slot="tree">
           <a-radio-group v-if="list.length" v-model="tree" @change="handleTreeChange">
-            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value"> {{ item.label }}
+            <a-radio :style="style" v-for="item in list" :key="item.value" :value="item.value">
+              {{ item.label }}
             </a-radio>
           </a-radio-group>
           <a-empty description="当前赛事没有项目, 请到赛事列表中创建项目" v-else />
         </template>
         <template slot="operator">
           <a-space>
-            <a-button :disabled="!list.length" @click="handleSubmit" type="primary" icon="search">查询</a-button>
-            <a-button :disabled="!list.length" type="primary" @click="handlePrint">成绩打印</a-button>
+            <a-button :disabled="!dataSource.length" @click="handleSubmit" type="primary" icon="search">查询</a-button>
+            <a-button :disabled="!dataSource.length" type="primary" @click="handlePrint">成绩打印</a-button>
           </a-space>
         </template>
         <template slot="default">
-          <a-table v-show="dataSource.length" :columns="columns" :data-source="dataSource" rowKey="i" :pagination="false" @change="handleTableChange" bordered :scroll="{ x: 1400 }">
-            <a-table :pagination="false" bordered slot="expandedRowRender" slot-scope="record" :columns="record.innerColumns" :data-source="record.innerData" :scroll="{ x: 1400 }"></a-table>
+          <!--   v-show="dataSource.length" -->
+          <a-table
+            :columns="columns"
+            :data-source="dataSource"
+            rowKey="i"
+            :pagination="false"
+            @change="handleTableChange"
+            bordered
+            :scroll="{ x: 1400 }"
+          >
+            <a-table
+              :pagination="false"
+              bordered
+              slot="expandedRowRender"
+              slot-scope="record"
+              :columns="record.innerColumns"
+              :data-source="record.innerData"
+              :scroll="{ x: 1400 }"
+            ></a-table>
           </a-table>
-          <a-empty v-show="!dataSource.length" description="当前项目数据, 暂时无法查询最终成绩" />
+          <!-- <a-empty v-show="!dataSource.length" description="当前项目无数据, 暂时无法查询最终成绩" /> -->
         </template>
       </TreeCard>
     </div>
@@ -203,13 +227,21 @@ export default {
               <td></td>
               <td>${item.grilList[0].playerName}</td>
               ${tdsgril.join('')}
-              <td>${item.grilList[0].goodTotal != null ? item.grilList[0].stageTotal + '-' + item.grilList[0].goodTotal + 'x' : item.grilList[0].stageTotal}</td>
+              <td>${
+                item.grilList[0].goodTotal != null
+                  ? item.grilList[0].stageTotal + '-' + item.grilList[0].goodTotal + 'x'
+                  : item.grilList[0].stageTotal
+              }</td>
             </tr>
             <tr >
               <td></td>
               <td>${item.boyList[0].playerName}</td>
               ${tdsboy.join('')}
-              <td>${item.boyList[0].goodTotal != null ? item.boyList[0].stageTotal + '-' + item.boyList[0].goodTotal + 'x' : item.boyList[0].stageTotal}</td>
+              <td>${
+                item.boyList[0].goodTotal != null
+                  ? item.boyList[0].stageTotal + '-' + item.boyList[0].goodTotal + 'x'
+                  : item.boyList[0].stageTotal
+              }</td>
             </tr>`)
 
           return `
@@ -461,7 +493,13 @@ export default {
       massingSportsList(arr).then((res) => {
         if (res.code === 200) {
           this.groupArrayData = res.result
-          this.getColumns(this.groupArrayData[0].groupList)
+
+          if (this.groupArrayData.length > 0) {
+            this.getColumns(this.groupArrayData[0].groupList)
+          } else {
+            this.getColumns([])
+          }
+
           const list = res.result.map((item) => {
             let total = 0
             const obj = {}
@@ -506,12 +544,18 @@ export default {
             var objgril = {}
             for (let i = 0; i < item.boyList.length; i++) {
               objboy.playerName = item.boyList[1].playerName
-              objboy.stageTotal = item.boyList[1].goodTotal != null ? item.boyList[1].stageTotal + '-' + item.boyList[1].goodTotal + 'x' : item.boyList[1].stageTotal
+              objboy.stageTotal =
+                item.boyList[1].goodTotal != null
+                  ? item.boyList[1].stageTotal + '-' + item.boyList[1].goodTotal + 'x'
+                  : item.boyList[1].stageTotal
               objboy[`teamScoreList${i + 1}`] = item.boyList[i].gunGroupTotalStr
             }
             for (let i = 0; i < item.grilList.length; i++) {
               objgril.playerName = item.grilList[1].playerName
-              objgril.stageTotal = item.grilList[1].goodTotal != null ? item.grilList[1].stageTotal + '-' + item.grilList[1].goodTotal + 'x' : item.grilList[1].stageTotal
+              objgril.stageTotal =
+                item.grilList[1].goodTotal != null
+                  ? item.grilList[1].stageTotal + '-' + item.grilList[1].goodTotal + 'x'
+                  : item.grilList[1].stageTotal
               objgril[`teamScoreList${i + 1}`] = item.grilList[i].gunGroupTotalStr
             }
             return {
@@ -540,6 +584,7 @@ export default {
     // 获取比赛成绩表头
     getColumns(total) {
       let children = []
+
       for (let i = 0; i < total.length; i++) {
         children.push({
           // title: numToCapital((i + 1) * 10),
@@ -549,6 +594,7 @@ export default {
           dataIndex: `teamScoreList${i + 1}`,
         })
       }
+
       this.columns = groupCardColumns.map((item) => {
         if (item.children) {
           return {

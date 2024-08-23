@@ -61,44 +61,43 @@
           <QuerySearch ref="query"></QuerySearch>
         </template>
         <template slot="operator">
-          <div style="overflow-x: auto">
-            <a-space v-show="cproStageId !== null">
-              <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
-              <a-button v-if="group === null" type="primary" @click="editHandle">编辑参赛人员</a-button>
-              <a-button type="primary" @click="handleGroup">分组</a-button>
-              <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
-              <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
-              <a-button
-                v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'"
-                type="primary"
-                @click="nextStageHandle"
-                >下一阶段</a-button
-              >
-              <a-button
-                v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')"
-                type="primary"
-                @click="nextStageHandle"
-                >结束阶段</a-button
-              >
-              <!--            选中组别-->
-              <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
-              <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
-              <a-button v-if="group !== null" type="primary" @click="handleDate">时间管理</a-button>
-              <a-button type="primary" @click="handleSameScore">同分</a-button>
-              <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
-              <a-button type="primary" @click="getTableList">刷新</a-button>
-              <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
-              <!--     v-if="stageName == '资格赛'" -->
-              <a-button
-            
-                type="primary"
-                style="border-color: rgb(62 187 1); background-color: rgb(62 187 1); color: rgb(255 255 255)"
-                @click.stop="addNewparticipants()"
-                >添加参赛人员</a-button
-              >
-              <a-button v-if="stageName == '金/铜牌赛'" type="danger" @click="handhandeleteModel()">删除</a-button>
-              <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
-            </a-space>
+          <div style="display: flex; flex-wrap: wrap">
+            <!-- <a-space v-show="cproStageId !== null" > -->
+            <a-button type="primary" @click="importHandle">导入参赛人员</a-button>
+            <a-button v-if="group === null" type="primary" @click="editHandle">编辑参赛人员</a-button>
+            <a-button type="primary" @click="handleGroup">分组</a-button>
+            <a-button v-if="group !== null" type="primary" @click="handleDraw">抽签</a-button>
+            <a-button v-if="group !== null" type="primary" @click="pushPadHandle">推送平板</a-button>
+            <a-button
+              v-if="group !== null && stageName !== '金/铜牌赛' && stageName !== '淘汰赛'"
+              type="primary"
+              @click="nextStageHandle"
+              >下一阶段</a-button
+            >
+            <a-button
+              v-if="group !== null && (stageName == '金/铜牌赛' || stageName == '淘汰赛')"
+              type="primary"
+              @click="nextStageHandle"
+              >结束阶段</a-button
+            >
+            <!--            选中组别-->
+            <!-- <a-button v-show="group !== null && draw" type="primary">推送大屏</a-button> -->
+            <a-button v-if="group !== null" type="primary" @click="handleExports">靶位导出</a-button>
+            <a-button v-if="group !== null" type="primary" @click="handleDate">时间管理</a-button>
+            <a-button type="primary" @click="handleSameScore">同分</a-button>
+            <a-button type="danger" @click="handleEliminate()">淘汰</a-button>
+            <a-button type="primary" @click="getTableList">刷新</a-button>
+            <a-button type="primary" @click="handleChengTong">成统裁判员</a-button>
+            <!--     v-if="stageName == '资格赛'" -->
+            <a-button
+              type="primary"
+              style="border-color: rgb(62 187 1); background-color: rgb(62 187 1); color: rgb(255 255 255)"
+              @click.stop="addNewparticipants()"
+              >添加参赛人员</a-button
+            >
+            <a-button v-if="stageName == '金/铜牌赛'" type="danger" @click="handhandeleteModel()">删除</a-button>
+            <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
+            <!-- </a-space> -->
           </div>
         </template>
         <div class="gameInfoTables" v-if="groupActive">
@@ -273,10 +272,10 @@
                           >设置发序无效</a-button
                         >
                       </a-menu-item>
-                      <a-menu-item >
+                      <a-menu-item>
                         <a-button type="link" size="small" icon="edit" @click="handleSetPlayer(record)">修改</a-button>
                       </a-menu-item>
-                      <a-menu-item v-if="stageName !== '金/铜牌赛'" >
+                      <a-menu-item v-if="stageName !== '金/铜牌赛'">
                         <a-popconfirm
                           title="是否要删除该运动员?"
                           ok-text="确定"
@@ -474,8 +473,8 @@ export default {
     GameInfoMixedGroup,
     ParticipantAddModal, //添加参赛人员
     GameSetplayerModel, //编辑人员信息
-    participantAddTeamModal,//添加混团参赛人员
-    GameInfoDeleteGroupModal,//混团删除代表队
+    participantAddTeamModal, //添加混团参赛人员
+    GameInfoDeleteGroupModal, //混团删除代表队
   },
   inject: ['closeCurrent'],
   data() {
@@ -606,16 +605,16 @@ export default {
       this.isDropdownVisible = false
       this.$refs.GameSetShootModel.init(row, this.stageName)
     },
-   //混团删除代表队
-   handhandeleteModel(){
-    const data = {
+    //混团删除代表队
+    handhandeleteModel() {
+      const data = {
         contestId: this.data.contestId, //赛事id
         cproId: this.cproId, //赛事项目id
-        stageId: this.cproStageId, //项目阶段id}
-        stageGroup: this.group, //分组id}
+        stageId: this.cproStageId, //项目阶段id
+        stageGroup: this.group, //分组id
       }
-    this.$refs.GameInfoDeleteGroupModal.init(data)
-   },
+      this.$refs.GameInfoDeleteGroupModal.init(data)
+    },
 
     //新增参赛人员
     addNewparticipants() {
@@ -625,9 +624,9 @@ export default {
         stageId: this.cproStageId, //项目阶段id}
         stageGroup: this.group, //分组id}
       }
-      if(this.stageName !== '金/铜牌赛'){
+      if (this.stageName !== '金/铜牌赛') {
         this.$refs.participantAddModal.init(data)
-      }else{
+      } else {
         this.$refs.participantAddTeamModal.init(data, this.stageName)
       }
     },
@@ -1547,35 +1546,55 @@ export default {
         contestId: this.data.contestId,
         cproId: this.cproId, //赛事项目id
         stageGroup: this.group,
-        stageId: this.cproStageId
+        stageId: this.cproStageId,
       }
-      selectStageStatusList({
-        contestId: this.data.contestId,
-        cproId: this.cproId, //赛事项目id
-        stageGroup: this.group,
-        stageId: this.cproStageId
-      }).then((r) => {
-        if (r.result.length) {
-          this.$refs.start.init(r, {
-            stageId: this.cproStageId, //项目阶段id
-            group: this.group,
-          },data)
-        } else {
-          startFire({
-            stageId: this.cproStageId, //项目阶段id
-            group: this.group,
-            playerIds: this.selectedRowKeys,
-          }).then((res) => {
-            if (res.success) {
-              this.$message.success('操作成功！')
-              this.selectedRowKeys = []
-              this.selectionRows = []
-            } else {
-              this.$message.error(res.message)
-            }
-          })
-        }
-      })
+      if (this.selectedRowKeys.length > 0) {
+        startFire({
+          stageId: this.cproStageId, //项目阶段id
+          group: this.group,
+          playerIds: this.selectedRowKeys,
+        }).then((res) => {
+          if (res.success) {
+            this.$message.success('操作成功！')
+            this.selectedRowKeys = []
+            this.selectionRows = []
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        selectStageStatusList({
+          contestId: this.data.contestId,
+          cproId: this.cproId, //赛事项目id
+          stageGroup: this.group,
+          stageId: this.cproStageId,
+        }).then((r) => {
+          if (r.result.length) {
+            this.$refs.start.init(
+              r,
+              {
+                stageId: this.cproStageId, //项目阶段id
+                group: this.group,
+              },
+              data
+            )
+          } else {
+            startFire({
+              stageId: this.cproStageId, //项目阶段id
+              group: this.group,
+              playerIds: this.selectedRowKeys,
+            }).then((res) => {
+              if (res.success) {
+                this.$message.success('操作成功！')
+                this.selectedRowKeys = []
+                this.selectionRows = []
+              } else {
+                this.$message.error(res.message)
+              }
+            })
+          }
+        })
+      }
     },
     handleEnd() {
       endFire({
@@ -1744,14 +1763,14 @@ export default {
           selected
             ? this.selectionRows.push(record)
             : this.selectionRows.splice(
-                this.selectionRows.findIndex((x) => x.id === record.id),
+                this.selectionRows.findIndex((x) => x.playerId === record.playerId),
                 1
               )
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
           this.selectionRows = selected
             ? this.selectionRows.concat(changeRows)
-            : this.selectionRows.filter((x) => !changeRows.find((i) => i.id === x.id))
+            : this.selectionRows.filter((x) => !changeRows.find((i) => i.playerId === x.playerId))
         },
         selectedRowKeys: selectedRowKeys,
         onChange: (selectedRowKeys, selectedRows) => {

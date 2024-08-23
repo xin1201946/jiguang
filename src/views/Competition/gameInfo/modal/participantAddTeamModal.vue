@@ -10,14 +10,14 @@
         </a-form-model-item>
         <a-form-model-item label="男运动员姓名" prop="playerName">
           <a-input v-if="formData.playerSource === 0" allowClear v-model="formData.playerName"></a-input>
-          <a-select v-else allowClear v-model="formData.playerName">
-            <a-select-option v-for="item in listTarge" :key="item.cproId" :value="item.targetSite"
-              >{{ item.targetSite }}
+          <a-select v-else show-search allowClear v-model="formData.playerName" @change="handleChangeP1">
+            <a-select-option v-for="item in playerList1" :key="item.playerId" :value="item.playerName"
+              >{{  item.playerName }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="靶位" prop="targetSite">
-          <a-select allowClear v-model="formData.targetSite" @change="handleChange">
+          <a-select allowClear v-model="formData.targetSite" @change="handleChange1">
             <a-select-option v-for="item in listTarge" :key="item.cproId" :value="item.targetSite"
               >{{ item.targetSite }}
             </a-select-option>
@@ -25,14 +25,15 @@
         </a-form-model-item>
         <a-form-model-item label="女运动员姓名" prop="playerName2">
           <a-input v-if="formData.playerSource === 0" allowClear v-model="formData.playerName2"></a-input>
-          <a-select v-else allowClear v-model="formData.playerName2">
-            <a-select-option v-for="item in listTarge" :key="item.cproId" :value="item.targetSite"
-              >{{ item.targetSite }}
+          <a-select v-else show-search allowClear v-model="formData.playerName2" @change="handleChangeP2">
+            <a-select-option v-for="item in playerList2" :key="item.playerId" :value="item.playerName"
+              >{{  item.playerName }}
             </a-select-option>
+            <!-- item.stageGroup + '组' + '-' + item.playerName + '-' + item.targetSite + '靶位' -->
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="靶位" prop="targetSite2">
-          <a-select allowClear v-model="formData.targetSite2" @change="handleChange">
+          <a-select allowClear v-model="formData.targetSite2" @change="handleChange2">
             <a-select-option v-for="item in listTarge" :key="item.cproId" :value="item.targetSite"
               >{{ item.targetSite }}
             </a-select-option>
@@ -51,7 +52,7 @@
   <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import BizMixins from '@views/biz/bizMixins'
-import { savePlayer, bizContestProjectDeviceList, savePlayerGroup } from '@api/competition'
+import { bizContestProjectDeviceList, savePlayerGroup, getPlayerList } from '@api/competition'
 import { projectGroup } from '@views/Competition/participant/participant.config'
 export default {
   name: 'participantAddTeamModal',
@@ -62,7 +63,7 @@ export default {
   data() {
     return {
       projectGroup,
-      title: '添加参赛人员',
+      title: '添加混团参赛人员',
       visible: false,
       loadingModal: false,
       type: 1,
@@ -94,6 +95,10 @@ export default {
       tabletPcNum: '',
       tabletPcNum2: '',
       listGroup: [],
+      playerList1: [],
+      playerList2: [],
+      player1Id: '',
+      player2Id: '',
     }
   },
   watch: {},
@@ -103,14 +108,31 @@ export default {
       this.loadingModal = false
       this.contestId = data.contestId
       this.cproId = data.cproId
-      // this.stageGroup = data.stageGroup
       this.stageId = data.stageId
       bizContestProjectDeviceList(data).then((res) => {
         this.listTarge = res.result
       })
+      getPlayerList({ ...data, playerSex: 1 }).then((res) => {
+        this.playerList1 = res.result
+      })
+      getPlayerList({ ...data, playerSex: 2 }).then((res) => {
+        this.playerList2 = res.result
+      })
     },
     onChange(e) {
-      console.log('radio checked', e.target.value)
+      this.formData.playerSource = e.target.value
+    },
+    handleChangeP1(e) {
+      const selectedOption = this.playerList1.find((item) => item.targetSite === e)
+      if (selectedOption) {
+        this.player1Id = selectedOption.playerId
+      }
+    },
+    handleChangeP2(e) {
+      const selectedOption = this.playerList2.find((item) => item.targetSite === e)
+      if (selectedOption) {
+        this.player2Id = selectedOption.playerId
+      }
     },
     handleOk() {
       this.$refs.form.validate((v) => {
@@ -124,6 +146,8 @@ export default {
               tabletPcNum2: this.tabletPcNum2,
               cproId: this.cproId,
               stageId: this.stageId,
+              player1Id: this.player1Id,
+              player2Id: this.player2Id,
             }
             savePlayerGroup(data).then((res) => {
               if (res.success) {
@@ -154,10 +178,16 @@ export default {
         }
       })
     },
-    handleChange(v) {
+    handleChange1(v) {
       const selectedOption = this.listTarge.find((item) => item.targetSite === v)
       if (selectedOption) {
         this.tabletPcNum = selectedOption.tabletPcNum
+      }
+    },
+    handleChange2(v) {
+      const selectedOption = this.listTarge.find((item) => item.targetSite === v)
+      if (selectedOption) {
+        this.tabletPcNum2 = selectedOption.tabletPcNum
       }
     },
     handleCancel() {
