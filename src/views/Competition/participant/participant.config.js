@@ -53,6 +53,23 @@ export const projectGroup = [
     label: "丁组女子",
     value: "丁组女子"
   },
+  {
+    label: "领导干部男子",
+    value: "领导干部男子"
+  },
+  {
+    label: "领导干部女子",
+    value: "领导干部女子"
+  },
+  {
+    label: "科技工匠男子",
+    value: "科技工匠男子"
+  },
+  {
+    label: "科技工匠女子",
+    value: "科技工匠女子"
+  },
+ 
   
 ]
 export const participantQuery = [

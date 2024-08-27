@@ -100,6 +100,15 @@ const projectGroup1 = [
     label: "丁组",
     value: "丁组"
   },
+  {
+    label: "领导干部",
+    value: "领导干部"
+  },
+  {
+    label: "科技工匠",
+    value: "科技工匠"
+  },
+  
 ]
 
 export default {
