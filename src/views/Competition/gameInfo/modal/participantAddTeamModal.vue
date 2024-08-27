@@ -123,13 +123,13 @@ export default {
       this.formData.playerSource = e.target.value
     },
     handleChangeP1(e) {
-      const selectedOption = this.playerList1.find((item) => item.targetSite === e)
+      const selectedOption = this.playerList1.find((item) => item.playerName === e)
       if (selectedOption) {
         this.player1Id = selectedOption.playerId
       }
     },
     handleChangeP2(e) {
-      const selectedOption = this.playerList2.find((item) => item.targetSite === e)
+      const selectedOption = this.playerList2.find((item) => item.playerName === e)
       if (selectedOption) {
         this.player2Id = selectedOption.playerId
       }
@@ -146,7 +146,7 @@ export default {
               tabletPcNum2: this.tabletPcNum2,
               cproId: this.cproId,
               stageId: this.stageId,
-              player1Id: this.player1Id,
+              playerId : this.player1Id,
               player2Id: this.player2Id,
             }
             savePlayerGroup(data).then((res) => {
