@@ -237,8 +237,14 @@ export default {
       const router = this.$router
       const screenWidth = window.screen.width
       const screenHeight = window.screen.height
+      let obj = {
+        title: '自定义大屏',
+        custom: true,
+      }
       // 最大化
-      window.open(router.resolve({ name: 'customsDataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`)
+      // 暂时不用
+      // window.open(router.resolve({ name: 'customsDataScreen', query: { data: encodeURI(JSON.stringify(obj)) } }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`)
+      window.open(router.resolve({ name: 'DataScreen', query: { data: encodeURI(JSON.stringify(obj)) } }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`)
     },
     /* update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
     showClick() {

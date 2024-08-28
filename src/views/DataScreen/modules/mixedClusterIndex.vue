@@ -52,6 +52,9 @@ export default {
     data: {
       type: Object,
     },
+    /**
+     * number 填写number = 1 页面为整体整体时候不设置表头宽度 大于1 就设置为100px 
+     * */
     number: {
       type: [String, Number],
     },
@@ -329,4 +332,5 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}</style>
+}
+</style>

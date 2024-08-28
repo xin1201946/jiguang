@@ -44,10 +44,8 @@
           <div style="width: 100%;height: 100%;"
             v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
             <!--    整页的滚动-->
-            <vueSeamless :classOption="{
-    step: 0.1,
-    limitMoveNum: 16,
-  }" class="foots" :data="data.listsList" ref="scorllBox">
+            <vueSeamless :classOption="{ step: 0.1, limitMoveNum: 16, }" class="foots" :data="data.listsList"
+              ref="scorllBox">
               <div class="footContent" ref="scorllArr">
                 <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
                   <div style="width: 60px; font-size: 26px">{{ item.rank }}</div>
@@ -181,10 +179,12 @@
         <!-- 混团赛 -->
         <div class="box_box"
           v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
-          <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
+          <!-- <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex> -->
+          <!--填写number = 1 页面为整体整体时候不设置表头宽度 大于1 就设置为100px  -->
+          <mixedClusterIndex :data="data" :number="1"></mixedClusterIndex>
         </div>
         <!-- 团队赛 -->
-        <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
+        <div class=" box_box" v-if="data.configName.indexOf('团体排名') != -1">
           <!--    表头-->
           <div class='th'>
             <div v-for='(item, i) in data.th' :key='i'
@@ -227,7 +227,8 @@ import {
   getTeamTotalScores,
   littleScreen,
   getDataScreenCurrentConfigApi,
-  littleScreenByTotal
+  littleScreenByTotal,
+  getDatabizCustomScreenConfigApi,
 } from '@api/competition'
 import Display from '@views/control/display/index.vue'
 import mixedClusterIndex from './modules/mixedClusterIndex.vue'
@@ -288,29 +289,62 @@ export default {
   },
   created() {
     let data = this.$route.query.data
-    // console.log(data, 'data123')
     if (data) {
       data = JSON.parse(decodeURI(data))
-      this.currentProject = JSON.parse(JSON.stringify(data))
-      this.projectList = data
-      this.projectList.map((item) => {
-        item['fiftyRounds'] = 0
-        item['finalEight'] = []
-        item['list'] = []
-        item['listsList'] = []
-        item['projectName'] = ''
-        item['stageGroup'] = ''
-        item['stageName'] = ''
-        item['bisaiTime'] = ''
-        item['contestName'] = ''
-        item['addr'] = ''
-        item['th'] = []
-        item['shootGroups'] = 0
-        item['rankingList'] = []
-        item['number'] = 0
-      })
-      this.getList()
-      this.timer = setInterval(() => {
+      if (data.custom) {  //自定义大屏判断 用新接口
+        // console.log(this.$route, '用新接口统一')
+        getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
+          console.log(res, 'res')
+          this.currentProject = JSON.parse(JSON.stringify(res.result))
+          this.projectList = res.result
+          this.projectList.map((item) => {
+            item['fiftyRounds'] = 0
+            item['finalEight'] = []
+            item['list'] = []
+            item['listsList'] = []
+            item['projectName'] = ''
+            item['stageGroup'] = ''
+            item['stageName'] = ''
+            item['bisaiTime'] = ''
+            item['contestName'] = ''
+            item['addr'] = ''
+            item['th'] = []
+            item['shootGroups'] = 0
+            item['rankingList'] = []
+            item['number'] = 0
+          })
+          this.getList()
+        })
+
+        this.timer = setInterval(() => {
+          getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
+            this.len = false
+            if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
+              this.currentProject = JSON.parse(JSON.stringify(res.result))
+              this.len = true
+              this.projectList = res.result
+              this.projectList.map((item) => {
+                item['fiftyRounds'] = 0
+                item['finalEight'] = []
+                item['list'] = []
+                item['listsList'] = []
+                item['projectName'] = ''
+                item['stageGroup'] = ''
+                item['stageName'] = ''
+                item['bisaiTime'] = ''
+                item['contestName'] = ''
+                item['addr'] = ''
+                item['th'] = []
+                item['shootGroups'] = 0
+                item['rankingList'] = []
+                item['number'] = 0
+              })
+              this.getList()
+            }
+          })
+        }, 3000)
+      } else {
+        // 单点本机大屏页面（单独）
         this.currentProject = JSON.parse(JSON.stringify(data))
         this.projectList = data
         this.projectList.map((item) => {
@@ -330,9 +364,30 @@ export default {
           item['number'] = 0
         })
         this.getList()
-      }, 3000)
+        this.timer = setInterval(() => {
+          this.currentProject = JSON.parse(JSON.stringify(data))
+          this.projectList = data
+          this.projectList.map((item) => {
+            item['fiftyRounds'] = 0
+            item['finalEight'] = []
+            item['list'] = []
+            item['listsList'] = []
+            item['projectName'] = ''
+            item['stageGroup'] = ''
+            item['stageName'] = ''
+            item['bisaiTime'] = ''
+            item['contestName'] = ''
+            item['addr'] = ''
+            item['th'] = []
+            item['shootGroups'] = 0
+            item['rankingList'] = []
+            item['number'] = 0
+          })
+          this.getList()
+        }, 3000)
+      }
     } else {
-      console.log(this.$route)
+      // console.log(this.$route, '旧接口统一')
       getDataScreenCurrentConfigApi().then((res) => {  //定义两个大屏的
         console.log(res, 'res')
         this.currentProject = JSON.parse(JSON.stringify(res.result))
@@ -391,6 +446,109 @@ export default {
         })
       }, 3000)
     }
+    // console.log(data, 'data123')
+    // if (data) {
+    //   data = JSON.parse(decodeURI(data))
+    //   this.currentProject = JSON.parse(JSON.stringify(data))
+    //   this.projectList = data
+    //   this.projectList.map((item) => {
+    //     item['fiftyRounds'] = 0
+    //     item['finalEight'] = []
+    //     item['list'] = []
+    //     item['listsList'] = []
+    //     item['projectName'] = ''
+    //     item['stageGroup'] = ''
+    //     item['stageName'] = ''
+    //     item['bisaiTime'] = ''
+    //     item['contestName'] = ''
+    //     item['addr'] = ''
+    //     item['th'] = []
+    //     item['shootGroups'] = 0
+    //     item['rankingList'] = []
+    //     item['number'] = 0
+    //   })
+    //   this.getList()
+    //   this.timer = setInterval(() => {
+    //     this.currentProject = JSON.parse(JSON.stringify(data))
+    //     this.projectList = data
+    //     this.projectList.map((item) => {
+    //       item['fiftyRounds'] = 0
+    //       item['finalEight'] = []
+    //       item['list'] = []
+    //       item['listsList'] = []
+    //       item['projectName'] = ''
+    //       item['stageGroup'] = ''
+    //       item['stageName'] = ''
+    //       item['bisaiTime'] = ''
+    //       item['contestName'] = ''
+    //       item['addr'] = ''
+    //       item['th'] = []
+    //       item['shootGroups'] = 0
+    //       item['rankingList'] = []
+    //       item['number'] = 0
+    //     })
+    //     this.getList()
+    //   }, 3000)
+    // } else {
+    //   console.log(this.$route)
+    //   getDataScreenCurrentConfigApi().then((res) => {  //定义两个大屏的
+    //     console.log(res, 'res')
+    //     this.currentProject = JSON.parse(JSON.stringify(res.result))
+    //     this.projectList = res.result
+    //     this.projectList.map((item) => {
+    //       item['fiftyRounds'] = 0
+    //       item['finalEight'] = []
+    //       item['list'] = []
+    //       item['listsList'] = []
+    //       item['projectName'] = ''
+    //       item['stageGroup'] = ''
+    //       item['stageName'] = ''
+    //       item['bisaiTime'] = ''
+    //       item['contestName'] = ''
+    //       item['addr'] = ''
+    //       item['th'] = []
+    //       item['shootGroups'] = 0
+    //       item['rankingList'] = []
+    //       item['number'] = 0
+    //     })
+    //     this.getList()
+    //   })
+
+    //   this.timer = setInterval(() => {
+    //     getDataScreenCurrentConfigApi().then((res) => { // 定义两个大屏的
+    //       this.len = false
+    //       if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
+    //         this.currentProject = JSON.parse(JSON.stringify(res.result))
+    //         this.len = true
+    //         // console.log(this.len !== res.result.length && this.len !== 0)
+    //         // console.log(this.len)
+    //         // if (this.len !== res.result.length && this.len !== 0) {
+    //         //   this.$router.go(0)
+    //         // }
+    //         // this.len = res.result.length
+    //         // console.log(this.len)
+    //         this.projectList = res.result
+    //         this.projectList.map((item) => {
+    //           item['fiftyRounds'] = 0
+    //           item['finalEight'] = []
+    //           item['list'] = []
+    //           item['listsList'] = []
+    //           item['projectName'] = ''
+    //           item['stageGroup'] = ''
+    //           item['stageName'] = ''
+    //           item['bisaiTime'] = ''
+    //           item['contestName'] = ''
+    //           item['addr'] = ''
+    //           item['th'] = []
+    //           item['shootGroups'] = 0
+    //           item['rankingList'] = []
+    //           item['number'] = 0
+    //         })
+    //         this.getList()
+    //       }
+    //     })
+    //   }, 3000)
+    // }
   },
   mounted() {
     document.body.style.overflow = 'hidden'
@@ -400,7 +558,7 @@ export default {
 
     this.carouselTimer = setInterval(() => {
       this.$refs.carousel.next()
-    }, 10000);
+    }, 10000)
   },
   methods: {
     // 向上滚动
