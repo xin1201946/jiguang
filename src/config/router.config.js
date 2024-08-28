@@ -346,6 +346,20 @@ export const constantRouterMap = [
       },
     ]
   },
+  {
+    path: '/DataScreen',
+    component: BlankLayout,
+    meta: {title: '自定义数据大屏'},
+    redirect: '/DataScreen/customsDataScreen',
+    children: [
+      {
+        path: 'customsDataScreen',
+        name: 'customsDataScreen',
+        component: () => import('@/views/DataScreen/customsDataScreen.vue'),
+        meta: {title: '自定义数据大屏'},
+      },
+    ]
+  },
 
   {
     // OAuth2 APP页面路由

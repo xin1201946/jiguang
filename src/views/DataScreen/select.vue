@@ -10,9 +10,12 @@
             <a-radio :value="2">
               两场
             </a-radio>
+            <!-- <a-radio :value="3">
+              自定义
+            </a-radio> -->
           </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="选择比赛（左）">
+        <a-form-model-item label="选择比赛（左）" v-if="data == 1 || data == 2">
           <a-select style="width: 50%" v-model="name1">
             <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configName">
               {{ item.configName }}
@@ -30,17 +33,45 @@
           <a-button type="primary" style="width: 40%;margin-left: 20px;" @click="toDataScreen('右')">数据大屏（比赛右）</a-button>
         </a-form-model-item>
       </a-form-model>
-      <a-button type="primary" style="text-align:center;" @click="updataScreen">更新</a-button>
+      <a-button type="primary" style="text-align:center;" @click="updataScreen"
+        v-if="data == 1 || data == 2">更新</a-button>
+
+      <!-- <div v-if="data == 3" class="boxcust">
+        <a-form-model :labelCol="{ span: 6 }" :wrapperCol="{ span: 17 }" ref="form" :model="formData">
+          <span style="width: 100%;display: block;color: #FF0000" v-if="data == 3">自定义设置展示多少大屏！！！</span>
+          <a-form-model-item v-for="(competition, index) in formData.competitions" :key="index"
+            :label="`选择比赛 ${index + 1}`">
+            <a-select style="width: 50%" v-model="competition.configId" placeholder="请选择比赛">
+              <a-select-option v-for="item in dataScreenList" :key="item.configId" :value="item.configId">
+                {{ item.configName }}
+              </a-select-option>
+            </a-select>
+            <a-button type="primary" style="margin-left: 20px;" @click="toDataScreen(`${index + 1}`)">数据大屏{{ `${index +
+    1}` }}</a-button>
+            <a-button class="elButtons" @click="addFormItem" icon="plus-circle"></a-button>
+            <a-button class="elButtonsjian" @click="removeFormItem" icon="minus-circle"></a-button>
+          </a-form-model-item>
+
+          <a-button type="primary" style="text-align:center;margin-left: 20px;"
+            @click="handleUpdateCustom">更新</a-button>
+        </a-form-model>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import {
+  // 默认大屏
   getDataScreenList,
   getDataScreenConfigApi,
   getDataScreenConfigUpdataApi,
   getDataScreenCurrentConfigApi,
+  // 自定义配置大屏
+  // getDatabizCustomScreenListApi,
+  // getDatabizCustomScreenSaveApi,
+  // getDatabizCustomScreenUpdateApi,
+  // getDatabizCustomScreenDeletesApi,
 } from '@/api/competition'
 import { fullscreen } from '@/utils'
 export default {
@@ -49,14 +80,28 @@ export default {
       data: 1,
       dataScreenList: [],
       formData: {},
+      // formData: {
+      //   competitions: [
+      //     { configId: undefined }
+      //   ]
+      // },
       name1: '',
       name2: '',
       screenId: 0,
+      // customList: [],
     }
   },
   mounted() {
     document.body.style.overflow = 'hidden'
   },
+  // watch: {
+  //   data(val) {
+  //     console.log(val, '63622555---')
+  //     if (val == 3) {
+  //       this.getCustomList()
+  //     }
+  //   }
+  // },
   methods: {
     toDataScreen(type) {
       let obj = []
@@ -72,7 +117,6 @@ export default {
       const router = this.$router
       const screenWidth = window.screen.width
       const screenHeight = window.screen.height
-      console.log(obj, '63622555---');
       window.open(
         router.resolve({ name: 'DataScreen', query: { data: encodeURI(JSON.stringify(obj)) } }).href,
         '_blank',
@@ -80,6 +124,7 @@ export default {
       )
     },
     getList() {
+      // this.getCustomList()
       getDataScreenList({}).then((res) => {
         this.dataScreenList = res.result
         // 回显当前选中的
@@ -95,6 +140,21 @@ export default {
         })
       })
     },
+    /**
+     * 自定义大屏列表
+     * */
+    // getCustomList() {
+    //   getDatabizCustomScreenListApi().then((res) => {
+    //     // this.customList = res.result
+    //     // console.log(this.customList, '自定义列表')
+    //     if (res.code == 200) {
+    //       this.formData.competitions = res.result
+    //       console.log(this.formData.competitions, '自定义列表')
+    //     } else {
+    //       this.$message.error(res.message)
+    //     }
+    //   })
+    // },
     updataScreen() {
       // console.log(1)
       if (this.name1 == this.name2) {
@@ -138,6 +198,40 @@ export default {
         this.getList()
       })
     },
+
+    // //自定义 增加比赛
+    // addFormItem() {
+    //   this.formData.competitions.push({ configId: '' }) // 添加一个新的比赛选择项  
+    // },
+    // //自定义 减少比赛
+    // removeFormItem() {
+    //   if (this.formData.competitions.length > 1) {
+    //     this.formData.competitions.pop() // 移除最后一个比赛选择项  
+    //   } else {
+    //     this.$message.error('至少要选择一个比赛！')
+    //   }
+    // },
+    // // 自定义 表单更新
+    // handleUpdateCustom() {
+    //   console.log('更新的表单数据:', this.formData)
+    //   let arr = []
+    //   this.formData.competitions.map((item) => {
+    //     return arr.push(item.configId)
+    //   }),
+    //     console.log(arr, '自定义表单更新', this.formData.competitions)
+    //   let obj = {
+    //     amount: 3,
+    //     configIdList: arr,
+    //   }
+    //   getDatabizCustomScreenUpdateApi(obj).then((res) => {
+    //     // console.log(res, '更新成功')
+    //     if (res.code == 200) {
+    //       this.$message.success('更新成功！')
+    //     } else {
+    //       this.$message.error(res.message)
+    //     }
+    //   }).catch((err) => { })
+    // },
   },
 }
 </script>
@@ -168,4 +262,39 @@ export default {
   font-size: 50px;
   margin-top: 50px;
 }
-</style>
+
+// .boxcust {
+//   position: relative;
+// }
+
+// .elButtons {
+//   width: 32px;
+//   height: 32px;
+//   color: #1890ff;
+//   font-size: 14px;
+//   position: absolute;
+//   top: -5px;
+//   right: -12%;
+//   border: 0;
+
+//   /deep/ svg {
+//     width: 25px;
+//     height: 25px;
+//   }
+// }
+
+// .elButtonsjian {
+//   width: 32px;
+//   height: 32px;
+//   color: #1890ff;
+//   font-size: 14px;
+//   position: absolute;
+//   top: -5px;
+//   right: -22%;
+//   border: 0;
+
+//   /deep/ svg {
+//     width: 25px;
+//     height: 25px;
+//   }
+// }</style>

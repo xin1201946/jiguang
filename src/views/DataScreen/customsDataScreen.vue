@@ -8,7 +8,7 @@
             <div>
               <div class="left">
                 <img class="logo" :src="data.configName.indexOf('手枪') != -1 ? shou :
-    data.configName.indexOf('步枪') != -1 ? bu : shou" alt="" />
+                data.configName.indexOf('步枪') != -1 ? bu : shou" alt="" />
                 <div>
                   <div style="margin-bottom: 5px;font-size: 28px;">{{ data.contestName }}</div>
                   <div v-if="data.configName != '团队综合排名'">
@@ -36,26 +36,23 @@
         <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
           <!--    表头-->
           <div class='th'>
-            <div v-for='(item, i) in data.th' :key='i'
-              :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+            <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
               {{ item.name }}
             </div>
           </div>
-          <div style="width: 100%;height: 100%;"
-            v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
+          <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
             <!--    整页的滚动-->
             <vueSeamless :classOption="{
-    step: 0.1,
-    limitMoveNum: 16,
-  }" class="foots" :data="data.listsList" ref="scorllBox">
+            step: 0.1,
+            limitMoveNum: 16,
+          }" class="foots" :data="data.listsList" ref="scorllBox">
               <div class="footContent" ref="scorllArr">
                 <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
                   <div style="width: 60px; font-size: 26px">{{ item.rank }}</div>
                   <div style="width: 60px; font-size: 26px">{{ item.targetSite }}</div>
                   <div style="width: 100px; font-size: 24px">{{ item.playerName }}</div>
                   <div style="flex: 1;text-align: left; font-size: 26px">{{ item.groupName }}</div>
-                  <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                    v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative; font-size: 20px">
+                  <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative; font-size: 20px">
                     {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                     <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                   </div>
@@ -66,17 +63,15 @@
               </div>
             </vueSeamless>
           </div>
-          <div style="width: 100%;height: 100%;"
-            v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
+          <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
             <!--    前8位-->
-            <div :class="{ 'finalEight': line, 'finalEightT': !line }">
+            <div :class="{'finalEight': line, 'finalEightT': !line}">
               <div v-for="(item, i) in data.finalEight" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
                 <div style="width: 60px">{{ item.targetSite }}</div>
                 <div style="width: 100px">{{ item.playerName }}</div>
                 <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                  v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
+                <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                   <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
@@ -94,8 +89,7 @@
                   <div style="width: 60px">{{ item.targetSite }}</div>
                   <div style="width: 100px">{{ item.playerName }}</div>
                   <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-                  <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''"
-                    v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
+                  <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                     {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
                     <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                   </div>
@@ -108,12 +102,10 @@
             </vueSeamless>
           </div>
 
-          <div style="width: 100%;height: 100%;display: flex;flex-direction: column"
-            v-if="data.configName.indexOf('个人决赛') != -1">
+          <div style="width: 100%;height: 100%;display: flex;flex-direction: column" v-if="data.configName.indexOf('个人决赛') != -1">
             <!--    前8位-->
             <div :class="data.finalEight.length == 0 ? '' : 'finalEight'">
-              <div v-for="(item, i) in data.finalEight" :key="i"
-                :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
+              <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
                 <div style="width: 60px">{{ item.rank }}</div>
                 <div style="width: 60px">{{ item.targetSite }}</div>
                 <div style="width: 100px">{{ item.playerName }}</div>
@@ -179,16 +171,14 @@
           </div>
         </div>
         <!-- 混团赛 -->
-        <div class="box_box"
-          v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
+        <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
           <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
         </div>
         <!-- 团队赛 -->
         <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
           <!--    表头-->
           <div class='th'>
-            <div v-for='(item, i) in data.th' :key='i'
-              :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
+            <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
               {{ item.name }}
             </div>
           </div>
@@ -214,7 +204,7 @@
         <div class="box_box" v-if="data.configName === '团队综合排名'">
           <RankingList :data="data.rankingList" />
         </div>
-
+        
       </dv-border-box-8>
     </a-carousel>
   </div>
@@ -227,6 +217,7 @@ import {
   getTeamTotalScores,
   littleScreen,
   getDataScreenCurrentConfigApi,
+  getDatabizCustomScreenConfigApi,
   littleScreenByTotal
 } from '@api/competition'
 import Display from '@views/control/display/index.vue'
@@ -282,13 +273,13 @@ export default {
       currentProject: [],
       len: false,
       line: false,
-
+      
       carouselTimer: null
     }
   },
   created() {
     let data = this.$route.query.data
-    // console.log(data, 'data123')
+    console.log(data, 'data123')
     if (data) {
       data = JSON.parse(decodeURI(data))
       this.currentProject = JSON.parse(JSON.stringify(data))
@@ -333,7 +324,8 @@ export default {
       }, 3000)
     } else {
       console.log(this.$route)
-      getDataScreenCurrentConfigApi().then((res) => {  //定义两个大屏的
+      // getDataScreenCurrentConfigApi().then((res) => {  //定义两个大屏的
+        getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
         console.log(res, 'res')
         this.currentProject = JSON.parse(JSON.stringify(res.result))
         this.projectList = res.result
@@ -354,10 +346,12 @@ export default {
           item['number'] = 0
         })
         this.getList()
+        
       })
 
       this.timer = setInterval(() => {
-        getDataScreenCurrentConfigApi().then((res) => { // 定义两个大屏的
+        // getDataScreenCurrentConfigApi().then((res) => { // 定义两个大屏的
+          getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
           this.len = false
           if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
             this.currentProject = JSON.parse(JSON.stringify(res.result))
@@ -589,8 +583,8 @@ export default {
         })
       })
     },
-    // 个人资格赛
-    gerenzong(data, index) {
+     // 个人资格赛
+     gerenzong(data, index) {
       console.log(data, '资格赛总排名')
       littleScreenByTotal({
         type: data.configName,
@@ -922,7 +916,7 @@ export default {
     },
     getData() {
       this.projectList.forEach((data, index) => {
-        if (data.configName.includes('个人资格赛') && !data.configName.includes('资格赛总排名')) {
+        if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
           this.geren(data, index)
         }
         if (data.configName.includes('个人决赛')) {
@@ -945,8 +939,8 @@ export default {
     getList() {
       this.len = false
       this.projectList.forEach((data, index) => {
-
-        if (data.configName.includes('个人资格赛') && !data.configName.includes('资格赛总排名')) {
+      
+        if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
           this.geren(data, index)
         }
         if (data.configName.includes('个人决赛')) {
@@ -1184,7 +1178,8 @@ export default {
       font-size: 22px;
       text-align: right;
 
-      .nameTitle {}
+      .nameTitle {
+      }
 
       .times {
         letter-spacing: 6px;
@@ -1210,7 +1205,7 @@ export default {
   margin-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 
-  &>div {
+  & > div {
     flex: 1;
     text-align: center;
   }
@@ -1222,13 +1217,11 @@ export default {
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
-
 .finalEightT {
   // display: flex;
   // justify-content: space-between;
   padding-bottom: 5px;
 }
-
 .finalEightRow {
   flex: 1;
   display: flex;

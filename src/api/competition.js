@@ -248,3 +248,23 @@ export const deletePlayerGroup = data => postAction("contest-process/deletePlaye
 export const getGroupNameList = data => postAction("bizTeamGoldScore/getGroupNameList", data)
 //混团添加运动员 运动员集合数据
 export const getPlayerList = data => postAction("bizTeamGoldScore/getPlayerList", data)
+
+
+/**
+ *  自定义 查询大屏当前配置列表 大屏用
+ * */
+export const getDatabizCustomScreenConfigApi = data => postAction("bizCustomScreen/queryScreen", data)
+
+/**
+ * 自定义配置 开始
+ * 自定义大屏配置列表
+*/
+export const getDatabizCustomScreenListApi = data => postAction("bizCustomScreen/list", data)
+
+/**
+ * 自定义大屏配置 更新=编辑
+*/
+export const getDatabizCustomScreenUpdateApi = data => postAction("bizCustomScreen/update", data)
+/**
+ * 自定义配置 结束
+ */

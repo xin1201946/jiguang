@@ -7,8 +7,13 @@
       <a-icon type="search"></a-icon>
     </span>
     <!--  -->
+    <span v-if='roleName !== "学员"' class="action action-full ant-dropdown-link user-dropdown-menu"
+      @click="handleFullscreenCustom()">
+      <span>自定义数据大屏</span>
+    </span>
     <a-dropdown>
-      <span v-if='roleName !== "学员"' class="action action-full ant-dropdown-link user-dropdown-menu" @click="handleFullscreen()">
+      <span v-if='roleName !== "学员"' class="action action-full ant-dropdown-link user-dropdown-menu"
+        @click="handleFullscreen()">
         <span>数据大屏</span>
       </span>
       <!-- <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
@@ -19,11 +24,14 @@
     </a-dropdown>
     <!--  -->
     <!-- update-begin author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
-    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders" :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible = false">
-      <a-select class="search-input" showSearch :showArrow="false" placeholder="搜索菜单" optionFilterProp="children" :filterOption="filterOption" :open="isMobile() ? true : null" :getPopupContainer="(node) => node.parentNode" :style="isMobile() ? { width: '100%', marginBottom: '50px' } : {}" @change="searchMethods" @blur="hiddenClick">
+    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders"
+      :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible = false">
+      <a-select class="search-input" showSearch :showArrow="false" placeholder="搜索菜单" optionFilterProp="children"
+        :filterOption="filterOption" :open="isMobile() ? true : null" :getPopupContainer="(node) => node.parentNode"
+        :style="isMobile() ? { width: '100%', marginBottom: '50px' } : {}" @change="searchMethods" @blur="hiddenClick">
         <a-select-option v-for="(site, index) in searchMenuOptions" :key="index" :value="site.id">{{
-          site.meta.title
-        }}</a-select-option>
+    site.meta.title
+  }}</a-select-option>
       </a-select>
     </component>
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
@@ -178,10 +186,10 @@ export default {
       // const pin = window.open('/DataScreen?type=' + row.configName + '&spear=' + spear, '_blank')
       // 现在的
       // process.env.NODE_ENV === "electron"
-      const router = this.$router;
+      const router = this.$router
       // DataScreen
-      const screenWidth = window.screen.width;
-      const screenHeight = window.screen.height;
+      const screenWidth = window.screen.width
+      const screenHeight = window.screen.height
       // console.log(router.resolve({ name: 'DataScreen' }).href)
       // width=${screenWidth}, height=${screenHeight},
       // fullscreen=yes
@@ -189,7 +197,7 @@ export default {
       // const pin = window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}, fullscreen=yes`);
       // pin.focus();
       // 最大化
-      window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`);
+      window.open(router.resolve({ name: 'DataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`)
       // axios.get("http://localhost:5173/route", {
       //   params: {
       //     route: router.resolve({ name: 'DataScreen' }).href
@@ -223,6 +231,14 @@ export default {
           pin.document.webkitCancelFullScreen()
         }
       }*/
+    },
+    // 自定义数据大屏事件
+    handleFullscreenCustom() {
+      const router = this.$router
+      const screenWidth = window.screen.width
+      const screenHeight = window.screen.height
+      // 最大化
+      window.open(router.resolve({ name: 'customsDataScreen' }).href, '_blank', `width=${screenWidth}, height=${screenHeight}`)
     },
     /* update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
     showClick() {
@@ -259,7 +275,7 @@ export default {
               })
             })
         },
-        onCancel() {},
+        onCancel() { },
       })
     },
     updatePassword() {
@@ -329,6 +345,7 @@ export default {
 /deep/ .ant-dropdown-menu-item {
   align-items: center;
 }
+
 /* update_begin author:zhaoxin date:20191129 for: 让搜索框颜色能随主题颜色变换*/
 /* update-begin author:sunjianlei date:20191220 for: 解决全局样式冲突问题 */
 .user-wrapper .search-input {
@@ -339,12 +356,14 @@ export default {
     background-color: inherit;
     border: 0;
     border-bottom: 1px solid white;
+
     &__placeholder,
     &__field__placeholder {
       color: inherit;
     }
   }
 }
+
 /* update-end author:sunjianlei date:20191220 for: 解决全局样式冲突问题 */
 /* update_end author:zhaoxin date:20191129 for: 让搜索框颜色能随主题颜色变换*/
 </style>
