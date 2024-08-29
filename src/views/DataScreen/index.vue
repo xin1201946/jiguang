@@ -20,7 +20,7 @@
     </div>
     <!-- 个人资格赛总排名 -->
     <div class="personally" v-if="state.indexOf('资格赛总排名') != -1">
-      <TableListVue type="资格赛总排名" :TitleList="personallyList.title" :List="[...personallyList.List[0], ...personallyList.List[1], ...personallyList.List[2]]" style="width: 100%; min-height: 100%"/>
+      <TableListVue type="个人赛" :TitleList="personallyList.title" :List="[...personallyList.List[0], ...personallyList.List[1], ...personallyList.List[2]]" style="width: 100%; min-height: 100%"/>
     </div>
     <!-- 个人赛淘汰赛 -->
     <div class="personally" v-if="state.indexOf('个人决赛') != -1 || state.indexOf('个人淘汰赛') != -1">

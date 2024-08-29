@@ -42,7 +42,7 @@
             </div>
           </div>
           <div style="width: 100%;height: 100%;"
-            v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
+            v-if="(data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1)||data.configName.indexOf('资格赛总排名') != -1">
             <!--    整页的滚动-->
             <vueSeamless :classOption="{ step: 0.1, limitMoveNum: 16, }" class="foots" :data="data.listsList"
               ref="scorllBox">
