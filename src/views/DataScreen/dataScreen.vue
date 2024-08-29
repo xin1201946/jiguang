@@ -747,7 +747,7 @@ export default {
         })
       })
     },
-    // 个人资格赛
+    // 个人资格赛总排名
     gerenzong(data, index) {
       console.log(data, '资格赛总排名')
       littleScreenByTotal({
