@@ -122,7 +122,6 @@ export default {
     }).then((res) => {
       this.list = res.result.records
     })
-    this.handleReset()
   },
   methods: {
     // 分页
