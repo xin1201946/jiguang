@@ -6,7 +6,7 @@
           <a-input allowClear v-model="formData.playerName"></a-input>
         </a-form-model-item>
 
-        <a-form-model-item label="团队名称" prop="groupName">
+        <a-form-model-item label="代表队" prop="groupName">
           <a-input allowClear v-model="formData.groupName"></a-input>
         </a-form-model-item>
       </a-form-model>
