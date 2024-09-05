@@ -95,6 +95,27 @@
               @click.stop="addNewparticipants()"
               >添加参赛人员</a-button
             >
+            <a-upload
+              v-if="stageName !== '金/铜牌赛'"
+              accept=".xlsx, xls"
+              name="file"
+              :showUploadList="false"
+              :multiple="false"
+              :headers="tokenHeader"
+              :action="importExcelUrl1"
+              :data="{
+                contestId: data.contestId,
+                cproId: cproId,
+                stageId: cproStageId,
+              }"
+              @change="handleImportExcel1"
+            >
+              <a-button
+                type="primary"
+                style="border-color: rgb(62 187 1); background-color: rgb(62 187 1); color: rgb(255 255 255)"
+                >导入参赛人员</a-button
+              >
+            </a-upload>
             <a-button v-if="stageName == '金/铜牌赛'" type="danger" @click="handhandeleteModel()">删除</a-button>
             <!-- <a-button type="primary" v-if="groupActive" @click="getGrouping">变更组别</a-button> -->
             <!-- </a-space> -->
@@ -423,6 +444,7 @@ import {
   changeGroupContestGroup, //混团变更组别
   deletePlayer, //删除运动员
 } from '@api/competition'
+import bizMixins from '@views/biz/bizMixins'
 import { numToCapital, infoMessage, deleteMessage } from '@/utils'
 function extractValue(str) {
   const regex = /_([^_]*?)x/
@@ -477,8 +499,10 @@ export default {
     GameInfoDeleteGroupModal, //混团删除代表队
   },
   inject: ['closeCurrent'],
+  mixins: [bizMixins],
   data() {
     return {
+      api: 'contest-process/savePlayerImport',
       loading2: false,
       isDropdownVisible: false,
       treeList: [],
@@ -590,6 +614,64 @@ export default {
     }
   },
   methods: {
+    //导入文件
+
+    handleImportExcel1(info) {
+      console.log(info)
+      const { file } = info
+      if (this.loading !== undefined) {
+        this.loading = true
+      }
+
+      if (file.status === 'uploading') {
+      }
+      if (file.status === 'done') {
+        const { response } = file
+        if (response.code === 200) {
+          if (this.loading !== undefined) {
+            this.loading = false
+          }
+          this.$message.success(response.message)
+          this.pagination.current = 1
+          this.$nextTick(() => {
+            this.getTableList()
+          })
+        } else if (response.code === 201) {
+          let {
+            message,
+            result: { msg, fileUrl, fileName },
+          } = response
+          let href = window._CONFIG['domianURL'] + fileUrl
+          this.$warning({
+            title: message,
+            content: (
+              <div>
+                <span>{msg}</span>
+                <br />
+                <span>
+                  具体详情请{' '}
+                  <a href={href} target="_blank" download={fileName}>
+                    点击下载
+                  </a>{' '}
+                </span>
+              </div>
+            ),
+            onOk: () => {
+              this.pagination.current = 1
+              this.$nextTick(() => {
+                this.getTableList()
+                if (this.loading !== undefined) {
+                  this.loading = false
+                }
+              })
+            },
+          })
+        } else {
+          this.$message.error(response.message)
+          this.loading = false
+        }
+      }
+    },
     //混团积分监控
     handleGrouplist() {
       const data = {
