@@ -1833,6 +1833,10 @@ export default {
     this.getProjectList()
   },
   computed: {
+    importExcelUrl1: function () {
+      return `${window._CONFIG['domianURL']}/${this.api}`
+    },
+
     rowSelection() {
       let { selectedRowKeys } = this
       return {
