@@ -72,7 +72,7 @@ export default {
   //       _.debounce(function () {
   //         const docHeight = document.body.clientHeight;
   //         const docWidth = document.body.clientWidth;
- 
+  //
   //         if (docWidth < 1680) {
   //           const currentScale = docHeight / docWidth;
   //           let [scale, translate] = [0, 0];
