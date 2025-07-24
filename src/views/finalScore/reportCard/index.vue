@@ -1284,6 +1284,7 @@ export default {
         contestId: this.contestId,
         cproId: this.tree,
       }
+      console.log("Nomal Score Print...")
 
       bizPlayerFinalScoreFinalSportsList(data).then((res) => {
         // includes("团体")

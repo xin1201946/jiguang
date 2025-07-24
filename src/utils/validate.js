@@ -1,4 +1,5 @@
 /**
+ * Who know why they call the function validate,clearly call this function is "vaildata"
  * 邮箱
  * @param {*} s
  */

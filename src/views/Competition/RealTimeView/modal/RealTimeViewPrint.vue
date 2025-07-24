@@ -5,12 +5,22 @@
         <a-descriptions bordered :column="4">
           <a-descriptions-item :span="2" label="选手名称">{{ formData.playerName }}</a-descriptions-item>
           <a-descriptions-item :span="2" label="代表队">{{ formData.groupName }}</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目名称">{{
-            formData.projectName || formData.detailScoreList[0].projectName
-          }}</a-descriptions-item>
-          <a-descriptions-item :span="2" label="项目组别">{{
-            formData.projectGroup || formData.detailScoreList[0].projectGroup
-          }}</a-descriptions-item>
+          <a-descriptions-item :span="2" label="项目名称">
+            {{
+              formData.projectName ||
+              (formData.detailScoreList && formData.detailScoreList.length > 0
+                ? formData.detailScoreList[0].projectName
+                : '')
+            }}
+          </a-descriptions-item>
+          <a-descriptions-item :span="2" label="项目组别">
+            {{
+              formData.projectGroup ||
+              (formData.detailScoreList && formData.detailScoreList.length > 0
+                ? formData.detailScoreList[0].projectGroup
+                : '')
+            }}
+          </a-descriptions-item>
         </a-descriptions>
       </div>
       <div class="printBody" id="printMe" ref="print" style="margin-top: 20px">
@@ -41,9 +51,9 @@
 </template>
 
 <script >
-import { Time } from '@/utils'
 import BizModal from '@comp/modal/BizModal.vue'
 import { deleteSurplusShoot } from '@/api/competition'
+
 export default {
   name: 'RealTimeViewPrint',
   components: {
@@ -120,6 +130,7 @@ export default {
       if (Array.isArray(data)) {
         this.formData = data[0]
         // this.visible = true
+        // 防止 data.stageName 为 undefined
         const arr = data
           .map((item) => {
             return {
@@ -127,17 +138,17 @@ export default {
               list: item.dtlDto.scoreList,
             }
           })
-          .filter((item) => item.stageName === data.stageName)
+          // 这里的 data.stageName 可能为 undefined
+          .filter((item) => item.stageName === (data.stageName || ''))
         this.list = arr
-        console.log(this.list)
       } else {
         this.formData = {}
         this.stageName = data.stageName
-        if (data.stageName.includes('团体')) {
+        // 判空处理
+        if (data.stageName && data.stageName.includes('团体')) {
           this.formData = data
-          // this.list =
           this.$nextTick(() => {
-            if ('detailScoreList' in data) {
+            if ('detailScoreList' in data && Array.isArray(data.detailScoreList)) {
               this.jt['金牌赛'] = data.detailScoreList.filter((item) => item.stageGroup === 1)
               this.jt['铜牌赛'] = data.detailScoreList.filter((item) => item.stageGroup !== 1)
               this.list = [{ list: data.detailScoreList, title: '' }]
@@ -148,22 +159,28 @@ export default {
             }
           })
         } else {
-          const arr = data.list
-            .filter((item) => item.cproStageId === data.stageId)
-            .map((item) => {
-              return {
-                title: item.stageName,
-                list: item.dtlDto.scoreList,
-                scoreList: item.scoreList,
-                stageTotal: item.stageTotal,
-                goodTotal: item.goodTotal,
-              }
-            })
-          this.name = arr[0].title
-          this.scoreList = arr[0].scoreList
-          this.stageTotal = arr[0].stageTotal
-          this.goodTotal = arr[0].goodTotal
-          this.formData = data.list.filter((item) => item.cproStageId === data.stageId)[0]
+          // 判空处理
+          const arr = Array.isArray(data.list)
+            ? data.list
+                .filter((item) => item.cproStageId === data.stageId)
+                .map((item) => {
+                  return {
+                    title: item.stageName,
+                    list: item.dtlDto.scoreList,
+                    scoreList: item.scoreList,
+                    stageTotal: item.stageTotal,
+                    goodTotal: item.goodTotal,
+                  }
+                })
+            : []
+          this.name = arr.length > 0 ? arr[0].title : ''
+          this.scoreList = arr.length > 0 ? arr[0].scoreList : []
+          this.stageTotal = arr.length > 0 ? arr[0].stageTotal : ''
+          this.goodTotal = arr.length > 0 ? arr[0].goodTotal : ''
+          this.formData =
+            Array.isArray(data.list) && data.list.filter((item) => item.cproStageId === data.stageId).length > 0
+              ? data.list.filter((item) => item.cproStageId === data.stageId)[0]
+              : {}
           this.list = arr
         }
       }
@@ -817,22 +834,70 @@ export default {
       const prints = (fn) => {
         const iframe = document.createElement('iframe')
         document.body.appendChild(iframe)
-        iframe.contentWindow.document.open()
-        // iframe.contentWindow.document.write(this.bodyContent());
-        iframe.contentWindow.document.write(fn())
         iframe.width = '100%'
         iframe.height = '800px'
-        setTimeout(() => {
-          iframe.contentWindow.print()
-          iframe.contentWindow.document.close()
-          iframe.contentWindow.addEventListener('afterprint', () => {
-            iframe.contentWindow.document.close()
+
+        // 等待 iframe 加载完成后再设置内容
+        iframe.onload = () => {
+          try {
+            if (iframe.contentWindow && iframe.contentWindow.document) {
+              const doc = iframe.contentWindow.document
+              doc.open()
+              doc.write(`
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <title>Print</title>
+                    <meta charset="utf-8">
+                  </head>
+                  <body>
+                    ${fn()}
+                  </body>
+                </html>
+              `)
+              doc.close()
+
+              setTimeout(() => {
+                try {
+                  iframe.contentWindow.print()
+
+                  // 添加打印完成的监听
+                  iframe.contentWindow.addEventListener('afterprint', () => {
+                    document.body.removeChild(iframe)
+                  })
+
+                  // 如果 afterprint 事件没有触发，设置一个超时清理
+                  setTimeout(() => {
+                    if (document.body.contains(iframe)) {
+                      document.body.removeChild(iframe)
+                    }
+                  }, 1000)
+                } catch (e) {
+                  console.error('Print error:', e)
+                  if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe)
+                  }
+                }
+              }, 100)
+            }
+          } catch (e) {
+            console.error('IFrame error:', e)
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe)
+            }
+          }
+        }
+
+        // 添加错误处理
+        iframe.onerror = () => {
+          console.error('IFrame failed to load')
+          if (document.body.contains(iframe)) {
             document.body.removeChild(iframe)
-          })
-          document.body.removeChild(iframe)
-        }, 50)
+          }
+        }
       }
-      if (this.stageName.includes('团体')) {
+
+      if (this.stageName && this.stageName.includes('团体')) {
         prints(this.groupContent)
       } else {
         if (this.name == '资格赛') {
