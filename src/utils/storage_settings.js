@@ -71,7 +71,7 @@ export function getSettings(name, isJson = false){
       value = parseJson(value);
     }
 
-    return value ?? null;
+    return value !== undefined && value !== null ? value : null;
   } catch (error) {
     console.error('Failed to get settings:', error);
     return null;

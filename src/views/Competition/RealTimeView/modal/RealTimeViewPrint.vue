@@ -27,7 +27,12 @@
         <div v-for="(item, i) in list" :key="i" class="list">
           <template v-if="item.list && item.list.length">
             <h3>{{ item.title }}</h3>
-            <a-table bordered :pagination="false" :columns="columns" :data-source="item.list">
+            <a-table
+              bordered
+              :pagination="false"
+              :columns="columns"
+              :data-source="item.list"
+              :row-key="record => record.playerScoreId || record.shootCode">
               <template slot="operation" slot-scope="text, record, index">
                 <a-button
                   v-if="index + 1 > extractNumber(formData.projectName)"
@@ -53,11 +58,12 @@
 <script >
 import BizModal from '@comp/modal/BizModal.vue'
 import { deleteSurplusShoot } from '@/api/competition'
+import { checkAPIAvailability, getSessionInfo, tryAskAI } from '@/utils/ai/chrome_ai'
 
 export default {
   name: 'RealTimeViewPrint',
   components: {
-    BizModal,
+    BizModal
   },
   data() {
     return {
@@ -105,9 +111,15 @@ export default {
         金牌赛: [],
         铜牌赛: [],
       },
+      aiSummary: '',
+      isPrinting: false
     }
   },
-  mounted() {},
+  async mounted() {
+    console.log("打印组件已加载")
+    let result = ""
+    await checkAPIAvailability()
+  },
   methods: {
     info(data) {
       this.title = '成绩详情'
@@ -199,6 +211,58 @@ export default {
     },
     handleCancel() {
       this.visible = false
+    },
+    // 获取AI总结
+    async getAISummary() {
+      try {
+        const playerInfo = `选手:${this.formData.playerName || '未知'}, 代表队:${this.formData.groupName || '未知'}, 项目:${
+          this.formData.projectName || (this.formData.detailScoreList && this.formData.detailScoreList.length > 0
+            ? this.formData.detailScoreList[0].projectName : '未知')
+        }`;
+
+        let scoreInfo = '';
+        if (this.list && this.list.length > 0) {
+          const scores = this.list
+            .filter(item => item.list && item.list.length)
+            .map(item => {
+              return `${item.title || ''}:${this.stageTotal || ''}环${this.goodTotal ? `-${this.goodTotal}*` : ''}`;
+            })
+            .join(', ');
+
+          scoreInfo = `成绩: ${scores}`;
+        }
+
+        const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。(50字)`;
+        this.aiSummary = await tryAskAI(prompt);
+        return this.aiSummary;
+      } catch (error) {
+        console.error('获取AI总结失败:', error);
+        this.aiSummary = '无法生成AI总结';
+        return this.aiSummary;
+      }
+    },
+    // 自定义 markdown 转 HTML 函数，简化处理
+    markdownToHtml(text) {
+      if (!text) return '';
+
+      // 处理基本的 markdown 语法
+      return text
+        // 处理加粗文本 **text**
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // 处理斜体 *text*
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        // 处理链接 [title](url)
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
+        // 处理标题 # Heading
+        .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+        .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+        // 处理无序列表
+        .replace(/^\* (.*$)/gm, '<li>$1</li>')
+        .replace(/^- (.*$)/gm, '<li>$1</li>')
+        // 处理段落
+        .replace(/\n(?!\n)/g, '<br>')
+        .replace(/\n\n/g, '</p><p>');
     },
     // 打印的资格赛
     bodyContent() {
@@ -369,9 +433,20 @@ export default {
           grid-template-columns: 45% 46%;
           grid-column-gap: 8%;
         }
+        .ai-summary {
+          margin-top: 20px;
+          padding: 10px;
+          border-top: 1px dashed #ccc;
+          font-size: 14px;
+          line-height: 1.5;
+        }
       </style>
       <div class="print" style="height: auto;">
          ${arr.join('</br>')}
+      </div>
+      <div class="ai-summary">
+        <strong>AI分析:</strong>
+        <p>${this.markdownToHtml(this.aiSummary)}</p>
       </div>`
     },
     // 打印的决赛
@@ -404,7 +479,7 @@ export default {
                 <td align="center"  ><img style="width:15px;height: 15px;" src="${
                   process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
                 }" ></td>
-                <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
+                <td align="center" style="font-size:12px;">${item.isGood === '���' ? `${item.score} *` : item.score}</td>
                 <td align="center" style="font-size:12px;">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
@@ -508,7 +583,7 @@ export default {
                     <tr><th colspan="5" style="font-size: 18px; text-align: left">${
                       this.formData.dtlDto.title
                     }</th></tr>
-                    <tr style="height:25px; line-height:25px">
+                    <tr style="height: 25px; line-height: 25px">
                       <th style="font-size: 14px;width:40px;">发序</th>
                       <th style="font-size: 14px;width:45px;">方向点</th>
                       <th style="font-size: 14px;">环数</th>
@@ -566,9 +641,20 @@ export default {
           grid-template-columns: 45% 46%;
           grid-column-gap: 8%;
         }
+        .ai-summary {
+          margin-top: 20px;
+          padding: 10px;
+          border-top: 1px dashed #ccc;
+          font-size: 14px;
+          line-height: 1.5;
+        }
       </style>
       <div class="print" style="height: auto">
          ${arr.join('</br>')}
+      </div>
+      <div class="ai-summary">
+        <strong>AI分析:</strong>
+        <p>${this.markdownToHtml(this.aiSummary)}</p>
       </div>`
     },
     groupContent() {
@@ -647,7 +733,7 @@ export default {
                     <th style="font-size: 14px;">Y</th>
                     </tr>
                   </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
+                  <tbody style="font-family: 宋��;">${tds[i].join('')}</tbody>
                 </table>
               </div>
             `)
@@ -656,9 +742,7 @@ export default {
               <div style="box-sizing: border-box;padding: 10px">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
                   <thead>
-                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${
-                      this.formData.detailScoreList[0].stageName
-                    }</th></tr>
+                    <tr><th colspan="5" style="font-size: 22px; text-align: left">${this.formData.detailScoreList[0].stageName}</th></tr>
                     <tr style="height: 25px; line-height: 25px;">
                     <th style="font-size: 28px;"><b>发序</b></th>
                     <th style="font-size: 14px;"><b>环数</b></th>
@@ -820,91 +904,113 @@ export default {
             display: grid;
             grid-template-columns: 45% 45%;
           }
+          .ai-summary {
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px dashed #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+          }
         </style>
         <div class="print" style="height: auto">${jtList()}</div>
+        <div class="ai-summary">
+          <strong>AI分析:</strong>
+          <p>${this.markdownToHtml(this.aiSummary)}</p>
+        </div>
       `
-      // return ""
-      //          <th style="font-size: 16px;">发序</th>
-      //         <th style="font-size: 16px;">环数</th>
-      //         <th style="font-size: 16px;">时间</th>
-      //         <th style="font-size: 16px;">X</th>
-      //         <th style="font-size: 16px;">Y</th>
     },
-    handlePrint() {
-      const prints = (fn) => {
-        const iframe = document.createElement('iframe')
-        document.body.appendChild(iframe)
-        iframe.width = '100%'
-        iframe.height = '800px'
+    async handlePrint() {
+      if (this.isPrinting) return; // 防止重复点击
+      this.isPrinting = true;
 
-        // 等待 iframe 加载完成后再设置内容
-        iframe.onload = () => {
-          try {
-            if (iframe.contentWindow && iframe.contentWindow.document) {
-              const doc = iframe.contentWindow.document
-              doc.open()
-              doc.write(`
-                <!DOCTYPE html>
-                <html>
-                  <head>
-                    <title>Print</title>
-                    <meta charset="utf-8">
-                  </head>
-                  <body>
-                    ${fn()}
-                  </body>
-                </html>
-              `)
-              doc.close()
+      try {
+        // 先获取AI总结，等待结果返回
+        await this.getAISummary();
 
-              setTimeout(() => {
-                try {
-                  iframe.contentWindow.print()
+        const prints = (fn) => {
+          const iframe = document.createElement('iframe')
+          document.body.appendChild(iframe)
+          iframe.width = '100%'
+          iframe.height = '800px'
 
-                  // 添加打印完成的监听
-                  iframe.contentWindow.addEventListener('afterprint', () => {
-                    document.body.removeChild(iframe)
-                  })
+          // 等待 iframe 加载完成后再设置内容
+          iframe.onload = () => {
+            try {
+              if (iframe.contentWindow && iframe.contentWindow.document) {
+                const doc = iframe.contentWindow.document
+                doc.open()
+                doc.write(`
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                      <title>Print</title>
+                      <meta charset="utf-8">
+                    </head>
+                    <body>
+                      ${fn()}
+                    </body>
+                  </html>
+                `)
+                doc.close()
 
-                  // 如果 afterprint 事件没有触发，设置一个超时清理
-                  setTimeout(() => {
+                setTimeout(() => {
+                  try {
+                    iframe.contentWindow.print()
+
+                    // 添加打印完成的监听
+                    iframe.contentWindow.addEventListener('afterprint', () => {
+                      document.body.removeChild(iframe)
+                      this.isPrinting = false
+                    })
+
+                    // 如果 afterprint 事件没有触发，设置一个超时清理
+                    setTimeout(() => {
+                      if (document.body.contains(iframe)) {
+                        document.body.removeChild(iframe)
+                      }
+                      this.isPrinting = false
+                    }, 1000)
+                  } catch (e) {
+                    console.error('Print error:', e)
                     if (document.body.contains(iframe)) {
                       document.body.removeChild(iframe)
                     }
-                  }, 1000)
-                } catch (e) {
-                  console.error('Print error:', e)
-                  if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe)
+                    this.isPrinting = false
                   }
-                }
-              }, 100)
+                }, 100)
+              }
+            } catch (e) {
+              console.error('IFrame error:', e)
+              if (document.body.contains(iframe)) {
+                document.body.removeChild(iframe)
+              }
+              this.isPrinting = false
             }
-          } catch (e) {
-            console.error('IFrame error:', e)
+          }
+
+          // 添加错误处理
+          iframe.onerror = () => {
+            console.error('IFrame failed to load')
             if (document.body.contains(iframe)) {
               document.body.removeChild(iframe)
             }
+            this.isPrinting = false
           }
         }
 
-        // 添加错误处理
-        iframe.onerror = () => {
-          console.error('IFrame failed to load')
-          if (document.body.contains(iframe)) {
-            document.body.removeChild(iframe)
-          }
-        }
-      }
-
-      if (this.stageName && this.stageName.includes('团体')) {
-        prints(this.groupContent)
-      } else {
-        if (this.name == '资格赛') {
-          prints(this.bodyContent)
+        // AI总结已��成，开始打印
+        if (this.stageName && this.stageName.includes('团体')) {
+          prints(this.groupContent)
         } else {
-          prints(this.bodyContent2)
+          if (this.name == '资格赛') {
+            prints(this.bodyContent)
+          } else {
+            prints(this.bodyContent2)
+          }
         }
+      } catch (error) {
+        console.error('打印过程中发生错误:', error);
+        this.isPrinting = false;
       }
     },
   },
