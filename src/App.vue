@@ -9,6 +9,7 @@
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import enquireScreen from '@/utils/device'
 import _ from 'lodash'
+import { checkAPIAvailability } from '@/utils/ai/chrome_ai'
 export default {
   data() {
     return {

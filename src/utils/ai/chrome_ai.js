@@ -1,8 +1,7 @@
 import { getSettings, setSettings } from "@/utils/storage_settings";
 
-// 全局变量（JS 中不能直接 declare global，只能假设全局对象存在）
+// 全局变量
 let session = null;
-let user_name = getSettings('user_name') || 'User';
 
 /**
  * 检查 AI API 是否可用。
@@ -15,11 +14,16 @@ export async function checkAPIAvailability() {
       return false;
     }
 
-    const capabilities = await LanguageModel.availability();
-    if (capabilities.available === "unavailable") {
+    const availability = await LanguageModel.availability();
+    if (availability === "unavailable") {
       setSettings('ai_support', 'False');
       console.log("AI is unavailable according to LanguageModel.availability().");
       return false;
+    }
+
+    // 如果模型是可下载的，可以添加额外的处理逻辑
+    if (availability === "downloadable") {
+      console.log("AI model is downloadable but not yet downloaded.");
     }
 
     const isInitialized = await initAI();
@@ -42,10 +46,10 @@ export async function checkAPIAvailability() {
 /**
  * 初始化 AI 会话
  */
-export async function initAI(systemPrompt) {
+export async function initAI(systemPrompt = "") {
   try {
     if (typeof LanguageModel === "undefined" || typeof LanguageModel.create !== "function") {
-      console.error("LanguageModel api may be changed..")
+      console.error("LanguageModel API may be changed..")
       return false;
     }
 
@@ -54,15 +58,21 @@ export async function initAI(systemPrompt) {
       return true;
     }
 
-    const prompt = systemPrompt || getSettings('systemPrompt') ||
-      "你是MeetHub会议系统的AI助手。你可以帮助用户进行语音转录、翻译、生成会议摘要和回答会议相关问题。" +
-      "当前用户是：" + user_name + "。" +
-      "请用简洁、专业的语言回答问题，并根据会议内容提供有用的建议。" +
-      "对于翻译任务，请只返回翻译结果，不要添加额外说明。" +
-      "对于摘要任务，请按照要求的JSON格式返回结构化数据。";
+    const systemPromptContent = systemPrompt || "请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(50-200字)" +
+      "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
+      "注意，给出的信息仅包含 发序 ⽅向点 环数 时间 X Y ，其中 只有 跑射联项 需要给出跑射建议，其余情况不需要给出跑射建议。"
 
-    session = await LanguageModel.create({ systemPrompt: prompt });
-    setSettings('systemPrompt', prompt);
+    // 使用 initialPrompts 替代之前的 systemPrompt
+    session = await LanguageModel.create({
+      initialPrompts: [{ role: "system", content: systemPromptContent }],
+      monitor(m) {
+        m.addEventListener("downloadprogress", (e) => {
+          console.log(`AI Model downloaded ${e.loaded * 100}%`);
+        });
+      }
+    });
+
+    setSettings('systemPrompt', systemPromptContent);
     setSettings('ai_support', 'True');
     console.log("AI session initialized successfully.");
     return true;
@@ -169,9 +179,9 @@ export async function tryAskAIStream(something, onChunk) {
 export function getSessionInfo() {
   if (!session) return null;
   return {
-    tokensSoFar: session.tokensSoFar,
-    maxTokens: session.maxTokens,
-    tokensLeft: session.tokensLeft
+    inputUsage: session.inputUsage,
+    inputQuota: session.inputQuota,
+    remainingQuota: session.inputQuota - session.inputUsage
   };
 }
 
