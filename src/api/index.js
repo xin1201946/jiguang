@@ -1,3 +1,4 @@
+
 const api = {
   Login: '/sys/login',
   Logout: '/sys/logout',
@@ -6,4 +7,5 @@ const api = {
   SendSms: '/account/sms',
   UserInfo: '/user/info'
 }
+
 export default api

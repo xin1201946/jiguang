@@ -1,210 +1,163 @@
 import { getSettings, setSettings } from "@/utils/storage_settings";
 
-// 全局变量
 let session = null;
+let useFallback = "chrome"; // chrome | ollama | openai
 
-/**
- * 检查 AI API 是否可用。
- */
 export async function checkAPIAvailability() {
   try {
     if (typeof LanguageModel === "undefined" || typeof LanguageModel.availability !== "function") {
-      console.warn("LanguageModel API is not defined or not fully available.");
-      setSettings('ai_support', 'False');
-      return false;
+      console.warn("LanguageModel API not available. Falling back to Ollama.");
+      // useFallback = "ollama";
+      useFallback = "openai";
+      return true;
     }
 
     const availability = await LanguageModel.availability();
     if (availability === "unavailable") {
-      setSettings('ai_support', 'False');
-      console.log("AI is unavailable according to LanguageModel.availability().");
-      return false;
-    }
-
-    // 如果模型是可下载的，可以添加额外的处理逻辑
-    if (availability === "downloadable") {
-      console.log("AI model is downloadable but not yet downloaded.");
-    }
-
-    const isInitialized = await initAI();
-    if (!isInitialized) {
-      console.warn("AI capabilities seem available but failed to initialize a session.");
-      setSettings('ai_support', 'False');
-      return false;
-    }
-
-    setSettings('ai_support', 'True');
-    return true;
-
-  } catch (error) {
-    console.error("Error during AI availability check:", error);
-    setSettings('ai_support', 'False');
-    return false;
-  }
-}
-
-/**
- * 初始化 AI 会话
- */
-export async function initAI(systemPrompt = "") {
-  try {
-    if (typeof LanguageModel === "undefined" || typeof LanguageModel.create !== "function") {
-      console.error("LanguageModel API may be changed..")
-      return false;
-    }
-
-    if (session) {
-      console.log("AI session already initialized.");
+      console.log("Chrome AI unavailable, using Ollama.");
+      // useFallback = "ollama";
+      useFallback = "openai";
       return true;
     }
 
-    const systemPromptContent = systemPrompt || "你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(30-50字)" +
-      "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
-      "注意，给出的信息仅包含 ⽅向点 环数 时间 X轴 Y轴 。不要提 射速，时间 问题！！！！"
+    const ok = await initAI();
+    if (!ok) {
+      // useFallback = "ollama";
+      useFallback = "openai";
+      return true;
+    }
 
-    // 使用 initialPrompts 替代之前的 systemPrompt
-    session = await LanguageModel.create({
-      initialPrompts: [{ role: "system", content: systemPromptContent }],
-      monitor(m) {
-        m.addEventListener("downloadprogress", (e) => {
-          console.log(`AI Model downloaded ${e.loaded * 100}%`);
-        });
-      }
-    });
-
-    setSettings('systemPrompt', systemPromptContent);
-    setSettings('ai_support', 'True');
-    console.log("AI session initialized successfully.");
+    setSettings("ai_support", "True");
+    useFallback = "chrome";
     return true;
-  } catch (error) {
-    console.error("Failed to initialize AI session:", error);
-    setSettings('ai_support', 'False');
+  } catch (e) {
+    console.warn("Fallback to openAI due to error:", e);
+    useFallback = "openai";
+    return true;
+  }
+  finally {
+    console.log(useFallback)
+  }
+}
+
+export async function initAI(systemPrompt = "") {
+  if (useFallback !== "chrome") return true;
+
+  try {
+    if (!session && typeof LanguageModel !== "undefined") {
+      session = await LanguageModel.create({
+        initialPrompts: [{
+          role: "system",
+          content:
+            systemPrompt ||
+            "你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(30-50字)" +
+            "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
+            "注意，给出的信息仅包含 ⽅向点 环数 时间 X轴 Y轴 。不要提 射速，时间 问题！！！！",
+        }],
+        monitor(m) {
+          m.addEventListener("downloadprogress", (e) => {
+            console.log(`Model downloaded: ${e.loaded * 100}%`);
+          });
+        },
+      });
+    }
+    return true;
+  } catch (e) {
+    console.error("initAI error:", e);
     session = null;
     return false;
   }
 }
 
-/**
- * 释放 AI 会话资源。
- */
-export async function destroySession() {
-  if (session) {
+export async function tryAskAI(message) {
+
+  async function ollama_chat(params) {
     try {
-      await session.destroy();
-      console.log("AI session destroyed.");
-    } catch (e) {
-      console.warn("Failed to destroy session:", e);
-    } finally {
-      session = null;
+      const res = await fetch(`${window._CONFIG["VUE_ollama_BASE_URL"]}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!res.ok) throw new Error('Ollama 接口请求失败');
+
+      return await res.json();
+    } catch (err) {
+      console.error('ollama_chat 出错:', err);
+      throw err;
     }
   }
-}
 
-/**
- * 清除 AI 会话历史。
- */
-export async function clearAiHistory() {
-  if (!session) {
-    console.warn("No active AI session to clear history from.");
-    return;
-  }
-  try {
-    const newSession = await session.clone();
-    await session.destroy();
-    session = newSession;
-    console.log("AI session history cleared by cloning.");
-  } catch (e) {
-    console.warn("Failed to clear AI history:", e);
-  }
-}
+  async function openAI_completions(params) {
+    try {
+      const res = await fetch(`${window._CONFIG["VUE_AI_API_BASE_URL"]}/v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window._CONFIG["VUE_AI_API_KEY"]}`
+        },
+        body: JSON.stringify(params),
+      });
 
-/**
- * 确保 AI 会话可用。
- */
-async function ensureSession() {
-  if (session) return true;
-  return await initAI();
-}
+      if (!res.ok) throw new Error('OpenAI 接口请求失败');
 
-/**
- * 向 AI 提问（非流式）。
- */
-export async function tryAskAI(something) {
-  if (!(await ensureSession())) {
-    return 'AI session is not initialized or supported.';
-  }
-  if (getSettings('ai_support') !== "True") {
-    return 'AI support is disabled in settings.';
-  }
-
-  try {
-    return await session.prompt(something);
-  } catch (error) {
-    console.error("Error during AI prompt:", error);
-    return `Sorry, something went wrong while asking the AI: ${error.message || 'unknown error'}.`;
-  }
-}
-
-/**
- * 流式提问 AI。
- */
-export async function tryAskAIStream(something, onChunk) {
-  if (!(await ensureSession())) {
-    return 'AI session is not initialized or supported for streaming.';
-  }
-
-  if (getSettings('ai_support') !== "True") {
-    return 'AI support is disabled in settings.';
-  }
-
-  let fullResponse = "";
-  try {
-    const stream = session.promptStreaming(something);
-    for await (const chunk of stream) {
-      fullResponse += chunk;
-      if (typeof onChunk === 'function') {
-        onChunk(chunk, fullResponse);
-      }
+      return await res.json();
+    } catch (err) {
+      console.error('openAI_completions 出错:', err);
+      throw err;
     }
-    return fullResponse;
-  } catch (error) {
-    console.error("Error during AI streaming prompt:", error);
-    return `Sorry, something went wrong during AI streaming: ${error.message || 'unknown error'}.`;
   }
-}
 
-/**
- * 获取当前会话信息。
- */
-export function getSessionInfo() {
-  if (!session) return null;
-  return {
-    inputUsage: session.inputUsage,
-    inputQuota: session.inputQuota,
-    remainingQuota: session.inputQuota - session.inputUsage
-  };
+  switch (useFallback) {
+    case "chrome":
+      return await session.prompt(message);
+
+    case "ollama": {
+      const res = await ollama_chat({
+        model: "qwen3:4b",
+        messages: [
+          { role: "system", content: getSettings("systemPrompt") || "你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(30-50字)" +
+              "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
+              "注意，给出的信息仅包含 ⽅向点 环数 时间 X轴 Y轴 。不要提 射速，时间 问题！！！！" },
+          { role: "user", content: message },
+        ],
+        stream: false,
+      });
+      return (res.message && res.message.content) || JSON.stringify(res);
+    }
+
+    case "openai": {
+      const res = await  openAI_completions({
+        model: "deepseek-v3",
+        messages: [
+          { role: "system", content: getSettings("systemPrompt") ||"你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(30-50字)" +
+              "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
+              "注意，给出的信息仅包含 ⽅向点 环数 时间 X轴 Y轴 。不要提 射速，时间 问题！！！！"},
+          { role: "user", content: message },
+        ],
+        temperature: 0.7,
+      });
+      return (res.choices && res.choices[0] && res.choices[0].message && res.choices[0].message.content) || JSON.stringify(res);
+    }
+  }
 }
 
 export function getAI() {
-  try {
-    if (session) {
-      return session;
-    }
-  } catch (e) {
-    console.error(e.toString());
-    return e;
+  return session;
+}
+
+export async function destroySession() {
+  if (session && typeof session.destroy === "function") {
+    await session.destroy();
+    session = null;
   }
 }
 
-export function tryDestoryAI() {
-  try {
-    if (session) {
-      session.destroy();
-      session = null;
-    }
-    return "Done";
-  } catch (e) {
-    console.error(e.toString());
-    return e.toString();
-  }
+export async function clearAiHistory() {
+  if (!session) return;
+  const newSession = await session.clone();
+  await session.destroy();
+  session = newSession;
 }
