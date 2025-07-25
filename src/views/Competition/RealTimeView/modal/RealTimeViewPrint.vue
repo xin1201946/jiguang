@@ -235,7 +235,7 @@ export default {
         const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。`;
         console.log(prompt)
         if (await checkAPIAvailability()){
-          this.aiSummary = await tryAskAI(prompt)
+          this.aiSummary = "AI 分析:\n" + await tryAskAI(prompt)
         }else{
           this.aiSummary = ""
         }
@@ -364,36 +364,43 @@ export default {
         for (let i = 0; i < tds.length; i++) {
           if (i === 0) {
             tables.push(`
-              <div style="box-sizing: border-box;padding: 5px">
-                <table align="center" cellspacing="0" border="0" style="width: 100%;">
-                  <thead>
-                    <tr><th colspan="5" style="font-size: 18px; text-align: left">靶位:${
-                      this.formData.targetSiteStr
-                    }</th></tr>
-                    <tr><th colspan="5" style="font-size: 18px; text-align: left">时间:${
-                      this.formData.sgTimeStart
-                    }</th></tr>
-                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.projectGroup}${
-              this.formData.projectName
-            }</th></tr>
-                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${this.formData.playerName}</th></tr>
-                    <tr><th colspan="5" style="font-size: 18px; text-align: left">${
-                      this.formData.dtlDto.title || this.list[0].title
-                    }</th></tr>
-                    <tr style="height: 25px; line-height: 25px">
-                      <th style="font-size: 14px;width:40px;">发序</th>
-                      <th style="font-size: 14px;width:45px;">方向点</th>
-                      <th style="font-size: 14px;">环数</th>
-                      <th style="font-size: 14px;width:130px;">时间</th>
-                      <th style="font-size: 14px;">X</th>
-                      <th style="font-size: 14px;">Y</th>
-                    </tr>
-                  </thead>
-                  <tbody style="font-family: 宋体;">${tds[i].join('')}</tbody>
-                </table>
-              </div>
-            `)
-          } else {
+    <div style="box-sizing: border-box;padding: 10px 20px;">
+      <table align="center" cellspacing="0" border="0" style="width: 800px; font-family: 宋体;">
+        <thead>
+          <tr>
+            <th colspan="6" style="font-size: 22px; font-weight: bold; text-align: center; padding: 10px 0;">
+              ${this.formData.projectGroup} ${this.formData.projectName}
+            </th>
+          </tr>
+          <tr>
+            <th colspan="6" style="font-size: 18px; text-align: center; padding: 5px 0;">
+              ${this.formData.dtlDto.title || this.list[0].title}
+            </th>
+          </tr>
+          <tr>
+            <th colspan="6" style="font-size: 16px; text-align: center;">
+              靶位：${this.formData.targetSiteStr}　  ${this.formData.sgTimeStart ? `　|　时间：${this.formData.sgTimeStart}` : ""}
+            </th>
+          </tr>
+          <tr>
+            <th colspan="6" style="font-size: 16px; text-align: center; padding-bottom: 10px;">
+              射手：${this.formData.playerName}
+            </th>
+          </tr>
+          <tr style="height: 30px; line-height: 30px; background-color: #f0f0f0;">
+            <th style="font-size: 14px;width:40px;">发序</th>
+            <th style="font-size: 14px;width:45px;">方向点</th>
+            <th style="font-size: 14px;">环数</th>
+            <th style="font-size: 14px;width:130px;">时间</th>
+            <th style="font-size: 14px;">X</th>
+            <th style="font-size: 14px;">Y</th>
+          </tr>
+        </thead>
+        <tbody>${tds[i].join('')}</tbody>
+      </table>
+    </div>
+  `)
+          }else {
             tables.push(`
               <div style="box-sizing: border-box;padding: 5px">
                 <table align="center" cellspacing="0" border="0" style="width: 100%;">
@@ -450,7 +457,6 @@ export default {
          ${arr.join('</br>')}
       </div>
       <div class="ai-summary">
-        <strong>AI分析:</strong>
         <p>${this.markdownToHtml(this.aiSummary)}</p>
       </div>`
     },
