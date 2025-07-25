@@ -108,6 +108,19 @@ export const transitRESTful = {
   http: (url, parameter) => httpAction(getTransitURL(url), parameter),
 }
 
+//VUE_OPEN_API_BASE_URL Ollama API（原生接口）
+const ollama_generate = (params) => postAction("/generate", params)
+const ollama_chat = (params) => postAction("/chat", params)
+const ollama_list = (params) => getAction("/list", params)
+const ollama_pull = (params) => postAction("/pull", params)
+const ollama_delete = (params) => deleteAction("/delete", params)
+const ollama_embed = (params) => postAction("/embeddings", params) // 或 /embed，取决于服务
+
+// openAPI like ChatGPT 接口（如果你做了中间层）
+const openAI_completions = (params) => postAction("/v1/chat/completions", params)
+const openAI_embeddings = (params) => postAction("/v1/embeddings", params)
+const openAI_models = () => getAction("/v1/models")
+
 export {
   addRole,
   editRole,
@@ -163,7 +176,19 @@ export {
   saveDeptRolePermission,
   queryMyDepartTreeList,
   getUserNoticeInfo,
-  getDictItemsFromCache
+  getDictItemsFromCache,
+  // Ollama 原生 API
+  ollama_list,
+  ollama_generate,
+  ollama_chat,
+  ollama_pull,
+  ollama_delete,
+  ollama_embed,
+
+  // OpenAI 兼容接口
+  openAI_completions,
+  openAI_embeddings,
+  openAI_models,
 }
 
 

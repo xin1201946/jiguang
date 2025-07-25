@@ -6,6 +6,8 @@ window._CONFIG = {
   // VUE_APP_API_BASE_URL: 'http://192.168.8.119:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.8.162:8082/lasergun-training/',
   VUE_APP_API_BASE_URL: 'http://192.168.124.9:8087/lasergun-training/',
+  VUE_OPEN_API_BASE_URL: 'http://192.168.124.5:11435/api',
+  VUE_AI_API_BASE_URL: 'https://api.openai.com',
   // VUE_APP_API_BASE_URL: 'http://192.168.8.122:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.100.252:8080/lasergun-training/',
   // VUE_APP_API_BASE_URL: 'http://192.168.100.231:8080/lasergun-training/',
