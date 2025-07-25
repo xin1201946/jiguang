@@ -1468,78 +1468,80 @@ export default {
     },
     // 打印弹窗
     getHandelPrint(i) {
-      // console.log(123,this.dataTitle,i)
       const print = (fn) => {
         const title = this.dataTitle
         const iframe = document.createElement('iframe')
+        // 隐藏 iframe，使其不会在页面上显示，但仍可用于打印
+        iframe.style.display = 'none';
         document.body.appendChild(iframe)
+
         iframe.contentWindow.document.open()
-        iframe.contentWindow.document.write(fn)
-        iframe.width = '100%'
-        iframe.height = '800px'
-        iframe.contentWindow.addEventListener('beforeprint', () => {
-          function getNumberOfPages() {
-            // A4纸高度
-            const totalHeight = 1123
-            const foot = iframe.contentDocument.querySelector('.foot')
-            const body = iframe.contentDocument.body.scrollHeight
-            const pageHeight = body + foot.scrollHeight
-            const pageCount = Math.ceil(pageHeight / totalHeight)
-            console.log(title)
-            // 显示
-            if (pageCount === 1) {
-            }
-            // 隐藏 追加
-            else {
-              const footer = iframe.contentDocument.querySelector('.footer')
-              const newfooter = iframe.contentDocument.createElement('div')
-              newfooter.innerHTML = footer.innerHTML
-              if (title.includes('决赛')) {
-                // 判断低图是否有
-                // if (window._CONFIG.printSponsorBottomImgs.length) {
-                //   newfooter.style.marginTop =
-                //     totalHeight * pageCount - (body + foot.scrollHeight + foot.scrollHeight + foot
-                //       .scrollHeight) + 'px'
-                //   newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
-                // } else {
-                //   newfooter.style.marginTop =
-                //     totalHeight * pageCount -
-                //     (body + foot.scrollHeight + foot.scrollHeight + foot.scrollHeight + 20) +
-                //     'px'
-                //   // newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
-                // }
+        iframe.contentWindow.document.write(fn) // 将内容写入 iframe
+        iframe.contentWindow.document.close() // 关闭文档流，确保内容加载完成
+
+        // 确保内容加载完毕后再进行后续操作，否则 body.scrollHeight 可能不准确
+        // 在这里添加一个小的延迟或使用 iframe.onload 事件可能会更稳健
+        iframe.onload = () => { // 推荐使用 onload 确保 iframe 完全加载
+          iframe.contentWindow.addEventListener('beforeprint', () => {
+            function getNumberOfPages() {
+              // A4纸高度 (通常是 1123px，但请注意这取决于DPI和具体纸张设置)
+              const totalHeight = 1123
+              const foot = iframe.contentDocument.querySelector('.foot')
+              const bodyHeight = iframe.contentDocument.body.scrollHeight // 获取实际内容高度
+
+              // 确保 foot 元素存在
+              if (!foot) {
+                console.warn("未找到 .foot 元素，分页计算可能不准确。");
+                return;
               }
-              // 资格赛
-              else {
-                console.log(totalHeight, pageCount, foot.scrollHeight)
-                console.log(foot.scrollHeight * pageCount * 3)
-                if (window._CONFIG.printSponsorBottomImgs.length) {
-                  newfooter.style.marginTop =
-                    totalHeight * pageCount - (body + foot.scrollHeight + foot.scrollHeight / 2) + 'px'
-                  newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
-                } else {
-                  // newfooter.style.marginTop = '450px'
-                  newfooter.style.marginTop = foot.scrollHeight * pageCount + 'px'
+
+              // 这里计算 pageHeight 可能需要重新评估，bodyHeight 已经包含了内容高度
+              // 如果 foot 也计算在内，那么总高度应该是 bodyHeight + foot.scrollHeight
+              const pageHeight = bodyHeight + foot.scrollHeight;
+              const pageCount = Math.ceil(pageHeight / totalHeight)
+              console.log(title)
+
+              if (pageCount === 1) {
+                // 单页时的逻辑
+              } else {
+                // 多页时的逻辑
+                const footer = iframe.contentDocument.querySelector('.footer')
+                const newfooter = iframe.contentDocument.createElement('div')
+                newfooter.innerHTML = footer.innerHTML
+
+                // 这里对 newfooter.style.marginTop 的复杂计算可能需要进一步调试和验证
+                // 确保各个变量的值和逻辑是正确的，这部分逻辑与打印窗口不显示关系不大，但可能影响打印结果
+                if (title.includes('决赛')) {
+                  // ... 您的决赛逻辑 ...
+                } else { // 资格赛
+                  if (window._CONFIG.printSponsorBottomImgs && window._CONFIG.printSponsorBottomImgs.length) {
+                    newfooter.style.marginTop =
+                      totalHeight * pageCount - (bodyHeight + foot.scrollHeight + foot.scrollHeight / 2) + 'px'
+                    newfooter.style.marginBottom = foot.scrollHeight / 2 + 'px'
+                  } else {
+                    newfooter.style.marginTop = foot.scrollHeight * pageCount + 'px'
+                  }
                 }
+                footer.style.visibility = 'hidden'
+                iframe.contentDocument.body.append(newfooter)
               }
-              // console.log(newfooter)
-              footer.style.visibility = 'hidden'
-              iframe.contentDocument.body.append(newfooter)
             }
-          }
-          // if (!title.includes('团体')) {
-          getNumberOfPages()
-          // }
-        })
-        iframe.contentWindow.addEventListener('afterprint', () => {
-          document.body.removeChild(iframe)
-        })
-        setTimeout(() => {
+            // if (!title.includes('团体')) { // 根据您的注释，这个条件判断可能需要打开
+            getNumberOfPages()
+            // }
+          })
+
+          // 在 afterprint 事件中移除 iframe，确保打印对话框关闭后才移除
+          iframe.contentWindow.addEventListener('afterprint', () => {
+            document.body.removeChild(iframe)
+          })
+
+          // 调用打印
           iframe.contentWindow.print()
-          iframe.contentWindow.document.close()
-          document.body.removeChild(iframe)
-        }, 50)
+        }
       }
+
+      // 根据 dataTitle 调用不同的内容生成函数
       if (this.dataTitle.includes('团体')) {
         print(this.groupContent())
       } else {
