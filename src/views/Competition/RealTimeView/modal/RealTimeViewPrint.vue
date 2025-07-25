@@ -117,7 +117,6 @@ export default {
   },
   async mounted() {
     console.log("打印组件已加载")
-    let result = ""
     await checkAPIAvailability()
   },
   methods: {
@@ -326,7 +325,7 @@ export default {
               process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
             }" ></td>
             <td align="center" style="font-size:12px;">${item.isGood === '是' ? `${item.score} *` : item.score}</td>
-           
+
             <td align="center" style="font-size:12px;">${
               item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
             }</td>
@@ -925,97 +924,106 @@ export default {
         </div>
       `
     },
+    /**
+     * 兼容性打印方法
+     * @param {string} htmlContent 打印内容
+     */
+    compatiblePrint(htmlContent) {
+      // 优先使用 iframe 方式
+      try {
+        const iframe = document.createElement('iframe')
+        document.body.appendChild(iframe)
+        iframe.width = '100%'
+        iframe.height = '800px'
+        iframe.style.display = 'none'
+
+        iframe.onload = () => {
+          try {
+            const doc = iframe.contentWindow.document
+            doc.open()
+            doc.write(`
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <title>Print</title>
+                  <meta charset="utf-8">
+                </head>
+                <body>
+                  ${htmlContent}
+                </body>
+              </html>
+            `)
+            doc.close()
+            setTimeout(() => {
+              iframe.contentWindow.print()
+              iframe.contentWindow.addEventListener('afterprint', () => {
+                document.body.removeChild(iframe)
+              })
+              setTimeout(() => {
+                if (document.body.contains(iframe)) {
+                  document.body.removeChild(iframe)
+                }
+              }, 1000)
+            }, 100)
+          } catch (e) {
+            // fallback
+            document.body.removeChild(iframe)
+            this.windowWritePrint(htmlContent)
+          }
+        }
+        iframe.onerror = () => {
+          document.body.removeChild(iframe)
+          this.windowWritePrint(htmlContent)
+        }
+        // 触发 onload
+        iframe.src = 'about:blank'
+      } catch (e) {
+        this.windowWritePrint(htmlContent)
+      }
+    },
+    /**
+     * window.open + document.write 兼容打印
+     */
+    windowWritePrint(htmlContent) {
+      const printWindow = window.open('', '_blank')
+      if (!printWindow) return
+      printWindow.document.open()
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Print</title>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            ${htmlContent}
+          </body>
+        </html>
+      `)
+      printWindow.document.close()
+      printWindow.focus()
+      printWindow.print()
+      printWindow.close()
+    },
     async handlePrint() {
       if (this.isPrinting) return; // 防止重复点击
       this.isPrinting = true;
-
       try {
-        // 先获取AI总结，等待结果返回
         await this.getAISummary();
-
-        const prints = (fn) => {
-          const iframe = document.createElement('iframe')
-          document.body.appendChild(iframe)
-          iframe.width = '100%'
-          iframe.height = '800px'
-
-          // 等待 iframe 加载完成后再设置内容
-          iframe.onload = () => {
-            try {
-              if (iframe.contentWindow && iframe.contentWindow.document) {
-                const doc = iframe.contentWindow.document
-                doc.open()
-                doc.write(`
-                  <!DOCTYPE html>
-                  <html>
-                    <head>
-                      <title>Print</title>
-                      <meta charset="utf-8">
-                    </head>
-                    <body>
-                      ${fn()}
-                    </body>
-                  </html>
-                `)
-                doc.close()
-
-                setTimeout(() => {
-                  try {
-                    iframe.contentWindow.print()
-
-                    // 添加打印完成的监听
-                    iframe.contentWindow.addEventListener('afterprint', () => {
-                      document.body.removeChild(iframe)
-                      this.isPrinting = false
-                    })
-
-                    // 如果 afterprint 事件没有触发，设置一个超时清理
-                    setTimeout(() => {
-                      if (document.body.contains(iframe)) {
-                        document.body.removeChild(iframe)
-                      }
-                      this.isPrinting = false
-                    }, 1000)
-                  } catch (e) {
-                    console.error('Print error:', e)
-                    if (document.body.contains(iframe)) {
-                      document.body.removeChild(iframe)
-                    }
-                    this.isPrinting = false
-                  }
-                }, 100)
-              }
-            } catch (e) {
-              console.error('IFrame error:', e)
-              if (document.body.contains(iframe)) {
-                document.body.removeChild(iframe)
-              }
-              this.isPrinting = false
-            }
-          }
-
-          // 添加错误处理
-          iframe.onerror = () => {
-            console.error('IFrame failed to load')
-            if (document.body.contains(iframe)) {
-              document.body.removeChild(iframe)
-            }
-            this.isPrinting = false
-          }
-        }
-
-        // AI总结已完成，开始打印
+        let htmlContent = ''
         if (this.stageName && this.stageName.includes('团体')) {
-          prints(this.groupContent)
+          htmlContent = this.groupContent()
         } else {
           if (this.name == '资格赛') {
-            prints(this.bodyContent)
+            htmlContent = this.bodyContent()
           } else {
-            prints(this.bodyContent2)
+            htmlContent = this.bodyContent2()
           }
         }
+        this.compatiblePrint(htmlContent)
       } catch (error) {
         console.error('打印过程中发生错误:', error);
+      } finally {
         this.isPrinting = false;
       }
     },
