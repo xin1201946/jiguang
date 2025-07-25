@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="btns" v-if="type === 0">
-        <a-button type="primary" @click="handlePrint">打印</a-button>
+        <a-button type="primary" :loading="isPrinting" @click="handlePrint">打印</a-button>
       </div>
     </div>
   </BizModal>
@@ -1014,8 +1014,11 @@ export default {
     async handlePrint() {
       if (this.isPrinting) return; // 防止重复点击
       this.isPrinting = true;
+
       try {
+        // 获取AI总结
         await this.getAISummary();
+
         let htmlContent = ''
         if (this.stageName && this.stageName.includes('团体')) {
           htmlContent = this.groupContent()
@@ -1026,11 +1029,22 @@ export default {
             htmlContent = this.bodyContent2()
           }
         }
+
+        // 执行打印
         this.compatiblePrint(htmlContent)
+
+        // 打印成功提示
+        this.$message.success('打印任务已发送');
+
       } catch (error) {
         console.error('打印过程中发生错误:', error);
+        // 错误提示
+        this.$message.error('打印失败，请重试');
       } finally {
-        this.isPrinting = false;
+        // 延迟关闭加载状态，给用户足够的反馈时间
+        setTimeout(() => {
+          this.isPrinting = false;
+        }, 1000);
       }
     },
   },
