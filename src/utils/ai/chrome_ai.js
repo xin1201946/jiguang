@@ -58,9 +58,9 @@ export async function initAI(systemPrompt = "") {
       return true;
     }
 
-    const systemPromptContent = systemPrompt || "请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(50-200字)" +
+    const systemPromptContent = systemPrompt || "你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(50字)" +
       "要求语言简明扼要，结构清晰，适合用于家长或本人阅读。" +
-      "注意，给出的信息仅包含 发序 ⽅向点 环数 时间 X Y ，其中 只有 跑射联项 需要给出跑射建议，其余情况不需要给出跑射建议。"
+      "注意，给出的信息仅包含 ⽅向点 环数 时间 X轴 Y轴 。不要提 射速，时间 问题！！！！"
 
     // 使用 initialPrompts 替代之前的 systemPrompt
     session = await LanguageModel.create({

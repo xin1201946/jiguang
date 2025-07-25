@@ -55,10 +55,10 @@
   </BizModal>
 </template>
 
-<script >
+<script>
 import BizModal from '@comp/modal/BizModal.vue'
 import { deleteSurplusShoot } from '@/api/competition'
-import { checkAPIAvailability, getSessionInfo, tryAskAI } from '@/utils/ai/chrome_ai'
+import { checkAPIAvailability, tryAskAI } from '@/utils/ai/chrome_ai'
 
 export default {
   name: 'RealTimeViewPrint',
@@ -126,13 +126,12 @@ export default {
       this.type = 1
       this.formData = data[0]
       this.visible = true
-      const arr = data.map((item) => {
+      this.list = data.map((item) => {
         return {
           title: item.stageName,
           list: item.dtlDto.scoreList,
         }
       })
-      this.list = arr
     },
     init(data) {
       this.title = '成绩打印'
@@ -143,7 +142,7 @@ export default {
         this.formData = data[0]
         // this.visible = true
         // 防止 data.stageName 为 undefined
-        const arr = data
+        this.list = data
           .map((item) => {
             return {
               title: item.stageName,
@@ -152,7 +151,6 @@ export default {
           })
           // 这里的 data.stageName 可能为 undefined
           .filter((item) => item.stageName === (data.stageName || ''))
-        this.list = arr
       } else {
         this.formData = {}
         this.stageName = data.stageName
@@ -222,18 +220,26 @@ export default {
 
         let scoreInfo = '';
         if (this.list && this.list.length > 0) {
-          const scores = this.list
-            .filter(item => item.list && item.list.length)
+          scoreInfo = this.list
+            .filter(item => item.list && item.list.length) // 确保有成绩数据
             .map(item => {
-              return `${item.title || ''}:${this.stageTotal || ''}环${this.goodTotal ? `-${this.goodTotal}*` : ''}`;
+              // 提取每发的详细分数
+              const detailedScores = item.list
+                .map(scoreItem => `发序 ${scoreItem.shootCode}: ${scoreItem.score}${scoreItem.isGood === '是' ? '*' : ''}`)
+                .join(', ');
+              return `${item.title || '未知阶段'}: [${detailedScores}]`;
             })
-            .join(', ');
-
-          scoreInfo = `成绩: ${scores}`;
+            .join('; ');
+          scoreInfo = `详细成绩: ${scoreInfo}`;
         }
 
-        const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。(50字)`;
-        this.aiSummary = await tryAskAI(prompt);
+        const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。`;
+        console.log(prompt)
+        if (await checkAPIAvailability()){
+          this.aiSummary = await tryAskAI(prompt)
+        }else{
+          this.aiSummary = ""
+        }
         return this.aiSummary;
       } catch (error) {
         console.error('获取AI总结失败:', error);
@@ -998,7 +1004,7 @@ export default {
           }
         }
 
-        // AI总结已��成，开始打印
+        // AI总结已完成，开始打印
         if (this.stageName && this.stageName.includes('团体')) {
           prints(this.groupContent)
         } else {
