@@ -247,6 +247,23 @@ devServer: {
   }
 }
 ```
+## 💻 使用AI功能
+>[!COPTION]
+> 使用AI功能请遵循当地法律法规
+
+AI 功能 内置于 @/utils中，
+使用```import { ai } from '@/utils'``` 导入即可。
+初次使用需要初始化AI，让AI自动判断使用 Chrome Built-in AI ， Ollama 或者 OpenAI。
+> 优先级按照: Chrome Built_in AI > ollama > OpenAI
+
+### 初始化:
+
+```ai.AI_HELP.check_API (检查是否支持AI 功能)```
+
+```ai.AI_HELP.initAI (初始化AI，System Prompt)```
+
+### 随后使用:
+```ai.ASK_AI.ask_ai ```发送消息，收到后会返回信息
 
 ## 📋 开发规范
 
