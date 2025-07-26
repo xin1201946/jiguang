@@ -58,7 +58,7 @@
 <script>
 import BizModal from '@comp/modal/BizModal.vue'
 import { deleteSurplusShoot } from '@/api/competition'
-import { checkAPIAvailability, tryAskAI } from '@/utils/ai/chrome_ai'
+import { ai } from '@/utils'
 
 export default {
   name: 'RealTimeViewPrint',
@@ -117,7 +117,7 @@ export default {
   },
   async mounted() {
     console.log("打印组件已加载")
-    await checkAPIAvailability()
+    await ai.AI_HELP.check_API()
   },
   methods: {
     info(data) {
@@ -234,8 +234,8 @@ export default {
 
         const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。`;
         console.log(prompt)
-        if (await checkAPIAvailability()){
-          this.aiSummary = "AI 分析:\n" + await tryAskAI(prompt)
+        if (await ai.AI_HELP.check_API()){
+          this.aiSummary = "AI 分析:\n" + await ai.ASK_AI.ask_AI(prompt)
         }else{
           this.aiSummary = ""
         }

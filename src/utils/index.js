@@ -1,4 +1,5 @@
 import { Modal } from 'ant-design-vue'
+import { checkAPIAvailability, clearAiHistory, destroySession, getAI, initAI, tryAskAI } from '@/utils/ai/chrome_ai'
 
 // 获取label
 export const getLabel = (arr, value) => {
@@ -265,3 +266,28 @@ export function fullscreen () {
     }
   }
 }
+
+//向外界透露关键的AI组件API
+const ALL_APIS = {
+  check_API: checkAPIAvailability,
+  init_AI: initAI,
+  ask_AI: tryAskAI,
+  GET_Chrome_AI_Session: getAI,
+  destroy_Chrome_AI_Session: destroySession,
+  clear_AI_History: clearAiHistory,
+};
+
+export const ai = {
+  // AskAI采取回退机制， Chrome Built-AI > ollama > openapi
+  // GET_Chrome_AI_Session ,destroy_Chrome_AI_Session 仅支持Chrome Built AI 获取/销毁 session
+  // AI_Help 中功能
+  ALL_APIS,
+  AI_HELP: {
+    check_API: ALL_APIS.check_API,
+    init_AI: ALL_APIS.init_AI,
+    clear_AI_History: ALL_APIS.clear_AI_History,
+  },
+  ASK_AI: { ask_AI: ALL_APIS.ask_AI },
+  GET_Chrome_AI_Session: { get_AI: ALL_APIS.GET_Chrome_AI_Session },
+  DANGER_APIS: { destroy_Chrome_AI_Session: ALL_APIS.destroy_Chrome_AI_Session },
+};
