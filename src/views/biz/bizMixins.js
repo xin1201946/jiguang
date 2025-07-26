@@ -2,8 +2,6 @@ import { bizDeviceList, bizTabletPcList } from '@api/biz'
 import Vue from 'vue'
 import { ACCESS_TOKEN, TENANT_ID } from '@/store/mutation-types'
 
-
-
 const bizMixins = {
   computed: {
     //token header
