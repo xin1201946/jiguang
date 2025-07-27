@@ -68,6 +68,7 @@ export async function initAI(systemPrompt = "") {
 }
 
 export async function tryAskAI(message) {
+  if (window._CONFIG["VUE_USE_AI"] !== true) {return}
   const systemPrompt =
     getSettings("systemPrompt") ||
     "你是 激光射击训练系统（激光步枪或者激光手枪） 的AI，请根据以下数据，总结该用户在各个方面的成绩表现、优势与不足，并提供改进建议。(30-50字)" +
@@ -111,7 +112,7 @@ export async function tryAskAI(message) {
 
       if (useFallback === "ollama") {
         const res = await ollama_chat({
-          model: "qwen3:4b",
+          model: window._CONFIG["VUE_ollama_MODEL"] || "qwen3:4b",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: message },
@@ -123,7 +124,7 @@ export async function tryAskAI(message) {
 
       if (useFallback === "openai") {
         const res = await openAI_completions({
-          model: "deepseek-v3",
+          model: window._CONFIG["VUE_AI_API_MODEL"] || "deepseek-v3",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: message },

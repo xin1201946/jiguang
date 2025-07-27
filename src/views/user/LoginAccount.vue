@@ -8,7 +8,7 @@
       </a-form-model-item>
       <a-form-model-item required prop="password">
         <a-input v-model="model.password" size="large" type="password" autocomplete="false"
-          placeholder="请输入密码">
+                 placeholder="请输入密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
         </a-input>
       </a-form-model-item>
@@ -50,8 +50,6 @@ export default {
       currdatetime: '',
       loginType: 0,
       model: {
-        // username: 'admin',
-        // password: '1234.com',
         username: '',
         password: '',
         inputCode: '',
@@ -91,11 +89,18 @@ export default {
           value: '',
         },
       ],
-
+      // Add a property to store the interval ID
+      captchaRefreshInterval: null,
     }
   },
   created() {
-    this.handleChangeCheckCode()
+    this.handleChangeCheckCode();
+    // Start the interval when the component is created
+    this.startCaptchaRefreshInterval();
+  },
+  // Add a beforeDestroy hook to clear the interval
+  beforeDestroy() {
+    this.stopCaptchaRefreshInterval();
   },
   methods: {
     ...mapActions(['Login']),
@@ -114,6 +119,21 @@ export default {
       }).catch(() => {
         this.requestCodeSuccess = false
       })
+    },
+    // Start the automatic CAPTCHA refresh
+    startCaptchaRefreshInterval() {
+      // Clear any existing interval to prevent duplicates
+      this.stopCaptchaRefreshInterval();
+      this.captchaRefreshInterval = setInterval(() => {
+        this.handleChangeCheckCode();
+      }, 10000); // 10000 milliseconds = 10 seconds
+    },
+    // Stop the automatic CAPTCHA refresh
+    stopCaptchaRefreshInterval() {
+      if (this.captchaRefreshInterval) {
+        clearInterval(this.captchaRefreshInterval);
+        this.captchaRefreshInterval = null;
+      }
     },
     // 判断登录类型
     handleUsernameOrEmail(rule, value, callback) {
@@ -168,7 +188,6 @@ export default {
           this.Login(loginParams).then((res) => {
 
             if (res.message.length > 10) {
-              // console.log(res.result.userInfo.roleName)
               if (res.result.userInfo.roleName === '单位管理员') {
                 this.$notification.success({
                   message: '欢迎',
@@ -182,11 +201,9 @@ export default {
               this.$emit('success', res.result)
             }
           }).catch((err) => {
-            //update-begin-author: taoyan date:20220425 for: 登录页面，当输入验证码错误时，验证码图片要刷新一下，而不是保持旧的验证码图片不变 #41
             if (err && err.code === 412) {
               this.handleChangeCheckCode()
             }
-            //update-end-author: taoyan date:20220425 for: 登录页面，当输入验证码错误时，验证码图片要刷新一下，而不是保持旧的验证码图片不变 #41
             this.$emit('fail', err)
           })
         } else {
@@ -194,10 +211,7 @@ export default {
         }
       })
     }
-
-
   }
-
 }
 </script>
 
