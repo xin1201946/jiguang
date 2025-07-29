@@ -16,8 +16,11 @@ window._CONFIG = {
   //AI 配置
 
   VUE_USE_AI: true, //为True则使用AI总结功能
-  VUE_ollama_BASE_URL: 'http://192.168.124.5:5000',
-  VUE_ollama_MODEL:"qwen3:4b",
+  VUE_ollama_BASE_URL: 'http://192.168.124.5:11434',
+  VUE_ollama_MODEL:"deepseek-r1:1.5b",
+  VUE_RAGFlow_BASE_URL: 'http://192.168.124.5',
+  VUE_RAGFlow_MODEL: "gemma-2-2b-chinese-it-q4_k_m:latest",
+  VUE_RAGFlow_API_KEY: "ragflow-YxZWU2NDZlNmI4ZjExZjA4NmQxNDI1MD",
   VUE_AI_API_BASE_URL: 'https://jeniya.cn',
   VUE_AI_API_MODEL: "deepseek-v3",
   VUE_AI_API_KEY:"sk-wa76PEXgyz6ccsxLW2OwqOVZsmoTeYOGFRW25wWMeRijephy",

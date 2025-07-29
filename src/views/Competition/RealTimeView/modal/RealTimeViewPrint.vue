@@ -224,7 +224,7 @@ export default {
             .map(item => {
               // 提取每发的详细分数
               const detailedScores = item.list
-                .map(scoreItem => `发序 ${scoreItem.shootCode}: ${scoreItem.score}${scoreItem.isGood === '是' ? '*' : ''}`)
+                .map(scoreItem => `{发序 ${scoreItem.shootCode}: ${scoreItem.score}环，坐标(${scoreItem.xcoord}, ${scoreItem.ycoord})${scoreItem.isGood === '是好十环' ? '*' : ''}}`)
                 .join(', ');
               return `${item.title || '未知阶段'}: [${detailedScores}]`;
             })
@@ -232,10 +232,11 @@ export default {
           scoreInfo = `详细成绩: ${scoreInfo}`;
         }
 
-        const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据，总结该选手的表现、优势与不足，并提供改进建议。`;
+        const prompt = `${playerInfo}. ${scoreInfo}. 请根据以上数据,混团赛事是两个队比，不分轮次！！普通按10的倍数递增的赛事10发一轮，你需要分轮次比较，最后总结该选手的表现、优势与不足，并提供改进建议。`;
+
         console.log(prompt)
         if (await ai.AI_HELP.check_API()){
-          this.aiSummary = "AI 分析:\n" + await ai.ASK_AI.ask_AI(prompt)
+          this.aiSummary = await ai.ASK_AI.ask_AI(prompt)
         }else{
           this.aiSummary = ""
         }
