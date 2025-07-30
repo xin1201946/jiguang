@@ -14,8 +14,9 @@
       @change="changePage"
       @tabClick="tabCallBack"
       @edit="editPage">
-      <a-tab-pane :id="page.fullPath" :key="page.fullPath" v-for="page in pageList" :closable="!(page.meta.title=='首页')">
-        <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
+      <a-tab-pane :id='page.fullPath' :key='page.fullPath' v-for='page in pageList'
+                  :closable="!(page.meta.title=='首页')">
+        <span slot='tab' :pagekey='page.fullPath'>{{ page.meta.title }}</span>
       </a-tab-pane>
     </a-tabs>
     <div class="mains">

@@ -42,20 +42,32 @@
 
 
       <a-form-model-item label="激光训练器编号" prop="deviceNum0">
-        <a-select showSearch v-model="formData.deviceNum0" @change="handleDeviceChange">
+        <a-select
+          showSearch
+          v-model="formData.deviceNum0"
+          @change="handleDeviceChange"
+          :dropdownMatchSelectWidth="false"
+          :filterOption="filterOption"
+        >
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '0')"
             :key="item.deviceId"
-            :value="item.deviceNum"
-          >{{ item.deviceNum }} - {{ item.deviceGunType === '0'? '长款激光训练器' : item.deviceGunType === '1'? '短款激光训练器' : '' }}</a-select-option>
+            :value="item.deviceId"
+          >{{ item.deviceNum }} - {{ item.deviceGunType === '0'? '长款激光训练器' : item.deviceGunType === '1'? '短款激光训练器' : '' }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="激光接收靶编号" prop="deviceNum1">
-        <a-select showSearch v-model="formData.deviceNum1">
+        <a-select
+          showSearch
+          v-model="formData.deviceNum1"
+          :dropdownMatchSelectWidth="false"
+          :filterOption="filterOption"
+        >
           <a-select-option
             v-for="item in types.device.filter(item => item.deviceType === '1')"
             :key="item.deviceId"
-            :value="item.deviceNum"
+            :value="item.deviceId"
           >{{ item.deviceNum }}</a-select-option>
         </a-select>
       </a-form-model-item>
@@ -217,10 +229,14 @@ export default {
       }
       this.loadingModal = false
     },
-    handleDeviceChange(v) {
+    filterOption(input, option) {
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    },
+    handleDeviceChange(deviceId) {
       const device = this.types.device.filter(item => item.deviceType === '0')
-      const row = device.filter(item => item.deviceNum === v)[0]
+      const row = device.filter(item => item.deviceId === deviceId)[0]
       this.formData.deviceGunType = row.deviceGunType
+      this.formData.deviceNum0 = row.deviceNum // 保存实际的设备编号
     }
   }
 }

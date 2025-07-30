@@ -6,6 +6,9 @@
     <span class="action" @click="showClick">
       <a-icon type="search"></a-icon>
     </span>
+    <span class="action" @click="toggleRobotFrame">
+      <a-icon type="robot" />
+    </span>
     <!--  -->
     <span v-if='roleName !== "学员"' class="action action-full ant-dropdown-link user-dropdown-menu"
       @click="handleFullscreenCustom()">
@@ -99,6 +102,18 @@
     <user-password ref="userPassword"></user-password>
     <depart-select ref="departSelect" :closable="true" title="部门切换"></depart-select>
     <setting-drawer ref="settingDrawer" :closable="true" title="系统设置"></setting-drawer>
+
+    <!-- 光电射击赛事智能化助手浮窗 -->
+    <div v-if="showRobotFrame" class="robot-frame-wrapper">
+      <div class="robot-frame-content">
+        <iframe
+          src="http://192.168.124.5/chat/share?shared_id=a8a3fc106c3e11f08d3046dddf905352&from=agent&auth=YxZWU2OWM4NmI4ZjExZjA4NmQxNDI1MD&locale=zh"
+          style="width: 100%; height: 100%; min-height: 600px"
+          frameborder="0"
+        >
+        </iframe>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -127,6 +142,7 @@ export default {
       roleName,
       dataScreenList: [],
       // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
+      showRobotFrame: false,
     }
   },
   components: {
@@ -343,6 +359,9 @@ export default {
         })
     },
     /*update_end author:liushaoqian date:20200507 for: 刷新缓存*/
+    toggleRobotFrame() {
+      this.showRobotFrame = !this.showRobotFrame
+    },
   },
 }
 </script>
@@ -372,6 +391,46 @@ export default {
 
 /* update-end author:sunjianlei date:20191220 for: 解决全局样式冲突问题 */
 /* update_end author:zhaoxin date:20191129 for: 让搜索框颜色能随主题颜色变换*/
+
+.robot-frame-wrapper {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 400px;
+  height: 600px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  background-color: #fff;
+  border-radius: 10px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.robot-frame-header {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+.robot-frame-close {
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  color: #888;
+  transition: color 0.2s;
+}
+.robot-frame-close:hover {
+  color: #f5222d;
+}
+.robot-frame-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 </style>
 
 <style scoped>
