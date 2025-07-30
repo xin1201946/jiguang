@@ -40,7 +40,7 @@
               {{ item.name }}
             </div>
           </div>
-          <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
+          <div style="width: 100%;height: 100%" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
             <!--    整页的滚动-->
             <vueSeamless :classOption="{
             step: 0.1,
@@ -63,7 +63,7 @@
               </div>
             </vueSeamless>
           </div>
-          <div style="width: 100%;height: 100%;" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
+          <div style="width: 100%;height: 100%" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
             <!--    前8位-->
             <div :class="{'finalEight': line, 'finalEightT': !line}">
               <div v-for="(item, i) in data.finalEight" :key="i" class="finalEightRow">
@@ -124,8 +124,8 @@
               </div>
             </div>
             <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1">
-              <div :class="['div', data.finalEight.length < 3 ? 'fewer-players' : '']" v-for="(item) in data.finalEight" :key="item.targetSite">
-                <div :class="['flex', data.finalEight.length < 3 ? 'larger-target' : '']">
+              <div :class="['div', getPlayerClass(data.finalEight.length)]" v-for="(item) in data.finalEight" :key="item.targetSite">
+                <div :class="['flex', getTargetClass(data.finalEight.length)]">
                   <div class="box">
                     <div class="name">{{ item.playerName }}</div>
                     <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
@@ -136,9 +136,9 @@
               </div>
             </div>
             <div class="targetImage1" v-if="data.configName.indexOf('步枪') != -1">
-              <div :class="['div1', data.finalEight.length < 3 ? 'fewer-players-rifle' : '']" v-for="(item) in data.finalEight" :key="item.targetSite">
+              <div :class="['div1', getPlayerRifleClass(data.finalEight.length)]" v-for="(item) in data.finalEight" :key="item.targetSite">
                 <div class="name1">{{ item.playerName }}</div>
-                <div :class="['flex1', data.finalEight.length < 3 ? 'larger-target-rifle' : '']">
+                <div :class="['flex1', getTargetRifleClass(data.finalEight.length)]">
                   <div class="box1">
                     <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
                       <EchatTargetB :dots="item.playerScores" :state="data.configName" />
@@ -970,6 +970,33 @@ export default {
         }
       })
     },
+    // 根据选手数量返回对应的类名
+    getPlayerClass(count) {
+      if (count <= 2) return 'two-players';
+      if (count <= 4) return 'fewer-players';
+      return '';
+    },
+
+    // 根据选手数量返回对应的靶图类名
+    getTargetClass(count) {
+      if (count <= 2) return 'larger-target-two';
+      if (count <= 4) return 'larger-target';
+      return '';
+    },
+
+    // 步枪选手容器类
+    getPlayerRifleClass(count) {
+      if (count <= 2) return 'two-players-rifle';
+      if (count <= 4) return 'fewer-players-rifle';
+      return '';
+    },
+
+    // 步枪靶图类
+    getTargetRifleClass(count) {
+      if (count <= 2) return 'larger-target-rifle-two';
+      if (count <= 4) return 'larger-target-rifle';
+      return '';
+    },
   },
   destroyed() {
     clearInterval(this.time)
@@ -1022,6 +1049,8 @@ export default {
     color: #fff;
     font-size: 14px;
     font-weight: bold;
+    z-index: 10;
+    font-size: 18px;
   }
 
   .flex {
@@ -1287,9 +1316,25 @@ export default {
   height: 300px !important;
 }
 
+// 2个人时的特殊布局
+.two-players {
+  flex: 0 0 50% !important;
+  height: 50vh !important; // 利用视口高度更合理分配空间
+}
+
+.larger-target-two {
+  width: 400px !important;
+  height: 400px !important;
+}
+
 .fewer-players-rifle {
   width: 50% !important;
   height: 60% !important;
+}
+
+.two-players-rifle {
+  width: 50% !important;
+  height: 70% !important;
 }
 
 .larger-target-rifle {
@@ -1297,6 +1342,14 @@ export default {
     transform: scale(3.5) !important;
     top: -220px !important;
     left: -200px !important;
+  }
+}
+
+.larger-target-rifle-two {
+  .buqiang1 {
+    transform: scale(4.5) !important;
+    top: -200px !important;
+    left: -150px !important;
   }
 }
 </style>
