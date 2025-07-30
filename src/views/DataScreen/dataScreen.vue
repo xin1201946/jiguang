@@ -130,25 +130,21 @@
               </div>
             </div>
             <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1">
-              <div class="div" v-for="(item) in data.finalEight" :key="item.targetSite">
-                <div class="flex">
+              <div :class="['div', data.finalEight.length < 3 ? 'fewer-players' : '']" v-for="(item) in data.finalEight" :key="item.targetSite">
+                <div :class="['flex', data.finalEight.length < 3 ? 'larger-target' : '']">
                   <div class="box">
                     <div class="name">{{ item.playerName }}</div>
                     <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
                       <EchatTarget :dots="item.playerScores" :state="data.configName" />
-                      <!-- [
-                      {  shootCode: 23, x_coord: 80, y_coord : 80 },
-                      {  shootCode: 24, x_coord: 80, y_coord : 80 }
-                    ] -->
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="targetImage1" v-if="data.configName.indexOf('步枪') != -1">
-              <div class="div1" v-for="(item) in data.finalEight" :key="item.targetSite">
+              <div :class="['div1', data.finalEight.length < 3 ? 'fewer-players-rifle' : '']" v-for="(item) in data.finalEight" :key="item.targetSite">
                 <div class="name1">{{ item.playerName }}</div>
-                <div class="flex1">
+                <div :class="['flex1', data.finalEight.length < 3 ? 'larger-target-rifle' : '']">
                   <div class="box1">
                     <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
                       <EchatTargetB :dots="item.playerScores" :state="data.configName" />
@@ -905,6 +901,7 @@ export default {
       }).then((res) => {
         data.finalEight = []
         const { result } = res
+        console.log('决赛数据:', result) // 添加调试日志查看返回数据
         data.projectName = result.projectName
         data.stageGroup = result.stageGroup
         data.stageName = result.stageName
@@ -938,18 +935,20 @@ export default {
             })
           })
         }
-        if (result)
-          if (result.players && result.players.length != 0) {
+        if (result) {
+          // 确保players存在且处理所有选手数据
+          if (result.players && Array.isArray(result.players)) {
             let arr = result.players.filter((item) => item.sameStatus == 1)
             data.number = 0
             arr.forEach((item) => {
-              if (data.number < item.sameScoreList.length) {
+              if (item.sameScoreList && data.number < item.sameScoreList.length) {
                 data.number = item.sameScoreList.length
               }
             })
             for (let i = 0; i < data.number; i++) {
               data.th.push({ name: ' ' })
             }
+            // 确保处理所有players，不限制数量
             result.players.forEach((item, index) => {
               let obj = {
                 ...item,
@@ -961,25 +960,37 @@ export default {
                     : item.totalScore,
                 notes: '',
                 bePromoted: '',
+                // 确保playerScores字段存在，用于靶图显示
+                playerScores: item.playerScores || []
               }
-              result.shoots.forEach((k) => {
-                obj[k] = ''
-              })
-              item.groupList.forEach((e, v) => {
+              // 确保为每个射击环节设置分数
+              if (result.shoots) {
                 result.shoots.forEach((k) => {
-                  if (k == e.groupCount) {
-                    obj[k] = e.groupTotal
-                  }
+                  obj[k] = ''
                 })
-              })
-
+                // 如果存在分组数据，处理每组数据
+                if (item.groupList && Array.isArray(item.groupList)) {
+                  item.groupList.forEach((e, v) => {
+                    result.shoots.forEach((k) => {
+                      if (k == e.groupCount) {
+                        obj[k] = e.groupTotal
+                      }
+                    })
+                  })
+                }
+              }
               data.finalEight.push(obj)
             })
+            console.log('处理后的决赛选手数据:', data.finalEight) // 添加日志查看处理后的数据
           } else {
+            console.warn('决赛数据中没有players数组或为空') // 警告日志
             data.finalEight = []
           }
+        }
         data.th.push({ name: '总环数' }, { name: '分差' }, { name: '备注' })
         this.$forceUpdate()
+      }).catch(error => {
+        console.error('获取决赛数据失败:', error)
       })
     },
     // 团体赛
@@ -1431,5 +1442,27 @@ export default {
   position: absolute;
   bottom: 10%;
   left: 22%;
+}
+
+.fewer-players {
+  flex: 0 0 50% !important;
+}
+
+.larger-target {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+.fewer-players-rifle {
+  width: 50% !important;
+  height: 60% !important;
+}
+
+.larger-target-rifle {
+  .buqiang1 {
+    transform: scale(3.5) !important;
+    top: -220px !important;
+    left: -200px !important;
+  }
 }
 </style>
