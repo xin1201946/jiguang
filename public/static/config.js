@@ -16,14 +16,10 @@ window._CONFIG = {
   //AI 配置
 
   VUE_USE_AI: true, //为True则使用AI总结功能
-  VUE_ollama_BASE_URL: 'http://192.168.124.5:11434',
-  VUE_ollama_MODEL:"deepseek-r1:1.5b",
-  VUE_RAGFlow_BASE_URL: 'http://192.168.124.5',
-  VUE_RAGFlow_MODEL: "gemma-2-2b-chinese-it-q4_k_m:latest",
-  VUE_RAGFlow_API_KEY: "ragflow-YxZWU2NDZlNmI4ZjExZjA4NmQxNDI1MD",
-  VUE_AI_API_BASE_URL: 'https://jeniya.cn',
-  VUE_AI_API_MODEL: "deepseek-v3",
-  VUE_AI_API_KEY:"sk-wa76PEXgyz6ccsxLW2OwqOVZsmoTeYOGFRW25wWMeRijephy",
+  VUE_RAGFlow_BASE_URL: 'http://192.168.124.19',
+  VUE_RAGFlow_MODEL: "qwen2.5:7b",
+  VUE_RAGFlow_API_KEY: "ragflow-I5OTMwNzE2NmU5NDExZjBhZmMwN2FhNT",
+  VUE_RAGFlow_Frame_URL:"http://192.168.124.19/chat/share?shared_id=89a67a386e8f11f09b5a7aa539898340&from=agent&auth=I5OTMxY2M0NmU5NDExZjBhZmMwN2FhNT&visible_avatar=1",
 
   // 单点登录地址
   VUE_APP_CAS_BASE_URL: '',

@@ -107,7 +107,7 @@
     <div v-if="showRobotFrame" class="robot-frame-wrapper">
       <div class="robot-frame-content">
         <iframe
-          src="http://192.168.124.5/chat/share?shared_id=a8a3fc106c3e11f08d3046dddf905352&from=agent&auth=YxZWU2OWM4NmI4ZjExZjA4NmQxNDI1MD&locale=zh"
+          src="http://192.168.124.19/chat/share?shared_id=89a67a386e8f11f09b5a7aa539898340&from=agent&auth=I5OTMxY2M0NmU5NDExZjBhZmMwN2FhNT&visible_avatar=1"
           style="width: 100%; height: 100%; min-height: 600px"
           frameborder="0"
         >

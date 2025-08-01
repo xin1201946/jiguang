@@ -179,19 +179,14 @@ const chatManager = {
   async ensureChat() {
     if (state.chatId) return state.chatId;
 
-    try {
-      await this.cleanup();
-      const createData = await api.createChat();
+    await this.cleanup();
+    const createData = await api.createChat();
 
-      state.chatId = createData.data.id;
-      state.sessionId = null;
+    state.chatId = createData.data.id;
+    state.sessionId = null;
 
-      console.log("创建RAGFlow聊天助手:", state.chatId);
-      return state.chatId;
-    } catch (error) {
-      console.error("创建聊天助手失败:", error);
-      throw error;
-    }
+    console.log("创建RAGFlow聊天助手:", state.chatId);
+    return state.chatId;
   },
 
   // 创建新会话
