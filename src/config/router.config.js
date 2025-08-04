@@ -295,6 +295,11 @@ export const asyncRouterMap = [
  */
 export const constantRouterMap = [
   {
+    path: '/introduce',
+    component: () => import('@/views/Home.vue'),
+    hidden: true
+  },
+  {
     path: '/user',
     component: UserLayout,
     redirect: '/user/login',
@@ -375,10 +380,6 @@ export const constantRouterMap = [
         component: () => import(/* webpackChunkName: "oauth2-app.login" */ '@/views/user/oauth2/OAuth2Login')
       },
     ]
-  },
-  {
-    path:"/introduce",
-    component: ()=>import('@/views/Home.vue')
   },
   {
     path: '/404',

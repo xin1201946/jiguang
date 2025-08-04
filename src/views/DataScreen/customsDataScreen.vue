@@ -32,6 +32,7 @@
             </div>
           </div>
         </div>
+
         <!-- 个人赛 -->
         <div class="box_box" v-if="data.configName.indexOf('个人资格赛') != -1 || data.configName.indexOf('个人决赛') != -1">
           <!--    表头-->
@@ -40,8 +41,9 @@
               {{ item.name }}
             </div>
           </div>
+
+          <!-- 资格赛内容 -->
           <div style="width: 100%;height: 100%" v-if="data.fiftyRounds === '0' && data.configName.indexOf('个人资格赛') != -1">
-            <!--    整页的滚动-->
             <vueSeamless :classOption="{
             step: 0.1,
             limitMoveNum: 16,
@@ -54,7 +56,6 @@
                   <div style="flex: 1;text-align: left; font-size: 26px">{{ item.groupName }}</div>
                   <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative; font-size: 20px">
                     {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-                    <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                   </div>
                   <div style="width: 110px; font-size: 26px">{{ item.total }}</div>
                   <div style="width: 60px; font-size: 26px">{{ item.remark }}</div>
@@ -63,8 +64,9 @@
               </div>
             </vueSeamless>
           </div>
+
+          <!-- 资格赛分页显示 -->
           <div style="width: 100%;height: 100%" v-if="data.fiftyRounds != '0' && data.configName.indexOf('个人资格赛') != -1">
-            <!--    前8位-->
             <div :class="{'finalEight': line, 'finalEightT': !line}">
               <div v-for="(item, i) in data.finalEight" :key="i" class="finalEightRow">
                 <div style="width: 60px">{{ item.rank }}</div>
@@ -73,15 +75,12 @@
                 <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
                 <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                   {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-                  <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                 </div>
                 <div style="width: 110px;">{{ item.total }}</div>
-                <!--              <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
                 <div style="width: 60px;">{{ item.remark }}</div>
                 <div style="width: 30px">{{ item.bePromoted }}</div>
               </div>
             </div>
-            <!-- 后半页滚动 -->
             <vueSeamless :classOption="classOption" :data="data.list" class="foot" ref="scorllBox">
               <div class="footContent" ref="scorllArr">
                 <div v-for="(item, i) in data.list" :key="i" class="finalEightRow">
@@ -91,10 +90,8 @@
                   <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
                   <div v-if="item.groupList[k - 1]" :class="item.groupList[k - 1].status === 1 ? 'xiahuaxian' : ''" v-for="k in data.shootGroups" :key="k" style="width: 75px;position: relative;">
                     {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-                    <!-- <span class="spanDiv" v-if="item.groupList[k - 1].status === 1"></span> -->
                   </div>
                   <div style="width: 110px;">{{ item.total }}</div>
-                  <!--                <div style="width: 60px;">{{ item.remarkPenalty }}</div>-->
                   <div style="width: 60px;">{{ item.remark }}</div>
                   <div style="width: 30px">{{ item.bePromoted }}</div>
                 </div>
@@ -102,8 +99,8 @@
             </vueSeamless>
           </div>
 
+          <!-- 个人决赛 -->
           <div style="width: 100%;height: 100%;display: flex;flex-direction: column" v-if="data.configName.indexOf('个人决赛') != -1">
-            <!--    前8位-->
             <div :class="data.finalEight.length == 0 ? '' : 'finalEight'">
               <div v-for="(item, i) in data.finalEight" :key="i" :class="item.eliminationStatus == 1 ? 'finalEightRow taotai' : item.sameStatus == 1 ? 'tongfen finalEightRow' : 'finalEightRow'">
                 <div style="width: 60px">{{ item.rank }}</div>
@@ -119,67 +116,59 @@
                 </div>
                 <div style="flex: 1;">{{ item.total }}</div>
                 <div style="flex: 1;">{{ item.diff }}</div>
-                <!--              <div style="flex: 1;">{{ item.remarkPenalty }}</div>-->
                 <div style="flex: 1;">{{ item.remark }}</div>
               </div>
             </div>
-            <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1">
-              <div :class="['div', getPlayerClass(data.finalEight.length)]" v-for="(item) in data.finalEight" :key="item.targetSite">
-                <div :class="['flex', getTargetClass(data.finalEight.length)]">
-                  <div class="box">
-                    <div class="name">{{ item.playerName }}</div>
-                    <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang' : 'shouqiang'">
-                      <EchatTarget :dots="item.playerScores" :state="data.configName" />
-                    </div>
+
+            <!-- 手枪靶图 -->
+            <div class="targetImage" v-if="data.configName.indexOf('手枪') != -1 && shouldRenderTargets(data)">
+              <div
+                v-for="(item, index) in data.finalEight"
+                :key="item.targetSite"
+                :class="['target-container']"
+                :style="getTargetContainerStyle(data.finalEight.length, 'pistol')"
+              >
+                <div class="target-wrapper" :style="getTargetWrapperStyle(data.finalEight.length, 'pistol')">
+                  <div class="player-name">{{ item.playerName }}</div>
+                  <div class="target-chart" :style="getTargetChartStyle(data.finalEight.length, 'pistol')">
+                    <EchatTarget :dots="item.playerScores" :state="data.configName" />
                   </div>
                 </div>
               </div>
             </div>
-            <div class="targetImage1" v-if="data.configName.indexOf('步枪') != -1">
-              <div :class="['div1', getPlayerRifleClass(data.finalEight.length)]" v-for="(item) in data.finalEight" :key="item.targetSite">
-                <div class="name1">{{ item.playerName }}</div>
-                <div :class="['flex1', getTargetRifleClass(data.finalEight.length)]">
-                  <div class="box1">
-                    <div :class="data.configName.indexOf('手枪') == -1 ? 'buqiang1' : 'shouqiang1'">
-                      <EchatTargetB :dots="item.playerScores" :state="data.configName" />
-                    </div>
+
+            <!-- 步枪靶图 -->
+            <div class="targetImage1" v-if="data.configName.indexOf('步枪') != -1 && shouldRenderTargets(data)">
+              <div
+                v-for="(item, index) in data.finalEight"
+                :key="item.targetSite"
+                :class="['target-container-rifle']"
+                :style="getTargetContainerStyle(data.finalEight.length, 'rifle')"
+              >
+                <div class="target-wrapper-rifle" :style="getTargetWrapperStyle(data.finalEight.length, 'rifle')">
+                  <div class="player-name-rifle">{{ item.playerName }}</div>
+                  <div class="target-chart-rifle" :style="getTargetChartStyle(data.finalEight.length, 'rifle')">
+                    <EchatTargetB :dots="item.playerScores" :state="data.configName" />
                   </div>
                 </div>
               </div>
             </div>
-            <!-- 后半页滚动 -->
-            <!-- <div class="foot" ref="scorllBox">
-          <div class="footContent" ref="scorllArr">
-            <div v-for="(item, i) in list" :key="i" class="finalEightRow">
-              <div style="width: 60px">{{ item.rank }}</div>
-              <div style="width: 60px">{{ item.targetSite }}</div>
-              <div style="width: 100px">{{ item.playerName }}</div>
-              <div style="flex: 1;text-align: left;">{{ item.groupName }}</div>
-              <div v-for="k in shootGroups" :key="k" style="width: 60px;">
-                {{ item.groupList[k - 1] && item.groupList[k - 1].groupTotal }}
-              </div>
-              <div style="width: 150px;">{{ item.total }}</div>
-              <div style="flex: 1;">{{ item.notes }}</div>
-              <div style="width: 60px">{{ item.bePromoted }}</div>
-            </div>
-          </div>
-        </div> -->
           </div>
         </div>
+
         <!-- 混团赛 -->
         <div class="box_box" v-if="data.configName === '手枪混团铜牌赛排名' || data.configName === '手枪混团金牌赛排名' || data.configName === '步枪混团金牌赛排名' || data.configName === '步枪混团铜牌赛排名'">
           <mixedClusterIndex :data="data" :number="projectList.length"></mixedClusterIndex>
         </div>
+
         <!-- 团队赛 -->
         <div class="box_box" v-if="data.configName.indexOf('团体排名') != -1">
-          <!--    表头-->
           <div class='th'>
             <div v-for='(item, i) in data.th' :key='i' :style="`width:${item.width};flex:${item.width ? 'none' : '1'};text-align:${item.align ? item.align : 'center'}`">
               {{ item.name }}
             </div>
           </div>
           <div style="width: 100%;height: 100%;">
-            <!--    整页的滚动-->
             <vueSeamless :classOption="classOption" :data="data.listsList" class="foots" ref="scorllBox">
               <div class="footContent" ref="scorllArr">
                 <div v-for="(item, i) in data.listsList" :key="i" class="finalEightRow">
@@ -196,11 +185,12 @@
             </vueSeamless>
           </div>
         </div>
+
         <!-- 排名 -->
         <div class="box_box" v-if="data.configName === '团队综合排名'">
           <RankingList :data="data.rankingList" />
         </div>
-        
+
       </dv-border-box-8>
     </a-carousel>
   </div>
@@ -223,6 +213,7 @@ import EchatTarget from '../view/targetmap/modules/EchatTarget.vue'
 import EchatTargetB from '../view/targetmap/modules/EchatTargetB.vue'
 import RankingList from './components/rankingList.vue'
 import vueSeamless from 'vue-seamless-scroll'
+
 export default {
   name: 'dataScreen',
   components: { Display, mixedClusterIndex, EchatTarget, RankingList, EchatTargetB, vueSeamless },
@@ -240,18 +231,12 @@ export default {
       time: null,
 
       th: [],
-      // 几组
       shootGroups: 0,
-      // 前8实时数据
       finalEight: [],
-      // 除了前8名的实时数据
       list: [],
-      // 旧数据
       oldList: [],
       listsList: [],
-      // 高度
       hei: 0,
-      // 动画定时器
       animate: undefined,
       projectName: '',
       stageGroup: '',
@@ -269,8 +254,37 @@ export default {
       currentProject: [],
       len: false,
       line: false,
-      
+
       carouselTimer: null
+    }
+  },
+  computed: {
+    // 计算靶图布局参数
+    targetLayoutConfig() {
+      return {
+        // 手枪靶图配置
+        pistol: {
+          1: { containerWidth: '100%', targetSize: 350, fontSize: '18px' },
+          2: { containerWidth: '50%', targetSize: 300, fontSize: '16px' },
+          3: { containerWidth: '33.33%', targetSize: 220, fontSize: '14px' },
+          4: { containerWidth: '50%', targetSize: 200, fontSize: '14px' },
+          5: { containerWidth: '33.33%', targetSize: 180, fontSize: '12px' },
+          6: { containerWidth: '33.33%', targetSize: 160, fontSize: '12px' },
+          7: { containerWidth: '25%', targetSize: 140, fontSize: '11px' },
+          8: { containerWidth: '25%', targetSize: 140, fontSize: '11px' }
+        },
+        // 步枪靶图配置
+        rifle: {
+          1: { containerWidth: '100%', targetSize: 400, fontSize: '18px' },
+          2: { containerWidth: '50%', targetSize: 350, fontSize: '16px' },
+          3: { containerWidth: '33.33%', targetSize: 280, fontSize: '14px' },
+          4: { containerWidth: '50%', targetSize: 250, fontSize: '14px' },
+          5: { containerWidth: '33.33%', targetSize: 220, fontSize: '12px' },
+          6: { containerWidth: '33.33%', targetSize: 200, fontSize: '12px' },
+          7: { containerWidth: '25%', targetSize: 180, fontSize: '11px' },
+          8: { containerWidth: '25%', targetSize: 180, fontSize: '11px' }
+        }
+      }
     }
   },
   created() {
@@ -319,9 +333,7 @@ export default {
         this.getList()
       }, 3000)
     } else {
-      console.log(this.$route)
-      // getDataScreenCurrentConfigApi().then((res) => {  //定义两个大屏的
-        getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
+      getDatabizCustomScreenConfigApi().then((res) => {
         console.log(res, 'res')
         this.currentProject = JSON.parse(JSON.stringify(res.result))
         this.projectList = res.result
@@ -342,23 +354,14 @@ export default {
           item['number'] = 0
         })
         this.getList()
-        
       })
 
       this.timer = setInterval(() => {
-        // getDataScreenCurrentConfigApi().then((res) => { // 定义两个大屏的
-          getDatabizCustomScreenConfigApi().then((res) => {  //自定义大屏的列表接口
+        getDatabizCustomScreenConfigApi().then((res) => {
           this.len = false
           if (JSON.stringify(this.currentProject) != JSON.stringify(res.result)) {
             this.currentProject = JSON.parse(JSON.stringify(res.result))
             this.len = true
-            // console.log(this.len !== res.result.length && this.len !== 0)
-            // console.log(this.len)
-            // if (this.len !== res.result.length && this.len !== 0) {
-            //   this.$router.go(0)
-            // }
-            // this.len = res.result.length
-            // console.log(this.len)
             this.projectList = res.result
             this.projectList.map((item) => {
               item['fiftyRounds'] = 0
@@ -393,41 +396,58 @@ export default {
     }, 10000);
   },
   methods: {
+    // 检查是否应该渲染靶图
+    shouldRenderTargets(data) {
+      return data.finalEight &&
+        Array.isArray(data.finalEight) &&
+        data.finalEight.length > 0 &&
+        data.finalEight.length <= 8 // 最多支持8个靶图
+    },
+
+    // 获取靶图容器样式
+    getTargetContainerStyle(playerCount, type) {
+      const config = this.targetLayoutConfig[type][playerCount] || this.targetLayoutConfig[type][8]
+      return {
+        width: config.containerWidth,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '5px',
+        boxSizing: 'border-box'
+      }
+    },
+
+    // 获取靶图包装器样式
+    getTargetWrapperStyle(playerCount, type) {
+      const config = this.targetLayoutConfig[type][playerCount] || this.targetLayoutConfig[type][8]
+      return {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%'
+      }
+    },
+
+    // 获取靶图图表样式
+    getTargetChartStyle(playerCount, type) {
+      const config = this.targetLayoutConfig[type][playerCount] || this.targetLayoutConfig[type][8]
+      return {
+        width: `${config.targetSize}px`,
+        height: `${config.targetSize}px`,
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '50%'
+      }
+    },
+
     // 向上滚动
     upload() {
-      // const box = this.$refs.scorllBox
-      // const arr = this.$refs.scorllArr
-      // const arr2 = document.createElement('div')
-      // arr2.innerHTML = arr.innerHTML
-      // const thit = this
-      // function scrolls() {
-      //   box.scrollTop = thit.hei
-      //   if (box.scrollTop > arr.offsetHeight) {
-      //     thit.hei = 0
-      //   } else {
-      //     // 移动速度
-      //     thit.hei += 0.3
-      //   }
-      //   thit.animate = window.requestAnimationFrame(scrolls)
-      // }
-      // if (arr.offsetHeight > box.offsetHeight) {
-      //   if (box.children.length < 2) {
-      //     box.appendChild(arr2)
-      //   } else {
-      //     box.children[1].innerHTML = arr.innerHTML
-      //   }
-      //   if (this.animate === undefined) {
-      //     scrolls()
-      //   }
-      // } else {
-      //   box.scrollTop = 0
-      //   if (box.children[1]) {
-      //     box.removeChild(box.children[1])
-      //   }
-      //   window.cancelAnimationFrame(this.animation)
-      //   this.animation = undefined
-      // }
+      // 滚动逻辑保持不变
     },
+
     // 个人资格赛
     geren(data, index) {
       console.log(data, '226322')
@@ -476,31 +496,14 @@ export default {
         }
         data.th.push({ name: '总环数', width: '110px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
         data.fiftyRounds = '0'
-        // 判断有没有到50发 (初始到60发展示前八名)
-        // 20发之后(都展示展示前八名)
+
         if (result.players) {
           result.players.map((item) => {
             item.groupList.map((it, i) => {
               if (it.groupCount === 2 && Number(it.groupTotal)) {
                 this.classOption.limitMoveNum = 8
                 data.fiftyRounds = it.groupTotal
-                // 设置前8名
-                // data.finalEight = result.players
-                //   .filter((item) => item.rank <= 8)
-                //   .map((item, i) => {
-                //     return {
-                //       ...item,
-                //       total:
-                //         result.isGood === '是'
-                //           ? !item.totalScore
-                //             ? item.totalScore
-                //             : `${item.totalScore}-${item.good}x`
-                //           : item.totalScore,
-                //       notes: '',
-                //       bePromoted: 'Q',
-                //     }
-                //   })
-                //多组时没有Q
+
                 if (this.line) {
                   data.finalEight = result.players
                     .filter((item) => item.rank <= 8)
@@ -534,7 +537,7 @@ export default {
                       }
                     })
                 }
-                // 除了前8名
+
                 data.list = result.players
                   .filter((item) => item.rank > 8)
                   .map((item) => {
@@ -565,9 +568,6 @@ export default {
                     bePromoted: '',
                   }
                 })
-                // data.listsList = [
-                //   ...data.listsList,
-                // ]
               }
             })
           })
@@ -579,13 +579,13 @@ export default {
         })
       })
     },
-     // 个人资格赛
-     gerenzong(data, index) {
+
+    // 个人资格赛总排名
+    gerenzong(data, index) {
       console.log(data, '资格赛总排名')
       littleScreenByTotal({
         type: data.configName,
       }).then((res) => {
-        // this.line = res.result.line
         console.log(res, 'res')
         data.finalEight = []
         data.list = []
@@ -597,7 +597,7 @@ export default {
         data.bisaiTime = result.time
         data.contestName = result.contestName
         data.addr = result.addr
-        // 设置表头
+
         data.th = [
           {
             name: '排名',
@@ -627,31 +627,14 @@ export default {
         }
         data.th.push({ name: '总环数', width: '110px' }, { name: '备注', width: '60px' }, { name: '-', width: '30px' })
         data.fiftyRounds = '0'
-        // 判断有没有到50发 (初始到60发展示前八名)
-        // 20发之后(都展示展示前八名)
+
         if (result.players) {
           result.players.map((item) => {
             item.groupList.map((it, i) => {
               if (it.groupCount === 2 && Number(it.groupTotal)) {
                 this.classOption.limitMoveNum = 8
                 data.fiftyRounds = it.groupTotal
-                // 设置前8名
-                // data.finalEight = result.players
-                //   .filter((item) => item.rank <= 8)
-                //   .map((item, i) => {
-                //     return {
-                //       ...item,
-                //       total:
-                //         result.isGood === '是'
-                //           ? !item.totalScore
-                //             ? item.totalScore
-                //             : `${item.totalScore}-${item.good}x`
-                //           : item.totalScore,
-                //       notes: '',
-                //       bePromoted: 'Q',
-                //     }
-                //   })
-                //多组时没有Q
+
                 if (this.line) {
                   data.finalEight = result.players
                     .filter((item) => item.rank <= 8)
@@ -685,7 +668,7 @@ export default {
                       }
                     })
                 }
-                // 除了前8名
+
                 data.list = result.players
                   .filter((item) => item.rank > 8)
                   .map((item) => {
@@ -716,9 +699,6 @@ export default {
                     bePromoted: '',
                   }
                 })
-                // data.listsList = [
-                //   ...data.listsList,
-                // ]
               }
             })
           })
@@ -730,6 +710,7 @@ export default {
         })
       })
     },
+
     // 个人决赛
     gerenjuesaii(data) {
       littleScreen({
@@ -737,7 +718,7 @@ export default {
       }).then((res) => {
         data.finalEight = []
         const { result } = res
-        console.log('自定义屏幕决赛数据:', result) // 添加调试日志
+        console.log('自定义屏幕决赛数据:', result)
         data.projectName = result.projectName
         data.stageGroup = result.stageGroup
         data.stageName = result.stageName
@@ -772,7 +753,6 @@ export default {
           })
         }
         if (result) {
-          // 确保players存在并正确处理
           if (result.players && Array.isArray(result.players)) {
             let arr = result.players.filter((item) => item.sameStatus == 1)
             data.number = 0
@@ -784,7 +764,7 @@ export default {
             for (let i = 0; i < data.number; i++) {
               data.th.push({ name: ' ' })
             }
-            // 确保处理所有players
+
             result.players.forEach((item, index) => {
               let obj = {
                 ...item,
@@ -796,10 +776,9 @@ export default {
                     : item.totalScore,
                 notes: '',
                 bePromoted: '',
-                // 确保playerScores字段存在
                 playerScores: item.playerScores || []
               }
-              // 处理射击环节数据
+
               if (result.shoots) {
                 result.shoots.forEach((k) => {
                   obj[k] = ''
@@ -828,6 +807,7 @@ export default {
         console.error('获取自定义屏幕决赛数据失败:', error)
       })
     },
+
     // 团体赛
     tuanti(data) {
       getTeamScoresAPI({
@@ -893,6 +873,7 @@ export default {
         this.$forceUpdate()
       })
     },
+
     // 团队综合排名
     tuandui(data) {
       getTeamTotalScores({
@@ -908,6 +889,7 @@ export default {
         this.$forceUpdate()
       })
     },
+
     // 混团
     huntuan(data) {
       getMixeTeamFinalsListAPI({
@@ -924,6 +906,7 @@ export default {
         this.$forceUpdate()
       })
     },
+
     getData() {
       this.projectList.forEach((data, index) => {
         if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
@@ -946,10 +929,10 @@ export default {
         }
       })
     },
+
     getList() {
       this.len = false
       this.projectList.forEach((data, index) => {
-      
         if (data.configName.includes('个人资格赛')&&!data.configName.includes('资格赛总排名')) {
           this.geren(data, index)
         }
@@ -969,34 +952,7 @@ export default {
           this.gerenzong(data)
         }
       })
-    },
-    // 根据选手数量返回对应的类名
-    getPlayerClass(count) {
-      if (count <= 2) return 'two-players';
-      if (count <= 4) return 'fewer-players';
-      return '';
-    },
-
-    // 根据选手数量返回对应的靶图类名
-    getTargetClass(count) {
-      if (count <= 2) return 'larger-target-two';
-      if (count <= 4) return 'larger-target';
-      return '';
-    },
-
-    // 步枪选手容器类
-    getPlayerRifleClass(count) {
-      if (count <= 2) return 'two-players-rifle';
-      if (count <= 4) return 'fewer-players-rifle';
-      return '';
-    },
-
-    // 步枪靶图类
-    getTargetRifleClass(count) {
-      if (count <= 2) return 'larger-target-rifle-two';
-      if (count <= 4) return 'larger-target-rifle';
-      return '';
-    },
+    }
   },
   destroyed() {
     clearInterval(this.time)
@@ -1024,6 +980,7 @@ export default {
   text-decoration: underline;
 }
 
+// 手枪靶图样式
 .targetImage {
   position: absolute;
   left: 0;
@@ -1031,152 +988,105 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  //height: 460px;
-  flex: 1;
-
-  .div {
-    position: relative;
-    flex: 0 0 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .name {
-    position: absolute;
-    left: 5%;
-    top: 0;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    z-index: 10;
-    font-size: 18px;
-  }
-
-  .flex {
-    // flex: 0 0 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // width: 25%;
-    width: 220px;
-    height: 220px;
-    overflow: hidden;
-    border-radius: 50%;
-
-    .box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      //position: relative;
-
-      .shouqiang {
-        position: absolute;
-        width: 230px;
-        height: 230px;
-      }
-    }
-  }
+  height: 35%;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
-/*.targetImage1 {
+.target-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.target-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.player-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.target-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+// 步枪靶图样式
+.targetImage1 {
   position: absolute;
   left: 0;
   bottom: 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  overflow: hidden;
   width: 100%;
-  height: 470px;
+  height: 35%;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+}
 
-  .div1 {
-    position: relative;
-    //flex: 0 0 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .name1 {
-    position: absolute;
-    left: 5%;
-    top: 0;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  .flex1 {
-    // flex: 0 0 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // width: 25%;
-    width: 250px;
-    height: 250px;
-    overflow: hidden;
-    border-radius: 50%;
-
-    .box1 {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2000px;
-      //height: 2000px;
-
-      .shouqiang1 {
-        width: 1000px;
-        height: 1000px;
-      }
-
-      .buqiang1 {
-        width: 680px;
-        height: 680px;
-      }
-    }
-  }
-}*/
-.targetImage1 {
+.target-container-rifle {
   display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
 
-  .div1 {
-    width: 25%;
-    height: 40%;
-    position: relative;
+.target-wrapper-rifle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
-    .name1 {
-      position: absolute;
-    }
+.player-name-rifle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 
-    .flex1 {
-      position: absolute;
+.target-chart-rifle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
 
-      .box1 {
-        //width: 1000px;
-        //height: 1000px;
-      }
-
-      .buqiang1 {
-        position: absolute;
-        width: 285px;
-        height: 285px;
-        top: -255px;
-        left: -240px;
-        transform-origin: top left;
-        transform: scale(2.54);
-      }
-    }
-  }
+.finalEight {
+  height: 60%;
+  overflow-y: auto;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #2174b6;
 }
 
 .container {
   flex: 1;
   position: relative;
-  // height: 141vh;
   height: 100vh;
   overflow: hidden;
   background: #001441;
@@ -1189,7 +1099,6 @@ export default {
   width: 100%;
   height: 100%;
   padding: 30px 30px 10px 30px;
-  // border: 2px solid #2174B6;
 }
 
 .head {
@@ -1225,13 +1134,6 @@ export default {
       }
     }
   }
-
-  // .bottom {
-  //   margin-top: 10px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: space-between;
-  // }
 }
 
 .th {
@@ -1251,16 +1153,14 @@ export default {
 }
 
 .finalEight {
-  // display: flex;
-  // justify-content: space-between;
   padding-bottom: 5px;
   border-bottom: 2px solid #2174b6;
 }
+
 .finalEightT {
-  // display: flex;
-  // justify-content: space-between;
   padding-bottom: 5px;
 }
+
 .finalEightRow {
   flex: 1;
   display: flex;
@@ -1305,51 +1205,5 @@ export default {
   position: absolute;
   bottom: 10%;
   left: 22%;
-}
-
-.fewer-players {
-  flex: 0 0 50% !important;
-}
-
-.larger-target {
-  width: 300px !important;
-  height: 300px !important;
-}
-
-// 2个人时的特殊布局
-.two-players {
-  flex: 0 0 50% !important;
-  height: 50vh !important; // 利用视口高度更合理分配空间
-}
-
-.larger-target-two {
-  width: 400px !important;
-  height: 400px !important;
-}
-
-.fewer-players-rifle {
-  width: 50% !important;
-  height: 60% !important;
-}
-
-.two-players-rifle {
-  width: 50% !important;
-  height: 70% !important;
-}
-
-.larger-target-rifle {
-  .buqiang1 {
-    transform: scale(3.5) !important;
-    top: -220px !important;
-    left: -200px !important;
-  }
-}
-
-.larger-target-rifle-two {
-  .buqiang1 {
-    transform: scale(4.5) !important;
-    top: -200px !important;
-    left: -150px !important;
-  }
 }
 </style>

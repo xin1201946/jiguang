@@ -7,6 +7,7 @@ import Storage from 'vue-ls'
 import router from './router'
 import store from './store/'
 import { VueAxios } from "@/utils/request"
+import '@/assets/tailwind.css'
 // 将自动注册所有组件为全局组件
 import dataV from '@jiaminghi/data-view'
 

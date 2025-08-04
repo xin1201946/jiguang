@@ -240,8 +240,6 @@ async function ragflow_chat(message) {
 
 // 导出接口
 export async function tryAskAI(message) {
-  if (!window._CONFIG["VUE_USE_AI"]) return;
-
   try {
     return await ragflow_chat(message);
   } catch (error) {

@@ -3,14 +3,25 @@
     <!-- Navigation -->
     <nav class="nav-bar">
       <div class="nav-container">
+        <!-- 品牌 -->
         <div class="nav-brand">
           <div class="brand-icon">🎯</div>
           <span class="brand-text">激光射击训练系统</span>
         </div>
+
+        <!-- 菜单 -->
         <div class="nav-menu">
-          <a href="#" class="nav-link active">首页</a>
-          <a href="#" class="nav-link">核心功能特色</a>
-          <a href="#" class="nav-link">数据大屏</a>
+          <a
+            v-for="item in menu"
+            :key="item.name"
+            :href="item.href"
+            class="nav-link"
+            :class="{ active: current === item.href }"
+            @click.prevent="current = item.href"
+          >
+            {{ item.name }}
+          </a>
+
         </div>
       </div>
     </nav>
@@ -19,13 +30,13 @@
     <section class="hero">
       <div class="hero-container">
         <div class="hero-content">
-          <h1 class="hero-title">
+          <h1 class="hero-title" style='height: 80px'>
             <TextType
-              :text="['激光射击训练系统','智能化赛事平台']"
+              :text="['激光射击训练系统']"
               :typingSpeed="100"
-              :pauseDuration="2500"
-              :showCursor="true"
-              cursorCharacter="|"
+              :pauseDuration="70000"
+              :showCursor="false"
+              cursorCharacter=""
             />
           </h1>
           <p class="hero-subtitle">
@@ -33,15 +44,15 @@
             支持项目预设、设备管理、大屏显示的完整解决方案
           </p>
           <div class="hero-actions">
-            <button class="cta-button primary" >
-              登录
+            <button class="cta-button" @click='route_login' style='background: #FFFFFF; color: #000000;'>
+              开始体验
               <span class="button-arrow">→</span>
             </button>
           </div>
         </div>
 
         <!-- Floating Elements -->
-        <div class="hero-visuals">
+        <div >
           <div class="tilted-card">
             <img src='/HomePage.png' alt="Shooting Training Platform" class="card-image">
           </div>
@@ -49,11 +60,9 @@
       </div>
     </section>
 
-    <!-- Components Section -->
-
 
     <!-- Core Features Section -->
-    <section class="features-section">
+    <section class="features-section" id='features'>
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">核心功能特色</h2>
@@ -200,22 +209,12 @@
         </div>
       </div>
     </section>
-    <footer class="footer">
+    <footer class="footer" id='footer'>
       <div class="footer-container">
         <div class="footer-content">
-          <div class="footer-brand">
-            <div class="brand-icon">🎯</div>
-            <span>激光射击训练系统</span>
-          </div>
           <div class="footer-links">
-            <a href="#" class="footer-link">关于我们</a>
-            <a href="#" class="footer-link">使用指南</a>
-            <a href="#" class="footer-link">技术支持</a>
-            <a href="#" class="footer-link">联系我们</a>
+            <div style='color: grey'>激光射击模拟系统</div>
           </div>
-        </div>
-        <div class="footer-bottom">
-          <p>© 2024 激光射击训练系统. 专业射击训练平台</p>
         </div>
       </div>
     </footer>
@@ -229,12 +228,14 @@ import CountDown from '@/components/CountDown/CountDown'
 import Ellipsis from '@/components/Ellipsis'
 import NumberInfo from '@/components/NumberInfo'
 import TextType from '@/components/TextType/TextType.vue'
+import AIChat from '@/components/ai/AIChat.vue'
 
 const AvatarListItem = AvatarList.AvatarItem
 
 export default {
   name: 'Home',
   components: {
+    AIChat,
     TextType,
     NumberInfo,
     Ellipsis,
@@ -245,19 +246,19 @@ export default {
   },
   data() {
     return {
+      current: '#', // 默认首页被选中
+      menu: [
+        { name: '首页', href: '#' },
+        { name: '核心功能特色', href: '#features' },
+        // 你还可以加更多项
+      ],
       targetTime: new Date().getTime() + 3900000
     }
   },
   methods: {
-    onEndHandle() {
-      this.$message.success('训练时间到！准备开始团队训练！')
-    },
-    onEndHandle2() {
-      this.$notification.open({
-        message: '休息结束',
-        description: '休息时间已结束，请准备开始下一轮训练。',
-      });
-    },
+    route_login() {
+      this.$router.push('/user/login')
+    }
   }
 }
 </script>
@@ -283,7 +284,6 @@ export default {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(10, 10, 15, 0.8);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -362,21 +362,10 @@ export default {
   transition: all 0.3s ease;
 }
 
-.github-btn:hover {
-  background: rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.5);
-}
-
-.star-count {
-  background: rgba(139, 92, 246, 0.2);
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
 /* Hero Section */
 .hero {
-  padding: 120px 24px 80px;
+  height: 100vh;
+  padding: 170px 24px 80px;
   position: relative;
   background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
 }
@@ -446,165 +435,48 @@ export default {
   transform: translateX(4px);
 }
 
-/* Hero Visuals */
-.hero-visuals {
-  position: relative;
-  height: 500px;
-}
-.card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
-.floating-card {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  backdrop-filter: blur(20px);
-  padding: 24px;
+.tilted-card {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 10px;
+  padding: 5px;
+  /* 修改：添加背景、边框和阴影 */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+  0 0 80px rgba(139, 92, 246, 0.3),
+  0 0 120px rgba(139, 92, 246, 0.1);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 修改：增加倾斜效果 */
+  transform: rotate3d(1, 1, 0, 10deg) scale(0.9);
+  transform-style: preserve-3d;
   animation: float 6s ease-in-out infinite;
 }
 
-.floating-card.card-1 {
-  top: 50px;
-  right: 50px;
-  width: 200px;
-  animation-delay: 0s;
+.tilted-card:hover {
+  transform: rotate3d(0, 0, 0, 0deg) scale(1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+  0 0 100px rgba(139, 92, 246, 0.4),
+  0 0 150px rgba(139, 92, 246, 0.2);
 }
 
-.floating-card.card-2 {
-  bottom: 120px;
-  right: 20px;
-  width: 120px;
-  height: 120px;
-  animation-delay: -2s;
-}
 
-.floating-card.card-3 {
-  top: 20px;
-  left: 20px;
-  width: 220px;
-  animation-delay: -4s;
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 5px;
+  /* 修改：图片边框，使其看起来更像是在容器内 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-20px) rotate(1deg); }
-}
-
-.card-pattern {
-  width: 100%;
-  height: 60px;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.3) 2px, transparent 2px),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 2px, transparent 2px),
-    radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.3) 2px, transparent 2px),
-    radial-gradient(circle at 60% 60%, rgba(139, 92, 246, 0.3) 2px, transparent 2px),
-    radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 2px, transparent 2px),
-    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.3) 2px, transparent 2px);
-  background-size: 40px 40px;
-  margin-bottom: 16px;
-}
-
-.card-grid {
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.metric {
-  text-align: center;
-}
-
-.metric-value {
-  display: block;
-  font-size: 24px;
-  font-weight: 700;
-  color: #8b5cf6;
-  margin-bottom: 4px;
-}
-
-.metric-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.code-preview {
-  font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 12px;
-}
-
-.code-line {
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 4px;
-  position: relative;
-  padding-left: 16px;
-}
-
-/* AI Analysis Card */
-.ai-analysis-preview {
-  text-align: center;
-}
-
-.ai-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.ai-icon {
-  font-size: 16px;
-}
-
-.ai-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-}
-
-/* Device Grid */
-.device-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  height: 100%;
-  align-items: center;
-}
-
-.device-item {
-  font-size: 24px;
-  text-align: center;
-  padding: 8px;
-  background: rgba(139, 92, 246, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-/* Agent Preview */
-.agent-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.chat-bubble {
-  background: rgba(139, 92, 246, 0.1);
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-.agent-text {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.8);
-  font-family: 'Monaco', 'Menlo', monospace;
 }
 
 /* Features Section */
@@ -989,183 +861,27 @@ export default {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Component Showcase */
-.component-showcase {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  margin-bottom: 100px;
-}
-
-.component-showcase.reverse {
-  direction: rtl;
-}
-
 .component-showcase.reverse > * {
   direction: ltr;
-}
-
-.component-info {
-  max-width: 400px;
-}
-
-.component-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.component-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.component-tag {
-  padding: 4px 12px;
-  background: rgba(139, 92, 246, 0.1);
-  color: #8b5cf6;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-.component-desc {
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-  margin: 0;
-}
-
-.component-demo-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  padding: 32px;
-  backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
-}
-
-.component-demo-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-4px);
-}
-
-.demo-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.demo-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.online-indicator {
-  font-size: 12px;
-  color: #10b981;
-}
-
-/* Component Specific Styles */
-.trend-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.trend-item {
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.avatar-demo {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.team-stats {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.stat {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.countdown-display {
-  text-align: center;
-}
-
-.main-countdown {
-  font-size: 2rem !important;
-  font-weight: 700;
-  color: #8b5cf6;
-  margin-bottom: 12px;
-}
-
-.countdown-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0;
-}
-
-.stats-grid {
-  display: grid;
-  gap: 24px;
-}
-
-.stat-card {
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.text-demo {
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.5;
 }
 
 /* Footer */
 .footer {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 60px 24px 40px;
+  padding: 30px 24px 40px;
   background: rgba(255, 255, 255, 0.01);
 }
 
 .footer-container {
-  max-width: 1200px;
+  width:100%;
   margin: 0 auto;
 }
 
 .footer-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  margin-bottom: 20px;
 }
 
 .footer-links {
@@ -1184,11 +900,6 @@ export default {
   color: rgba(255, 255, 255, 0.9);
 }
 
-.footer-bottom {
-  text-align: center;
-  padding-top: 40px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
 
 .footer-bottom p {
   color: rgba(255, 255, 255, 0.5);
@@ -1216,14 +927,6 @@ export default {
     font-size: 2.5rem;
   }
 
-  .component-showcase {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .component-showcase.reverse {
-    direction: ltr;
-  }
 
   .footer-content {
     flex-direction: column;
