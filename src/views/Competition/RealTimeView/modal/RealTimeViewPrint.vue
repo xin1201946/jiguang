@@ -385,7 +385,7 @@ export default {
           </tr>
           <tr>
             <th colspan="6" style="font-size: 16px; text-align: center; padding-bottom: 10px;">
-              射手：${this.formData.playerName}
+              选手：${this.formData.playerName}
             </th>
           </tr>
           <tr style="height: 30px; line-height: 30px; background-color: #f0f0f0;">
@@ -491,7 +491,7 @@ export default {
                 <td align="center"  ><img style="width:15px;height: 15px;" src="${
                   process.env.NODE_ENV === 'electron' ? imgSrc : '../' + imgSrc
                 }" ></td>
-                <td align="center" style="font-size:12px;">${item.isGood === '���' ? `${item.score} *` : item.score}</td>
+                <td align="center" style="font-size:12px;">${item.isGood === '好十环' ? `${item.score} *` : item.score}</td>
                 <td align="center" style="font-size:12px;">${
                   item.beginTime.length <= 19 ? item.beginTime : item.beginTime.substring(0, item.beginTime.length - 7)
                 }</td>
@@ -896,7 +896,7 @@ export default {
             <p style="font-size: 18px"><b>靶位:${this.formData.targetSite}</b></p>
             <p style="font-size: 18px"><b>时间:${this.formData.sgTimeStart}</b></p>
             <p style="font-size: 18px"><b>${this.formData.detailScoreList[0].projectName}</b></p>
-            <p style="font-size: 18px"><b>${this.formData.playerName}</b></p>
+            <p style="font-size: 18px"><b>选手:${this.formData.playerName}</b></p>
             <table align="center" cellspacing="0" border="0" style="width: 100%;font-family: 宋体;">
               ${table}
             </table>

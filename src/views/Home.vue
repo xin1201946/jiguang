@@ -342,26 +342,6 @@ export default {
   border-radius: 1px;
 }
 
-.nav-actions {
-  display: flex;
-  align-items: center;
-}
-
-.github-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 20px;
-  color: #8b5cf6;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
 /* Hero Section */
 .hero {
   height: 100vh;

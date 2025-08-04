@@ -1,6 +1,6 @@
 // RAGFlow 集成代码
 
-import { getSettings } from "@/utils/storage_settings";
+import { getSettings } from '@/utils/storage_settings'
 
 // 配置管理
 const CONFIG = {
@@ -144,8 +144,7 @@ const api = {
   async ensureChat(){
     if (state.chatId){return state.chatId}
     const ai = api.createChat()
-    const chatID = ai.data.chatId;
-    state.chatId = chatID;
+    state.chatId = ai.data.chatId;
     state.sessionId = null;
     return state.chatId;
   },
@@ -227,7 +226,9 @@ async function ragflow_chat(message) {
     const sessionId = await chatManager.createNewSession(chatId);
 
     const responseData = await api.sendMessage(chatId, sessionId, message);
-    const answer = utils.parseResponse(responseData);
+    let answer = utils.parseResponse(responseData);
+
+    answer = answer.replace(/\[[^\]]*\]/g, '');
 
     console.log("RAGFlow回答:", answer);
     return answer;
