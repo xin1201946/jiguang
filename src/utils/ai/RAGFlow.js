@@ -10,15 +10,18 @@ const CONFIG = {
   get systemPrompt() {
     return getSettings("systemPrompt") ||
       `你是“激光射击训练系统”的智能分析助手。你的任务是：
-
       根据提供的成绩数据，**总结选手在比赛过程中的整体表现，分析其射击优势与不足，并提出可行的改进建议**。
-      
-      ## 输出格式如下：
+      ## 输出格式严格按照如下要求，并在每个标题添加加粗和回车，避免数据过于密集：
       选手优点：
       ……
+      
       存在问题：
       ……
-      改进建议：
+      
+      现场发挥改进建议：
+      ……
+      
+      训练方案改进建议：
       ……
       （注：本总结由AI自动生成，仅供参考，具体训练效果请结合教练指导。）
       
@@ -30,10 +33,12 @@ const CONFIG = {
          - 是否集中：例如坐标是否接近中轴线（约在80, 80附近），是否分散；
          - 是否偏移：比如坐标多集中在“左上方”“右下方”“偏右”；
          - 表现是否稳定：是否存在明显波动、失误（如突然掉环）；
-      5. 总结语言应简洁明了，面向家长或选手本人易于理解，控制在150字左右。
+      5. 总结语言应简洁明了，面向家长或选手本人易于理解，控制在500字左右。
       `;
-
-  }
+  },
+  get temperature() {
+    return Number(window._CONFIG["VUE_RAGFlow_TEMPERATURE"]);
+  },
 };
 
 // 状态管理
@@ -117,8 +122,11 @@ const api = {
   async createChat() {
     const body = {
       name: `激光射击训练AI_${Date.now()}`,
-      dataset_ids: [],
-      llm: { model_name: CONFIG.model },
+      dataset_ids: ["836021266e8d11f0a7d87aa539898340"],
+      llm: {
+        model_name: CONFIG.model,
+        temperature: CONFIG.temperature
+      },
       prompt: {
         prompt: CONFIG.systemPrompt,
         similarity_threshold: 0.2,
@@ -133,7 +141,14 @@ const api = {
       body: JSON.stringify(body)
     });
   },
-
+  async ensureChat(){
+    if (state.chatId){return state.chatId}
+    const ai = api.createChat()
+    const chatID = ai.data.chatId;
+    state.chatId = chatID;
+    state.sessionId = null;
+    return state.chatId;
+  },
   // 创建会话
   async createSession(chatId) {
     const body = { name: `射击分析_${Date.now()}` };
@@ -175,19 +190,21 @@ const chatManager = {
     }
   },
 
-  // 确保聊天助手存在
-  async ensureChat() {
-    if (state.chatId) return state.chatId;
-
-    await this.cleanup();
-    const createData = await api.createChat();
-
-    state.chatId = createData.data.id;
-    state.sessionId = null;
-
-    console.log("创建RAGFlow聊天助手:", state.chatId);
-    return state.chatId;
+  async createNewChat() {
+    try{
+      await this.cleanup();
+      const createData = await api.createChat();
+      state.chatId = createData.data.id;
+      state.sessionId = null;
+      console.log("创建RAGFlow聊天助手:", state.chatId);
+      return state.chatId;
+    }catch (e){
+      console.error("创建RAGFlow聊天助手失败:", e);
+      return e
+    }
   },
+
+
 
   // 创建新会话
   async createNewSession(chatId) {
@@ -206,7 +223,7 @@ async function ragflow_chat(message) {
   try {
     console.log("发送消息到RAGFlow:", message);
 
-    const chatId = await chatManager.ensureChat();
+    const chatId = await chatManager.createNewChat();
     const sessionId = await chatManager.createNewSession(chatId);
 
     const responseData = await api.sendMessage(chatId, sessionId, message);
